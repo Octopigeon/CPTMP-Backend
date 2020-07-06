@@ -1,4 +1,4 @@
-package io.github.octopigeon.cptmpdao.module;
+package io.github.octopigeon.cptmpdao.model;
 
 import lombok.Data;
 

@@ -1,6 +1,6 @@
 package io.github.octopigeon.cptmpdao.mapper;
 
-import io.github.octopigeon.cptmpdao.module.Pigeon;
+import io.github.octopigeon.cptmpdao.model.Pigeon;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Repository;

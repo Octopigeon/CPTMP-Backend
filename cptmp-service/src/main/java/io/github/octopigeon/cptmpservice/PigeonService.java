@@ -1,7 +1,7 @@
 package io.github.octopigeon.cptmpservice;
 
 import io.github.octopigeon.cptmpdao.mapper.PigeonMapper;
-import io.github.octopigeon.cptmpdao.module.Pigeon;
+import io.github.octopigeon.cptmpdao.model.Pigeon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
