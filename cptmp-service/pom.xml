@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>octopigeon.github.io</groupId>
+        <groupId>io.github.octopigeon</groupId>
         <artifactId>cptmp</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
@@ -18,7 +18,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>octopigeon.github.io</groupId>
+            <groupId>io.github.octopigeon</groupId>
             <artifactId>cptmp-dao</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>

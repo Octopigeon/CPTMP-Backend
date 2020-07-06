@@ -8,7 +8,7 @@
         <version>2.3.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>octopigeon.github.io</groupId>
+    <groupId>io.github.octopigeon</groupId>
     <artifactId>cptmp</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>cptmp</name>
