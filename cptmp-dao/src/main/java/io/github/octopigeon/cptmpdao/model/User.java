@@ -16,15 +16,20 @@ public class User {
 
     private BigInteger id;
     private Date gmtCreate;
+    /** nullable */
     private Date gmtModified;
-    private String nickname;
+    private String username;
     private String password;
+    /** nullable */
     private String introduction;
+    /** nullable */
     private String contactInfo;
     /**
      * 0-female, 1-male
+     * nullable
      */
     private Boolean male;
+    /** nullable */
     private String avatar;
 
 }
