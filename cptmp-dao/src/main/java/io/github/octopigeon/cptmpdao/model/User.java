@@ -8,6 +8,8 @@ import java.util.Date;
 
 /**
  * @author anlow
+ * @version 1.0
+ * @date 2020/7/7
  */
 @Data
 public class User {
@@ -15,7 +17,6 @@ public class User {
     private BigInteger id;
     private Date gmtCreate;
     private Date gmtModified;
-    private String roleName;
     private String nickname;
     private String password;
     private String introduction;
@@ -25,9 +26,5 @@ public class User {
      */
     private Boolean male;
     private String avatar;
-    /**
-     * use Json store authority id info
-     */
-    private String authorityIds;
 
 }
