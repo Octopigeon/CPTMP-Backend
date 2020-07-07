@@ -9,6 +9,8 @@ import java.util.Date;
 
 /**
  * @author anlow
+ * @version 1.0
+ * @date 2020/7/7
  */
 @Data
 public class SchoolStudent {
@@ -20,6 +22,9 @@ public class SchoolStudent {
     private String schoolName;
     private String userId;
     private String studentId;
+    /**
+     * 学生证件照的URL，用于人脸比对从而实现人脸识别
+     */
     private String studentFace;
 
 }
