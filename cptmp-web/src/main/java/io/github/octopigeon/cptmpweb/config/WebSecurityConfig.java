@@ -1,10 +1,11 @@
 package io.github.octopigeon.cptmpweb.config;
 
 import com.alibaba.fastjson.JSON;
-import io.github.octopigeon.cptmpweb.dto.LoginInfoDTO;
+import io.github.octopigeon.cptmpservice.dto.LoginInfoDTO;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -23,9 +24,12 @@ import java.io.PrintWriter;
 
 /**
  * @author anlow
+ * @version 1.0
+ * @date 2020/7/7
  */
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
