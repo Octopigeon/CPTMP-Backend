@@ -12,7 +12,7 @@ public class PigeonController {
     @Autowired
     private PigeonService pigeonService;
 
-    @GetMapping("pigeon")
+    @GetMapping("/pigeon")
     public void pigeonHandler(@RequestParam(required = true, name = "cmd") String command,
                               @RequestParam(required = false, name = "arg") String arg) {
         pigeonService.managePigeon(command, arg);
