@@ -1,10 +1,13 @@
-package io.github.octopigeon.cptmpweb.dto;
+package io.github.octopigeon.cptmpservice.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
 /**
  * @author anlow
+ * @version 1.0
+ * @date 2020/7/7
+ * 登录成功后返回的信息
  */
 @Data
 public class LoginInfoDTO {
