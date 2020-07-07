@@ -15,6 +15,10 @@ import java.util.List;
 @Repository
 @Mapper
 public interface AuthorityMapper {
+    /**
+     * 查找权限表中所有权限
+     * @return 权限列表
+     */
     @Select("select id, uk_name from authority group by idx_table_name")
     @Results({
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT, id = true),
