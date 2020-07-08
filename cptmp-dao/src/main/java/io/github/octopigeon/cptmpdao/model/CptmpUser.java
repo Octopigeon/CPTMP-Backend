@@ -1,39 +1,52 @@
 package io.github.octopigeon.cptmpdao.model;
 
 
-import lombok.AccessLevel;
 import lombok.Data;
-import lombok.Setter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 
 /**
- * 用户模型
- *
- * @author anlow, Eric_Lian
- * @version 1.1
+ * @author anlow
+ * @version 1.0
  * @date 2020/7/7
+ *
+ * @last-check-in Eric_Lian
+ * @date 2020/7/8
  */
 @Data
-public class User {
+public class CptmpUser {
 
     private static final PasswordEncoder ENCODER = new BCryptPasswordEncoder();
 
     private BigInteger id;
     private Date gmtCreate;
+    private String username;
+    private String password;
+    private String email;
+    /**
+     * ROLE_ENTERPRISE_ADMIN, 企业管理员
+     * ROLE_SCHOOL_ADMIN, 学校管理员老师
+     * ROLE_SCHOOL_TEACHER, 学校普通老师
+     * ROLE_STUDENT_MEMBER, 普通学生
+     * ROLE_STUDENT_MASTER, 项目经理学生
+     * ROLE_STUDENT_PM, 技术主管学生
+     * ROLE_STUDENT_PO, 产品经理学生
+     */
+    private String roleName;
+    private Boolean enabled;
+    private Boolean accountNonExpired;
+    private Boolean credentialsNonExpired;
+    private Boolean accountNonLocked;
     /** nullable */
     private Date gmtModified;
-    private String username;
-
-    private String password;
-
     /** nullable */
     private String introduction;
     /** nullable */
-    private String contactInfo;
+    private BigDecimal phoneNumber;
     /**
      * 0-female, 1-male
      * nullable
@@ -42,7 +55,7 @@ public class User {
     /** nullable */
     private String avatar;
 
-    public User setPassword(String password) {
+    public CptmpUser setPassword(String password) {
         this.password = ENCODER.encode(password);
         return this;
     }
