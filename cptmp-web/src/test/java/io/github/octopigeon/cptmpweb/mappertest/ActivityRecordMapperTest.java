@@ -2,6 +2,7 @@ package io.github.octopigeon.cptmpweb.mappertest;
 
 import io.github.octopigeon.cptmpdao.mapper.ActivityRecordMapper;
 import io.github.octopigeon.cptmpdao.model.ActivityRecord;
+import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @date 2020/7/8
  */
 
-class ActivityRecordMapperTest{
+class ActivityRecordMapperTest extends BaseTest {
     @Autowired
     private ActivityRecordMapper activityRecordMapper=new ActivityRecordMapper() {
         @Override
