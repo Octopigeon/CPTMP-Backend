@@ -1,4 +1,4 @@
-package io.github.octopigeon.cptmpweb.config;
+package io.github.octopigeon.cptmpservice;
 
 /**
  * @author anlow
@@ -10,6 +10,8 @@ public class CptmpStatusCode {
     public static int OK = 0;
 
     /** 登录验证失败 */
-    public static int AUTH_FAILED = 1;
+    public static int AUTH_FAILED_WRONG_PASSWORD = 1;
+
+    public static int AUTH_FAILED_WRONG_USERNAME = 2;
 
 }
