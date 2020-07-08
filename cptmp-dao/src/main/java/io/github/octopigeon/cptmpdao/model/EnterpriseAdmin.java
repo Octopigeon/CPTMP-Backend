@@ -8,8 +8,11 @@ import java.util.Date;
 
 /**
  * @author anlow
- * @version 1.0
+ * @version 1.1
  * @date 2020/7/7
+ *
+ * @last-check-in GH Li
+ * @date 2020/7/8
  */
 @Data
 public class EnterpriseAdmin {
@@ -18,7 +21,7 @@ public class EnterpriseAdmin {
     private Date gmtCreate;
     private Date gmtModified;
     private String name;
-    private String userId;
-    private String employeeId;
+    private BigInteger userId;
+    private BigInteger employeeId;
 
 }
