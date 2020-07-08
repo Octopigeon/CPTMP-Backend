@@ -30,31 +30,6 @@ class ActivityRecordMapperTest{
         }
 
         @Override
-        public void removeActivityRecordByAll() {
-
-        }
-
-        @Override
-        public void removeActivityRecordByPeopleId(BigInteger peopleId) {
-
-        }
-
-        @Override
-        public void removeActivityRecordByTeamId(BigInteger teamId) {
-
-        }
-
-        @Override
-        public void updateActivityRecordByPeopleId(BigInteger peopleId, BigInteger teamId, Date gmtModified, BigInteger state, String event) {
-
-        }
-
-        @Override
-        public void updateActivityRecordByTeamId(BigInteger peopleId, BigInteger teamId, Date gmtModified, BigInteger state, String event) {
-
-        }
-
-        @Override
         public List<ActivityRecord> findAllActivityRecord() {
             return null;
         }
@@ -93,18 +68,18 @@ class ActivityRecordMapperTest{
         activityRecords.add(activityRecordMapper.findActivityRecordByPeopleId(BigInteger.valueOf(1)));
         activityRecords.add((activityRecordMapper.findActivityRecordByTeamId(BigInteger.valueOf(2))));
         Assertions.assertEquals(2,activityRecords.size());
-        activityRecordMapper.updateActivityRecordByPeopleId(BigInteger.valueOf(1),BigInteger.valueOf(1),new Date(),BigInteger.valueOf(1),"更新完成");
-        activityRecordMapper.removeActivityRecordByPeopleId(BigInteger.valueOf(1));
-        int n=1;
-        if(activityRecordMapper.findActivityRecordByPeopleId(BigInteger.valueOf(1))==null){
-            n=0;
-        }
-        Assertions.assertEquals(0,n);
-        activityRecordMapper.removeActivityRecordByAll();
-        int m=1;
-        if(activityRecordMapper.findActivityRecordByPeopleId(BigInteger.valueOf(1))==null){
-            m=0;
-        }
-        Assertions.assertEquals(0,m);
+//        activityRecordMapper.updateActivityRecordByPeopleId(BigInteger.valueOf(1),BigInteger.valueOf(1),new Date(),BigInteger.valueOf(1),"更新完成");
+//        activityRecordMapper.removeActivityRecordByPeopleId(BigInteger.valueOf(1));
+//        int n=1;
+//        if(activityRecordMapper.findActivityRecordByPeopleId(BigInteger.valueOf(1))==null){
+//            n=0;
+//        }
+//        Assertions.assertEquals(0,n);
+//        activityRecordMapper.removeActivityRecordByAll();
+//        int m=1;
+//        if(activityRecordMapper.findActivityRecordByPeopleId(BigInteger.valueOf(1))==null){
+//            m=0;
+//        }
+//        Assertions.assertEquals(0,m);
     }
 }
