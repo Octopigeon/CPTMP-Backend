@@ -36,20 +36,21 @@ public class CptmpUserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        /*
         logger.info("Current username: " + username);
         CptmpUser cptmpUser = cptmpUserMapper.findUserByUsername(username);
         Optional<CptmpUser> userOptional = Optional.ofNullable(cptmpUser);
         if (userOptional.isPresent()) {
             // TODO 查找权限字符串
-            /**
             return new User(username,
                     passwordEncoder.encode(cptmpUser.getPassword()),
-                    AuthorityUtils.commaSeparatedStringToAuthorityList())
-            */
-
+                    AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
         } else {
             throw new UsernameNotFoundException("cannot find username:" + username);
         }
-        return null;
+        */
+        return new User("username",
+                passwordEncoder.encode("123"),
+                AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
     }
 }
