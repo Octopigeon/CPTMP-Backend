@@ -1,6 +1,7 @@
 package io.github.octopigeon.cptmpweb.config;
 
 import com.alibaba.fastjson.JSON;
+import io.github.octopigeon.cptmpweb.utils.Util;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationDetailsSource;
@@ -41,9 +42,9 @@ public class CptmpLoginAuthenticationFilter extends AbstractAuthenticationProces
         }
 
         // 得到用户名
-        String username = obtainUsername(httpServletRequest);
+        String username = JSON.parseObject(Util.getHttpRequestBody(httpServletRequest)).getString("username");
         // 得到密码
-        String password = obtainPassword(httpServletRequest);
+        String password = JSON.parseObject(Util.getHttpRequestBody(httpServletRequest)).getString("password");
 
         // 生成认证Token
         CptmpLoginAuthenticationToken cptmpLoginAuthenticationToken = new CptmpLoginAuthenticationToken(username);
@@ -52,34 +53,6 @@ public class CptmpLoginAuthenticationFilter extends AbstractAuthenticationProces
         cptmpLoginAuthenticationToken.setDetails(authenticationDetailsSource.buildDetails(httpServletRequest));
 
         return null;
-    }
-
-    /**
-     * RequestBody为json格式，获取username和password等登录信息
-     * @param httpServletRequest request
-     * @return password
-     */
-    private String obtainPassword(HttpServletRequest httpServletRequest) throws IOException {
-        StringBuilder json = new StringBuilder();
-        String str = "";
-        while ((str = httpServletRequest.getReader().readLine()) != null) {
-            json.append(str);
-        }
-        return JSON.parseObject(json.toString()).getString("password");
-    }
-
-    /**
-     * RequestBody为json格式，获取username和password等登录信息
-     * @param httpServletRequest request
-     * @return username
-     */
-    private String obtainUsername(HttpServletRequest httpServletRequest) throws IOException {
-        StringBuilder json = new StringBuilder();
-        String str = "";
-        while ((str = httpServletRequest.getReader().readLine()) != null) {
-            json.append(str);
-        }
-        return JSON.parseObject(json.toString()).getString("username");
     }
 
 }
