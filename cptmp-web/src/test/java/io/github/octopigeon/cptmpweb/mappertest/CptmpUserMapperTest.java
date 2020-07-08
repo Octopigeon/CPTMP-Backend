@@ -14,6 +14,9 @@ import java.util.List;
  * @author anlow
  * @version 1.0
  * @date 2020/7/8
+ *
+ * @last-check-in Eric_Lian
+ * @date 2020/7/8
  */
 public class CptmpUserMapperTest extends BaseTest {
 
@@ -32,6 +35,7 @@ public class CptmpUserMapperTest extends BaseTest {
         cptmpUser1.setAccountNonExpired(true);
         cptmpUser1.setCredentialsNonExpired(true);
         cptmpUser1.setAccountNonLocked(true);
+
         CptmpUser cptmpUser2 = new CptmpUser();
         cptmpUser2.setGmtCreate(new Date());
         cptmpUser2.setUsername("test2");
@@ -42,6 +46,13 @@ public class CptmpUserMapperTest extends BaseTest {
         cptmpUser2.setAccountNonExpired(true);
         cptmpUser2.setCredentialsNonExpired(true);
         cptmpUser2.setAccountNonLocked(true);
+
+        Assertions.assertEquals(false, cptmpUser1.validatePassword("114514"));   // 验证错误密码
+        String cptmpUser1pw1 = cptmpUser1.getPassword();
+        Assertions.assertEquals(true, cptmpUser1.validatePassword("123456"));    // 验证正确密码
+        String cptmpUser1pw2 = cptmpUser1.getPassword();
+        Assertions.assertEquals(false, cptmpUser1pw1.equals(cptmpUser1pw2));                    // 验证密码自动更新
+        Assertions.assertEquals(true, cptmpUser1.validatePassword("123456"));    // 验证正确密码
 
         cptmpUserMapper.removeAllUsers();
         cptmpUserMapper.addUser(cptmpUser1);
