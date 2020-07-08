@@ -14,7 +14,7 @@ import java.math.BigInteger;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class EnterpriseAdminInfoDTO extends UserInfoDTO{
+public class EnterpriseAdminInfoDTO extends BaseUserInfoDTO{
 
     private String name;
     private BigInteger employeeId;
