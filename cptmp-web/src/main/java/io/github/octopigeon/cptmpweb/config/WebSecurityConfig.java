@@ -2,9 +2,11 @@ package io.github.octopigeon.cptmpweb.config;
 
 import com.alibaba.fastjson.JSON;
 import io.github.octopigeon.cptmpservice.dto.LoginInfoDTO;
+import io.github.octopigeon.cptmpservice.service.CptmpUserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -39,6 +41,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    @Override
+    public UserDetailsService userDetailsService() {
+        return new CptmpUserDetailsServiceImpl();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -47,44 +55,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginPage("/login")
+                //.loginPage("/login")
                 .permitAll()
                 .and()
                 .logout()
-                .permitAll()
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(new AuthenticationEntryPoint() {
-                    @Override
-                    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-                        httpServletResponse.setContentType("application/json;charset=utf-8");
-                        PrintWriter out = httpServletResponse.getWriter();
-                        LoginInfoDTO loginInfoDTO = new LoginInfoDTO();
-                        loginInfoDTO.setUsername("wxc");
-                        loginInfoDTO.setRole("admin");
-                        loginInfoDTO.setStatusCode(200);
-                        String respJson = JSON.toJSONString(loginInfoDTO);
-                        if (e instanceof InsufficientAuthenticationException) {
-                            respJson = "{ status_code: 500 }";
-                        }
-                        out.write(respJson);
-                        out.flush();
-                        out.close();
-                    }
-                });
+                .permitAll();
     }
 
-    @Bean
     @Override
-    public UserDetailsService userDetailsService() {
-        UserDetails user =
-                User.withDefaultPasswordEncoder()
-                        .username("user")
-                        .password("password")
-                        .roles("USER")
-                        .build();
-
-        return new InMemoryUserDetailsManager(user);
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
     }
 
 }
