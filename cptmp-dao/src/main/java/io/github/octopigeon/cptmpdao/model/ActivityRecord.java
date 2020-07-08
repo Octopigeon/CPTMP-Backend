@@ -1,8 +1,8 @@
 package io.github.octopigeon.cptmpdao.model;
+
 import lombok.Data;
 
 import java.math.BigInteger;
-import java.security.Timestamp;
 import java.util.Date;
 /**
  * @author 李国鹏
