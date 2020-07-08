@@ -3,6 +3,7 @@ package io.github.octopigeon.cptmpweb.config;
 import com.alibaba.fastjson.JSON;
 import io.github.octopigeon.cptmpservice.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.LoginInfoDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -26,8 +27,9 @@ import java.util.Date;
  * @last-check-in anlow
  * @date 2020/7/8
  */
+@Slf4j
 @Component
-public class CptmpAuthenticationFailureHandlerImpl implements AuthenticationFailureHandler {
+public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHandler {
 
 
     @Override
@@ -52,6 +54,7 @@ public class CptmpAuthenticationFailureHandlerImpl implements AuthenticationFail
         } else {
             loginInfoDTO.setStatusCode(CptmpStatusCode.AUTH_FAILED_UNKNOWN_ERROR);
         }
+        log.info("Login status: " + loginInfoDTO.getStatusCode());
         httpServletResponse.getWriter().write(JSON.toJSONString(loginInfoDTO));
     }
 }

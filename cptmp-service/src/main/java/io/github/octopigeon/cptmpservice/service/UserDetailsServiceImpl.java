@@ -22,7 +22,7 @@ import java.util.Optional;
  * @date 2020/7/8
  */
 @Service
-public class CptmpUserDetailsServiceImpl implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private CptmpUserMapper cptmpUserMapper;
