@@ -37,7 +37,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         logger.info("Current username: " + username);
         CptmpUser cptmpUser = cptmpUserMapper.findUserByUsername(username);
         Optional<CptmpUser> userOptional = Optional.ofNullable(cptmpUser);
+        // String decypher = passwordEncoder.encode(cptmpUser.getPassword());
         if (userOptional.isPresent()) {
+            logger.info("Current password: " + cptmpUser.getPassword());
             return new User(username,
                     passwordEncoder.encode(cptmpUser.getPassword()),
                     cptmpUser.getEnabled(),
