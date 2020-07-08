@@ -42,7 +42,7 @@ public interface SchoolStudentMapper {
      * @param studentFace :url,学生人脸信息链接
      */
     @Update("update school_student set gmt_modified = #{gmtModified}, idx_name = #{name}, uk_student_id = #{studentId}, idx_school_name = #{schoolName}, uk_student_face = #{studentFace} where uk_user_id = #{userId}")
-    void updateSchoolStudetnByUserId(BigInteger userId, Date gmtModified, String name, BigInteger studentId, String schoolName, String studentFace);
+    void updateSchoolStudentByUserId(BigInteger userId, Date gmtModified, String name, BigInteger studentId, String schoolName, String studentFace);
 
     /**
      * 查找所有的学生的账号、姓名、学号、所属学校
