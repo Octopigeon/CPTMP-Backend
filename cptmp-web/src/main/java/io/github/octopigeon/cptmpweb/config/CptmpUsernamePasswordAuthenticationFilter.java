@@ -2,7 +2,6 @@ package io.github.octopigeon.cptmpweb.config;
 
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.octopigeon.cptmpweb.utils.Util;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
