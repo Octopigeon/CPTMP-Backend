@@ -2,6 +2,8 @@ package io.github.octopigeon.cptmpdao.model;
 
 
 import lombok.Data;
+import lombok.Setter;
+import lombok.AccessLevel;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -25,7 +27,10 @@ public class CptmpUser {
     private BigInteger id;
     private Date gmtCreate;
     private String username;
+
+    @Setter(AccessLevel.PRIVATE)
     private String password;
+
     private String email;
     /**
      * ROLE_ENTERPRISE_ADMIN, 企业管理员
@@ -55,7 +60,7 @@ public class CptmpUser {
     /** nullable */
     private String avatar;
 
-    public CptmpUser setPassword(String password) {
+    public CptmpUser updatePassword(String password) {
         this.password = ENCODER.encode(password);
         return this;
     }
@@ -63,7 +68,7 @@ public class CptmpUser {
     public boolean validatePassword(String submittedPassword) {
         boolean ret = ENCODER.matches(submittedPassword, this.password);
         if (ret) {
-            this.setPassword(submittedPassword);
+            this.updatePassword(submittedPassword);
         }
         return ret;
     }
