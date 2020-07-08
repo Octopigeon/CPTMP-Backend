@@ -1,10 +1,12 @@
 package io.github.octopigeon.cptmpdao.mapper;
 
 import io.github.octopigeon.cptmpdao.model.ActivityRecord;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -87,11 +89,22 @@ class ActivityRecordMapperTest{
 
         activityRecordMapper.addActivityRecord(activityRecord);
         activityRecordMapper.addActivityRecord(activityRecord2);
-        activityRecordMapper.findAllActivityRecord();
-        activityRecordMapper.findActivityRecordByPeopleId(BigInteger.valueOf(1));
-        activityRecordMapper.findActivityRecordByTeamId(BigInteger.valueOf(2));
+        List<ActivityRecord> activityRecords=new ArrayList<>();
+        activityRecords.add(activityRecordMapper.findActivityRecordByPeopleId(BigInteger.valueOf(1)));
+        activityRecords.add((activityRecordMapper.findActivityRecordByTeamId(BigInteger.valueOf(2))));
+        Assertions.assertEquals(2,activityRecords.size());
         activityRecordMapper.updateActivityRecordByPeopleId(BigInteger.valueOf(1),BigInteger.valueOf(1),new Date(),BigInteger.valueOf(1),"更新完成");
         activityRecordMapper.removeActivityRecordByPeopleId(BigInteger.valueOf(1));
+        int n=1;
+        if(activityRecordMapper.findActivityRecordByPeopleId(BigInteger.valueOf(1))==null){
+            n=0;
+        }
+        Assertions.assertEquals(0,n);
         activityRecordMapper.removeActivityRecordByAll();
+        int m=1;
+        if(activityRecordMapper.findActivityRecordByPeopleId(BigInteger.valueOf(1))==null){
+            m=0;
+        }
+        Assertions.assertEquals(0,m);
     }
 }
