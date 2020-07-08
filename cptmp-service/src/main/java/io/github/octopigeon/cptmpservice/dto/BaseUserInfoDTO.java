@@ -3,6 +3,7 @@ package io.github.octopigeon.cptmpservice.dto;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * 带有必要信息的UserDTO
@@ -13,7 +14,7 @@ import java.math.BigDecimal;
  * @date 2020/7/8
  */
 @Data
-public class UserInfoDTO{
+public abstract class BaseUserInfoDTO{
     /**
      * 必须进行导入的属性
      */
@@ -24,9 +25,12 @@ public class UserInfoDTO{
      */
     private String userName;
     private String password;
+
+    /** 默认为Null */
     private BigDecimal phoneNum;
-    /**
-     * 0-female, 1-male
-     */
+    /** 0-female, 1-male 默认为Null */
     private Boolean gender;
+
+    /** 返回携带用户账号 */
+    private BigInteger userId;
 }

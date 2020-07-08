@@ -15,7 +15,7 @@ import java.math.BigInteger;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class StudentInfoDTO extends UserInfoDTO{
+public class StudentInfoDTO extends BaseUserInfoDTO{
 
     private String name;
     private String schoolName;
