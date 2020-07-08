@@ -27,6 +27,11 @@ public interface ActivityRecordMapper {
     void addActivityRecord(ActivityRecord activityRecord);
 
     /**
+     *  删除活动信息
+     */
+    @Delete("delete * from activity_record")
+    void removeActivityRecordByAll();
+    /**
      * 根据活动人id删除对应的活动信息
      * @param peopleId：活动人id
      */
