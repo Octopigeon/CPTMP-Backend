@@ -11,12 +11,22 @@ import java.util.List;
  * @author anlow
  * @version 1.0
  * @date 2020/7/7
+ *
+ * @last-check-in anlow
+ * @date 2020/7/8
  */
 @Repository
 @Mapper
 public interface CptmpUserMapper {
 
-    @Insert("insert into cptmp_user (gmt_create, idx_password, uk_username, introduction, contact_info, gender, avatar) values (#{gmtCreate}, #{password}, #{username}, #{introduction}, #{contactInfo}, #{male}, #{avatar})")
+    String COLUMNS = "gmt_create, gmt_modified, introduction, email, phone_number, " +
+            "gender, avatar, uk_username, idx_password, idx_role_name, enabled, " +
+            "account_non_expired, credentials_non_expired, account_non_locked";
+    String PROPS = "#{gmtCreate}, #{gmtModified}, #{introduction}, #{email}, #{phoneNumber}, " +
+            "#{male}, #{avatar}, #{username}, #{password}, #{roleName}, #{enabled}, " +
+            "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}";
+
+    @Insert("insert into cptmp_user (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addUser(CptmpUser cptmpUser);
 
@@ -27,21 +37,27 @@ public interface CptmpUserMapper {
      * 通过用户名获取用户，可以用来进行登录验证
      * @param username 用户名，唯一
      */
-    @Select("select id, gmt_create, gmt_modified, introduction, contact_info, gender, avatar, uk_username, idx_password from cptmp_user where uk_username = #{username}")
+    @Select("select id, " + COLUMNS + " from cptmp_user where uk_username = #{username}")
     @Results(id = "user", value = {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
             @Result(column = "introduction", property = "introduction", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "contact_info", property = "contactInfo", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "email", property = "email", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "phone_number", property = "phoneNumber", jdbcType = JdbcType.DECIMAL),
             @Result(column = "gender", property = "male", jdbcType = JdbcType.TINYINT),
             @Result(column = "avatar", property = "avatar", jdbcType = JdbcType.VARCHAR),
             @Result(column = "uk_username", property = "username", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "idx_password", property = "password", jdbcType = JdbcType.VARCHAR)
+            @Result(column = "idx_password", property = "password", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "idx_role_name", property = "roleName", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "enabled", property = "enabled", jdbcType = JdbcType.TINYINT),
+            @Result(column = "account_non_expired", property = "accountNonExpired", jdbcType = JdbcType.TINYINT),
+            @Result(column = "credentials_non_expired", property = "credentialsNonExpired", jdbcType = JdbcType.TINYINT),
+            @Result(column = "account_non_locked", property = "accountNonLocked", jdbcType = JdbcType.TINYINT),
     })
     CptmpUser findUserByUsername(String username);
 
-    @Select("select id, gmt_create, gmt_modified, introduction, contact_info, gender, avatar, uk_username, idx_password from cptmp_user")
+    @Select("select id, " + COLUMNS + " from cptmp_user")
     @ResultMap(value = "user")
     List<CptmpUser> findAllUsers();
 
