@@ -2,6 +2,8 @@ package io.github.octopigeon.cptmpdao.model;
 
 
 import lombok.Data;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -12,11 +14,13 @@ import java.util.Date;
  * @version 1.0
  * @date 2020/7/7
  *
- * @last-check-in anlow
+ * @last-check-in Eric_Lian
  * @date 2020/7/8
  */
 @Data
 public class CptmpUser {
+
+    private static final PasswordEncoder ENCODER = new BCryptPasswordEncoder();
 
     private BigInteger id;
     private Date gmtCreate;
@@ -50,5 +54,18 @@ public class CptmpUser {
     private Boolean male;
     /** nullable */
     private String avatar;
+
+    public CptmpUser setPassword(String password) {
+        this.password = ENCODER.encode(password);
+        return this;
+    }
+
+    public boolean validatePassword(String submittedPassword) {
+        boolean ret = ENCODER.matches(submittedPassword, this.password);
+        if (ret) {
+            this.setPassword(submittedPassword);
+        }
+        return ret;
+    }
 
 }
