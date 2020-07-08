@@ -1,4 +1,4 @@
-package io.github.octopigeon.cptmpservice;
+package io.github.octopigeon.cptmpservice.service;
 
 import io.github.octopigeon.cptmpdao.mapper.PigeonMapper;
 import io.github.octopigeon.cptmpdao.model.Pigeon;
