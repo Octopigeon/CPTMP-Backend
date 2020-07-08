@@ -31,7 +31,7 @@ public interface EnterpriseAdminMapper {
      * @param userId：用户id
      */
     @Delete("delete from enterprise_admin where uk_user_id = #{userId}")
-    void removeEnterprseAdminByUserId(BigInteger userId);
+    void removeEnterpriseAdminByUserId(BigInteger userId);
 
     /**
      * 根据用户id更新数据
@@ -41,7 +41,7 @@ public interface EnterpriseAdminMapper {
      * @param employeeId：员工工号
      */
     @Update("update enterprise_admin set gmt_modified = #{gmtModified}, idx_name = #{name}, uk_employee_id = #{employeeId} where uk_user_id = #{userId}")
-    void updateEnterprseAdminByUserId(BigInteger userId, Date gmtModified, String name, BigInteger employeeId);
+    void updateEnterpriseAdminByUserId(BigInteger userId, Date gmtModified, String name, BigInteger employeeId);
 
     /**
      * 查找所有的企业管理员的账号、姓名、工号
