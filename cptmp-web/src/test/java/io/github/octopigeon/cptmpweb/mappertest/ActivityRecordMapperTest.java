@@ -1,5 +1,6 @@
-package io.github.octopigeon.cptmpdao.mapper;
+package io.github.octopigeon.cptmpweb.mappertest;
 
+import io.github.octopigeon.cptmpdao.mapper.ActivityRecordMapper;
 import io.github.octopigeon.cptmpdao.model.ActivityRecord;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
