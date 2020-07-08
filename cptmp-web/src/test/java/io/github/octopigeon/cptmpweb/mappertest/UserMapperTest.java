@@ -1,28 +1,21 @@
-package io.github.octopigeon.cptmpweb;
+package io.github.octopigeon.cptmpweb.mappertest;
 
 import io.github.octopigeon.cptmpdao.mapper.UserMapper;
 import io.github.octopigeon.cptmpdao.model.User;
+import io.github.octopigeon.cptmpweb.BaseTest;
+import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.junit.runner.Runner;
-import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.annotation.Rollback;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
 
-
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@Transactional
-public class CptmpWebApplicationTests {
+/**
+ * @author anlow
+ * @version 1.0
+ * @date 2020/7/8
+ */
+public class UserMapperTest extends BaseTest {
 
     @Autowired
     private UserMapper userMapper;
