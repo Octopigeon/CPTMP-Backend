@@ -1,10 +1,7 @@
 package io.github.octopigeon.cptmpservice.service;
 
-import com.alibaba.fastjson.JSON;
 import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
-import io.github.octopigeon.cptmpservice.CptmpStatusCode;
-import io.github.octopigeon.cptmpservice.dto.AuthInfoDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,21 +33,19 @@ public class CptmpUserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        /*
         logger.info("Current username: " + username);
         CptmpUser cptmpUser = cptmpUserMapper.findUserByUsername(username);
         Optional<CptmpUser> userOptional = Optional.ofNullable(cptmpUser);
         if (userOptional.isPresent()) {
-            // TODO 查找权限字符串
             return new User(username,
                     passwordEncoder.encode(cptmpUser.getPassword()),
-                    AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
+                    cptmpUser.getEnabled(),
+                    cptmpUser.getAccountNonExpired(),
+                    cptmpUser.getCredentialsNonExpired(),
+                    cptmpUser.getAccountNonLocked(),
+                    AuthorityUtils.commaSeparatedStringToAuthorityList(cptmpUser.getRoleName()));
         } else {
             throw new UsernameNotFoundException("cannot find username:" + username);
         }
-        */
-        return new User("username",
-                passwordEncoder.encode("123"),
-                AuthorityUtils.commaSeparatedStringToAuthorityList("admin"));
     }
 }
