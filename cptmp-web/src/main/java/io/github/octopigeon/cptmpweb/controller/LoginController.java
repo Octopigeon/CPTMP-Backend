@@ -1,8 +1,9 @@
 package io.github.octopigeon.cptmpweb.controller;
 
-import org.springframework.web.bind.annotation.PostMapping;
+import io.github.octopigeon.cptmpservice.CptmpStatusCode;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -13,16 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2020/7/8
  */
 @RestController
+@ResponseBody
 public class LoginController {
 
-    /**
-     * 处理登录请求，返回体由登陆成功/失败处理器提交
-     * @param json 前端提交的用户填写的登录信息
-     */
-    @PostMapping("/login")
-    public void doPostLogin(@RequestParam(name = "username") String username,
-                            @RequestParam(name = "password") String password) {
+    @GetMapping("/doLogin")
+    public String doGetLogin() {
+        return "{ status_code: " + CptmpStatusCode.ACCESS_DENY_NOT_LOGIN + " }";
+    }
 
+    @GetMapping("/test")
+    public String doGetTest() {
+        return "{ status_code: " + CptmpStatusCode.OK + " }";
     }
 
 }

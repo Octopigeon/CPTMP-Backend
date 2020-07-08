@@ -25,5 +25,9 @@ public class CptmpStatusCode {
     public static int AUTH_FAILED_ACCOUNT_EXPIRED = 6;
     /** 未知错误 */
     public static int AUTH_FAILED_UNKNOWN_ERROR = 7;
+    /** 尚未登录 */
+    public static int ACCESS_DENY_NOT_LOGIN = 8;
+
+
 
 }
