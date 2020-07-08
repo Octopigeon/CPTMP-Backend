@@ -23,6 +23,15 @@ public class CptmpUser {
     private String username;
     private String password;
     private String email;
+    /**
+     * ROLE_ENTERPRISE_ADMIN, 企业管理员
+     * ROLE_SCHOOL_ADMIN, 学校管理员老师
+     * ROLE_SCHOOL_TEACHER, 学校普通老师
+     * ROLE_STUDENT_MEMBER, 普通学生
+     * ROLE_STUDENT_MASTER, 项目经理学生
+     * ROLE_STUDENT_PM, 技术主管学生
+     * ROLE_STUDENT_PO, 产品经理学生
+     */
     private String roleName;
     private Boolean enabled;
     private Boolean accountNonExpired;
