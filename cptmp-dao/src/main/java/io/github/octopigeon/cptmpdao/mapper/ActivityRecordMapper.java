@@ -26,47 +26,47 @@ public interface ActivityRecordMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addActivityRecord(ActivityRecord activityRecord);
 
-    /**
-     *  删除活动信息
-     */
-    @Delete("delete * from activity_record")
-    void removeActivityRecordByAll();
-    /**
-     * 根据活动人id删除对应的活动信息
-     * @param peopleId：活动人id
-     */
-    @Delete("delete from activity_record where uk_people_id = #{peopleId}")
-    void removeActivityRecordByPeopleId(BigInteger peopleId);
-
-    /**
-     * 根据团队伍id删除对应的活动信息
-     * @param teamId: 团队id
-     */
-    @Delete("delete from activity_record where uk_team_id = #{teamId}")
-    void removeActivityRecordByTeamId(BigInteger teamId);
-
-
-    /**
-     * 根据活动人id修改活动记录
-     * @param peopleId：活动人id
-     * @param teamId：团队id
-     * @param gmtModified：修改时间
-     * @param state：活动状态
-     * @param event：活动内容事件
-     */
-    @Update("update activity_record set gmt_modified = #{gmtModified}, state_record = #{state}, event_record = #{event}, uk_people_id = #{peopleId}, uk_team_id = #{teamId} where uk_people_id = #{peopleId}")
-    void updateActivityRecordByPeopleId(BigInteger peopleId, BigInteger teamId, Date gmtModified, BigInteger state, String event);
-
-    /**
-     *根据团队id修改活动记录
-     * @param peopleId：活动人id
-     * @param teamId：团队id
-     * @param gmtModified：修改时间
-     * @param state：活动状态
-     * @param event：活动内容事件
-     */
-    @Update("update activity_record set gmt_modified = #{gmtModified}, state_record = #{state}, event_record = #{event}, uk_people_id = #{peopleId}, uk_team_id = #{teamId} where uk_team_id = #{teamId}")
-    void updateActivityRecordByTeamId(BigInteger peopleId, BigInteger teamId, Date gmtModified, BigInteger state, String event);
+//    /**
+//     *  删除活动信息
+//     */
+//    @Delete("delete * from activity_record")
+//    void removeActivityRecordByAll();
+//    /**
+//     * 根据活动人id删除对应的活动信息
+//     * @param peopleId：活动人id
+//     */
+//    @Delete("delete from activity_record where uk_people_id = #{peopleId}")
+//    void removeActivityRecordByPeopleId(BigInteger peopleId);
+//
+//    /**
+//     * 根据团队伍id删除对应的活动信息
+//     * @param teamId: 团队id
+//     */
+//    @Delete("delete from activity_record where uk_team_id = #{teamId}")
+//    void removeActivityRecordByTeamId(BigInteger teamId);
+//
+//
+//    /**
+//     * 根据活动人id修改活动记录
+//     * @param peopleId：活动人id
+//     * @param teamId：团队id
+//     * @param gmtModified：修改时间
+//     * @param state：活动状态
+//     * @param event：活动内容事件
+//     */
+//    @Update("update activity_record set gmt_modified = #{gmtModified}, state_record = #{state}, event_record = #{event}, uk_people_id = #{peopleId}, uk_team_id = #{teamId} where uk_people_id = #{peopleId}")
+//    void updateActivityRecordByPeopleId(BigInteger peopleId, BigInteger teamId, Date gmtModified, BigInteger state, String event);
+//
+//    /**
+//     *根据团队id修改活动记录
+//     * @param peopleId：活动人id
+//     * @param teamId：团队id
+//     * @param gmtModified：修改时间
+//     * @param state：活动状态
+//     * @param event：活动内容事件
+//     */
+//    @Update("update activity_record set gmt_modified = #{gmtModified}, state_record = #{state}, event_record = #{event}, uk_people_id = #{peopleId}, uk_team_id = #{teamId} where uk_team_id = #{teamId}")
+//    void updateActivityRecordByTeamId(BigInteger peopleId, BigInteger teamId, Date gmtModified, BigInteger state, String event);
 
     /**
      * 查找所有活动记录
