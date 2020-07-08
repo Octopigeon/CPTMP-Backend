@@ -26,10 +26,22 @@ public class CptmpUserMapperTest extends BaseTest {
         cptmpUser1.setGmtCreate(new Date());
         cptmpUser1.setUsername("test1");
         cptmpUser1.setPassword("123456");
+        cptmpUser1.setEmail("111@11.com");
+        cptmpUser1.setRoleName("admin");
+        cptmpUser1.setEnabled(true);
+        cptmpUser1.setAccountNonExpired(true);
+        cptmpUser1.setCredentialsNonExpired(true);
+        cptmpUser1.setAccountNonLocked(true);
         CptmpUser cptmpUser2 = new CptmpUser();
         cptmpUser2.setGmtCreate(new Date());
         cptmpUser2.setUsername("test2");
         cptmpUser2.setPassword("123456");
+        cptmpUser2.setEmail("111@11.com");
+        cptmpUser2.setRoleName("admin");
+        cptmpUser2.setEnabled(true);
+        cptmpUser2.setAccountNonExpired(true);
+        cptmpUser2.setCredentialsNonExpired(true);
+        cptmpUser2.setAccountNonLocked(true);
 
         cptmpUserMapper.removeAllUsers();
         cptmpUserMapper.addUser(cptmpUser1);
