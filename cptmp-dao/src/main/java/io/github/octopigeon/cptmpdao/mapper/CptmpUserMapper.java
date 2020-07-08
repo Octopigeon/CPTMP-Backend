@@ -1,6 +1,6 @@
 package io.github.octopigeon.cptmpdao.mapper;
 
-import io.github.octopigeon.cptmpdao.model.User;
+import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Repository;
@@ -14,11 +14,11 @@ import java.util.List;
  */
 @Repository
 @Mapper
-public interface UserMapper {
+public interface CptmpUserMapper {
 
     @Insert("insert into cptmp_user (gmt_create, idx_password, uk_username, introduction, contact_info, gender, avatar) values (#{gmtCreate}, #{password}, #{username}, #{introduction}, #{contactInfo}, #{male}, #{avatar})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    void addUser(User user);
+    void addUser(CptmpUser cptmpUser);
 
     @Delete("delete from cptmp_user")
     void removeAllUsers();
@@ -39,10 +39,10 @@ public interface UserMapper {
             @Result(column = "uk_username", property = "username", jdbcType = JdbcType.VARCHAR),
             @Result(column = "idx_password", property = "password", jdbcType = JdbcType.VARCHAR)
     })
-    User findUserByUsername(String username);
+    CptmpUser findUserByUsername(String username);
 
     @Select("select id, gmt_create, gmt_modified, introduction, contact_info, gender, avatar, uk_username, idx_password from cptmp_user")
     @ResultMap(value = "user")
-    List<User> findAllUsers();
+    List<CptmpUser> findAllUsers();
 
 }

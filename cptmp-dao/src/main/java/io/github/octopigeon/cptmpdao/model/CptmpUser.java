@@ -12,7 +12,7 @@ import java.util.Date;
  * @date 2020/7/7
  */
 @Data
-public class User {
+public class CptmpUser {
 
     private BigInteger id;
     private Date gmtCreate;
