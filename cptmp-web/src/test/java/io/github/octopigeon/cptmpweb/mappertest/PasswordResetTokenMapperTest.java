@@ -34,15 +34,17 @@ public class PasswordResetTokenMapperTest extends BaseTest {
         PasswordResetToken passwordResetToken = new PasswordResetToken();
         passwordResetToken.setGmtCreate(new Date());
         // 设置UUID的Token
-        passwordResetToken.setToken(UUID.randomUUID().toString());
-        passwordResetToken.setEmail("123@qq.com");
+        String token = UUID.randomUUID().toString();
+        String userEmail = "123@qq.com";
+        passwordResetToken.setToken(token);
+        passwordResetToken.setEmail(userEmail);
 
         // 创建用户
         CptmpUser cptmpUser = new CptmpUser();
         cptmpUser.setGmtCreate(new Date());
         cptmpUser.setUsername("test1");
         cptmpUser.updatePassword("123456");
-        cptmpUser.setEmail("123@qq.com");
+        cptmpUser.setEmail(userEmail);
         cptmpUser.setRoleName("ROLE_SCHOOL_TEACHER");
         cptmpUser.setEnabled(true);
         cptmpUser.setAccountNonExpired(true);
@@ -52,7 +54,9 @@ public class PasswordResetTokenMapperTest extends BaseTest {
         cptmpUserMapper.addUser(cptmpUser);
 
         passwordResetTokenMapper.removeAllPasswordResetTokens();
+        Assertions.assertEquals(0, passwordResetTokenMapper.findAllPasswordResetTokens().size());
         passwordResetTokenMapper.addPasswordResetToken(passwordResetToken);
+        passwordResetTokenMapper.updateTokenByEmail(token, userEmail);
         List<PasswordResetToken> passwordResetTokens = passwordResetTokenMapper.findAllPasswordResetTokens();
         Assertions.assertEquals(1, passwordResetTokens.size());
         Assertions.assertNotNull(passwordResetTokens.get(0).getId());
