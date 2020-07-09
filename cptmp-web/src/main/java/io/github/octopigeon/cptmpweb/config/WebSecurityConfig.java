@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginProcessingUrl("/login")
-                .permitAll()
+                .permitAll()  // 没有permitAll()会导致重定向死循环
                 .loginPage("/guard")
                 .permitAll()
                 .and()
