@@ -25,6 +25,7 @@ public class DailyRecord {
     private String title;
     private String content;
     private BigInteger userId;
+    private BigInteger teamId;
     private String documentPath;
 
     /**
