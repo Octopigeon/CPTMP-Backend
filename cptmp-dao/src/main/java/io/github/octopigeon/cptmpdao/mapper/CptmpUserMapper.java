@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -19,14 +20,14 @@ import java.util.List;
 @Mapper
 public interface CptmpUserMapper {
 
-    String COLUMNS = "gmt_create, gmt_modified, introduction, uk_email, phone_number, " +
+    String COLUMNS = "gmt_create, gmt_modified, introduction, email, phone_number, " +
             "gender, avatar, uk_username, idx_password, idx_role_name, enabled, " +
-            "account_non_expired, credentials_non_expired, account_non_locked, invitation_code, nickname";
+            "account_non_expired, credentials_non_expired, account_non_locked, invitation_code";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{introduction}, #{email}, #{phoneNumber}, " +
             "#{male}, #{avatar}, #{username}, #{password}, #{roleName}, #{enabled}, " +
-            "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}, #{invitationCode}, #{nickname}";
+            "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}, #{invitationCode}";
     String UPDATE_HEADER = "update cptmp_user set ";
-    String UPDATE_TAIL_USERNAME = " where uk_username = #{username}";
+    String UPDATE_TAIL_USERNAME = " where (uk_username = #{username})";
 
     @Insert("insert into cptmp_user (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -45,18 +46,18 @@ public interface CptmpUserMapper {
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
             @Result(column = "introduction", property = "introduction", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "uk_email", property = "email", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "email", property = "email", jdbcType = JdbcType.VARCHAR),
             @Result(column = "phone_number", property = "phoneNumber", jdbcType = JdbcType.DECIMAL),
             @Result(column = "gender", property = "male", jdbcType = JdbcType.TINYINT),
             @Result(column = "avatar", property = "avatar", jdbcType = JdbcType.VARCHAR),
             @Result(column = "uk_username", property = "username", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "nickname", property = "nickname", jdbcType = JdbcType.VARCHAR),
             @Result(column = "idx_password", property = "password", jdbcType = JdbcType.VARCHAR),
             @Result(column = "idx_role_name", property = "roleName", jdbcType = JdbcType.VARCHAR),
             @Result(column = "enabled", property = "enabled", jdbcType = JdbcType.TINYINT),
             @Result(column = "account_non_expired", property = "accountNonExpired", jdbcType = JdbcType.TINYINT),
             @Result(column = "credentials_non_expired", property = "credentialsNonExpired", jdbcType = JdbcType.TINYINT),
             @Result(column = "account_non_locked", property = "accountNonLocked", jdbcType = JdbcType.TINYINT),
+            @Result(column = "invitation_code", property = "invitationCode", jdbcType = JdbcType.VARCHAR)
     })
     CptmpUser findUserByUsername(String username);
 
@@ -79,5 +80,8 @@ public interface CptmpUserMapper {
 
     @Update(UPDATE_HEADER + "account_non_locked = #{accountNonLocked}" + UPDATE_TAIL_USERNAME)
     void updateAccountNonLockedByUsername(String username, Boolean accountNonLocked);
+
+    @Update(UPDATE_HEADER + "invitation_code = #{invitationCode}" + UPDATE_TAIL_USERNAME)
+    void updateInvitationCodeByUsername(String username, String invitationCode);
 
 }
