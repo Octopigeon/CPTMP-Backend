@@ -2,6 +2,7 @@ package io.github.octopigeon.cptmpweb.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.octopigeon.cptmpweb.bean.AuthenticationBean;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,10 +22,13 @@ import java.util.Map;
  * @last-check-in anlow
  * @date 2020/7/9
  */
+@Slf4j
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        if (request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
+        logger.info("Attempt authenticate...");
+        String t = request.getContentType();
+        if (request.getContentType().contains(MediaType.APPLICATION_JSON_VALUE)) {
             ObjectMapper mapper = new ObjectMapper();
             UsernamePasswordAuthenticationToken authRequest = null;
             try (InputStream is = request.getInputStream()) {
