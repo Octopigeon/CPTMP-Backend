@@ -133,7 +133,11 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         if(userInfo.getUserName() == null)
         {
-            userInfo.setUserName(productUserName());
+            userInfo.setUserName(productUserName(userInfo));
+        }
+        if(userInfo.getNickname() == null)
+        {
+            userInfo.setNickname(productNickname());
         }
         if(!validateEmailFormat(userInfo.getEmail()))
         {
@@ -157,11 +161,37 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     /**
      * 产生20位字母命名
-     * @return 随机用户名
+     * @return 随机昵称
      */
-    private String productUserName()
+    private String productNickname()
     {
         return RandomStringUtils.randomAlphabetic(20);
+    }
+
+    private String productUserName(BaseUserInfoDTO userInfo)
+    {
+        String roleName = userInfo.getRoleName();
+        RoleEnum role = RoleEnum.valueOf(RoleEnum.class, roleName);
+        String userName = "";
+        // 学生
+        if(role.compareTo(RoleEnum.ROLE_STUDENT_MASTER) >= 0)
+        {
+            StudentInfoDTO studentInfo = (StudentInfoDTO)userInfo;
+            userName = studentInfo.getSchoolName() + studentInfo.getStudentId();
+        }
+        // 老师
+        else if(role.compareTo(RoleEnum.ROLE_SCHOOL_ADMIN) >= 0)
+        {
+            TeacherInfoDTO teacherInfo = (TeacherInfoDTO)userInfo;
+            userName = teacherInfo.getSchoolName() + teacherInfo.getEmployeeId();
+        }
+        // 企业管理员
+        else if(role.compareTo(RoleEnum.ROLE_ENTERPRISE_ADMIN) >= 0)
+        {
+            EnterpriseAdminInfoDTO adminInfo = (EnterpriseAdminInfoDTO)userInfo;
+            userName = adminInfo.getEmployeeId();
+        }
+        return userName;
     }
 
     /**
@@ -207,6 +237,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         user.setPhoneNumber(userInfo.getPhoneNum());
         user.setMale(userInfo.getGender());
         user.setUsername(userInfo.getUserName());
+        user.setNickname(userInfo.getNickname());
         user.setGmtCreate(new Date());
         user.setEnabled(true);
         user.setAccountNonExpired(true);
@@ -233,20 +264,21 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void addRole(BaseUserInfoDTO userInfo)
     {
         String roleName = userInfo.getRoleName();
+        RoleEnum role = RoleEnum.valueOf(RoleEnum.class, roleName);
         // 学生
-        if(RoleEnum.ROLE_STUDENT_MEMBER.name().equals(roleName))
+        if(role.compareTo(RoleEnum.ROLE_STUDENT_MASTER) >= 0)
         {
             addStudentRole(userInfo);
         }
-        // 企业管理员
-        else if(RoleEnum.ROLE_ENTERPRISE_ADMIN.name().equals(roleName))
-        {
-            addEnterpriseAdminRole(userInfo);
-        }
         // 老师
-        else if(RoleEnum.ROLE_SCHOOL_TEACHER.name().equals(roleName))
+        else if(role.compareTo(RoleEnum.ROLE_SCHOOL_ADMIN) >= 0)
         {
             addTeacherRole(userInfo);
+        }
+        // 企业管理员
+        else if(role.compareTo(RoleEnum.ROLE_ENTERPRISE_ADMIN) >= 0)
+        {
+            addEnterpriseAdminRole(userInfo);
         }
     }
 
