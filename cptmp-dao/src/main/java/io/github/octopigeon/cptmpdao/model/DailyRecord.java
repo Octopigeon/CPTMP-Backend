@@ -4,29 +4,36 @@ import lombok.Data;
 
 import java.math.BigInteger;
 import java.util.Date;
+
 /**
  * @author 李国鹏
  * @version 1.0
  * @date 2020/7/8
  *
- * @last-check-in 李国鹏
+ * last-check-in 李国鹏
  * @date 2020/7/8
  */
 @Data
-//活动记录
-public class ActivityRecord {
+
+/**
+ * 日志
+ */
+public class DailyRecord {
     private BigInteger id;
     private Date gmtCreate;
     private Date gmtModified;
-    /**
-     * 0表示待完成
-     * 1表示已完成
-     * 其余表示进行中
-     *
-     */
-    private int state;
-    private String event;
+    private String title;
+    private String content;
     private BigInteger userId;
     private BigInteger teamId;
+    private String documentPath;
 
+    /**
+     * 0代表是纯文本
+     * 1代表是XX
+     * 2XXX
+     *
+     * 待定
+     */
+    private int recordType;
 }
