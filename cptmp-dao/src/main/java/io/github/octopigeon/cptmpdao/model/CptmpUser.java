@@ -47,7 +47,6 @@ public class CptmpUser {
     private Boolean accountNonExpired;
     private Boolean credentialsNonExpired;
     private Boolean accountNonLocked;
-    private String invitationCode;
     /** nullable */
     private Date gmtModified;
     /** nullable */
