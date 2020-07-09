@@ -25,7 +25,7 @@ public abstract class BaseUserInfoDTO{
      */
     private String userName;
     private String password;
-
+    private String nickname;
     /** 默认为Null */
     private BigDecimal phoneNum;
     /** 0-female, 1-male 默认为Null */
