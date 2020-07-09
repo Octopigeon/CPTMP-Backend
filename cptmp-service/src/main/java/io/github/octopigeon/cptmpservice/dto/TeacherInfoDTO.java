@@ -19,5 +19,5 @@ public class TeacherInfoDTO extends BaseUserInfoDTO{
 
     private String name;
     private String schoolName;
-    private BigInteger employeeId;
+    private String employeeId;
 }
