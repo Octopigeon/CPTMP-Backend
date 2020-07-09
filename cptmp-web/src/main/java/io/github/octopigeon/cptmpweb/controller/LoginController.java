@@ -1,6 +1,7 @@
 package io.github.octopigeon.cptmpweb.controller;
 
 import io.github.octopigeon.cptmpservice.CptmpStatusCode;
+import io.github.octopigeon.cptmpweb.bean.RespBean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,14 +18,13 @@ import org.springframework.web.bind.annotation.RestController;
 @ResponseBody
 public class LoginController {
 
-    @GetMapping("/doLogin")
-    public String doGetLogin() {
-        return "{ status_code: " + CptmpStatusCode.ACCESS_DENY_NOT_LOGIN + " }";
+    @GetMapping("/login")
+    public RespBean login() {
+        return RespBean.error("尚未登录，请登录");
     }
-
-    @GetMapping("/test")
-    public String doGetTest() {
-        return "{ status_code: " + CptmpStatusCode.OK + " }";
+    @GetMapping("/hello")
+    public String hello() {
+        return "hello";
     }
 
 }

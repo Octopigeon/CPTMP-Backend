@@ -18,6 +18,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Date;
 
 /**
@@ -55,6 +56,9 @@ public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHa
             loginInfoDTO.setStatusCode(CptmpStatusCode.AUTH_FAILED_UNKNOWN_ERROR);
         }
         log.info("Login status: " + loginInfoDTO.getStatusCode());
-        httpServletResponse.getWriter().write(JSON.toJSONString(loginInfoDTO));
+        PrintWriter out = httpServletResponse.getWriter();
+        out.write(JSON.toJSONString(loginInfoDTO));
+        out.flush();
+        out.close();
     }
 }
