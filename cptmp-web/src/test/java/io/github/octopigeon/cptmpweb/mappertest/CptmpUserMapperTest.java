@@ -28,9 +28,9 @@ public class CptmpUserMapperTest extends BaseTest {
         CptmpUser cptmpUser1 = new CptmpUser();
         cptmpUser1.setGmtCreate(new Date());
         cptmpUser1.setUsername("test1");
-        cptmpUser1.setPassword("123456");
+        cptmpUser1.updatePassword("123456");
         cptmpUser1.setEmail("111@11.com");
-        cptmpUser1.setRoleName("admin");
+        cptmpUser1.setRoleName("ROLE_SCHOOL_TEACHER");
         cptmpUser1.setEnabled(true);
         cptmpUser1.setAccountNonExpired(true);
         cptmpUser1.setCredentialsNonExpired(true);
@@ -39,20 +39,13 @@ public class CptmpUserMapperTest extends BaseTest {
         CptmpUser cptmpUser2 = new CptmpUser();
         cptmpUser2.setGmtCreate(new Date());
         cptmpUser2.setUsername("test2");
-        cptmpUser2.setPassword("123456");
+        cptmpUser2.updatePassword("123456");
         cptmpUser2.setEmail("111@11.com");
-        cptmpUser2.setRoleName("admin");
+        cptmpUser2.setRoleName("ROLE_SCHOOL_ADMIN");
         cptmpUser2.setEnabled(true);
         cptmpUser2.setAccountNonExpired(true);
         cptmpUser2.setCredentialsNonExpired(true);
         cptmpUser2.setAccountNonLocked(true);
-
-        Assertions.assertEquals(false, cptmpUser1.validatePassword("114514"));   // 验证错误密码
-        String cptmpUser1pw1 = cptmpUser1.getPassword();
-        Assertions.assertEquals(true, cptmpUser1.validatePassword("123456"));    // 验证正确密码
-        String cptmpUser1pw2 = cptmpUser1.getPassword();
-        Assertions.assertEquals(false, cptmpUser1pw1.equals(cptmpUser1pw2));                    // 验证密码自动更新
-        Assertions.assertEquals(true, cptmpUser1.validatePassword("123456"));    // 验证正确密码
 
         cptmpUserMapper.removeAllUsers();
         cptmpUserMapper.addUser(cptmpUser1);
