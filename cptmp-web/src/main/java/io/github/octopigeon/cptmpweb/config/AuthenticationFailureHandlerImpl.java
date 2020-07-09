@@ -38,10 +38,8 @@ public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHa
                                         AuthenticationException e) throws IOException, ServletException {
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
         RespBean respBean;
-        if (e instanceof UsernameNotFoundException) {
-            respBean = RespBean.error(CptmpStatusCode.AUTH_FAILED_USERNAME_NOT_FOUND, "authenticate failed, username not found");
-        } else if (e instanceof BadCredentialsException) {
-            respBean = RespBean.error(CptmpStatusCode.AUTH_FAILED_BAD_CREDENTIALS, "authenticate failed, bad credentials, wrong password(best guess)");
+        if (e instanceof BadCredentialsException) {
+            respBean = RespBean.error(CptmpStatusCode.AUTH_FAILED_BAD_CREDENTIALS, "authenticate failed, bad credentials, wrong password or username(best guess)");
         } else if (e instanceof RememberMeAuthenticationException) {
             respBean = RespBean.error(CptmpStatusCode.AUTH_FAILED_REMEMBER_ME_ERROR, "authenticate failed, remember me expired(best guess)");
         } else if (e instanceof CredentialsExpiredException) {
