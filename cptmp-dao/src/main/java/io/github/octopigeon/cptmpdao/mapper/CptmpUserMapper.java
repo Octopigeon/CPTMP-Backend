@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2020/7/7
  *
  * @last-check-in anlow
- * @date 2020/7/8
+ * @date 2020/7/9
  */
 @Repository
 @Mapper
@@ -25,6 +25,8 @@ public interface CptmpUserMapper {
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{introduction}, #{email}, #{phoneNumber}, " +
             "#{male}, #{avatar}, #{username}, #{password}, #{roleName}, #{enabled}, " +
             "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}";
+    String UPDATE_HEADER = "update cptmp_user set ";
+    String UPDATE_TAIL_USERNAME = " where uk_username = #{username}";
 
     @Insert("insert into cptmp_user (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -57,8 +59,24 @@ public interface CptmpUserMapper {
     })
     CptmpUser findUserByUsername(String username);
 
+    /**
+     * 得到所有用户（调试性方法）
+     * @return 所有用户的列表
+     */
     @Select("select id, " + COLUMNS + " from cptmp_user")
     @ResultMap(value = "user")
     List<CptmpUser> findAllUsers();
+
+    @Update(UPDATE_HEADER + "enabled = #{enabled}" + UPDATE_TAIL_USERNAME)
+    void updateEnabledByUsername(String username, Boolean enabled);
+
+    @Update(UPDATE_HEADER + "account_non_expired = #{accountNonExpired}" + UPDATE_TAIL_USERNAME)
+    void updateAccountNonExpiredByUsername(String username, Boolean accountNonExpired);
+
+    @Update(UPDATE_HEADER + "credentials_non_expired = #{credentialsNonExpired}" + UPDATE_TAIL_USERNAME)
+    void updateCredentialsNonExpiredByUsername(String username, Boolean credentialsNonExpired);
+
+    @Update(UPDATE_HEADER + "account_non_locked = #{accountNonLocked}" + UPDATE_TAIL_USERNAME)
+    void updateAccountNonLockedByUsername(String username, Boolean accountNonLocked);
 
 }
