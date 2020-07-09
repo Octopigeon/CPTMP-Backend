@@ -19,12 +19,12 @@ import java.util.List;
 @Mapper
 public interface CptmpUserMapper {
 
-    String COLUMNS = "gmt_create, gmt_modified, introduction, email, phone_number, " +
+    String COLUMNS = "gmt_create, gmt_modified, introduction, uk_email, phone_number, " +
             "gender, avatar, uk_username, idx_password, idx_role_name, enabled, " +
-            "account_non_expired, credentials_non_expired, account_non_locked";
+            "account_non_expired, credentials_non_expired, account_non_locked, invitation_code";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{introduction}, #{email}, #{phoneNumber}, " +
             "#{male}, #{avatar}, #{username}, #{password}, #{roleName}, #{enabled}, " +
-            "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}";
+            "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}, #{invitationCode}";
     String UPDATE_HEADER = "update cptmp_user set ";
     String UPDATE_TAIL_USERNAME = " where uk_username = #{username}";
 
