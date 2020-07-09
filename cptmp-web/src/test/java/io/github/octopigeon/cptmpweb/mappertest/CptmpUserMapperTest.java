@@ -47,13 +47,6 @@ public class CptmpUserMapperTest extends BaseTest {
         cptmpUser2.setCredentialsNonExpired(true);
         cptmpUser2.setAccountNonLocked(true);
 
-        Assertions.assertEquals(false, cptmpUser1.validatePassword("114514"));   // 验证错误密码
-        String cptmpUser1pw1 = cptmpUser1.getPassword();
-        Assertions.assertEquals(true, cptmpUser1.validatePassword("123456"));    // 验证正确密码
-        String cptmpUser1pw2 = cptmpUser1.getPassword();
-        Assertions.assertEquals(false, cptmpUser1pw1.equals(cptmpUser1pw2));                    // 验证密码自动更新
-        Assertions.assertEquals(true, cptmpUser1.validatePassword("123456"));    // 验证正确密码
-
         cptmpUserMapper.removeAllUsers();
         cptmpUserMapper.addUser(cptmpUser1);
         cptmpUserMapper.addUser(cptmpUser2);
