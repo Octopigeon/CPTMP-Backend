@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -21,12 +22,12 @@ public interface CptmpUserMapper {
 
     String COLUMNS = "gmt_create, gmt_modified, introduction, email, phone_number, " +
             "gender, avatar, uk_username, idx_password, idx_role_name, enabled, " +
-            "account_non_expired, credentials_non_expired, account_non_locked";
+            "account_non_expired, credentials_non_expired, account_non_locked, invitation_code";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{introduction}, #{email}, #{phoneNumber}, " +
             "#{male}, #{avatar}, #{username}, #{password}, #{roleName}, #{enabled}, " +
-            "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}";
+            "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}, #{invitationCode}";
     String UPDATE_HEADER = "update cptmp_user set ";
-    String UPDATE_TAIL_USERNAME = " where uk_username = #{username}";
+    String UPDATE_TAIL_USERNAME = " where (uk_username = #{username})";
 
     @Insert("insert into cptmp_user (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -56,6 +57,7 @@ public interface CptmpUserMapper {
             @Result(column = "account_non_expired", property = "accountNonExpired", jdbcType = JdbcType.TINYINT),
             @Result(column = "credentials_non_expired", property = "credentialsNonExpired", jdbcType = JdbcType.TINYINT),
             @Result(column = "account_non_locked", property = "accountNonLocked", jdbcType = JdbcType.TINYINT),
+            @Result(column = "invitation_code", property = "invitationCode", jdbcType = JdbcType.VARCHAR)
     })
     CptmpUser findUserByUsername(String username);
 
@@ -78,5 +80,8 @@ public interface CptmpUserMapper {
 
     @Update(UPDATE_HEADER + "account_non_locked = #{accountNonLocked}" + UPDATE_TAIL_USERNAME)
     void updateAccountNonLockedByUsername(String username, Boolean accountNonLocked);
+
+    @Update(UPDATE_HEADER + "invitation_code = #{invitationCode}" + UPDATE_TAIL_USERNAME)
+    void updateInvitationCodeByUsername(String username, String invitationCode);
 
 }
