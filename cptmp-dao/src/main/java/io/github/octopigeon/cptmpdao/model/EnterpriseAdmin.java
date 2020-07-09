@@ -22,6 +22,6 @@ public class EnterpriseAdmin {
     private Date gmtModified;
     private String name;
     private BigInteger userId;
-    private BigInteger employeeId;
+    private String employeeId;
 
 }
