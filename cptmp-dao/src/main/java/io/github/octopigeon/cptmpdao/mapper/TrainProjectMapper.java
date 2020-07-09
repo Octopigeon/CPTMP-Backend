@@ -92,26 +92,26 @@ public interface TrainProjectMapper {
             @Result(column = "resource_library", property = "resourceLibrary", jdbcType = JdbcType.VARCHAR)
 
     })
-    List<TrainProject> findAllDailyRecord();
-//
-//    /**
-//     * 根据项目id查找项目
-//     * @param id：项目id
-//     * @return 项目
-//     */
-//    @Select("select * from train_project where id = #{id}")
-//    @Results({
-//            @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
-//            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
-//            @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
-//            @Result(column = "uk_project_name", property = "projectName", jdbcType = JdbcType.VARCHAR),
-//            @Result(column = "start_date", property = "startDate", jdbcType = JdbcType.DATE),
-//            @Result(column = "finish_date", property = "finishDate", jdbcType = JdbcType.DATE),
-//            @Result(column = "content", property = "content", jdbcType = JdbcType.VARCHAR),
-//            @Result(column = "accept_standard", property = "acceptStandard", jdbcType = JdbcType.VARCHAR),
-//            @Result(column = "resource_library", property = "resourceLibrary", jdbcType = JdbcType.VARCHAR)
-//    })
-//    TrainProject findTrainProjectById(BigInteger id);
+    List<TrainProject> findAllTrainProject();
+
+    /**
+     * 根据项目id查找项目
+     * @param id：项目id
+     * @return 项目
+     */
+    @Select("select * from train_project where id = #{id}")
+    @Results({
+            @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
+            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
+            @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
+            @Result(column = "uk_project_name", property = "projectName", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "start_date", property = "startDate", jdbcType = JdbcType.DATE),
+            @Result(column = "finish_date", property = "finishDate", jdbcType = JdbcType.DATE),
+            @Result(column = "content", property = "content", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "accept_standard", property = "acceptStandard", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "resource_library", property = "resourceLibrary", jdbcType = JdbcType.VARCHAR)
+    })
+    TrainProject findTrainProjectById(BigInteger id);
 
     /**
      * 根据项目名查找项目
@@ -130,5 +130,5 @@ public interface TrainProjectMapper {
             @Result(column = "accept_standard", property = "acceptStandard", jdbcType = JdbcType.VARCHAR),
             @Result(column = "resource_library", property = "resourceLibrary", jdbcType = JdbcType.VARCHAR)
     })
-    TrainProject findTrainProjectByProjectName(String projectName);
+    List<TrainProject> findTrainProjectByProjectName(String projectName);
 }
