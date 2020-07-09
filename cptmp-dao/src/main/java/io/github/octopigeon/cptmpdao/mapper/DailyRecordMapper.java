@@ -26,7 +26,7 @@ public interface DailyRecordMapper {
      * 添加日志
      * @param dailyRecord：日志类
      */
-    @Insert("insert into daily_record (gmt_create, title, content, uk_user_id, document_path, record_type) values (#{gmtCreate}, #{title}, #{content}, #{userId}, #{documentPath}, #{recordType})")
+    @Insert("insert into daily_record (gmt_create, title, content, idx_user_id, document_path, record_type) values (#{gmtCreate}, #{title}, #{content}, #{userId}, #{documentPath}, #{recordType})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addDailyRecord(DailyRecord dailyRecord);
 
@@ -41,7 +41,7 @@ public interface DailyRecordMapper {
      * 根据用户id删除日志
      * @param userId 用户id
      */
-    @Delete("delete from daily_record where uk_user_id = #{userId}")
+    @Delete("delete from daily_record where idx_user_id = #{userId}")
     void removeDailyRecordByUserId(BigInteger userId);
 
     /**
@@ -54,7 +54,7 @@ public interface DailyRecordMapper {
      * @param documentPath 文件路径
      * @param recordType 文件类型
      */
-    @Update("update daily_record set gmt_modified = #{gmtModified}, title = #{title}, content = #{content}, uk_user_id = #{userId}, document_path = #{documentPath}, record_type = #{recordType} where id = #{id}")
+    @Update("update daily_record set gmt_modified = #{gmtModified}, title = #{title}, content = #{content}, idx_user_id = #{userId}, document_path = #{documentPath}, record_type = #{recordType} where id = #{id}")
     void updateDailyRecordById(BigInteger id, Date gmtModified, String title, String content, BigInteger userId, String documentPath, int recordType);
 
     /**
@@ -66,7 +66,7 @@ public interface DailyRecordMapper {
      * @param documentPath 文件路径
      * @param recordType 文件类型
      */
-    @Update("update daily_record set gmt_modified = #{gmtModified}, title = #{title}, content = #{content}, uk_user_id = #{userId}, document_path = #{documentPath}, record_type = #{recordType} where uk_user_id = #{userId}")
+    @Update("update daily_record set gmt_modified = #{gmtModified}, title = #{title}, content = #{content}, idx_user_id = #{userId}, document_path = #{documentPath}, record_type = #{recordType} where idx_user_id = #{userId}")
     void updateDailyRecordByUserId(Date gmtModified, String title, String content, BigInteger userId, String documentPath, int recordType);
 
     /**
@@ -78,7 +78,7 @@ public interface DailyRecordMapper {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
-            @Result(column = "uk_user_id", property = "userId", jdbcType = JdbcType.BIGINT),
+            @Result(column = "idx_user_id", property = "userId", jdbcType = JdbcType.BIGINT),
             @Result(column = "document_path", property = "documentPath", jdbcType = JdbcType.VARCHAR),
             @Result(column = "record_type", property = "recordType", jdbcType = JdbcType.INTEGER),
             @Result(column = "title", property = "title", jdbcType = JdbcType.VARCHAR),
@@ -92,12 +92,12 @@ public interface DailyRecordMapper {
      * @param userId：用户id
      * @return 日志
      */
-    @Select("select * from daily_record where uk_user_id = #{userId}")
+    @Select("select * from daily_record where idx_user_id = #{userId}")
     @Results({
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
-            @Result(column = "uk_user_id", property = "userId", jdbcType = JdbcType.BIGINT),
+            @Result(column = "idx_user_id", property = "userId", jdbcType = JdbcType.BIGINT),
             @Result(column = "document_path", property = "documentPath", jdbcType = JdbcType.VARCHAR),
             @Result(column = "record_type", property = "recordType", jdbcType = JdbcType.INTEGER),
             @Result(column = "title", property = "title", jdbcType = JdbcType.VARCHAR),
