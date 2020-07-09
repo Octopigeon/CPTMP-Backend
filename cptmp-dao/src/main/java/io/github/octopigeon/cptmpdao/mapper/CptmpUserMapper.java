@@ -9,11 +9,11 @@ import java.util.List;
 
 /**
  * @author anlow
- * @version 1.0
+ * @version 1.1
  * @date 2020/7/7
- *
- * @last-check-in anlow
- * @date 2020/7/8
+ * 添加邀请码字段
+ * @last-check-in GH Li
+ * @date 2020/7/9
  */
 @Repository
 @Mapper
@@ -21,10 +21,10 @@ public interface CptmpUserMapper {
 
     String COLUMNS = "gmt_create, gmt_modified, introduction, email, phone_number, " +
             "gender, avatar, uk_username, idx_password, idx_role_name, enabled, " +
-            "account_non_expired, credentials_non_expired, account_non_locked";
+            "account_non_expired, credentials_non_expired, account_non_locked, invitation_code";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{introduction}, #{email}, #{phoneNumber}, " +
             "#{male}, #{avatar}, #{username}, #{password}, #{roleName}, #{enabled}, " +
-            "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}";
+            "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}, #{invitationCode}";
 
     @Insert("insert into cptmp_user (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
