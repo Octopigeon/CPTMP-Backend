@@ -233,7 +233,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     private void addRole(BaseUserInfoDTO userInfo)
     {
         String roleName = userInfo.getRoleName();
-        // TODO 等待常量类的定义
         // 学生
         if(RoleEnum.ROLE_STUDENT_MEMBER.name().equals(roleName))
         {
