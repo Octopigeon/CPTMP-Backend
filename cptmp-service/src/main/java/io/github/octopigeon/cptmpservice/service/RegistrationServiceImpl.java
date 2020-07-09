@@ -56,6 +56,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 userRole = RoleEnum.valueOf(RoleEnum.class, user.getRoleName());
                 if(userRole.compareTo(registrationRole) >= 0)
                 {
+                    //验证码有效更新邀请者邀请码
                     return true;
                 }
             }

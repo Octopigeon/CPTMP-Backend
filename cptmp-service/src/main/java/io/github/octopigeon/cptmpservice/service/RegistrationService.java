@@ -1,6 +1,7 @@
 package io.github.octopigeon.cptmpservice.service;
 
 import io.github.octopigeon.cptmpservice.dto.BaseUserInfoDTO;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
  * @last-check-in Gh Li
  * @date 2020/7/8
  */
+@Repository
 public interface RegistrationService {
 
     /**
