@@ -26,6 +26,7 @@ public class CptmpUser {
     private BigInteger id;
     private Date gmtCreate;
     private String username;
+    private String nickname;
 
     @Setter(AccessLevel.PRIVATE)
     private String password;
