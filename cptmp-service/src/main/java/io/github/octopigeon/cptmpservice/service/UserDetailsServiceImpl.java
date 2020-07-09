@@ -2,7 +2,6 @@ package io.github.octopigeon.cptmpservice.service;
 
 import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -27,9 +25,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private CptmpUserMapper cptmpUserMapper;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Override
@@ -37,11 +32,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         logger.info("Current username: " + username);
         CptmpUser cptmpUser = cptmpUserMapper.findUserByUsername(username);
         Optional<CptmpUser> userOptional = Optional.ofNullable(cptmpUser);
-        // String decypher = passwordEncoder.encode(cptmpUser.getPassword());
         if (userOptional.isPresent()) {
             logger.info("Current password: " + cptmpUser.getPassword());
             return new User(username,
-                    passwordEncoder.encode(cptmpUser.getPassword()),
+                    cptmpUser.getPassword(),
                     cptmpUser.getEnabled(),
                     cptmpUser.getAccountNonExpired(),
                     cptmpUser.getCredentialsNonExpired(),
