@@ -21,7 +21,7 @@ public interface SchoolStudentMapper {
      * 向表中插入一条数据
      * @param schoolStudent：类
      */
-    @Insert("insert into school_student (gmt_create, idx_name, uk_user_id, uk_student_id, idx_school_name, uk_student_face) values (#{gmtCreate}, #{name}, #{userId}, #{studentId}, #{schoolName}, #{studentFace})")
+    @Insert("insert into school_student (gmt_create, idx_name, uk_user_id, idx_student_id, idx_school_name, uk_student_face) values (#{gmtCreate}, #{name}, #{userId}, #{studentId}, #{schoolName}, #{studentFace})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addSchoolStudent(SchoolStudent schoolStudent);
 
@@ -41,18 +41,18 @@ public interface SchoolStudentMapper {
      * @param schoolName:学校名称
      * @param studentFace :url,学生人脸信息链接
      */
-    @Update("update school_student set gmt_modified = #{gmtModified}, idx_name = #{name}, uk_student_id = #{studentId}, idx_school_name = #{schoolName}, uk_student_face = #{studentFace} where uk_user_id = #{userId}")
+    @Update("update school_student set gmt_modified = #{gmtModified}, idx_name = #{name}, idx_student_id = #{studentId}, idx_school_name = #{schoolName}, uk_student_face = #{studentFace} where uk_user_id = #{userId}")
     void updateSchoolStudetnByUserId(BigInteger userId, Date gmtModified, String name, BigInteger studentId, String schoolName, String studentFace);
 
     /**
      * 查找所有的学生的账号、姓名、学号、所属学校
      * @return 学生列表
      */
-    @Select("select uk_user_id, idx_name, uk_student_id, idx_school_name from school_student group by idx_school_name")
+    @Select("select uk_user_id, idx_name, idx_student_id, idx_school_name from school_student group by idx_school_name")
     @Results({
             @Result(column = "uk_user_id", property = "userId", jdbcType = JdbcType.BIGINT),
             @Result(column = "idx_name", property = "name", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "uk_student_id", property = "studentId", jdbcType = JdbcType.BIGINT),
+            @Result(column = "idx_student_id", property = "studentId", jdbcType = JdbcType.VARCHAR),
             @Result(column = "idx_school_name", property = "schoolName", jdbcType = JdbcType.VARCHAR)
     })
     List<SchoolStudent> findAllSchoolStudents();
@@ -61,11 +61,11 @@ public interface SchoolStudentMapper {
      * 查找某个学校所有学生的账号、姓名、学号、所属学校
      * @return 学生列表
      */
-    @Select("select uk_user_id, idx_name, uk_student_id, idx_school_name from school_student where idx_school_name = #{schoolName}")
+    @Select("select uk_user_id, idx_name, idx_student_id, idx_school_name from school_student where idx_school_name = #{schoolName}")
     @Results({
             @Result(column = "uk_user_id", property = "userId", jdbcType = JdbcType.BIGINT),
             @Result(column = "idx_name", property = "name", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "uk_student_id", property = "studentId", jdbcType = JdbcType.BIGINT),
+            @Result(column = "idx_student_id", property = "studentId", jdbcType = JdbcType.VARCHAR),
             @Result(column = "idx_school_name", property = "schoolName", jdbcType = JdbcType.VARCHAR)
     })
     List<SchoolStudent> findSchoolStudentsBySchool(String schoolName);
@@ -75,11 +75,11 @@ public interface SchoolStudentMapper {
      * @param userId：用户账号
      * @return 学生实例
      */
-    @Select("select uk_user_id, idx_name, uk_student_id, idx_school_name from school_student where uk_user_id = #{userId}")
+    @Select("select uk_user_id, idx_name, idx_student_id, idx_school_name from school_student where uk_user_id = #{userId}")
     @Results({
             @Result(column = "uk_user_id", property = "userId", jdbcType = JdbcType.BIGINT),
             @Result(column = "idx_name", property = "name", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "uk_student_id", property = "studentId", jdbcType = JdbcType.BIGINT),
+            @Result(column = "idx_student_id", property = "studentId", jdbcType = JdbcType.VARCHAR),
             @Result(column = "idx_school_name", property = "schoolName", jdbcType = JdbcType.VARCHAR)
     })
     SchoolStudent findSchoolStudentByUserId(BigInteger userId);

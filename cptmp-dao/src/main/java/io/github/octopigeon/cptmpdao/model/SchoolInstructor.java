@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * @author anlow,Gh Li
- * @version 1.1
+ * @version 1.2
  * @date 2020/7/7
  */
 @Data
@@ -19,6 +19,6 @@ public class SchoolInstructor {
     private String name;
     private String schoolName;
     private BigInteger userId;
-    private BigInteger employeeId;
+    private String employeeId;
 
 }
