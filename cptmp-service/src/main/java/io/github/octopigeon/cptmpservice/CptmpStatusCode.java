@@ -6,6 +6,8 @@ import org.omg.CORBA.PUBLIC_MEMBER;
  * @author anlow
  * @version 1.0
  * @date 2020/7/7
+ * @last-check-in anlow
+ * @date 2020/7/9
  */
 public class CptmpStatusCode {
 

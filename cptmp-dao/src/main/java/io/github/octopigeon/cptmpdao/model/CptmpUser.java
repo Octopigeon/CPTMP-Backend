@@ -15,9 +15,8 @@ import java.util.Date;
  * @author anlow
  * @version 1.0
  * @date 2020/7/7
- *
- * @last-check-in Eric_Lian
- * @date 2020/7/8
+ * @last-check-in anlow
+ * @date 2020/7/9
  */
 @Data
 public class CptmpUser {
