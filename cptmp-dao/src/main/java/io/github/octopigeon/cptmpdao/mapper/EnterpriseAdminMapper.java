@@ -22,7 +22,7 @@ public interface EnterpriseAdminMapper {
      * 向enterprise admin中插入一条数据
      * @param enterpriseAdmin：类
      */
-    @Insert("insert into enterprise_admin (gmt_create, idx_name, uk_user_id, uk_employee_id) values (#{gmtCreate}, #{name}, #{userId}, #{employeeId})")
+    @Insert("insert into enterprise_admin (gmt_create, idx_name, uk_user_id, idx_employee_id) values (#{gmtCreate}, #{name}, #{userId}, #{employeeId})")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addEnterpriseAdmin(EnterpriseAdmin enterpriseAdmin);
 
@@ -40,18 +40,18 @@ public interface EnterpriseAdminMapper {
      * @param name：员工名称
      * @param employeeId：员工工号
      */
-    @Update("update enterprise_admin set gmt_modified = #{gmtModified}, idx_name = #{name}, uk_employee_id = #{employeeId} where uk_user_id = #{userId}")
-    void updateEnterprseAdminByUserId(BigInteger userId, Date gmtModified, String name, BigInteger employeeId);
+    @Update("update enterprise_admin set gmt_modified = #{gmtModified}, idx_name = #{name}, idx_employee_id = #{employeeId} where uk_user_id = #{userId}")
+    void updateEnterprseAdminByUserId(BigInteger userId, Date gmtModified, String name, String employeeId);
 
     /**
      * 查找所有的企业管理员的账号、姓名、工号
      * @return 企业管理员列表
      */
-    @Select("select uk_user_id, idx_name, uk_employee_id from enterprise_admin")
+    @Select("select uk_user_id, idx_name, idx_employee_id from enterprise_admin")
     @Results({
             @Result(column = "uk_user_id", property = "userId", jdbcType = JdbcType.BIGINT),
             @Result(column = "idx_name", property = "name", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "uk_employee_id", property = "employeeId", jdbcType = JdbcType.BIGINT)
+            @Result(column = "idx_employee_id", property = "employeeId", jdbcType = JdbcType.VARCHAR)
     })
     List<EnterpriseAdmin> findAllEnterpriseAdmins();
 
@@ -60,11 +60,11 @@ public interface EnterpriseAdminMapper {
      * @param userId：用户账号
      * @return 企业管理员实例
      */
-    @Select("select uk_user_id, idx_name, uk_employee_id from enterprise_admin where uk_user_id = #{userId}")
+    @Select("select uk_user_id, idx_name, idx_employee_id from enterprise_admin where uk_user_id = #{userId}")
     @Results({
             @Result(column = "uk_user_id", property = "userId", jdbcType = JdbcType.BIGINT),
             @Result(column = "idx_name", property = "name", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "uk_employee_id", property = "employeeId", jdbcType = JdbcType.BIGINT)
+            @Result(column = "idx_employee_id", property = "employeeId", jdbcType = JdbcType.VARCHAR)
     })
     EnterpriseAdmin findEnterpriseAdminByUserId(BigInteger userId);
 }
