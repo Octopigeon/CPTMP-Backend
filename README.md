@@ -12,10 +12,28 @@ College Practice Training Management Platform
 + 三个子模块间的依赖关系为：web->service->dao
 
 # API说明
-更新时间：2020/7/6
+更新时间：2020/7/9
 
 ## /pigeon
 + HTTP方法：GET
 + 返回类型：/
 + 说明：仅用于测试环境，两个参数cmd和arg，支持添加一个pigeon，查询所有pigeon，删除所有pigeon
 + 调用示例：/pigeon?cmd=add&arg=wxc;/pigeon?cmd=list;/pigeon?cmd=remove;
+
+## /login
++ HTTP方法：POST
++ 返回类型：json
++ 说明：返回体包括status，date，msg，详情@RespBean和@CptmpStatusCode中的状态码定义
++ 调用实例：/login
+
+## /guard
++ HTTP方法：GET
++ 返回类型：json
++ 说明：当用户未登录时尝试访问未登录不能访问的地址时，返回一个json，状态码为8（以@CptmpStatusCode中的为准）
++ 调用实例：/guard
+
+## /api/access
++ HTTP方法：GET
++ 返回类型：json
++ 说明：用于测试登录是否成功
++ 调用实例：/api/access
