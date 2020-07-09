@@ -25,61 +25,44 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ActivityRecordMapperTest extends BaseTest {
     @Autowired
-    private ActivityRecordMapper activityRecordMapper=new ActivityRecordMapper() {
-        @Override
-        public void addActivityRecord(ActivityRecord activityRecord) {
-
-        }
-
-        @Override
-        public List<ActivityRecord> findAllActivityRecord() {
-            return null;
-        }
-
-        @Override
-        public ActivityRecord findActivityRecordByPeopleId(BigInteger peopleId) {
-            return null;
-        }
-
-        @Override
-        public ActivityRecord findActivityRecordByTeamId(BigInteger teamId) {
-            return null;
-        }
-    };
+    private ActivityRecordMapper activityRecordMapper;
     @Test
     public void test(){
         ActivityRecord activityRecord=new ActivityRecord();
         activityRecord.setGmtCreate(new Date());
         activityRecord.setId(BigInteger.valueOf(1));
-        activityRecord.setActivityPeopleId(BigInteger.valueOf(1));
-        activityRecord.setActivityTeamId(BigInteger.valueOf(1));
-        activityRecord.setActivityState(BigInteger.valueOf(0));
-        activityRecord.setActivityEvent("test1");
+        activityRecord.setUserId(BigInteger.valueOf(1));
+        activityRecord.setTeamId(BigInteger.valueOf(1));
+        activityRecord.setState(0);
+        activityRecord.setEvent("test1");
 
         ActivityRecord activityRecord2=new ActivityRecord();
         activityRecord2.setGmtCreate(new Date());
         activityRecord2.setId(BigInteger.valueOf(2));
-        activityRecord2.setActivityPeopleId(BigInteger.valueOf(2));
-        activityRecord2.setActivityTeamId(BigInteger.valueOf(2));
-        activityRecord2.setActivityState(BigInteger.valueOf(0));
-        activityRecord2.setActivityEvent("test2");
+        activityRecord2.setUserId(BigInteger.valueOf(2));
+        activityRecord2.setTeamId(BigInteger.valueOf(2));
+        activityRecord2.setState(0);
+        activityRecord2.setEvent("test2");
 
+        List<ActivityRecord> activityRecords;
         activityRecordMapper.addActivityRecord(activityRecord);
         activityRecordMapper.addActivityRecord(activityRecord2);
-        List<ActivityRecord> activityRecords=new ArrayList<>();
-        activityRecords.add(activityRecordMapper.findActivityRecordByPeopleId(BigInteger.valueOf(1)));
-        activityRecords.add((activityRecordMapper.findActivityRecordByTeamId(BigInteger.valueOf(2))));
+        activityRecords=activityRecordMapper.findAllActivityRecord();
         Assertions.assertEquals(2,activityRecords.size());
-//        activityRecordMapper.updateActivityRecordByPeopleId(BigInteger.valueOf(1),BigInteger.valueOf(1),new Date(),BigInteger.valueOf(1),"更新完成");
-//        activityRecordMapper.removeActivityRecordByPeopleId(BigInteger.valueOf(1));
+
+        activityRecords=activityRecordMapper.findActivityRecordByUserId(BigInteger.valueOf(1));
+        Assertions.assertEquals(1,activityRecords.size());
+
+//        activityRecordMapper.updateActivityRecordByUserId(BigInteger.valueOf(1),BigInteger.valueOf(1),new Date(),BigInteger.valueOf(1),"更新完成");
+//        activityRecordMapper.removeActivityRecordByUserId(BigInteger.valueOf(1));
 //        int n=1;
-//        if(activityRecordMapper.findActivityRecordByPeopleId(BigInteger.valueOf(1))==null){
+//        if(activityRecordMapper.findActivityRecordByUserId(BigInteger.valueOf(1))==null){
 //            n=0;
 //        }
 //        Assertions.assertEquals(0,n);
 //        activityRecordMapper.removeActivityRecordByAll();
 //        int m=1;
-//        if(activityRecordMapper.findActivityRecordByPeopleId(BigInteger.valueOf(1))==null){
+//        if(activityRecordMapper.findActivityRecordByUserId(BigInteger.valueOf(1))==null){
 //            m=0;
 //        }
 //        Assertions.assertEquals(0,m);
