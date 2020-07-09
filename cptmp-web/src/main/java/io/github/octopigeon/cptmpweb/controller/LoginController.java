@@ -1,5 +1,7 @@
 package io.github.octopigeon.cptmpweb.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import io.github.octopigeon.cptmpservice.CptmpStatusCode;
 import io.github.octopigeon.cptmpweb.bean.RespBean;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,11 +22,11 @@ public class LoginController {
 
     @GetMapping("/guard")
     public RespBean login() {
-        return RespBean.error("尚未登录，请登录");
+        return RespBean.error(CptmpStatusCode.ACCESS_DENY_NOT_LOGIN, "not login");
     }
-    @GetMapping("/hello")
-    public String hello() {
-        return "hello";
+    @GetMapping("/api/access")
+    public RespBean hello() {
+        return RespBean.ok("access successfully");
     }
 
 }

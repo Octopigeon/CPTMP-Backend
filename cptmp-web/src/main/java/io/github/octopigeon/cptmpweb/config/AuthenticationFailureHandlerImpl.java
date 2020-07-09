@@ -1,9 +1,10 @@
 package io.github.octopigeon.cptmpweb.config;
 
-import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.octopigeon.cptmpservice.CptmpStatusCode;
-import io.github.octopigeon.cptmpservice.dto.LoginInfoDTO;
+import io.github.octopigeon.cptmpweb.bean.RespBean;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Date;
 
 /**
  * @author anlow
@@ -28,7 +28,6 @@ import java.util.Date;
  * @last-check-in anlow
  * @date 2020/7/9
  */
-@Slf4j
 @Component
 public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHandler {
 
@@ -37,27 +36,25 @@ public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHa
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest,
                                         HttpServletResponse httpServletResponse,
                                         AuthenticationException e) throws IOException, ServletException {
-        httpServletResponse.setContentType("application/json;charset=UTF-8");
-        LoginInfoDTO loginInfoDTO = new LoginInfoDTO();
-        loginInfoDTO.setLoginDate(new Date());
+        httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        RespBean respBean;
         if (e instanceof UsernameNotFoundException) {
-            loginInfoDTO.setStatusCode(CptmpStatusCode.AUTH_FAILED_USERNAME_NOT_FOUND);
+            respBean = RespBean.error(CptmpStatusCode.AUTH_FAILED_USERNAME_NOT_FOUND, "authenticate failed, username not found");
         } else if (e instanceof BadCredentialsException) {
-            loginInfoDTO.setStatusCode(CptmpStatusCode.AUTH_FAILED_BAD_CREDENTIALS);
+            respBean = RespBean.error(CptmpStatusCode.AUTH_FAILED_BAD_CREDENTIALS, "authenticate failed, bad credentials, wrong password(best guess)");
         } else if (e instanceof RememberMeAuthenticationException) {
-            loginInfoDTO.setStatusCode(CptmpStatusCode.AUTH_FAILED_REMEMBER_ME_ERROR);
+            respBean = RespBean.error(CptmpStatusCode.AUTH_FAILED_REMEMBER_ME_ERROR, "authenticate failed, remember me expired(best guess)");
         } else if (e instanceof CredentialsExpiredException) {
-            loginInfoDTO.setStatusCode(CptmpStatusCode.AUTH_FAILED_CREDENTIALS_EXPIRED);
+            respBean = RespBean.error(CptmpStatusCode.AUTH_FAILED_CREDENTIALS_EXPIRED, "authenticate failed, credentials expired");
         } else if (e instanceof AccountExpiredException) {
-            loginInfoDTO.setStatusCode(CptmpStatusCode.AUTH_FAILED_ACCOUNT_EXPIRED);
+            respBean = RespBean.error(CptmpStatusCode.AUTH_FAILED_ACCOUNT_EXPIRED, "authenticate failed, account expired");
         } else if (e instanceof AccountStatusException) {
-            loginInfoDTO.setStatusCode(CptmpStatusCode.AUTH_FAILED_ACCOUNT_STATUS_ERROR);
+            respBean = RespBean.error(CptmpStatusCode.AUTH_FAILED_ACCOUNT_STATUS_ERROR, "authenticate failed, account status error, not enabled(best guess)");
         } else {
-            loginInfoDTO.setStatusCode(CptmpStatusCode.AUTH_FAILED_UNKNOWN_ERROR);
+            respBean = RespBean.error(CptmpStatusCode.AUTH_FAILED_UNKNOWN_ERROR, "authenticate failed, unknown error");
         }
-        log.info("Login status: " + loginInfoDTO.getStatusCode());
         PrintWriter out = httpServletResponse.getWriter();
-        out.write(JSON.toJSONString(loginInfoDTO));
+        out.write(new ObjectMapper().writeValueAsString(respBean));
         out.flush();
         out.close();
     }

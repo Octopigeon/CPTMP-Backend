@@ -1,6 +1,7 @@
 package io.github.octopigeon.cptmpweb.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.github.octopigeon.cptmpweb.bean.AuthenticationBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -23,24 +24,26 @@ import java.util.Map;
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        if (request.getContentType().equals(MediaType.APPLICATION_JSON_UTF8_VALUE)
-                || request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
+        if (request.getContentType().equals(MediaType.APPLICATION_JSON_VALUE)) {
             ObjectMapper mapper = new ObjectMapper();
             UsernamePasswordAuthenticationToken authRequest = null;
             try (InputStream is = request.getInputStream()) {
-                Map<String,String> authenticationBean = mapper.readValue(is, Map.class);
+                AuthenticationBean authenticationBean = mapper.readerFor(AuthenticationBean.class).readValue(is);
                 authRequest = new UsernamePasswordAuthenticationToken(
-                        authenticationBean.get("username"), authenticationBean.get("password"));
+                        authenticationBean.getUsername(), authenticationBean.getPassword());
+
+                // finally
+                setDetails(request, authRequest);
+                return this.getAuthenticationManager().authenticate(authRequest);
             } catch (IOException e) {
-                e.printStackTrace();
                 authRequest = new UsernamePasswordAuthenticationToken(
                         "", "");
-            } finally {
+
+                // finally
                 setDetails(request, authRequest);
                 return this.getAuthenticationManager().authenticate(authRequest);
             }
-        }
-        else {
+        } else {
             return super.attemptAuthentication(request, response);
         }
     }

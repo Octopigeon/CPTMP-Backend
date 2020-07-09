@@ -1,5 +1,11 @@
 package io.github.octopigeon.cptmpweb.bean;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
+import io.github.octopigeon.cptmpservice.CptmpStatusCode;
+import lombok.Data;
+
+import java.util.Date;
+
 /**
  * @author anlow
  * @version 1.0
@@ -7,68 +13,38 @@ package io.github.octopigeon.cptmpweb.bean;
  * @last-check-in anlow
  * @date 2020/7/9
  */
+@Data
 public class RespBean {
     /** 状态码 */
     private Integer status;
+    /** 时间 */
+    private final Date date;
     /** 返回信息 */
     private String msg;
-    /** 数据 */
-    private Object obj;
 
     private RespBean() {
+        this.date = new Date();
     }
 
     public static RespBean build() {
         return new RespBean();
     }
 
-    public static RespBean ok(String msg, Object obj) {
-        return new RespBean(200, msg, obj);
-    }
-
     public static RespBean ok(String msg) {
-        return new RespBean(200, msg, null);
+        return new RespBean(CptmpStatusCode.OK, msg);
     }
 
-    public static RespBean error(String msg, Object obj) {
-        return new RespBean(500, msg, obj);
+    public static RespBean ok(Integer status, String msg) {
+        return new RespBean(status, msg);
     }
 
-    public static RespBean error(String msg) {
-        return new RespBean(500, msg, null);
+    public static RespBean error(Integer status, String msg) {
+        return new RespBean(status, msg);
     }
 
-    private RespBean(Integer status, String msg, Object obj) {
+    private RespBean(Integer status, String msg) {
         this.status = status;
+        this.date = new Date();
         this.msg = msg;
-        this.obj = obj;
-    }
-
-    public Integer getStatus() {
-
-        return status;
-    }
-
-    public RespBean setStatus(Integer status) {
-        this.status = status;
-        return this;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public RespBean setMsg(String msg) {
-        this.msg = msg;
-        return this;
-    }
-
-    public Object getObj() {
-        return obj;
-    }
-
-    public RespBean setObj(Object obj) {
-        this.obj = obj;
-        return this;
     }
 }
