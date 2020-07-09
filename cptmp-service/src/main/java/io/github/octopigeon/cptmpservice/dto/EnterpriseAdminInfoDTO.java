@@ -17,5 +17,5 @@ import java.math.BigInteger;
 public class EnterpriseAdminInfoDTO extends BaseUserInfoDTO{
 
     private String name;
-    private BigInteger employeeId;
+    private String employeeId;
 }
