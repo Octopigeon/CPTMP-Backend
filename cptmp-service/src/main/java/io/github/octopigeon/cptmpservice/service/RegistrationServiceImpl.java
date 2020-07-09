@@ -8,9 +8,9 @@ import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpdao.model.EnterpriseAdmin;
 import io.github.octopigeon.cptmpdao.model.SchoolInstructor;
 import io.github.octopigeon.cptmpdao.model.SchoolStudent;
+import io.github.octopigeon.cptmpservice.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.BaseUserInfoDTO;
 
-import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -36,6 +36,34 @@ public class RegistrationServiceImpl implements RegistrationService {
     private SchoolInstructorMapper schoolInstructorMapper;
 
     /**
+     * 验证邀请码
+     *
+     * @param registrationRoleName ：待注册的权限
+     * @param invitationCode       ：邀请码
+     * @return 验证码是否有效
+     */
+    @Override
+    public Boolean validateInvitationCode(String registrationRoleName, String invitationCode) {
+        List<CptmpUser> users = cptmpUserMapper.findAllUsers();
+        RoleEnum registrationRole = RoleEnum.valueOf(RoleEnum.class, registrationRoleName);
+        String code;
+        RoleEnum userRole;
+        for (CptmpUser user: users
+             ) {
+            code = user.getInvitationCode();
+            if(invitationCode.equals(code))
+            {
+                userRole = RoleEnum.valueOf(RoleEnum.class, user.getRoleName());
+                if(userRole.compareTo(registrationRole) >= 0)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
      * 个体注册
      * 默认生成项变成必填
      * @param userInfo ：用户
@@ -50,8 +78,9 @@ public class RegistrationServiceImpl implements RegistrationService {
             CptmpUser user = userInfoToUser(parsedUserInfo);
             //添加用户
             cptmpUserMapper.addUser(user);
-            BigInteger userId = cptmpUserMapper.findUserByUsername(user.getUsername()).getId();
-            parsedUserInfo.setUserId(userId);
+            CptmpUser registeredUser = cptmpUserMapper.findUserByUsername(user.getUsername());
+            parsedUserInfo.setUserId(registeredUser.getId());
+            parsedUserInfo.setInvitationCode(registeredUser.getInvitationCode());
             //添加角色
             addRole(parsedUserInfo);
             return parsedUserInfo;
@@ -116,12 +145,21 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     /**
-     * 产生8位字母命名
+     * 产生20位字母命名
      * @return 随机用户名
      */
     private String productUserName()
     {
-        return RandomStringUtils.randomAlphabetic(8);
+        return RandomStringUtils.randomAlphabetic(20);
+    }
+
+    /**
+     * 产生6位邀请码
+     * @return 随机邀请码
+     */
+    private String productInvitationCode()
+    {
+        return RandomStringUtils.randomAlphabetic(6);
     }
 
     private Boolean validateEmailFormat(String email)
@@ -154,7 +192,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         CptmpUser user = new CptmpUser();
         user.setEmail(userInfo.getEmail());
         user.setRoleName(userInfo.getRoleName());
-        user.setPassword(userInfo.getPassword());
+        user.updatePassword(userInfo.getPassword());
         user.setPhoneNumber(userInfo.getPhoneNum());
         user.setMale(userInfo.getGender());
         user.setUsername(userInfo.getUserName());
@@ -165,6 +203,15 @@ public class RegistrationServiceImpl implements RegistrationService {
         user.setCredentialsNonExpired(true);
         // TODO 默认头像链接待定
         user.setAvatar("");
+        user.setIntroduction("");
+        //学生用户无邀请码
+        if(RoleEnum.ROLE_STUDENT_MEMBER.name().equals(user.getRoleName()))
+        {
+            user.setInvitationCode(null);
+        }
+        else {
+            user.setInvitationCode(productInvitationCode());
+        }
         return user;
     }
 
@@ -177,17 +224,17 @@ public class RegistrationServiceImpl implements RegistrationService {
         String roleName = userInfo.getRoleName();
         // TODO 等待常量类的定义
         // 学生
-        if(roleName.equals("ROLE_STUDENT_MEMBER"))
+        if(RoleEnum.ROLE_STUDENT_MEMBER.name().equals(roleName))
         {
             addStudentRole(userInfo);
         }
         // 企业管理员
-        else if(roleName.equals("ROLE_ENTERPRISE_ADMIN"))
+        else if(RoleEnum.ROLE_ENTERPRISE_ADMIN.name().equals(roleName))
         {
             addEnterpriseAdminRole(userInfo);
         }
         // 老师
-        else if(roleName.equals("ROLE_SCHOOL_TEACHER"))
+        else if(RoleEnum.ROLE_SCHOOL_TEACHER.name().equals(roleName))
         {
             addTeacherRole(userInfo);
         }

@@ -13,11 +13,11 @@ import java.util.Date;
 
 /**
  * @author anlow
- * @version 1.0
+ * @version 1.1
  * @date 2020/7/7
- *
- * @last-check-in Eric_Lian
- * @date 2020/7/8
+ * 添加邀请码字段
+ * @last-check-in GH Li
+ * @date 2020/7/9
  */
 @Data
 public class CptmpUser {
@@ -59,6 +59,8 @@ public class CptmpUser {
     private Boolean male;
     /** nullable */
     private String avatar;
+    /** nullable */
+    private String invitationCode;
 
     public CptmpUser updatePassword(String password) {
         this.password = ENCODER.encode(password);

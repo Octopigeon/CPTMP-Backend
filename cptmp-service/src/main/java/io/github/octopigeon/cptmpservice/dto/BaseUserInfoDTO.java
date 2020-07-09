@@ -33,4 +33,6 @@ public abstract class BaseUserInfoDTO{
 
     /** 返回携带用户账号 */
     private BigInteger userId;
+    /** 返回携带邀请码 */
+    private String invitationCode;
 }

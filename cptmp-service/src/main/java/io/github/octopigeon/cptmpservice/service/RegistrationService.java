@@ -15,6 +15,14 @@ import java.util.List;
 public interface RegistrationService {
 
     /**
+     * 验证邀请码
+     * @param registrationRoleName：待注册的权限
+     * @param invitationCode：邀请码
+     * @return 验证码是否有效
+     */
+    Boolean validateInvitationCode(String registrationRoleName, String invitationCode);
+
+    /**
      * 个体注册
      * @param userInfo：用户
      * @return 注册之后的用户信息
