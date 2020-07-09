@@ -66,13 +66,4 @@ public class CptmpUser {
         this.password = ENCODER.encode(password);
         return this;
     }
-
-    public boolean validatePassword(String submittedPassword) {
-        boolean ret = ENCODER.matches(submittedPassword, this.password);
-        if (ret) {
-            this.updatePassword(submittedPassword);
-        }
-        return ret;
-    }
-
 }
