@@ -44,15 +44,15 @@ public class TrainProjectMapperTest extends BaseTest {
 
         trainProjectMapper.addTrainProject(trainProject1);
         trainProjectMapper.addTrainProject(trainProject2);
-        Assertions.assertEquals(2,trainProjectMapper.findAllDailyRecord().size());
+        Assertions.assertEquals(2,trainProjectMapper.findAllTrainProject().size());
 
         trainProjectMapper.removeTrainProjectByProjectName("1");
-        Assertions.assertEquals(trainProject2.getContent(),trainProjectMapper.findTrainProjectByProjectName("2").getContent());
-        Assertions.assertEquals(1,trainProjectMapper.findAllDailyRecord().size());
+        Assertions.assertEquals(trainProject2.getContent(),trainProjectMapper.findTrainProjectByProjectName("2").get(0).getContent());
+        Assertions.assertEquals(1,trainProjectMapper.findAllTrainProject().size());
 
         trainProjectMapper.updateTrainProjectByProjectName(new Date(),"2",new Date(), new Date(),"test3 content", "test3","www.hao123.com");
 
-        Assertions.assertEquals("test3 content",trainProjectMapper.findTrainProjectByProjectName("2").getContent());
+        Assertions.assertEquals("test3 content",trainProjectMapper.findTrainProjectByProjectName("2").get(0).getContent());
 
 
 
