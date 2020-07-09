@@ -11,6 +11,7 @@ import io.github.octopigeon.cptmpdao.model.SchoolStudent;
 import io.github.octopigeon.cptmpservice.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.BaseUserInfoDTO;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -18,7 +19,9 @@ import io.github.octopigeon.cptmpservice.dto.EnterpriseAdminInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.StudentInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.TeacherInfoDTO;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
-import org.apache.commons.lang.*;
+import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * 批量注册服务具体实现
@@ -28,37 +31,44 @@ import org.apache.commons.lang.*;
  * @last-check-in Gh Li
  * @date 2020/7/8
  */
+@Service
 public class RegistrationServiceImpl implements RegistrationService {
 
+    @Autowired
     private CptmpUserMapper cptmpUserMapper;
+    @Autowired
     private EnterpriseAdminMapper enterpriseAdminMapper;
+    @Autowired
     private SchoolStudentMapper schoolStudentMapper;
+    @Autowired
     private SchoolInstructorMapper schoolInstructorMapper;
 
     /**
      * 验证邀请码
      *
-     * @param registrationRoleName ：待注册的权限
-     * @param invitationCode       ：邀请码
+     * @param userInfo ：用户信息类
      * @return 验证码是否有效
      */
     @Override
-    public Boolean validateInvitationCode(String registrationRoleName, String invitationCode) {
+    public Boolean validateInvitationCode(BaseUserInfoDTO userInfo) {
+
         List<CptmpUser> users = cptmpUserMapper.findAllUsers();
-        RoleEnum registrationRole = RoleEnum.valueOf(RoleEnum.class, registrationRoleName);
+        RoleEnum registrationRole = RoleEnum.valueOf(RoleEnum.class, userInfo.getRoleName());
         String code;
         RoleEnum userRole;
         for (CptmpUser user: users
              ) {
             code = user.getInvitationCode();
-            if(invitationCode.equals(code))
+            if(userInfo.getInvitationCode().equals(code))
             {
                 userRole = RoleEnum.valueOf(RoleEnum.class, user.getRoleName());
-                if(userRole.compareTo(registrationRole) >= 0)
+                if(registrationRole.compareTo(userRole) >= 0)
                 {
                     //验证码有效更新邀请者邀请码
+                    cptmpUserMapper.updateInvitationCodeByUsername(user.getUsername(), productInvitationCode());
                     return true;
                 }
+                return false;
             }
         }
         return false;
