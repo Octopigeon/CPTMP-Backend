@@ -2,6 +2,9 @@ package io.github.octopigeon.cptmpservice.dto;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
+import org.springframework.security.core.Authentication;
+
+import java.util.Date;
 
 /**
  * @author anlow
@@ -12,11 +15,8 @@ import lombok.Data;
 @Data
 public class LoginInfoDTO {
 
-    @JSONField(name = "username")
-    private String username;
-
-    @JSONField(name = "role")
-    private String role;
+    @JSONField(name = "login_date")
+    private Date loginDate;
 
     @JSONField(name = "status_code")
     private Integer statusCode;
