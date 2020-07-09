@@ -26,6 +26,10 @@ public interface PasswordResetTokenMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void addPasswordResetToken(PasswordResetToken passwordResetToken);
 
+    @Deprecated
+    @Update("update password_reset_token set uk_token = #{token} where idx_email = #{email}")
+    void updateTokenByEmail(String token, String email);
+
     /**
      * 用于验证后删除该用户的所有token
      * @param email token对应的用户email
@@ -59,7 +63,7 @@ public interface PasswordResetTokenMapper {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
-            @Result(column = "token", property = "token", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "uk_token", property = "token", jdbcType = JdbcType.VARCHAR),
             @Result(column = "idx_email", property = "email", jdbcType = JdbcType.VARCHAR)
     })
     List<PasswordResetToken> findAllPasswordResetTokens();

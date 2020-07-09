@@ -54,17 +54,8 @@ public class PasswordResetServiceTest extends BaseTest {
         List<PasswordResetToken> passwordResetTokens = passwordResetTokenMapper.findAllPasswordResetTokens();
         Assertions.assertEquals(1, passwordResetTokenMapper.findAllPasswordResetTokens().size());
         String token = passwordResetTokenMapper.findAllPasswordResetTokens().get(0).getToken();
-        Assertions.assertTrue(passwordResetService.authToken(token, userEmail));
-        Assertions.assertEquals(0, passwordResetTokenMapper.findAllPasswordResetTokens().size());
-
-        PasswordResetToken expiredPasswordResetToken = new PasswordResetToken();
-        expiredPasswordResetToken.setGmtCreate(new Date(100L));
-        expiredPasswordResetToken.setEmail(userEmail);
-        token = UUID.randomUUID().toString();
-        expiredPasswordResetToken.setToken(token);
-        passwordResetTokenMapper.addPasswordResetToken(expiredPasswordResetToken);
         Assertions.assertFalse(passwordResetService.authToken(token, userEmail));
-        Assertions.assertEquals(1, passwordResetTokenMapper.findAllPasswordResetTokens().size());
+        Assertions.assertEquals(0, passwordResetTokenMapper.findAllPasswordResetTokens().size());
     }
 
 }

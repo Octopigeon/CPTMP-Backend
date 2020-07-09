@@ -57,6 +57,7 @@ public class PasswordResetService {
         if (passwordResetToken == null) {
             return false;
         }
+        // 注意，这里测试的时候有时区问题
         long delay = System.currentTimeMillis() - passwordResetToken.getGmtCreate().getTime();
         long maxTokenLiveTime = 5 * 60 * 1000L;
         if (delay < maxTokenLiveTime) {
