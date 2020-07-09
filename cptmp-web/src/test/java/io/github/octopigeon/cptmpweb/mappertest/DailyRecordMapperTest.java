@@ -32,6 +32,7 @@ public class DailyRecordMapperTest extends BaseTest {
         DailyRecord dailyRecord1 = new DailyRecord();
         dailyRecord1.setGmtCreate(new Date());
         dailyRecord1.setUserId(BigInteger.valueOf(1));
+        dailyRecord1.setTeamId(BigInteger.valueOf(1));
         dailyRecord1.setRecordType(0);
         dailyRecord1.setDocumentPath("E://");
         dailyRecord1.setTitle("lgp");
@@ -40,6 +41,7 @@ public class DailyRecordMapperTest extends BaseTest {
         DailyRecord dailyRecord2 = new DailyRecord();
         dailyRecord2.setGmtCreate(new Date());
         dailyRecord2.setUserId(BigInteger.valueOf(2));
+        dailyRecord2.setTeamId(BigInteger.valueOf(2));
         dailyRecord2.setRecordType(1);
         dailyRecord2.setDocumentPath("E://");
         dailyRecord2.setTitle("wxc");
@@ -59,7 +61,7 @@ public class DailyRecordMapperTest extends BaseTest {
         dailyRecords=dailyRecordMapper.findAllDailyRecord();
         Assertions.assertEquals(1,dailyRecords.size());
 
-        dailyRecordMapper.updateDailyRecordByUserId(new Date(),"test","lgp",BigInteger.valueOf(2),"C://",0);
+        dailyRecordMapper.updateDailyRecordByUserId(new Date(),"test","lgp",BigInteger.valueOf(2), BigInteger.valueOf(2), "C://",0);
         dailyRecords=dailyRecordMapper.findDailyRecordByUserId(BigInteger.valueOf(2));
         Assertions.assertEquals("lgp",dailyRecords.get(0).getContent());
 
