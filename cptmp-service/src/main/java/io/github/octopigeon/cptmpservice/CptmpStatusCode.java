@@ -15,8 +15,6 @@ public class CptmpStatusCode {
 
     /** 登录验证失败 */
     public static int AUTH_FAILED_BAD_CREDENTIALS = 1;
-    /** 登录用户名不存在 */
-    public static int AUTH_FAILED_USERNAME_NOT_FOUND = 2;
     /** 记住我异常 */
     public static int AUTH_FAILED_REMEMBER_ME_ERROR = 3;
     /** 认证信息过期 */
