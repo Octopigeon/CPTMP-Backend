@@ -1,4 +1,6 @@
-package io.github.octopigeon.cptmpservice.service.trainprojectdetails;
+package io.github.octopigeon.cptmpservice.service.trainproject.details;
+
+import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 
