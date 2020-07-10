@@ -1,8 +1,10 @@
 package io.github.octopigeon.cptmpservice.service;
 
+import org.springframework.core.io.Resource;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.math.BigInteger;
 
 /**
  * 文件传输服务
@@ -12,30 +14,31 @@ import java.io.IOException;
  * @last-check-in Gh Li
  * @date 2020/7/10
  */
+@Repository
 public interface FileTransferService {
     /**
      * 单个文件上传接收服务
      * @param file 多文件
-     * @return 文件对应的url
-     * @throws IllegalStateException
-     * @throws IOException
+     * @param userId 上传的用户
+     * @param teamId 上传所属团队，可为空
+     * @return 文件名
+     * @throws Exception
      */
-    String singleFileUpload( MultipartFile file) throws IllegalStateException, IOException;
-
-    /**
-     * 多文件上传接收服务
-     * @param files 多文件
-     * @return 多个文件的url
-     * @throws IllegalStateException
-     * @throws IOException
-     */
-    String[] multiFileUpload(MultipartFile[] files) throws IllegalStateException, IOException;
+    String singleStoreFile(MultipartFile file, BigInteger userId, BigInteger teamId) throws Exception;
 
     /**
      * 文件下载服务
-     * @param fileUrl 文件的url
-     * @return 是否传输成功
-     * @throws IOException
+     * @param fileName 文件名
+     * @return 资源文件
+     * @throws Exception
      */
-    Boolean singleFileDownload(String fileUrl) throws IOException;
+    Resource loadFile(String fileName, String year, String month, String day) throws Exception;
+
+    /**
+     * 删除文件
+     * @param fileName 文件名
+     * @return 是否删除成功
+     * @throws Exception
+     */
+    Boolean deleteFile(String fileName, String year, String month, String day) throws Exception;
 }

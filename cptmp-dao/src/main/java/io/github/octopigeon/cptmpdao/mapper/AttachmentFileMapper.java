@@ -3,6 +3,7 @@ package io.github.octopigeon.cptmpdao.mapper;
 import io.github.octopigeon.cptmpdao.model.AttachmentFile;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -15,6 +16,8 @@ import java.util.List;
  * @last-check-in Gh Li
  * @date 2020/7/10
  */
+@Repository
+@Mapper
 public interface AttachmentFileMapper {
 
     /**
@@ -51,7 +54,7 @@ public interface AttachmentFileMapper {
             @Result(column = "uk_file_path", property = "filePath", jdbcType =JdbcType.VARCHAR),
             @Result(column = "origin_name", property = "originName", jdbcType = JdbcType.VARCHAR),
     })
-    void findAttachmentFileByfileName(String fileName);
+    AttachmentFile findAttachmentFileByfileName(String fileName);
 
     /**
      * 查询用户上传的文件
