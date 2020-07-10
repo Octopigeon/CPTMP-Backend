@@ -1,6 +1,8 @@
 package io.github.octopigeon.cptmpservice.dto.trainproject;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.springframework.boot.jackson.JsonComponent;
 
 import java.util.Date;
 
@@ -15,8 +17,11 @@ import java.util.Date;
 @Data
 public class TrainProjectDuringTimeDTO {
 
+    @JsonProperty(value = "project_name")
     private String projectName;
+    @JsonProperty(value = "start_date")
     private Date startDate;
+    @JsonProperty(value = "finish_date")
     private Date finishDate;
 
 }
