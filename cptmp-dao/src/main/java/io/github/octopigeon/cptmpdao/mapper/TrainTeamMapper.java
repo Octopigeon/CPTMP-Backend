@@ -13,11 +13,11 @@ import java.util.List;
 
 /**
  * @author 李国鹏
- * @version 1.0
+ * @version 1.2
  * @date 2020/7/9
  * <p>
  * last-check-in 李国鹏
- * @date 2020/7/9
+ * @date 2020/7/10
  */
 @Repository
 @Mapper
@@ -27,8 +27,12 @@ public interface TrainTeamMapper {
      * 插入实训团队
      * @param trainTeam：实训团队
      */
-    @Insert("insert into train_team (gmt_create, train_project_id, idx_team_name, team_manager_id, code_base_url, team_grade) " +
-            "values (#{gmtCreate}, #{trainProjectId}, #{teamName}, #{teamManagerId}, #{codeBaseUrl}, #{teamGrade})")
+    String COLUMNS="gmt_create, gmt_modified, train_project_id, idx_team_name, team_manager_id, code_base_url, team_grade";
+    String PROPS="#{gmtCreate}, #{gmtModified}, #{trainProjectId}, #{teamName}, #{teamManagerId}, #{codeBaseUrl}, #{teamGrade}";
+    String UPDATE_CONTENT="gmt_modified = #{gmtModified}, train_project_id = #{trainProjectId}, idx_team_name = #{teamName}, " +
+            "team_manager_id = #{teamManagerId}, code_base_url = #{codeBaseUrl}, team_grade = #{teamGrade}";
+    @Insert("insert into train_team (" + COLUMNS + ") " +
+            "values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addTrainTeam(TrainTeam trainTeam);
 
@@ -56,8 +60,8 @@ public interface TrainTeamMapper {
      * @param codeBaseUrl 代码库地址
      * @param teamGrade 团队成绩
      */
-    @Update("update train_team set gmt_modified = #{gmtModified}, train_project_id = #{trainProjectId}, idx_team_name = #{teamName}, " +
-            "team_manager_id = #{teamManagerId}, code_base_url = #{codeBaseUrl}, team_grade = #{teamGrade} where id = #{id}")
+    @Update("update train_team set "+
+            UPDATE_CONTENT+"  where id = #{id}")
     void updateTrainTeamById(BigInteger id, Date gmtModified, BigInteger trainProjectId, String teamName, BigInteger teamManagerId, String codeBaseUrl, BigDecimal teamGrade);
 
     /**
@@ -69,8 +73,8 @@ public interface TrainTeamMapper {
      * @param codeBaseUrl 代码库地址
      * @param teamGrade 团队成绩
      */
-    @Update("update train_team set gmt_modified = #{gmtModified}, train_project_id = #{trainProjectId}, idx_team_name = #{teamName}, " +
-            "team_manager_id = #{teamManagerId}, code_base_url = #{codeBaseUrl}, team_grade = #{teamGrade} where idx_team_name = #{teamName}")
+    @Update("update train_team set "+
+            UPDATE_CONTENT+" where idx_team_name = #{teamName}")
     void updateTrainTeamByTeamName(Date gmtModified, BigInteger trainProjectId, String teamName, BigInteger teamManagerId, String codeBaseUrl, BigDecimal teamGrade);
 
 
@@ -78,7 +82,7 @@ public interface TrainTeamMapper {
      * 查询所有团队
      * @return 团队列表
      */
-    @Select("select * from train_team")
+    @Select("select id, " + COLUMNS + " from train_team")
     @Results({
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
@@ -97,7 +101,7 @@ public interface TrainTeamMapper {
      * @param teamId：团队id
      * @return 团队
      */
-    @Select("select * from train_team where id = #{id}")
+    @Select("select id, " + COLUMNS + " from train_team where id = #{id}")
     @Results({
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
@@ -116,7 +120,7 @@ public interface TrainTeamMapper {
      * @param teamName：团队名称
      * @return 团队列表
      */
-    @Select("select * from train_team where team_name = #{teamName}")
+    @Select("select id, " + COLUMNS + " from train_team where team_name = #{teamName}")
     @Results({
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
