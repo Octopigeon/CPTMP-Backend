@@ -1,8 +1,26 @@
 package io.github.octopigeon.cptmpservice.service;
 
+import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
+import io.github.octopigeon.cptmpdao.mapper.SchoolStudentMapper;
+import io.github.octopigeon.cptmpdao.model.CptmpUser;
+import io.github.octopigeon.cptmpdao.model.SchoolStudent;
+import io.github.octopigeon.cptmpweb.config.FileProperties;
+import org.apache.commons.io.FilenameUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.Date;
+import java.util.Objects;
+
 
 /**
  * @author Gh Li
@@ -11,29 +29,109 @@ import java.io.IOException;
  * @last-check-in Gh Li
  * @date 2020/7/10
  */
+@Service
 public class ImageServiceImpl implements ImageService{
+    // 文件在本地存储的地址
+    private final Path userAvatarLocation;
+    private final Path userFaceLocation;
+
+    @Autowired
+    private CptmpUserMapper cptmpUserMapper;
+    @Autowired
+    private SchoolStudentMapper schoolStudentMapper;
+
+    @Autowired
+    public ImageServiceImpl(FileProperties fileProperties) throws Exception {
+        this.userAvatarLocation = Paths.get(fileProperties.getUploadBaseDir()+fileProperties.getUploadUserAvatar()).toAbsolutePath().normalize();
+        this.userFaceLocation = Paths.get(fileProperties.getUploadBaseDir()+fileProperties.getUploadUserFace()).toAbsolutePath().normalize();
+        try {
+            Files.createDirectories(this.userAvatarLocation);
+            Files.createDirectories(this.userFaceLocation);
+        } catch (Exception ex) {
+            throw new Exception("Could not create the directory where the uploaded files will be stored.", ex);
+        }
+    }
+
     /**
      * 图片上传
      *
-     * @param image 图片
+     * @param image    图片
+     * @param username 用户名
      * @return 图片存储的url
-     * @throws IllegalStateException
-     * @throws IOException
+     * @throws Exception
      */
     @Override
-    public String imageUpload(MultipartFile image) throws IllegalStateException, IOException {
-        return null;
+    public String storeImage(MultipartFile image, String username, String avatarOrFace) throws Exception {
+        String originName = StringUtils.cleanPath(Objects.requireNonNull(image.getOriginalFilename()));
+        try {
+            if (originName.contains("..")) {
+                throw new Exception("Sorry! Filename contains invalid path sequence " + originName);
+            }
+            String extension = FilenameUtils.getExtension(originName);
+            String imageName = String.format("%s_%s.%s", avatarOrFace, username, extension);
+            Path filePath = getFilePath(avatarOrFace, imageName);
+            if(filePath == null)
+            {
+                throw new Exception("The url is error!");
+            }
+            // 写入文件
+            Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            // 访问数据库
+            if(imageName.contains("avatar")){
+                String relativePath = String.format("/avatar/%s", imageName);
+                cptmpUserMapper.updateAvatarByUsername(new Date(), relativePath);
+            }
+            if(imageName.contains("face")){
+                String relativePath = String.format("/face/%s", imageName);
+                CptmpUser user = cptmpUserMapper.findUserByUsername(username);
+                SchoolStudent student = schoolStudentMapper.findSchoolStudentByUserId(user.getId());
+                schoolStudentMapper.updateSchoolStudetnByUserId(student.getUserId(), new Date(), student.getName(), student.getStudentId(), student.getSchoolName(), relativePath);
+            }
+
+            return imageName;
+        }catch (Exception ex){
+            throw new Exception("Could not store file " + originName + ". Please try again!", ex);
+        }
     }
 
     /**
      * 图片下载
      *
-     * @param imageUrl 图片url
+     * @param imageName 图片url
      * @return 是否传输成功
-     * @throws IOException
+     * @throws Exception
      */
     @Override
-    public Boolean imageDownload(String imageUrl) throws IOException {
-        return null;
+    public Resource uploadImage(String imageName, String avatarOrFace) throws Exception {
+        try {
+            Path filePath = getFilePath(avatarOrFace, imageName);
+            if(filePath == null)
+            {
+                throw new Exception("Image not found");
+            }
+            Resource resource = new UrlResource(filePath.toUri());
+            if(resource.exists()) {
+                return resource;
+            } else {
+                throw new Exception("Image not found");
+            }
+        } catch (MalformedURLException ex) {
+            throw new Exception("Image not found");
+        }
+    }
+
+    private Path getFilePath(String avatarOrFace, String imageName)
+    {
+        if("avatar".equals(avatarOrFace))
+        {
+            return Paths.get(this.userAvatarLocation.toString(), imageName).normalize();
+        }
+        else if("face".equals(avatarOrFace))
+        {
+            return Paths.get(this.userFaceLocation.toString(), imageName).normalize();
+        }
+        else {
+            return null;
+        }
     }
 }

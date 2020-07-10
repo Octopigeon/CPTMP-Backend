@@ -6,6 +6,7 @@ import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -84,5 +85,8 @@ public interface CptmpUserMapper {
 
     @Update(UPDATE_HEADER + "invitation_code = #{invitationCode}" + UPDATE_TAIL_USERNAME)
     void updateInvitationCodeByUsername(String username, String invitationCode);
+
+    @Update(UPDATE_HEADER + "gmt_modified=#{gmtModified}, avatar=#{avatar}" + UPDATE_TAIL_USERNAME)
+    void updateAvatarByUsername(Date gmtModified, String avatar);
 
 }
