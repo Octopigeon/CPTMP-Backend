@@ -58,7 +58,7 @@ public class RegistrationServiceTest extends BaseTest {
         BaseUserInfoDTO userInfo = new TeacherInfoDTO();
         initData(userInfo, "asdadd", RoleEnum.ROLE_SCHOOL_TEACHER);
         TeacherInfoDTO teacherInfo = (TeacherInfoDTO)userInfo;
-        teacherInfo.setEmployeeId(BigInteger.valueOf(1223455L));
+        teacherInfo.setEmployeeId(BigInteger.valueOf(1223455L).toString());
         teacherInfo.setName("赵春华");
         teacherInfo.setSchoolName("武汉大学");
         if(registrationService.validateInvitationCode(userInfo)){
@@ -98,7 +98,7 @@ public class RegistrationServiceTest extends BaseTest {
             userInfo.setPassword("123456");
             userInfo.setName("赵春华");
             userInfo.setSchoolName("武汉大学");
-            userInfo.setStudentId(BigInteger.valueOf((long) (Math.random() * 1000)));
+            userInfo.setStudentId(BigInteger.valueOf((long) (Math.random() * 1000)).toString());
             userInfos.add(userInfo);
         }
         return userInfos;
