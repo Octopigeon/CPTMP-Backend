@@ -24,12 +24,12 @@ import java.util.List;
 @Mapper
 public interface TrainProjectMapper {
 
-    String COLUMNS = "gmt_create, gmt_modified, uk_project_name, start_date, finish_date, " +
-            "content, accept_standard, resource_library";
-    String PROPS = "#{gmtCreate}, #{gmtModified}, #{projectName}, #{startDate}, #{finishDate}, " +
-            "#{content}, #{acceptStandard}, #{resourceLibrary}";
-    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, uk_project_name = #{projectName}, start_date = #{startDate}, " +
-            "finish_date = #{finishDate}, content = #{content}, accept_standard = #{acceptStandard}, resource_library = #{resourceLibrary}";
+    String COLUMNS = "gmt_create, gmt_modified, train_id, uk_project_name, project_level, " +
+            "project_content, resource_library";
+    String PROPS = "#{gmtCreate}, #{gmtModified}, #{trainId}, #{projectName}, #{projectLevel}, " +
+            "#{projectContent}, #{resourceLibrary}";
+    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, train_id = #{trainId}, uk_project_name = #{projectName}, " +
+            "project_level = #{projectLevel}, project_content = #{projectContent}, resource_library = #{resourceLibrary}";
 
     /**
      * 插入实训项目
@@ -60,31 +60,31 @@ public interface TrainProjectMapper {
      */
     @Delete("delete from train_project where uk_project_name = #{projectName}")
     void removeTrainProjectByProjectName(String projectName);
-    /**
-     * 根据项目id修改项目内容
-     * @param gmtModified  修改时间
-     * @param projectName 项目名称
-     * @param startDate 开始时间
-     * @param finishDate  结束时间
-     * @param content  项目内容
-     * @param acceptStandard  验收标准
-     * @param resourceLibrary 资源库
-     */
-    @Update("update train_project set"+ UPDATE_CONTENT +" where id = #{id}")
-    void updateTrainProjectById(BigInteger id, Date gmtModified, String projectName, Date startDate, Date finishDate, String content, String acceptStandard, String resourceLibrary);
 
     /**
-     * 根据项目名修改项目内容
-     * @param gmtModified  修改时间
+     * 根据id修改实训项目
+     * @param id 实训id
+     * @param gmtModified 修改时间
+     * @param trainId 实训id
+     * @param projectName 项目姓名
+     * @param projectLevel 项目难度
+     * @param projectContent 项目内容描述
+     * @param resourceLibrary 项目资源库
+     */
+    @Update("update train_project set "+ UPDATE_CONTENT +" where id = #{id}")
+    void updateTrainProjectById(BigInteger id, Date gmtModified, BigInteger trainId, String projectName, Integer projectLevel, String projectContent, String resourceLibrary);
+
+    /**
+     * 根据项目名称修改
+     * @param gmtModified 修改时间
+     * @param trainId 实训id
      * @param projectName 项目名称
-     * @param startDate 开始时间
-     * @param finishDate  结束时间
-     * @param content  项目内容
-     * @param acceptStandard  验收标准
-     * @param resourceLibrary 资源库
+     * @param projectLevel 项目难度
+     * @param projectContent 项目内容描述
+     * @param resourceLibrary 项目资源库
      */
     @Update("update train_project set "+ UPDATE_CONTENT +" where uk_project_name = #{projectName}")
-    void updateTrainProjectByProjectName(Date gmtModified, String projectName, Date startDate, Date finishDate, String content, String acceptStandard, String resourceLibrary);
+    void updateTrainProjectByProjectName(Date gmtModified, BigInteger trainId, String projectName, Integer projectLevel, String projectContent, String resourceLibrary);
 
     /**
      * 查询所有项目
@@ -96,10 +96,9 @@ public interface TrainProjectMapper {
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
             @Result(column = "uk_project_name", property = "projectName", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "start_date", property = "startDate", jdbcType = JdbcType.DATE),
-            @Result(column = "finish_date", property = "finishDate", jdbcType = JdbcType.DATE),
-            @Result(column = "content", property = "content", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "accept_standard", property = "acceptStandard", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "train_id", property = "trainId", jdbcType = JdbcType.BIGINT),
+            @Result(column = "project_level", property = "projectLevel", jdbcType = JdbcType.INTEGER),
+            @Result(column = "project_content", property = "projectContent", jdbcType = JdbcType.VARCHAR),
             @Result(column = "resource_library", property = "resourceLibrary", jdbcType = JdbcType.VARCHAR)
 
     })
