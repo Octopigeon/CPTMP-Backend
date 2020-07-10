@@ -20,17 +20,16 @@ public class TrainProject {
     private BigInteger id;
     private Date gmtCreate;
     private Date gmtModified;
-    private String projectId;
+    private BigInteger trainId;
     private String projectName;
-    private Date startDate;
-    private Date finishDate;
-    private String content;
     /**
-     * 验收标准
+     * 数字代表难度系数
      */
-    private String acceptStandard;
+    private Integer projectLevel;
+    private String projectContent;
     /**
-     * 实训资源
+     * 项目资源
      */
     private String resourceLibrary;
+
 }
