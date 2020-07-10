@@ -2,7 +2,8 @@ package io.github.octopigeon.cptmpservice.service;
 
 import io.github.octopigeon.cptmpdao.mapper.AttachmentFileMapper;
 import io.github.octopigeon.cptmpdao.model.AttachmentFile;
-import io.github.octopigeon.cptmpweb.config.FileProperties;
+import io.github.octopigeon.cptmpservice.FileProperties;
+import io.github.octopigeon.cptmpservice.dto.FileDTO;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -28,7 +29,7 @@ import java.util.Random;
  * @date 2020/7/10
  */
 @Service
-public class FileTransferServiceImpl implements FileTransferService{
+public class FileServiceImpl implements FileService{
     // 文件在本地存储的地址
     private final Path fileStorageLocation;
 
@@ -36,7 +37,7 @@ public class FileTransferServiceImpl implements FileTransferService{
     private AttachmentFileMapper attachmentFileMapper;
 
     @Autowired
-    public FileTransferServiceImpl(FileProperties fileProperties) throws Exception {
+    public FileServiceImpl(FileProperties fileProperties) throws Exception {
 
         String path = fileProperties.getUploadBaseDir()+fileProperties.getUploadFile();
         this.fileStorageLocation = Paths.get(path).toAbsolutePath().normalize();
@@ -56,7 +57,7 @@ public class FileTransferServiceImpl implements FileTransferService{
      * @throws Exception
      */
     @Override
-    public String singleStoreFile(MultipartFile file, BigInteger userId, BigInteger teamId) throws Exception {
+    public FileDTO singleStoreFile(MultipartFile file, BigInteger userId, BigInteger teamId) throws Exception {
         String originName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         try{
             if(originName.contains("..")){
@@ -76,21 +77,34 @@ public class FileTransferServiceImpl implements FileTransferService{
             Path filePath = realPath.resolve(fileName);
             // 文件存储
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            //构建返回fileDTO
+            FileDTO fileResp = new FileDTO();
+            fileResp.setGmtCreate(new Date());
+            fileResp.setFileName(fileName);
+            fileResp.setFilePath(String.format("/storage/%d/%d/%d/%s", cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DATE), fileName));
+            fileResp.setOriginalName(originName);
+            fileResp.setFileSize(file.getSize());
+            fileResp.setFileType(file.getContentType());
             //数据库操作
-            AttachmentFile attachmentFile = new AttachmentFile();
-            attachmentFile.setFileName(fileName);
-            attachmentFile.setFilePath(filePath.toString());
-            attachmentFile.setFileSize(BigInteger.valueOf(file.getSize()));
-            attachmentFile.setFileType(file.getContentType());
-            attachmentFile.setGmtCreate(new Date());
-            attachmentFile.setOriginName(originName);
-            attachmentFile.setUserId(userId);
-            attachmentFile.setTeamId(teamId);
-            attachmentFileMapper.addAttachmentFile(attachmentFile);
-            return fileName;
+            addFileRecord(fileResp, userId, teamId);
+            return fileResp;
         } catch (Exception ex) {
             throw new Exception("Could not store file " + originName + ". Please try again!", ex);
         }
+    }
+
+    private void addFileRecord(FileDTO fileInfo, BigInteger userId, BigInteger teamId)
+    {
+        AttachmentFile attachmentFile = new AttachmentFile();
+        attachmentFile.setFileName(fileInfo.getFileName());
+        attachmentFile.setFilePath(fileInfo.getFilePath());
+        attachmentFile.setFileSize(BigInteger.valueOf(fileInfo.getFileSize()));
+        attachmentFile.setFileType(fileInfo.getFileType());
+        attachmentFile.setGmtCreate(fileInfo.getGmtCreate());
+        attachmentFile.setOriginName(fileInfo.getOriginalName());
+        attachmentFile.setUserId(userId);
+        attachmentFile.setTeamId(teamId);
+        attachmentFileMapper.addAttachmentFile(attachmentFile);
     }
 
     /**

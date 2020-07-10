@@ -1,5 +1,6 @@
 package io.github.octopigeon.cptmpservice.service;
 
+import io.github.octopigeon.cptmpservice.dto.FileDTO;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,7 +16,7 @@ import java.math.BigInteger;
  * @date 2020/7/10
  */
 @Repository
-public interface FileTransferService {
+public interface FileService {
     /**
      * 单个文件上传接收服务
      * @param file 多文件
@@ -24,7 +25,7 @@ public interface FileTransferService {
      * @return 文件名
      * @throws Exception
      */
-    String singleStoreFile(MultipartFile file, BigInteger userId, BigInteger teamId) throws Exception;
+    FileDTO singleStoreFile(MultipartFile file, BigInteger userId, BigInteger teamId) throws Exception;
 
     /**
      * 文件下载服务

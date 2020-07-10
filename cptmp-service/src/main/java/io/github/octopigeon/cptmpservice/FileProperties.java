@@ -1,4 +1,4 @@
-package io.github.octopigeon.cptmpweb.config;
+package io.github.octopigeon.cptmpservice;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

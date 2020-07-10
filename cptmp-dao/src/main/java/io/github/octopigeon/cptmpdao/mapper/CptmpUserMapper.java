@@ -87,6 +87,6 @@ public interface CptmpUserMapper {
     void updateInvitationCodeByUsername(String username, String invitationCode);
 
     @Update(UPDATE_HEADER + "gmt_modified=#{gmtModified}, avatar=#{avatar}" + UPDATE_TAIL_USERNAME)
-    void updateAvatarByUsername(Date gmtModified, String avatar);
+    void updateAvatarByUsername(String username, Date gmtModified, String avatar);
 
 }
