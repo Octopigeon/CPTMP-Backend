@@ -1,6 +1,7 @@
-package io.github.octopigeon.cptmpweb.bean;
+package io.github.octopigeon.cptmpweb.bean.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Data;
 
 /**
