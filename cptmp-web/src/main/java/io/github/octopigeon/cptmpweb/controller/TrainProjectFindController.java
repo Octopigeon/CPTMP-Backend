@@ -2,7 +2,7 @@ package io.github.octopigeon.cptmpweb.controller;
 
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainProjectFindRespDTO;
 import io.github.octopigeon.cptmpservice.service.trainproject.find.TrainProjectEnterpriseAdminFindServiceImpl;
-import io.github.octopigeon.cptmpweb.bean.KeyWordBean;
+import io.github.octopigeon.cptmpweb.bean.request.KeyWordBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
@@ -31,7 +31,6 @@ public class TrainProjectFindController {
     public List<TrainProjectFindRespDTO> enterpriseAdminFindTrainProject(
             @RequestBody KeyWordBean keyWord
             ) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return trainProjectEnterpriseAdminFindService.findTrainProjects(keyWord.getKeyWord());
     }
 
