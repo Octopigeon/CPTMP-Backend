@@ -16,11 +16,11 @@ import java.util.Date;
 import java.util.List;
 /**
  * @author 李国鹏
- * @version 1.0
+ * @version 1.2
  * @date 2020/7/8
  *
  * last-check-in 李国鹏
- * @date 2020/7/8
+ * @date 2020/7/10
  */
 public class DailyRecordMapperTest extends BaseTest {
     @Autowired

@@ -1,9 +1,7 @@
 package io.github.octopigeon.cptmpweb.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.octopigeon.cptmpservice.CptmpStatusCode;
-import io.github.octopigeon.cptmpweb.bean.RespBean;
-import lombok.extern.slf4j.Slf4j;
+import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
