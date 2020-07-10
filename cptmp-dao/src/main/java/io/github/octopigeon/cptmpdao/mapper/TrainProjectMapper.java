@@ -17,19 +17,26 @@ import java.util.List;
  * @version 1.0
  * @date 2020/7/9
  * <p>
- * last-check-in 李国鹏
- * @date 2020/7/9
+ * last-check-in anlow
+ * @date 2020/7/10
  */
 @Repository
 @Mapper
 public interface TrainProjectMapper {
 
+    String COLUMNS = "gmt_create, gmt_modified, uk_project_name, start_date, finish_date, " +
+            "content, accept_standard, resource_library";
+    String PROPS = "#{gmtCreate}, #{gmtModified}, #{projectName}, #{startDate}, #{finishDate}, " +
+            "#{content}, #{acceptStandard}, #{resourceLibrary}";
+    String UPDATE_HEADER = "update train_project set ";
+    String TAIL_PROJECT_NAME = "where uk_project_name = #{projectName}";
+
     /**
      * 插入实训项目
      * @param trainProject：实训项目
      */
-    @Insert("insert into train_project (gmt_create, uk_project_name, start_date, finish_date, content, accept_standard, resource_library) " +
-            "values (#{gmtCreate}, #{projectName}, #{startDate}, #{finishDate}, #{content}, #{acceptStandard}, #{resourceLibrary})")
+    @Insert("insert into train_project (" + COLUMNS + ") " +
+            "values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addTrainProject(TrainProject trainProject);
 
@@ -79,7 +86,7 @@ public interface TrainProjectMapper {
      * 查询所有项目
      * @return 项目列表
      */
-    @Select("select * from train_project")
+    @Select("select id, " + COLUMNS + " from train_project")
     @Results({
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
@@ -99,7 +106,7 @@ public interface TrainProjectMapper {
      * @param id：项目id
      * @return 项目
      */
-    @Select("select * from train_project where id = #{id}")
+    @Select("select id, " + COLUMNS + " from train_project where id = #{id}")
     @Results({
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
@@ -118,7 +125,7 @@ public interface TrainProjectMapper {
      * @param projectName：项目名称
      * @return 项目
      */
-    @Select("select * from train_project where uk_project_name = #{projectName}")
+    @Select("select id, " + COLUMNS + " from train_project where uk_project_name = #{projectName}")
     @Results({
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
