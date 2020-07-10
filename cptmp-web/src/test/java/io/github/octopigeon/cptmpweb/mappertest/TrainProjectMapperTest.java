@@ -13,11 +13,11 @@ import java.util.Date;
 
 /**
  * @author 李国鹏
- * @version 1.0
+ * @version 1.2
  * @date 2020/7/9
  * <p>
  * last-check-in 李国鹏
- * @date 2020/7/9
+ * @date 2020/7/10
  */
 public class TrainProjectMapperTest extends BaseTest {
     @Autowired
