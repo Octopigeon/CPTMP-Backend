@@ -9,11 +9,11 @@ import java.util.Date;
 import java.util.List;
 /**
  * @author 李国鹏
- * @version 1.0
+ * @version 1.2
  * @date 2020/7/8
  *
  * @last-check-in 李国鹏
- * @date 2020/7/8
+ * @date 2020/7/10
  */
 @Repository
 @Mapper
@@ -22,7 +22,9 @@ public interface ActivityRecordMapper {
      * 向activity record中插入一条数据
      * @param activityRecord：类
      */
-    @Insert("insert into activity_record (gmt_create, state_record, event_record, idx_user_id, idx_team_id) values (#{gmtCreate}, #{state}, #{event}, #{userId}, #{teamId})")
+    String COLUMNS="gmt_create, gmt_modified, idx_user_id, idx_team_id, state_record, event_record";
+    String PROPS="#{gmtCreate}, #{gmtModified}, #{userId}, #{teamId}, #{state}, #{event}";
+    @Insert("insert into activity_record (" + COLUMNS + ") values ( " + PROPS +" )")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addActivityRecord(ActivityRecord activityRecord);
 
@@ -72,15 +74,15 @@ public interface ActivityRecordMapper {
      * 查找所有活动记录
      * @return 活动记录列表
      */
-    @Select("select * from activity_record")
+    @Select("select id, " + COLUMNS + " from activity_record")
     @Results({
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
+            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
+            @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
             @Result(column = "idx_user_id", property = "userId", jdbcType = JdbcType.BIGINT),
             @Result(column = "idx_team_id", property = "teamId", jdbcType = JdbcType.BIGINT),
-            @Result(column = "event_record", property = "event", jdbcType = JdbcType.VARCHAR),
             @Result(column = "state_record", property = "state", jdbcType = JdbcType.BIGINT),
-            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
-            @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE)
+            @Result(column = "event_record", property = "event", jdbcType = JdbcType.VARCHAR)
     })
     List<ActivityRecord> findAllActivityRecord();
 
@@ -89,15 +91,15 @@ public interface ActivityRecordMapper {
      * @param userId:活动人id
      * @return 活动记录列表
      */
-    @Select("select * from activity_record where idx_user_id = #{userId}")
+    @Select("select id, " + COLUMNS + " from activity_record where idx_user_id = #{userId}")
     @Results({
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
+            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
+            @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
             @Result(column = "idx_user_id", property = "userId", jdbcType = JdbcType.BIGINT),
             @Result(column = "idx_team_id", property = "teamId", jdbcType = JdbcType.BIGINT),
-            @Result(column = "event_record", property = "event", jdbcType = JdbcType.VARCHAR),
             @Result(column = "state_record", property = "state", jdbcType = JdbcType.BIGINT),
-            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
-            @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE)
+            @Result(column = "event_record", property = "event", jdbcType = JdbcType.VARCHAR)
     })
     List<ActivityRecord> findActivityRecordByUserId(BigInteger userId);
 
@@ -106,15 +108,15 @@ public interface ActivityRecordMapper {
      * @param teamId：团队id
      * @return 活动记录列表
      */
-    @Select("select * from activity_record where idx_team_id = #{teamId}")
+    @Select("select id, " + COLUMNS + " from activity_record where idx_team_id = #{teamId}")
     @Results({
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
+            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
+            @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
             @Result(column = "idx_user_id", property = "userId", jdbcType = JdbcType.BIGINT),
             @Result(column = "idx_team_id", property = "teamId", jdbcType = JdbcType.BIGINT),
-            @Result(column = "event_record", property = "event", jdbcType = JdbcType.VARCHAR),
             @Result(column = "state_record", property = "state", jdbcType = JdbcType.BIGINT),
-            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
-            @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE)
+            @Result(column = "event_record", property = "event", jdbcType = JdbcType.VARCHAR)
     })
     List<ActivityRecord> findActivityRecordByTeamId(BigInteger teamId);
 
