@@ -1,11 +1,12 @@
 package io.github.octopigeon.cptmpweb.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import io.github.octopigeon.cptmpservice.CptmpStatusCode;
-import io.github.octopigeon.cptmpweb.bean.RespBean;
+import io.github.octopigeon.cptmpweb.bean.response.RespBean;
+import io.github.octopigeon.cptmpweb.bean.response.RespBeanWithObj;
+import org.springframework.beans.BeanUtils;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +28,13 @@ public class LoginController {
     @GetMapping("/api/access")
     public RespBean hello() {
         return RespBean.ok("access successfully");
+    }
+    @GetMapping("/api/me")
+    public RespBeanWithObj<Authentication> getProfile() {
+        RespBeanWithObj<Authentication> authenticationRespBeanWithObj = new RespBeanWithObj<>();
+        BeanUtils.copyProperties(RespBean.ok(CptmpStatusCode.OK, "get profile success"), authenticationRespBeanWithObj);
+        authenticationRespBeanWithObj.setObj(SecurityContextHolder.getContext().getAuthentication());
+        return authenticationRespBeanWithObj;
     }
 
 }
