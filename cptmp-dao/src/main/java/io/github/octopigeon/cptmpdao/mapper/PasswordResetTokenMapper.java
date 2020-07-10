@@ -42,7 +42,7 @@ public interface PasswordResetTokenMapper {
      * @param token 当前token
      * @return 返回找到的token对象
      */
-    @Select("select " + COLUMNS + " from password_reset_token where uk_token = #{token}")
+    @Select("select id, " + COLUMNS + " from password_reset_token where uk_token = #{token}")
     @ResultMap("passwordResetToken")
     PasswordResetToken findPasswordResetTokenByToken(String token);
 
