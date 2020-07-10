@@ -1,6 +1,6 @@
 package io.github.octopigeon.cptmpweb.exceptionhandler;
 
-import io.github.octopigeon.cptmpweb.bean.RespBean;
+import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
