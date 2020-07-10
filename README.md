@@ -18,8 +18,7 @@ College Practice Training Management Platform
 + HTTP方法：POST
 + 返回类型：json
 + 说明：返回体包括status，date，msg，详情@RespBean和@CptmpStatusCode中的状态码定义
-+ 调用实例：/login
-+ 请求json：
++ 调用实例：
 ```
 {
     "username": "test",
@@ -35,11 +34,11 @@ College Practice Training Management Platform
 }
 ```
 
+## LoginController
 ## /api/guard
 + HTTP方法：GET
 + 返回类型：json
 + 说明：当用户未登录时尝试访问未登录不能访问的地址时，返回一个json，状态码为8（以@CptmpStatusCode中的为准）
-+ 调用实例：/guard
 + 返回json：
 ```
 {
@@ -53,7 +52,6 @@ College Practice Training Management Platform
 + HTTP方法：GET
 + 返回类型：json
 + 说明：用于测试登录是否成功
-+ 调用实例：/api/access
 + 返回json:
 ``` 
 {
@@ -61,6 +59,15 @@ College Practice Training Management Platform
     "date": "2020-07-10T09:04:55.531+00:00",
     "msg": "access successfully"
 }
+```
+
+# TrainProjectDetailsController
+## /api/train-project/{id}/details/during-time
++ HTTP方法：GET
++ 返回类型：json
++ 说明：企业管理员模糊查询实训项目，可以查询到所有的项目
++ 调用实例：
+``` 
 ```
 
 ## /api/enterprise-admin/find/train-project
