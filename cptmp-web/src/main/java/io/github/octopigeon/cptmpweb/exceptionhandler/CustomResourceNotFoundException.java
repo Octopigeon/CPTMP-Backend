@@ -1,5 +1,7 @@
 package io.github.octopigeon.cptmpweb.exceptionhandler;
 
+import io.github.octopigeon.cptmpweb.bean.RespBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
@@ -15,8 +17,8 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 public class CustomResourceNotFoundException {
 
     @ExceptionHandler(NoHandlerFoundException.class)
-    public NoHandlerFoundException handleNoHandlerFoundException(NoHandlerFoundException e) {
-        return e;
+    public RespBean handleNoHandlerFoundException(NoHandlerFoundException e) {
+        return RespBean.error(HttpStatus.NOT_FOUND.value(), "not found");
     }
 
 }
