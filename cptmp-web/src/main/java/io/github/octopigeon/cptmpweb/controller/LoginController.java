@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @ResponseBody
 public class LoginController {
 
-    @GetMapping("/guard")
+    @GetMapping("/api/guard")
     public RespBean login() {
         return RespBean.error(CptmpStatusCode.ACCESS_DENY_NOT_LOGIN, "not login");
     }

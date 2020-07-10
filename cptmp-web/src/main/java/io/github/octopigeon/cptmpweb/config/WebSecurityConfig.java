@@ -53,9 +53,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().anyRequest().authenticated()
                 .and()
                 .formLogin()
-                .loginProcessingUrl("/login")
+                .loginProcessingUrl("/api/login")
                 .permitAll()  // 没有permitAll()会导致重定向死循环
-                .loginPage("/guard")
+                .loginPage("/api/guard")
                 .permitAll()
                 .and()
                 .logout()
