@@ -88,5 +88,15 @@ public interface CptmpUserMapper {
 
     @Update(UPDATE_HEADER + "gmt_modified=#{gmtModified}, avatar=#{avatar}" + UPDATE_TAIL_USERNAME)
     void updateAvatarByUsername(String username, Date gmtModified, String avatar);
+    /**
+     * 更新用户常规信息
+     * @param username
+     * @param nickname
+     * @param gmtModified
+     * @param introduction
+     * @param male
+     */
+    @Update(UPDATE_HEADER + "nickname = #{nickname},gmt_modified = #{gmtModified},introduction = #{introduction},gender = #{male}" + UPDATE_TAIL_USERNAME)
+    void updateUserInfoByUsername(String username, String nickname, Date gmtModified, String introduction, boolean male);
 
 }
