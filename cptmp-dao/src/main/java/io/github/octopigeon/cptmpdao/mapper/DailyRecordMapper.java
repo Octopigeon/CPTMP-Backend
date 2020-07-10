@@ -13,11 +13,11 @@ import java.util.List;
 
 /**
  * @author 李国鹏
- * @version 1.0
+ * @version 1.2
  * @date 2020/7/8
  * <p>
  * last-check-in 李国鹏
- * @date 2020/7/8
+ * @date 2020/7/10
  */
 @Repository
 @Mapper
@@ -26,7 +26,9 @@ public interface DailyRecordMapper {
      * 添加日志
      * @param dailyRecord：日志类
      */
-    @Insert("insert into daily_record (gmt_create, title, content, idx_user_id, idx_team_id, document_path, record_type) values (#{gmtCreate}, #{title}, #{content}, #{userId}, #{teamId}, #{documentPath}, #{recordType})")
+    String COLUMNS = "gmt_create, gmt_modified, idx_user_id, idx_team_id, title, content, record_type, document_path";
+    String PROPS = "#{gmtCreate}, #{gmtModified}, #{userId}, #{teamId}, #{title}, #{content}, #{recordType}, #{documentPath}";
+    @Insert("insert into daily_record (" +COLUMNS+ ") values (" +PROPS+ ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addDailyRecord(DailyRecord dailyRecord);
 
@@ -75,17 +77,17 @@ public interface DailyRecordMapper {
      * 查询所有日志
      * @return 日志列表
      */
-    @Select("select * from daily_record")
+    @Select("select id, " + COLUMNS + " from daily_record")
     @Results({
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
-            @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
+            @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
             @Result(column = "idx_user_id", property = "userId", jdbcType = JdbcType.BIGINT),
             @Result(column = "idx_team_id", property = "teamId", jdbcType = JdbcType.BIGINT),
-            @Result(column = "document_path", property = "documentPath", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "record_type", property = "recordType", jdbcType = JdbcType.INTEGER),
             @Result(column = "title", property = "title", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "content", property = "content", jdbcType = JdbcType.VARCHAR)
+            @Result(column = "content", property = "content", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "record_type", property = "recordType", jdbcType = JdbcType.INTEGER),
+            @Result(column = "document_path", property = "documentPath", jdbcType = JdbcType.VARCHAR)
 
     })
     List<DailyRecord> findAllDailyRecord();
@@ -95,17 +97,17 @@ public interface DailyRecordMapper {
      * @param userId：用户id
      * @return 日志
      */
-    @Select("select * from daily_record where idx_user_id = #{userId}")
+    @Select("select id, " + COLUMNS + " from daily_record where idx_user_id = #{userId}")
     @Results({
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
-            @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
+            @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
             @Result(column = "idx_user_id", property = "userId", jdbcType = JdbcType.BIGINT),
             @Result(column = "idx_team_id", property = "teamId", jdbcType = JdbcType.BIGINT),
-            @Result(column = "document_path", property = "documentPath", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "record_type", property = "recordType", jdbcType = JdbcType.INTEGER),
             @Result(column = "title", property = "title", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "content", property = "content", jdbcType = JdbcType.VARCHAR)
+            @Result(column = "content", property = "content", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "record_type", property = "recordType", jdbcType = JdbcType.INTEGER),
+            @Result(column = "document_path", property = "documentPath", jdbcType = JdbcType.VARCHAR)
     })
     List<DailyRecord> findDailyRecordByUserId(BigInteger userId);
 
