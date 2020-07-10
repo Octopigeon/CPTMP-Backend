@@ -14,22 +14,29 @@ import java.util.List;
 
 /**
  * @author 李国鹏
- * @version 1.0
+ * @version 1.2
  * @date 2020/7/9
  * <p>
  * last-check-in 李国鹏
- * @date 2020/7/9
+ * @date 2020/7/10
  */
 @Repository
 @Mapper
 public interface TrainProjectMapper {
 
+    String COLUMNS = "gmt_create, gmt_modified, uk_project_name, start_date, finish_date, " +
+            "content, accept_standard, resource_library";
+    String PROPS = "#{gmtCreate}, #{gmtModified}, #{projectName}, #{startDate}, #{finishDate}, " +
+            "#{content}, #{acceptStandard}, #{resourceLibrary}";
+    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, uk_project_name = #{projectName}, start_date = #{startDate}, " +
+            "finish_date = #{finishDate}, content = #{content}, accept_standard = #{acceptStandard}, resource_library = #{resourceLibrary}";
+
     /**
      * 插入实训项目
      * @param trainProject：实训项目
      */
-    @Insert("insert into train_project (gmt_create, uk_project_name, start_date, finish_date, content, accept_standard, resource_library) " +
-            "values (#{gmtCreate}, #{projectName}, #{startDate}, #{finishDate}, #{content}, #{acceptStandard}, #{resourceLibrary})")
+    @Insert("insert into train_project (" + COLUMNS + ") " +
+            "values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addTrainProject(TrainProject trainProject);
 
@@ -37,8 +44,15 @@ public interface TrainProjectMapper {
      * 根据项目id删除对应的项目
      * @param id：项目id
      */
-    @Delete("delete from daily_record where id = #{id}")
+    @Delete("delete from train_project where id = #{id}")
     void removeTrainProjectById(BigInteger id);
+
+    /**
+     * 测试用
+     */
+    @Deprecated
+    @Delete("delete from train_project")
+    void removeAllTrainProjects();
 
     /**
      * 根据项目名称删除项目
@@ -56,8 +70,7 @@ public interface TrainProjectMapper {
      * @param acceptStandard  验收标准
      * @param resourceLibrary 资源库
      */
-    @Update("update train_project set gmt_modified = #{gmtModified}, uk_project_name = #{projectName}, start_date = #{startDate}, " +
-            "finish_date = #{finishDate}, content = #{content}, accept_standard = #{acceptStandard}, resource_library = #{resourceLibrary} where id = #{id}")
+    @Update("update train_project set"+ UPDATE_CONTENT +" where id = #{id}")
     void updateTrainProjectById(BigInteger id, Date gmtModified, String projectName, Date startDate, Date finishDate, String content, String acceptStandard, String resourceLibrary);
 
     /**
@@ -70,17 +83,15 @@ public interface TrainProjectMapper {
      * @param acceptStandard  验收标准
      * @param resourceLibrary 资源库
      */
-    @Update("update train_project set gmt_modified = #{gmtModified}, uk_project_name = #{projectName}, start_date = #{startDate}, " +
-            "finish_date = #{finishDate}, content = #{content}, accept_standard = #{acceptStandard}, resource_library = #{resourceLibrary} where uk_project_name = #{projectName}")
+    @Update("update train_project set "+ UPDATE_CONTENT +" where uk_project_name = #{projectName}")
     void updateTrainProjectByProjectName(Date gmtModified, String projectName, Date startDate, Date finishDate, String content, String acceptStandard, String resourceLibrary);
-
 
     /**
      * 查询所有项目
      * @return 项目列表
      */
-    @Select("select * from train_project")
-    @Results({
+    @Select("select id, " + COLUMNS + " from train_project")
+    @Results(id = "trainProject", value = {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
@@ -99,36 +110,16 @@ public interface TrainProjectMapper {
      * @param id：项目id
      * @return 项目
      */
-    @Select("select * from train_project where id = #{id}")
-    @Results({
-            @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
-            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
-            @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
-            @Result(column = "uk_project_name", property = "projectName", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "start_date", property = "startDate", jdbcType = JdbcType.DATE),
-            @Result(column = "finish_date", property = "finishDate", jdbcType = JdbcType.DATE),
-            @Result(column = "content", property = "content", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "accept_standard", property = "acceptStandard", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "resource_library", property = "resourceLibrary", jdbcType = JdbcType.VARCHAR)
-    })
+    @Select("select id, " + COLUMNS + " from train_project where id = #{id}")
+    @ResultMap("trainProject")
     TrainProject findTrainProjectById(BigInteger id);
 
     /**
-     * 根据项目名查找项目
+     * 根据项目名查找项目，模糊查找
      * @param projectName：项目名称
      * @return 项目
      */
-    @Select("select * from train_project where uk_project_name = #{projectName}")
-    @Results({
-            @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
-            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
-            @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
-            @Result(column = "uk_project_name", property = "projectName", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "start_date", property = "startDate", jdbcType = JdbcType.DATE),
-            @Result(column = "finish_date", property = "finishDate", jdbcType = JdbcType.DATE),
-            @Result(column = "content", property = "content", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "accept_standard", property = "acceptStandard", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "resource_library", property = "resourceLibrary", jdbcType = JdbcType.VARCHAR)
-    })
-    List<TrainProject> findTrainProjectByProjectName(String projectName);
+    @Select("select id, " + COLUMNS + " from train_project where uk_project_name like concat('%', #{projectName}, '%')")
+    @ResultMap("trainProject")
+    List<TrainProject> findTrainProjectByProjectNameAmbiguously(String projectName);
 }

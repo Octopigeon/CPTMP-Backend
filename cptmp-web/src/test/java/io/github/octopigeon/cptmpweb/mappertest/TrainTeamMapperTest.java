@@ -13,11 +13,11 @@ import java.util.Date;
 
 /**
  * @author 李国鹏
- * @version 1.0
+ * @version 1.2
  * @date 2020/7/9
  * <p>
  * last-check-in 李国鹏
- * @date 2020/7/9
+ * @date 2020/7/10
  */
 public class TrainTeamMapperTest extends BaseTest {
     @Autowired
@@ -48,7 +48,7 @@ public class TrainTeamMapperTest extends BaseTest {
         Assertions.assertEquals(1,trainTeamMapper.findAllTrainTeam().size());
 
         trainTeamMapper.updateTrainTeamByTeamName(new Date(), BigInteger.valueOf(3), "lgp",BigInteger.valueOf(3),"http",BigDecimal.valueOf(99));
-        Assertions.assertEquals(BigDecimal.valueOf(99),trainTeamMapper.findAllTrainTeam().get(0).getTeamGrade());
+        Assertions.assertEquals(BigInteger.valueOf(3),trainTeamMapper.findAllTrainTeam().get(0).getTrainProjectId());
 
 
     }
