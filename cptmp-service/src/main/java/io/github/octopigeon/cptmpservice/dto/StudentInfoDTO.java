@@ -20,4 +20,5 @@ public class StudentInfoDTO extends BaseUserInfoDTO{
     private String name;
     private String schoolName;
     private String studentId;
+    private String studentFace;
 }
