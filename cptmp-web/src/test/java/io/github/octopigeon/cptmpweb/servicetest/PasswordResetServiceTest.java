@@ -1,9 +1,10 @@
-package io.github.octopigeon.cptmpweb.mappertest;
+package io.github.octopigeon.cptmpweb.servicetest;
 
 import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.mapper.PasswordResetTokenMapper;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpdao.model.PasswordResetToken;
+import io.github.octopigeon.cptmpservice.service.PasswordResetService;
 import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -16,11 +17,11 @@ import java.util.UUID;
 /**
  * @author anlow
  * @version 1.0
- * @date 2020/7/9
+ * @date 2020/7/10
  * @last-check-in anlow
- * @date 2020/7/9
+ * @date 2020/7/10
  */
-public class PasswordResetTokenMapperTest extends BaseTest {
+public class PasswordResetServiceTest extends BaseTest {
 
     @Autowired
     private PasswordResetTokenMapper passwordResetTokenMapper;
@@ -28,17 +29,12 @@ public class PasswordResetTokenMapperTest extends BaseTest {
     @Autowired
     private CptmpUserMapper cptmpUserMapper;
 
+    @Autowired
+    private PasswordResetService passwordResetService;
+
     @Test
     public void test() {
-        // 创建密码重置token
-        PasswordResetToken passwordResetToken = new PasswordResetToken();
-        passwordResetToken.setGmtCreate(new Date());
-        // 设置UUID的Token
-        String token = UUID.randomUUID().toString();
         String userEmail = "123@qq.com";
-        passwordResetToken.setToken(token);
-        passwordResetToken.setEmail(userEmail);
-
         // 创建用户
         CptmpUser cptmpUser = new CptmpUser();
         cptmpUser.setGmtCreate(new Date());
@@ -54,16 +50,12 @@ public class PasswordResetTokenMapperTest extends BaseTest {
         cptmpUserMapper.addUser(cptmpUser);
 
         passwordResetTokenMapper.removeAllPasswordResetTokens();
-        Assertions.assertEquals(0, passwordResetTokenMapper.findAllPasswordResetTokens().size());
-        passwordResetTokenMapper.addPasswordResetToken(passwordResetToken);
-        passwordResetTokenMapper.updateTokenByEmail(token, userEmail);
+        passwordResetService.createPasswordResetTokenForUser(userEmail);
         List<PasswordResetToken> passwordResetTokens = passwordResetTokenMapper.findAllPasswordResetTokens();
-        Assertions.assertEquals(1, passwordResetTokens.size());
-        Assertions.assertNotNull(passwordResetTokens.get(0).getId());
-        Assertions.assertNotNull(passwordResetTokens.get(0).getEmail());
-        Assertions.assertNotNull(passwordResetTokens.get(0).getGmtCreate());
-        Assertions.assertNull(passwordResetTokens.get(0).getGmtModified());
-        Assertions.assertNotNull(passwordResetTokens.get(0).getToken());
+        Assertions.assertEquals(1, passwordResetTokenMapper.findAllPasswordResetTokens().size());
+        String token = passwordResetTokenMapper.findAllPasswordResetTokens().get(0).getToken();
+        Assertions.assertFalse(passwordResetService.authToken(token, userEmail));
+        Assertions.assertEquals(0, passwordResetTokenMapper.findAllPasswordResetTokens().size());
     }
 
 }
