@@ -16,6 +16,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @RestControllerAdvice
 public class CustomResourceNotFoundException {
 
+    //TODO 未测试
     @ExceptionHandler(NoHandlerFoundException.class)
     public RespBean handleNoHandlerFoundException(NoHandlerFoundException e) {
         return RespBean.error(HttpStatus.NOT_FOUND.value(), "not found");

@@ -14,10 +14,10 @@ import java.util.List;
 
 /**
  * @author 李国鹏
- * @version 1.0
+ * @version 1.2
  * @date 2020/7/9
  * <p>
- * last-check-in anlow
+ * last-check-in 李国鹏
  * @date 2020/7/10
  */
 @Repository
@@ -28,8 +28,8 @@ public interface TrainProjectMapper {
             "content, accept_standard, resource_library";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{projectName}, #{startDate}, #{finishDate}, " +
             "#{content}, #{acceptStandard}, #{resourceLibrary}";
-    String UPDATE_HEADER = "update train_project set ";
-    String TAIL_PROJECT_NAME = "where uk_project_name = #{projectName}";
+    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, uk_project_name = #{projectName}, start_date = #{startDate}, " +
+            "finish_date = #{finishDate}, content = #{content}, accept_standard = #{acceptStandard}, resource_library = #{resourceLibrary}";
 
     /**
      * 插入实训项目
@@ -70,8 +70,7 @@ public interface TrainProjectMapper {
      * @param acceptStandard  验收标准
      * @param resourceLibrary 资源库
      */
-    @Update("update train_project set gmt_modified = #{gmtModified}, uk_project_name = #{projectName}, start_date = #{startDate}, " +
-            "finish_date = #{finishDate}, content = #{content}, accept_standard = #{acceptStandard}, resource_library = #{resourceLibrary} where id = #{id}")
+    @Update("update train_project set"+ UPDATE_CONTENT +" where id = #{id}")
     void updateTrainProjectById(BigInteger id, Date gmtModified, String projectName, Date startDate, Date finishDate, String content, String acceptStandard, String resourceLibrary);
 
     /**
@@ -84,8 +83,7 @@ public interface TrainProjectMapper {
      * @param acceptStandard  验收标准
      * @param resourceLibrary 资源库
      */
-    @Update("update train_project set gmt_modified = #{gmtModified}, uk_project_name = #{projectName}, start_date = #{startDate}, " +
-            "finish_date = #{finishDate}, content = #{content}, accept_standard = #{acceptStandard}, resource_library = #{resourceLibrary} where uk_project_name = #{projectName}")
+    @Update("update train_project set "+ UPDATE_CONTENT +" where uk_project_name = #{projectName}")
     void updateTrainProjectByProjectName(Date gmtModified, String projectName, Date startDate, Date finishDate, String content, String acceptStandard, String resourceLibrary);
 
     /**
