@@ -4,7 +4,7 @@ import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.mapper.SchoolStudentMapper;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpdao.model.SchoolStudent;
-import io.github.octopigeon.cptmpweb.config.FileProperties;
+import io.github.octopigeon.cptmpservice.FileProperties;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -77,20 +77,20 @@ public class ImageServiceImpl implements ImageService{
             // 写入文件
             Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
             // 访问数据库
+            String relativePath = "";
             if(imageName.contains("avatar")){
-                String relativePath = String.format("/avatar/%s", imageName);
-                cptmpUserMapper.updateAvatarByUsername(new Date(), relativePath);
+                relativePath = String.format("/storage/avatar/%s", imageName);
+                cptmpUserMapper.updateAvatarByUsername(username, new Date(), relativePath);
             }
             if(imageName.contains("face")){
-                String relativePath = String.format("/face/%s", imageName);
+                relativePath = String.format("/storage/face/%s", imageName);
                 CptmpUser user = cptmpUserMapper.findUserByUsername(username);
                 SchoolStudent student = schoolStudentMapper.findSchoolStudentByUserId(user.getId());
                 schoolStudentMapper.updateSchoolStudetnByUserId(student.getUserId(), new Date(), student.getName(), student.getStudentId(), student.getSchoolName(), relativePath);
             }
-
-            return imageName;
+            return relativePath;
         }catch (Exception ex){
-            throw new Exception("Could not store file " + originName + ". Please try again!", ex);
+            throw new Exception("Could not store file " + originName + ". Please try again!\n"+ ex.getMessage(), ex);
         }
     }
 

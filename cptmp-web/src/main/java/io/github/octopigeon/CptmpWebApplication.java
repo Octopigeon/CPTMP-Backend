@@ -1,6 +1,6 @@
 package io.github.octopigeon;
 
-import io.github.octopigeon.cptmpweb.config.FileProperties;
+import io.github.octopigeon.cptmpservice.FileProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
