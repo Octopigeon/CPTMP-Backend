@@ -1,5 +1,6 @@
 package io.github.octopigeon.cptmpservice.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -23,11 +24,12 @@ public abstract class BaseUserInfoDTO{
     /**
      * 可产生默认值，也可导入的属性
      */
-    private String userName;
+    private String username;
+    @JsonIgnore
     private String password;
     private String nickname;
     /** 默认为Null */
-    private BigDecimal phoneNum;
+    private BigDecimal phoneNumber;
     /** 0-female, 1-male 默认为Null */
     private Boolean gender;
     private String introduction;

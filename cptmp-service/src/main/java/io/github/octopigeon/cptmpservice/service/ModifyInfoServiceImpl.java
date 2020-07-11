@@ -50,7 +50,7 @@ public class ModifyInfoServiceImpl implements ModifyInfoService{
             return 0;
         }
 
-        cptmpUserMapper.updateUserInfoByUsername(baseUserInfo.getUserName(),baseUserInfo.getNickname(),
+        cptmpUserMapper.updateUserInfoByUsername(baseUserInfo.getUsername(),baseUserInfo.getNickname(),
                 new Date(),baseUserInfo.getIntroduction(),baseUserInfo.getGender());
 
         switch (baseUserInfo.getRoleName())
