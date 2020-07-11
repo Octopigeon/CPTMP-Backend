@@ -39,10 +39,12 @@ public interface SchoolStudentMapper {
      * @param name：姓名
      * @param studentId：学号
      * @param schoolName:学校名称
-     * @param studentFace :url,学生人脸信息链接
      */
-    @Update("update school_student set gmt_modified = #{gmtModified}, idx_name = #{name}, idx_student_id = #{studentId}, idx_school_name = #{schoolName}, uk_student_face = #{studentFace} where uk_user_id = #{userId}")
-    void updateSchoolStudetnByUserId(BigInteger userId, Date gmtModified, String name, String studentId, String schoolName, String studentFace);
+    @Update("update school_student set gmt_modified = #{gmtModified}, idx_name = #{name}, idx_student_id = #{studentId}, idx_school_name = #{schoolName} where uk_user_id = #{userId}")
+    void updateSchoolStudetnByUserId(BigInteger userId, Date gmtModified, String name, String studentId, String schoolName);
+
+    @Update("update school_student set gmt_modified = #{gmtModified}, uk_student_face = #{studentFace} where uk_user_id = #{userId}")
+    void updateFaceInfoByUserId(BigInteger userId, Date gmtModified, String studentFace);
 
     /**
      * 查找所有的学生的账号、姓名、学号、所属学校
