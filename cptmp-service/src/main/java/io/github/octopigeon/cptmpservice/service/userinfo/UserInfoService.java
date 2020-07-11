@@ -20,6 +20,14 @@ import java.util.List;
 public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, BaseFileService {
 
     /**
+     * 用于验证用户输入的原密码是否正确
+     * @param username 用户名
+     * @param originPassword 用户输入的原密码
+     * @return 是否正确
+     */
+    Boolean validateOriginPassword(String username, String originPassword);
+
+    /**
      * 验证邀请码
      * @param userInfo：用户信息类
      * @return 验证码是否有效
@@ -43,6 +51,13 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
      * @param userId
      */
     void activateAccount(BigInteger userId);
+
+    /**
+     * 更新密码
+     * @param username 用户名
+     * @param newPassword 新密码
+     */
+    void updatePassword(String username, String newPassword);
 
     /**
      * 上传用户头像
