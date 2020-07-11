@@ -30,6 +30,7 @@ public abstract class BaseUserInfoDTO{
     private BigDecimal phoneNum;
     /** 0-female, 1-male 默认为Null */
     private Boolean gender;
+    private String introduction;
 
     /** 返回携带用户账号 */
     private BigInteger userId;
