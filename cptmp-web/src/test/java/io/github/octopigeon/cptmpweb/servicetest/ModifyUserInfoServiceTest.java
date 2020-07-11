@@ -39,7 +39,7 @@ public class ModifyUserInfoServiceTest extends BaseTest {
         studentInfo.setName("testname");
         studentInfo.setStudentFace("face");
         studentInfo.setStudentId("1");
-        userInfoService.modifyUserInfo(studentInfo);
+        userInfoService.modify(studentInfo);
     }
 
     @Test
@@ -55,7 +55,7 @@ public class ModifyUserInfoServiceTest extends BaseTest {
         teacherInfo.setSchoolName("武汉大学");
         teacherInfo.setName("testname");
         teacherInfo.setEmployeeId("33");
-        userInfoService.modifyUserInfo(teacherInfo);
+        userInfoService.modify(teacherInfo);
     }
 
     @Test
@@ -70,6 +70,6 @@ public class ModifyUserInfoServiceTest extends BaseTest {
         enterpriseAdminInfo.setNickname("manta");
         enterpriseAdminInfo.setName("员工二号");
         enterpriseAdminInfo.setEmployeeId("22");
-        userInfoService.modifyUserInfo(enterpriseAdminInfo);
+        userInfoService.modify(enterpriseAdminInfo);
     }
 }
