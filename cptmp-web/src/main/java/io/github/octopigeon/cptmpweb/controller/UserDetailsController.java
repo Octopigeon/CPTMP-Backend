@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author anlow
  * @version 1.0
  * @date 2020/7/10
- * 用于提供各种用户信息查询接口
+ * 用于提供各种与用户信息交互的接口
  * @last-check-in anlow
  * @date 2020/7/11
  */
