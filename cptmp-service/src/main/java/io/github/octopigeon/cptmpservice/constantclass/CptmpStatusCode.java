@@ -5,7 +5,7 @@ package io.github.octopigeon.cptmpservice.constantclass;
  * @version 1.0
  * @date 2020/7/7
  * @last-check-in anlow
- * @date 2020/7/11
+ * @date 2020/7/12
  */
 public class CptmpStatusCode {
 
@@ -28,7 +28,9 @@ public class CptmpStatusCode {
 
     /** 尝试修改密码失败 */
     public static int UPDATE_PASSWORD_FAILED = 9;
-    /** 尝试修改基本信息失败 */
+    /** 尝试修改信息失败 */
     public static int UPDATE_BASIC_INFO_FAILED = 10;
+    /** 注册失败 */
+    public static int REGISTER_FAILED = 11;
 
 }
