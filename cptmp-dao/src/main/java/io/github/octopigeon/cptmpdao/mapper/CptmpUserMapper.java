@@ -53,7 +53,7 @@ public interface CptmpUserMapper {
             @Result(column = "avatar", property = "avatar", jdbcType = JdbcType.VARCHAR),
             @Result(column = "uk_username", property = "username", jdbcType = JdbcType.VARCHAR),
             @Result(column = "idx_password", property = "password", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "nickname", property = "nickname", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "idx_nickname", property = "nickname", jdbcType = JdbcType.VARCHAR),
             @Result(column = "idx_role_name", property = "roleName", jdbcType = JdbcType.VARCHAR),
             @Result(column = "enabled", property = "enabled", jdbcType = JdbcType.TINYINT),
             @Result(column = "account_non_expired", property = "accountNonExpired", jdbcType = JdbcType.TINYINT),
