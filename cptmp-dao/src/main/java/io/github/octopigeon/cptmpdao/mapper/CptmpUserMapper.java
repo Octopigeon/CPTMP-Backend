@@ -26,7 +26,7 @@ public interface CptmpUserMapper {
             "gender, avatar, uk_username, idx_password, idx_role_name, enabled, " +
             "account_non_expired, credentials_non_expired, account_non_locked, invitation_code, idx_nickname";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{introduction}, #{email}, #{phoneNumber}, " +
-            "#{male}, #{avatar}, #{username}, #{password}, #{roleName}, #{enabled}, " +
+            "#{gender}, #{avatar}, #{username}, #{password}, #{roleName}, #{enabled}, " +
             "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}, #{invitationCode}, #{nickname}";
     String UPDATE_HEADER = "update cptmp_user set ";
     String UPDATE_TAIL_USERNAME = " where (uk_username = #{username})";
@@ -50,7 +50,7 @@ public interface CptmpUserMapper {
             @Result(column = "introduction", property = "introduction", jdbcType = JdbcType.VARCHAR),
             @Result(column = "uk_email", property = "email", jdbcType = JdbcType.VARCHAR),
             @Result(column = "phone_number", property = "phoneNumber", jdbcType = JdbcType.DECIMAL),
-            @Result(column = "gender", property = "male", jdbcType = JdbcType.TINYINT),
+            @Result(column = "gender", property = "gender", jdbcType = JdbcType.TINYINT),
             @Result(column = "avatar", property = "avatar", jdbcType = JdbcType.VARCHAR),
             @Result(column = "uk_username", property = "username", jdbcType = JdbcType.VARCHAR),
             @Result(column = "idx_password", property = "password", jdbcType = JdbcType.VARCHAR),
@@ -79,30 +79,8 @@ public interface CptmpUserMapper {
     @ResultMap(value = "user")
     List<CptmpUser> findAllUsers();
 
-    @Select("select idx_password from cptmp_user where uk_username = #{username}")
-    @Result(column = "idx_password", property = "password", jdbcType = JdbcType.VARCHAR)
-    String findPasswordByUsername(String username);
-
     @Select("select id, " + COLUMNS + " from cptmp_user where id = #{userId}")
-    @Results(id = "user", value = {
-            @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
-            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
-            @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
-            @Result(column = "introduction", property = "introduction", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "uk_email", property = "email", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "phone_number", property = "phoneNumber", jdbcType = JdbcType.DECIMAL),
-            @Result(column = "gender", property = "male", jdbcType = JdbcType.TINYINT),
-            @Result(column = "avatar", property = "avatar", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "uk_username", property = "username", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "idx_password", property = "password", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "nickname", property = "nickname", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "idx_role_name", property = "roleName", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "enabled", property = "enabled", jdbcType = JdbcType.TINYINT),
-            @Result(column = "account_non_expired", property = "accountNonExpired", jdbcType = JdbcType.TINYINT),
-            @Result(column = "credentials_non_expired", property = "credentialsNonExpired", jdbcType = JdbcType.TINYINT),
-            @Result(column = "account_non_locked", property = "accountNonLocked", jdbcType = JdbcType.TINYINT),
-            @Result(column = "invitation_code", property = "invitationCode", jdbcType = JdbcType.VARCHAR)
-    })
+    @ResultMap("user")
     CptmpUser findUserById(BigInteger userId);
 
     @Update(UPDATE_HEADER + "enabled = #{enabled}" + UPDATE_TAIL_USERNAME)

@@ -22,6 +22,7 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.reflect.Field;
@@ -36,6 +37,7 @@ import java.util.List;
  * @last-check-in Gh Li
  * @date 2020/7/11
  */
+@Service
 public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfoService{
 
     @Autowired
@@ -439,7 +441,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         user.setRoleName(userInfo.getRoleName());
         user.updatePassword(userInfo.getPassword());
         user.setPhoneNumber(userInfo.getPhoneNumber());
-        user.setMale(userInfo.getGender());
+        user.setGender(userInfo.getGender());
         user.setUsername(userInfo.getUsername());
         user.setNickname(userInfo.getNickname());
         user.setGmtCreate(new Date());
