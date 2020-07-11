@@ -8,6 +8,7 @@ import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,21 +46,34 @@ public class UserDetailsController {
         return respBean;
     }
 
-
-// TODO 修改用户信息
-//    @PutMapping("/api/user/me/basic-info")
-//    public RespBean updateMyBasicInfo(@RequestBody String json) throws JsonProcessingException {
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO() {
-//        };
-//        String introduction = objectMapper.readValue(json, ObjectNode.class).get("introduction").asText();
-//        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-//        if (modifyInfoService.updateUserBasicInfo(username, introduction)) {
-//            return RespBean.ok("update basic info successfully");
-//        } else {
-//            return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "update basic info failed");
-//        }
-//    }
+    /**
+     * 修改性别，简介信息
+     * @param json 包含性别和简介的json
+     * @return ok-成功 error-失败
+     */
+    @PutMapping("/api/user/me/basic-info")
+    public RespBean updateMyBasicInfo(@RequestBody String json) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO() {
+        };
+        // TODO 等数据库重构，把name加进BaseUserInfoDTO中
+        String name = objectMapper.readValue(json, ObjectNode.class).get("name").asText();
+        Boolean gender = objectMapper.readValue(json, ObjectNode.class).get("gender").asBoolean();
+        String introduction = objectMapper.readValue(json, ObjectNode.class).get("introduction").asText();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        baseUserInfoDTO.setUsername(username);
+        baseUserInfoDTO.setGender(gender);
+        baseUserInfoDTO.setIntroduction(introduction);
+        try {
+            if (userInfoService.modify(baseUserInfoDTO)) {
+                return RespBean.ok("update basic info successfully");
+            } else {
+                return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "update basic info failed");
+            }
+        } catch (Exception e) {
+            return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "modify info failed");
+        }
+    }
 
     /**
      * 修改用户密码
