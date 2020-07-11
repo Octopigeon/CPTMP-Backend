@@ -6,6 +6,7 @@ import lombok.Setter;
 import lombok.AccessLevel;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.DigestUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -13,11 +14,12 @@ import java.util.Date;
 
 /**
  * @author anlow
- * @version 1.1
+ * @version 1.2
  * @date 2020/7/7
- * 添加邀请码字段
- * @last-check-in GH Li
- * @date 2020/7/9
+ *
+ * Gravatar 支持
+ * @last-check-in Eric_Lian
+ * @date 2020/7/11
  */
 @Data
 public class CptmpUser {
@@ -58,13 +60,36 @@ public class CptmpUser {
      * nullable
      */
     private Boolean male;
+
     /** nullable */
     private String avatar;
+
     /** nullable */
     private String invitationCode;
 
     public CptmpUser updatePassword(String password) {
         this.password = ENCODER.encode(password);
         return this;
+    }
+
+    /**
+     * Gravatar 支持
+     *
+     * @return 头像地址
+     */
+    public String getAvatar(){
+        if (avatar.length() > 0) {
+            return avatar;
+        } else {
+            // 小写的邮箱地址 MD5
+            String emailMD5 = DigestUtils.md5DigestAsHex(email.getBytes()).toLowerCase();
+
+            // d 默认头像类型
+            // s 图像大小
+            // r 限制级
+            String format = "https://www.gravatar.com/avatar/" + emailMD5 + "/?d=mp&s=60&r=g";
+
+            return format;
+        }
     }
 }
