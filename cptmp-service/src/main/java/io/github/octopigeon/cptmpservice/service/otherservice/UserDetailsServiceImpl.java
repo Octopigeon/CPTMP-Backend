@@ -1,4 +1,4 @@
-package io.github.octopigeon.cptmpservice.service;
+package io.github.octopigeon.cptmpservice.service.otherservice;
 
 import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;

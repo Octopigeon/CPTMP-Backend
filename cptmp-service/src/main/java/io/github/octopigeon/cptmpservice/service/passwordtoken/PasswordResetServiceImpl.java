@@ -1,7 +1,8 @@
-package io.github.octopigeon.cptmpservice.service;
+package io.github.octopigeon.cptmpservice.service.passwordtoken;
 
 import io.github.octopigeon.cptmpdao.mapper.PasswordResetTokenMapper;
 import io.github.octopigeon.cptmpdao.model.PasswordResetToken;
+import io.github.octopigeon.cptmpservice.service.passwordtoken.PasswordResetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,11 +17,16 @@ import java.util.UUID;
  * @date 2020/7/9
  */
 @Service
-public class PasswordResetService {
+public class PasswordResetServiceImpl implements PasswordResetService {
 
     @Autowired
     private PasswordResetTokenMapper passwordResetTokenMapper;
 
+    /**
+     * 为用户创建修改密码的token
+     * @param userEmail 用户邮箱
+     */
+    @Override
     public void createPasswordResetTokenForUser(String userEmail) {
         String token = UUID.randomUUID().toString();
         PasswordResetToken passwordResetToken = new PasswordResetToken();
@@ -36,6 +42,7 @@ public class PasswordResetService {
      * @param email 前端提交的用户email
      * @return 是否验证成功
      */
+    @Override
     public boolean authToken(String token, String email) {
         PasswordResetToken passwordResetToken = passwordResetTokenMapper
                 .findPasswordResetTokenByToken(token);
@@ -51,6 +58,12 @@ public class PasswordResetService {
         }
     }
 
+    /**
+     * 检查token是否过期
+     * @param token token值
+     * @return 是否过期
+     */
+    @Override
     public boolean checkIsTokenExpired(String token) {
         PasswordResetToken passwordResetToken = passwordResetTokenMapper
                 .findPasswordResetTokenByToken(token);

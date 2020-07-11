@@ -1,4 +1,4 @@
-package io.github.octopigeon.cptmpservice.dto;
+package io.github.octopigeon.cptmpservice.dto.file;
 
 import lombok.Data;
 

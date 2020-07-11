@@ -1,4 +1,4 @@
-package io.github.octopigeon.cptmpservice.dto;
+package io.github.octopigeon.cptmpservice.dto.cptmpuser;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
@@ -7,12 +7,12 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * 带有必要信息的UserDTO
+ * 带有必要信息的UserDTO抽象类
  * @author Gh Li
- * @version 1.0
+ * @version 1.1
  * @date 2020/7/8
  * @last-check-in Gh Li
- * @date 2020/7/8
+ * @date 2020/7/11
  */
 @Data
 public abstract class BaseUserInfoDTO{
@@ -38,7 +38,4 @@ public abstract class BaseUserInfoDTO{
 
     /** 返回携带用户账号 */
     private BigInteger userId;
-    /** 返回携带邀请码 */
-    @JsonIgnore
-    private String invitationCode;
 }
