@@ -26,5 +26,4 @@ public class TrainTeam {
     private BigInteger poUserId;
     private String codeBaseUrl;
     private BigDecimal teamGrade;
-
 }
