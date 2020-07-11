@@ -1,9 +1,8 @@
-package io.github.octopigeon.cptmpservice.dto;
+package io.github.octopigeon.cptmpservice.dto.cptmpuser;
 
+import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.math.BigInteger;
 
 /**
  * @author Gh Li
@@ -14,7 +13,7 @@ import java.math.BigInteger;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class EnterpriseAdminInfoDTO extends BaseUserInfoDTO{
+public class EnterpriseAdminInfoDTO extends BaseUserInfoDTO {
 
     private String name;
     private String employeeId;

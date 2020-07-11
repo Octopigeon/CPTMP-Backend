@@ -1,12 +1,11 @@
 package io.github.octopigeon.cptmpweb.controller;
 
-import io.github.octopigeon.cptmpservice.CptmpStatusCode;
-import io.github.octopigeon.cptmpservice.dto.FileDTO;
-import io.github.octopigeon.cptmpservice.service.FileService;
-import io.github.octopigeon.cptmpservice.service.ImageService;
+import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
+import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
+import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileService;
+import io.github.octopigeon.cptmpservice.service.basefileService.ImageService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import io.github.octopigeon.cptmpweb.bean.response.RespBeanWithObj;
-import org.apache.catalina.connector.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,7 @@ public class FileController {
     private static final Logger logger = LoggerFactory.getLogger(FileController.class);
 
     @Autowired
-    private FileService fileService;
+    private BaseFileService baseFileService;
     @Autowired
     private ImageService imageService;
 
@@ -43,7 +42,7 @@ public class FileController {
     public RespBeanWithObj<?> uploadFile(@RequestParam("file") MultipartFile file, @PathVariable BigInteger userId, @PathVariable(required = false) BigInteger teamId){
         try {
             RespBeanWithObj<FileDTO> fileResp = new RespBeanWithObj<>();
-            FileDTO fileDTO = fileService.singleStoreFile(file, userId, teamId);
+            FileDTO fileDTO = baseFileService.singleStoreFile(file, userId, teamId);
             fileResp.setObj(fileDTO);
             return fileResp;
         }catch (Exception e){
@@ -74,7 +73,7 @@ public class FileController {
     @GetMapping("storage/{year}/{month}/{day}/{fileName:.+}")
     public ResponseEntity<?> downloadFile(@PathVariable String fileName, @PathVariable String year, @PathVariable String month, @PathVariable String day, HttpServletRequest request) {
         try {
-            Resource resource = fileService.loadFile(fileName, year, month, day);
+            Resource resource = baseFileService.loadFile(fileName, year, month, day);
             String contentType = null;
             try {
                 contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
