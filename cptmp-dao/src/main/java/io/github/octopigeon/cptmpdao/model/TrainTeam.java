@@ -21,7 +21,9 @@ public class TrainTeam {
     private Date gmtModified;
     private BigInteger trainProjectId;
     private String teamName;
-    private BigInteger teamManagerId;
+    private BigInteger masterUserId;
+    private BigInteger pmUserId;
+    private BigInteger poUserId;
     private String codeBaseUrl;
     private BigDecimal teamGrade;
 
