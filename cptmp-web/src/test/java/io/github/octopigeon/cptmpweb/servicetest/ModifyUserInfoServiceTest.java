@@ -25,7 +25,6 @@ public class ModifyUserInfoServiceTest extends BaseTest {
     @Autowired
     private  ModifyInfoService modifyInfoService;
 
-
     @Test
     @Rollback(false)
     public void ModifyStudentServiceTest() throws Exception {
@@ -41,7 +40,6 @@ public class ModifyUserInfoServiceTest extends BaseTest {
         studentInfo.setStudentFace("face");
         studentInfo.setStudentId("1");
         modifyInfoService.modifyUserInfo(studentInfo);
-        modifyInfoService.modifyStudentInfo(studentInfo);
     }
 
     @Test
@@ -58,7 +56,6 @@ public class ModifyUserInfoServiceTest extends BaseTest {
         teacherInfo.setName("testname");
         teacherInfo.setEmployeeId("33");
         modifyInfoService.modifyUserInfo(teacherInfo);
-        modifyInfoService.modifyTeacherInfo(teacherInfo);
     }
 
     @Test
@@ -74,6 +71,5 @@ public class ModifyUserInfoServiceTest extends BaseTest {
         enterpriseAdminInfo.setName("员工二号");
         enterpriseAdminInfo.setEmployeeId("22");
         modifyInfoService.modifyUserInfo(enterpriseAdminInfo);
-        modifyInfoService.modifyEnterpriseAdminInfo(enterpriseAdminInfo);
     }
 }
