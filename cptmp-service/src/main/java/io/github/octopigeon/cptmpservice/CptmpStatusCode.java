@@ -7,7 +7,7 @@ import org.omg.CORBA.PUBLIC_MEMBER;
  * @version 1.0
  * @date 2020/7/7
  * @last-check-in anlow
- * @date 2020/7/9
+ * @date 2020/7/11
  */
 public class CptmpStatusCode {
 
@@ -28,6 +28,7 @@ public class CptmpStatusCode {
     /** 尚未登录 */
     public static int ACCESS_DENY_NOT_LOGIN = 8;
 
-
+    /** 尝试修改密码失败 */
+    public static int UPDATE_PASSWORD_FAILED = 9;
 
 }

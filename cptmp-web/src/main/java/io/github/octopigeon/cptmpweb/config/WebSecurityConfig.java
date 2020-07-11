@@ -59,6 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .and()
                 .logout()
+                .logoutUrl("/api/logout")
                 .permitAll()
                 .and().csrf().disable();
         http.addFilterAt(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);

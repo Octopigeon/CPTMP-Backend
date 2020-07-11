@@ -14,12 +14,12 @@ College Practice Training Management Platform
 # API说明
 更新时间：2020/7/9
 
+# 登录/登出
 ## /api/login
 + HTTP方法：POST
 + 返回类型：json
 + 说明：返回体包括status，date，msg，详情@RespBean和@CptmpStatusCode中的状态码定义
-+ 调用实例：/login
-+ 请求json：
++ 调用实例：
 ```
 {
     "username": "test",
@@ -35,11 +35,25 @@ College Practice Training Management Platform
 }
 ```
 
+## /api/logout
++ HTTP方法：POST
++ 返回类型：json
++ 说明：返回体包括status，date，msg，详情@RespBean和@CptmpStatusCode中的状态码定义
++ 返回json：
+``` 
+{
+    "status": 8,
+    "date": "2020-07-11T03:54:26.043+00:00",
+    "msg": "not login"
+}
+```
+
+
+# LoginController
 ## /api/guard
 + HTTP方法：GET
 + 返回类型：json
 + 说明：当用户未登录时尝试访问未登录不能访问的地址时，返回一个json，状态码为8（以@CptmpStatusCode中的为准）
-+ 调用实例：/guard
 + 返回json：
 ```
 {
@@ -53,7 +67,6 @@ College Practice Training Management Platform
 + HTTP方法：GET
 + 返回类型：json
 + 说明：用于测试登录是否成功
-+ 调用实例：/api/access
 + 返回json:
 ``` 
 {
@@ -63,6 +76,7 @@ College Practice Training Management Platform
 }
 ```
 
+# TrainProjectFindController
 ## /api/enterprise-admin/find/train-project
 + HTTP方法：GET
 + 返回类型：json
@@ -85,4 +99,63 @@ College Practice Training Management Platform
         "project_name": "高校实习平台"
     }
 ]
+```
+
+# UserDetailsController
+## /api/user/me/basic-info
++ HTTP方法：GET
++ 返回类型：json
++ 说明：根据用户名，得到用户基本信息
++ 调用实例：
+```
+{
+    "username": "test"
+}
+```
++ 返回json:
+``` 
+{
+    "status": 0,
+    "date": "2020-07-11T07:56:42.676+00:00",
+    "msg": "success",
+    "basic_info": {
+        "email": "123@qq.com",
+        "role_name": "ROLE_ENTERPRISE_ADMIN",
+        "username": "test",
+        "nickname": "test_nick",
+        "phone_number": null,
+        "gender": null,
+        "introduction": null,
+        "user_id": 4,
+        "invitation_code": null,
+        "name": "wxc",
+        "employee_id": "123123"
+    }
+}
+```
+
+## /api/user/me/password
++ HTTP方法：PUT
++ 返回类型：json
++ 说明：修改用户密码，当用户输入的旧密码与现在的密码相同时，才能设置新密码
++ 调用实例：
+```
+{
+    "username": "test"
+}
+```
++ 返回json:
+```
+// 成功 
+{
+    "username": "test",
+    "origin_password": "123",
+    "new_password": "123"
+}
+// 失败
+{
+    "status": 9,
+    "date": "2020-07-11T07:58:48.703+00:00",
+    "msg": "wrong origin password"
+}
 ```

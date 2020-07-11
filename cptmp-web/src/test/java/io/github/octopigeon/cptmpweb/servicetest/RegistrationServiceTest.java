@@ -81,7 +81,7 @@ public class RegistrationServiceTest extends BaseTest {
     {
         userInfo.setEmail("55666@qq.com");
         userInfo.setRoleName(role.name());
-        userInfo.setUserName("lisa");
+        userInfo.setUsername("lisa");
         userInfo.setPassword("123456");
         userInfo.setInvitationCode(code);
         return userInfo;
@@ -94,7 +94,7 @@ public class RegistrationServiceTest extends BaseTest {
             StudentInfoDTO userInfo = new StudentInfoDTO();
             userInfo.setEmail("55666@qq.com");
             userInfo.setRoleName(RoleEnum.ROLE_STUDENT_MEMBER.name());
-            userInfo.setUserName(RandomStringUtils.randomAlphabetic(3));
+            userInfo.setUsername(RandomStringUtils.randomAlphabetic(3));
             userInfo.setPassword("123456");
             userInfo.setName("赵春华");
             userInfo.setSchoolName("武汉大学");

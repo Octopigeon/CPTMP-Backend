@@ -15,7 +15,7 @@ import java.util.List;
  * @date 2020/7/7
  *
  * @last-check-in anlow
- * @date 2020/7/9
+ * @date 2020/7/11
  */
 @Repository
 @Mapper
@@ -23,7 +23,7 @@ public interface CptmpUserMapper {
 
     String COLUMNS = "gmt_create, gmt_modified, introduction, uk_email, phone_number, " +
             "gender, avatar, uk_username, idx_password, idx_role_name, enabled, " +
-            "account_non_expired, credentials_non_expired, account_non_locked, invitation_code, nickname";
+            "account_non_expired, credentials_non_expired, account_non_locked, invitation_code, idx_nickname";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{introduction}, #{email}, #{phoneNumber}, " +
             "#{male}, #{avatar}, #{username}, #{password}, #{roleName}, #{enabled}, " +
             "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}, #{invitationCode}, #{nickname}";
@@ -53,7 +53,7 @@ public interface CptmpUserMapper {
             @Result(column = "avatar", property = "avatar", jdbcType = JdbcType.VARCHAR),
             @Result(column = "uk_username", property = "username", jdbcType = JdbcType.VARCHAR),
             @Result(column = "idx_password", property = "password", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "nickname", property = "nickname", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "idx_nickname", property = "nickname", jdbcType = JdbcType.VARCHAR),
             @Result(column = "idx_role_name", property = "roleName", jdbcType = JdbcType.VARCHAR),
             @Result(column = "enabled", property = "enabled", jdbcType = JdbcType.TINYINT),
             @Result(column = "account_non_expired", property = "accountNonExpired", jdbcType = JdbcType.TINYINT),
@@ -62,6 +62,9 @@ public interface CptmpUserMapper {
             @Result(column = "invitation_code", property = "invitationCode", jdbcType = JdbcType.VARCHAR)
     })
     CptmpUser findUserByUsername(String username);
+
+    @Select("select idx_password from cptmp_user where uk_username = #{username}")
+    String findPasswordByUsername(String username);
 
     /**
      * 得到所有用户（调试性方法）
@@ -98,5 +101,8 @@ public interface CptmpUserMapper {
      */
     @Update(UPDATE_HEADER + "nickname = #{nickname},gmt_modified = #{gmtModified},introduction = #{introduction},gender = #{male}" + UPDATE_TAIL_USERNAME)
     void updateUserInfoByUsername(String username, String nickname, Date gmtModified, String introduction, boolean male);
+
+    @Update(UPDATE_HEADER + "idx_password = #{password}" + UPDATE_TAIL_USERNAME)
+    void updatePasswordByUsername(String username, String password);
 
 }

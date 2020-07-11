@@ -1,6 +1,5 @@
 package io.github.octopigeon.cptmpweb.servicetest;
 
-import io.github.octopigeon.cptmpservice.dto.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.EnterpriseAdminInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.StudentInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.TeacherInfoDTO;
@@ -31,7 +30,7 @@ public class ModifyUserInfoServiceTest extends BaseTest {
     public void ModifyStudentServiceTest() throws Exception {
         StudentInfoDTO studentInfo = new StudentInfoDTO();
         studentInfo.setUserId(BigInteger.ONE);
-        studentInfo.setUserName("key");
+        studentInfo.setUsername("key");
         studentInfo.setGender(false);
         studentInfo.setRoleName("ROLE_STUDENT_MEMBER");
         studentInfo.setIntroduction("不错不错");
@@ -49,7 +48,7 @@ public class ModifyUserInfoServiceTest extends BaseTest {
     public void ModifyTeacherServiceTest() throws Exception {
         TeacherInfoDTO teacherInfo = new TeacherInfoDTO();
         teacherInfo.setUserId(BigInteger.valueOf(2));
-        teacherInfo.setUserName("test1");
+        teacherInfo.setUsername("test1");
         teacherInfo.setGender(false);
         teacherInfo.setRoleName("ROLE_SCHOOL_TEACHER");
         teacherInfo.setIntroduction("不错");
@@ -66,7 +65,7 @@ public class ModifyUserInfoServiceTest extends BaseTest {
     public void ModifyEnterpriseAdminInfoServiceTest() throws Exception {
         EnterpriseAdminInfoDTO enterpriseAdminInfo = new EnterpriseAdminInfoDTO();
         enterpriseAdminInfo.setUserId(BigInteger.valueOf(3));
-        enterpriseAdminInfo.setUserName("test2");
+        enterpriseAdminInfo.setUsername("test2");
         enterpriseAdminInfo.setGender(true);
         enterpriseAdminInfo.setRoleName("ROLE_ENTERPRISE_ADMIN");
         enterpriseAdminInfo.setIntroduction("我是员工");
