@@ -63,6 +63,10 @@ public interface CptmpUserMapper {
     })
     CptmpUser findUserByUsername(String username);
 
+    @Select("select id, " + COLUMNS + " from cptmp_user where uk_email = #{email}")
+    @ResultMap("user")
+    CptmpUser findUserByEmail(String email);
+
     @Select("select idx_password from cptmp_user where uk_username = #{username}")
     String findPasswordByUsername(String username);
 
