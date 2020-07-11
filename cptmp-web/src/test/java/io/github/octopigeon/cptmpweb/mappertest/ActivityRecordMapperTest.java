@@ -44,6 +44,7 @@ class ActivityRecordMapperTest extends BaseTest {
         activityRecord2.setState(0);
         activityRecord2.setEvent("test2");
 
+        activityRecordMapper.removeAllActivityRecord();
         List<ActivityRecord> activityRecords;
         activityRecordMapper.addActivityRecord(activityRecord);
         activityRecordMapper.addActivityRecord(activityRecord2);
@@ -51,6 +52,7 @@ class ActivityRecordMapperTest extends BaseTest {
         Assertions.assertEquals(2,activityRecords.size());
 
         activityRecords=activityRecordMapper.findActivityRecordByUserId(BigInteger.valueOf(1));
+        Assertions.assertEquals("test1",activityRecords.get(0).getEvent());
         Assertions.assertEquals(1,activityRecords.size());
 
 //        activityRecordMapper.updateActivityRecordByUserId(BigInteger.valueOf(1),BigInteger.valueOf(1),new Date(),BigInteger.valueOf(1),"更新完成");

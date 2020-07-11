@@ -31,6 +31,12 @@ public interface DailyRecordMapper {
     @Insert("insert into daily_record (" +COLUMNS+ ") values (" +PROPS+ ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addDailyRecord(DailyRecord dailyRecord);
+    /**
+     * 测试用
+     */
+    @Deprecated
+    @Delete("delete from daily_record")
+    void removeAllDailyRecord();
 
 //    /**
 //     * 根据日志id删除对应的日志信息
@@ -78,7 +84,7 @@ public interface DailyRecordMapper {
      * @return 日志列表
      */
     @Select("select id, " + COLUMNS + " from daily_record")
-    @Results({
+    @Results(id = "dailyRecord", value = {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
@@ -98,17 +104,7 @@ public interface DailyRecordMapper {
      * @return 日志
      */
     @Select("select id, " + COLUMNS + " from daily_record where idx_user_id = #{userId}")
-    @Results({
-            @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
-            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
-            @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
-            @Result(column = "idx_user_id", property = "userId", jdbcType = JdbcType.BIGINT),
-            @Result(column = "idx_team_id", property = "teamId", jdbcType = JdbcType.BIGINT),
-            @Result(column = "title", property = "title", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "content", property = "content", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "record_type", property = "recordType", jdbcType = JdbcType.INTEGER),
-            @Result(column = "document_path", property = "documentPath", jdbcType = JdbcType.VARCHAR)
-    })
+    @ResultMap("dailyRecord")
     List<DailyRecord> findDailyRecordByUserId(BigInteger userId);
 
 

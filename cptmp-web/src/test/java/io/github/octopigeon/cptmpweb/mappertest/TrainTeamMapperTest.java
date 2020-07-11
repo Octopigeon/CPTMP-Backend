@@ -28,7 +28,9 @@ public class TrainTeamMapperTest extends BaseTest {
         trainTeam1.setGmtCreate(new Date());
         trainTeam1.setTeamName("lgp");
         trainTeam1.setCodeBaseUrl("www");
-        trainTeam1.setTeamManagerId(BigInteger.valueOf(1));
+        trainTeam1.setMasterUserId(BigInteger.valueOf(1));
+        trainTeam1.setPmUserId(BigInteger.valueOf(1));
+        trainTeam1.setPoUserId(BigInteger.valueOf(1));
         trainTeam1.setTrainProjectId(BigInteger.valueOf(1));
         trainTeam1.setTeamGrade(BigDecimal.valueOf(100.0));
 
@@ -36,10 +38,13 @@ public class TrainTeamMapperTest extends BaseTest {
         trainTeam2.setGmtCreate(new Date());
         trainTeam2.setTeamName("lh");
         trainTeam2.setCodeBaseUrl("www.baidu.com");
-        trainTeam2.setTeamManagerId(BigInteger.valueOf(2));
+        trainTeam2.setMasterUserId(BigInteger.valueOf(2));
+        trainTeam2.setPmUserId(BigInteger.valueOf(2));
+        trainTeam2.setPoUserId(BigInteger.valueOf(2));
         trainTeam2.setTrainProjectId(BigInteger.valueOf(2));
         trainTeam2.setTeamGrade(BigDecimal.valueOf(90.0));
 
+        trainTeamMapper.removeAllTrainTeam();
         trainTeamMapper.addTrainTeam(trainTeam1);
         trainTeamMapper.addTrainTeam(trainTeam2);
         Assertions.assertEquals(2,trainTeamMapper.findAllTrainTeam().size());
@@ -47,7 +52,7 @@ public class TrainTeamMapperTest extends BaseTest {
         trainTeamMapper.removeTrainTeamByTeamName("lh");
         Assertions.assertEquals(1,trainTeamMapper.findAllTrainTeam().size());
 
-        trainTeamMapper.updateTrainTeamByTeamName(new Date(), BigInteger.valueOf(3), "lgp",BigInteger.valueOf(3),"http",BigDecimal.valueOf(99));
+        trainTeamMapper.updateTrainTeamByTeamName(new Date(), BigInteger.valueOf(3), "lgp",BigInteger.valueOf(3),BigInteger.valueOf(3),BigInteger.valueOf(3),"http",BigDecimal.valueOf(99));
         Assertions.assertEquals(BigInteger.valueOf(3),trainTeamMapper.findAllTrainTeam().get(0).getTrainProjectId());
 
 
