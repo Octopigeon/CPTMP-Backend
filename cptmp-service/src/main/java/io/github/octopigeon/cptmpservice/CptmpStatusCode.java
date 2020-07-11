@@ -30,5 +30,7 @@ public class CptmpStatusCode {
 
     /** 尝试修改密码失败 */
     public static int UPDATE_PASSWORD_FAILED = 9;
+    /** 尝试修改基本信息失败 */
+    public static int UPDATE_BASIC_INFO_FAILED = 10;
 
 }

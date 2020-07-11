@@ -11,6 +11,7 @@ import io.github.octopigeon.cptmpservice.dto.TeacherInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
@@ -32,6 +33,24 @@ public class ModifyInfoServiceImpl implements ModifyInfoService{
     private SchoolStudentMapper schoolStudentMapper;
     @Autowired
     private SchoolInstructorMapper schoolInstructorMapper;
+
+    /**
+     * 第一个版本用于修改用户个人信息的，后面的版本中重构时应该把取代
+     * @param username
+     * @param introduction
+     * @return 更新成功与否
+     */
+    @Deprecated
+    public Boolean updateUserBasicInfo(String username,
+                                       String introduction) {
+        try {
+            cptmpUserMapper.updateBasicInfoByUsername(new Date(), introduction, username);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 
 
     /**

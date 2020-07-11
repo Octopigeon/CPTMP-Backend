@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.octopigeon.cptmpservice.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.BaseUserInfoDTO;
+import io.github.octopigeon.cptmpservice.service.ModifyInfoServiceImpl;
 import io.github.octopigeon.cptmpservice.service.UserInfoService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.math.BigDecimal;
 
 /**
  * @author anlow
@@ -31,6 +34,10 @@ public class UserDetailsController {
     @Autowired
     private UserInfoService userInfoService;
 
+    /** 后面重构service的时候，将此服务下的方法移除 */
+    @Autowired
+    private ModifyInfoServiceImpl modifyInfoService;
+
     /**
      * 根据用户名，得到用户基本信息
      * @return 返回用户基本信息json
@@ -41,6 +48,21 @@ public class UserDetailsController {
         RespBeanWithBaseUserInfoDTO respBean = new RespBeanWithBaseUserInfoDTO();
         respBean.setBaseUserInfoDTO(userInfoService.findBaseUserInfoByUsername(username));
         return respBean;
+    }
+
+    @PutMapping("/api/user/me/basic-info")
+    public RespBean updateMyBasicInfo(@RequestBody String json) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO() {
+        };
+        String introduction = objectMapper.readValue(json, ObjectNode.class).get("introduction").asText();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (modifyInfoService.updateUserBasicInfo(username, introduction)) {
+            return RespBean.ok("update basic info successfully");
+        } else {
+            return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "update basic info failed");
+        }
+
     }
 
     /**
