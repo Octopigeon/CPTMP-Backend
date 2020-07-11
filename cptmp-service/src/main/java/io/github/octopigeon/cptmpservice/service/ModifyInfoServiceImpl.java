@@ -40,26 +40,35 @@ public class ModifyInfoServiceImpl implements ModifyInfoService{
      * @param baseUserInfo 修改后的用户信息
      * @return
      * 1:修改成功
-     * 0:id或用户名为空
+     * 0:id为空
      */
     @Override
     public int modifyUserInfo(BaseUserInfoDTO baseUserInfo) throws Exception {
 
-        if(baseUserInfo.getUserId()==null||baseUserInfo.getUserName()=="")
+        if(baseUserInfo.getUserId()==null)
         {
             return 0;
         }
 
-        try{
-            cptmpUserMapper.updateUserInfoByUsername(baseUserInfo.getUserName(),baseUserInfo.getNickname(),
-                    new Date(),baseUserInfo.getIntroduction(),baseUserInfo.getGender());
-            return 1;
-        }
-        catch(Exception e)
-        {
-            throw new Exception(e);
-        }
+        cptmpUserMapper.updateUserInfoByUsername(baseUserInfo.getUserName(),baseUserInfo.getNickname(),
+                new Date(),baseUserInfo.getIntroduction(),baseUserInfo.getGender());
 
+        switch (baseUserInfo.getRoleName())
+        {
+            case "ROLE_STUDENT_MASTER":
+            case "ROLE_STUDENT_PM":
+            case "ROLE_STUDENT_PO":
+            case "ROLE_STUDENT_MEMBER":
+                return modifyStudentInfo((StudentInfoDTO) baseUserInfo);
+            case "ROLE_ENTERPRISE_ADMIN":
+            case "ROLE_SYSTEM_ADMIN":
+                return modifyEnterpriseAdminInfo((EnterpriseAdminInfoDTO)baseUserInfo);
+            case "ROLE_SCHOOL_ADMIN":
+            case "ROLE_SCHOOL_TEACHER":
+                return modifyTeacherInfo((TeacherInfoDTO)baseUserInfo);
+            default:
+        }
+        return 1;
     }
 
     /**
@@ -68,7 +77,6 @@ public class ModifyInfoServiceImpl implements ModifyInfoService{
      * @return
      * 1:修改成功
      */
-    @Override
     public int modifyStudentInfo(StudentInfoDTO studentInfo) throws Exception {
 
         try{
@@ -89,7 +97,6 @@ public class ModifyInfoServiceImpl implements ModifyInfoService{
      * @return
      * 1:修改成功
      */
-    @Override
     public int modifyTeacherInfo(TeacherInfoDTO teacherInfo) throws Exception {
 
         try{
@@ -110,7 +117,6 @@ public class ModifyInfoServiceImpl implements ModifyInfoService{
      * @return
      * 1:修改成功
      */
-    @Override
     public int modifyEnterpriseAdminInfo(EnterpriseAdminInfoDTO enterpriseAdminInfo) throws Exception {
 
         try{
