@@ -2,6 +2,7 @@ package io.github.octopigeon.cptmpservice.service.trainproject.find;
 
 import io.github.octopigeon.cptmpdao.mapper.TrainProjectMapper;
 import io.github.octopigeon.cptmpdao.model.TrainProject;
+import io.github.octopigeon.cptmpservice.dto.trainproject.TrainProjectDuringTimeDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainProjectFindRespDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,15 @@ public class TrainProjectEnterpriseAdminFindServiceImpl implements TrainProjectF
     @Override
     public List<TrainProjectFindRespDTO> findTrainProjects(String keywords) {
         List<TrainProject> trainProjects = trainProjectMapper.findTrainProjectByProjectNameAmbiguously(keywords);
+        return translateIntoDTOs(trainProjects);
+    }
+
+    public List<TrainProjectFindRespDTO> findAllTrainProjects() {
+        List<TrainProject> trainProjects = trainProjectMapper.findAllTrainProject();
+        return translateIntoDTOs(trainProjects);
+    }
+
+    private List<TrainProjectFindRespDTO> translateIntoDTOs(List<TrainProject> trainProjects) {
         List<TrainProjectFindRespDTO> trainProjectFindRespDTOs = new ArrayList<>();
         for (TrainProject trainProject : trainProjects) {
             TrainProjectFindRespDTO trainProjectFindRespDTO = new TrainProjectFindRespDTO();
@@ -37,4 +47,5 @@ public class TrainProjectEnterpriseAdminFindServiceImpl implements TrainProjectF
         }
         return trainProjectFindRespDTOs;
     }
+
 }
