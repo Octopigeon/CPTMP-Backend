@@ -18,8 +18,8 @@ import java.util.Date;
  * @author Ruby
  * @version 1.0
  * @date 2020/07/10
- * @last-check-in Ruby
- * @date 2020/07/10
+ * @last-check-in anlow
+ * @date 2020/07/11
  */
 
 @Service
@@ -45,13 +45,13 @@ public class ModifyInfoServiceImpl implements ModifyInfoService{
     @Override
     public int modifyUserInfo(BaseUserInfoDTO baseUserInfo) throws Exception {
 
-        if(baseUserInfo.getUserId()==null||baseUserInfo.getUserName()=="")
+        if(baseUserInfo.getUserId()==null|| "".equals(baseUserInfo.getUsername()))
         {
             return 0;
         }
 
         try{
-            cptmpUserMapper.updateUserInfoByUsername(baseUserInfo.getUserName(),baseUserInfo.getNickname(),
+            cptmpUserMapper.updateUserInfoByUsername(baseUserInfo.getUsername(),baseUserInfo.getNickname(),
                     new Date(),baseUserInfo.getIntroduction(),baseUserInfo.getGender());
             return 1;
         }
