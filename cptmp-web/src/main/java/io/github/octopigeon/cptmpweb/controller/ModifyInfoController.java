@@ -33,29 +33,29 @@ public class ModifyInfoController {
         switch (role) {
             case "ROLE_STUDENT_MEMBER":
                 StudentInfoDTO studentInfoDTO = new ObjectMapper().readValue(json, StudentInfoDTO.class);
-                if(userInfoService.modifyUserInfo(studentInfoDTO))
+                if(userInfoService.modify(studentInfoDTO))
                 {
                     return RespBean.error(10000,"Username or id is empty.");
                 }
-                userInfoService.modifyUserInfo(studentInfoDTO);
+                userInfoService.modify(studentInfoDTO);
                 break;
             case "ROLE_ENTERPRISE_ADMIN":
             case "ROLE_SYSTEM_ADMIN":
                 EnterpriseAdminInfoDTO enterpriseAdminInfoDTO = new ObjectMapper().readValue(json, EnterpriseAdminInfoDTO.class);
-                if(userInfoService.modifyUserInfo(enterpriseAdminInfoDTO))
+                if(userInfoService.modify(enterpriseAdminInfoDTO))
                 {
                     return RespBean.error(10000,"Username or id is empty.");
                 }
-                userInfoService.modifyUserInfo(enterpriseAdminInfoDTO);
+                userInfoService.modify(enterpriseAdminInfoDTO);
                 break;
             case "ROLE_SCHOOL_ADMIN":
             case "ROLE_SCHOOL_TEACHER":
                 TeacherInfoDTO teacherInfoDTO = new ObjectMapper().readValue(json, TeacherInfoDTO.class);
-                if(userInfoService.modifyUserInfo(teacherInfoDTO))
+                if(userInfoService.modify(teacherInfoDTO))
                 {
                     return RespBean.error(10000,"Username or id is empty.");
                 }
-                userInfoService.modifyUserInfo(teacherInfoDTO);
+                userInfoService.modify(teacherInfoDTO);
                 break;
             default:
                 return RespBean.error(10001,"Rolename is empty.");
