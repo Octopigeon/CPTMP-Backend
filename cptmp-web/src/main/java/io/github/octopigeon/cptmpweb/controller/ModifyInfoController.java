@@ -9,7 +9,7 @@ import io.github.octopigeon.cptmpservice.dto.EnterpriseAdminInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.StudentInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.TeacherInfoDTO;
 import io.github.octopigeon.cptmpservice.service.ModifyInfoService;
-import io.github.octopigeon.cptmpweb.bean.RespBean;
+import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Ruby
  * @version 1.0
  * @date 2020/07/10
- * @last-check-in Ruby
- * @date 2020/07/10
+ * @last-check-in anlow
+ * @date 2020/07/11
  */
 
 @RestController
