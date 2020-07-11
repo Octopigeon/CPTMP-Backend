@@ -53,7 +53,7 @@ public class UserDetailsController {
             @RequestBody String json
     ) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        String username = objectMapper.readValue(json, ObjectNode.class).get("username").asText();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         // 用户提交的原密码，马上会和数据库中的比较
         String originPassword = objectMapper.readValue(json, ObjectNode.class).get("origin_password").asText();
         String newPassword = objectMapper.readValue(json, ObjectNode.class).get("new_password").asText();
@@ -73,7 +73,7 @@ public class UserDetailsController {
 @EqualsAndHashCode(callSuper = true)
 class RespBeanWithBaseUserInfoDTO extends RespBean {
 
-    @JsonProperty("basic_info")
+    @JsonProperty("data")
     private BaseUserInfoDTO baseUserInfoDTO;
 
 }

@@ -68,7 +68,7 @@ class RespBeanWithTrainProjectFindRespDTOs extends RespBean {
         this.trainProjectFindRespDTOs = trainProjectFindRespDTOs;
     }
 
-    @JsonProperty("results")
+    @JsonProperty("data")
     private List<TrainProjectFindRespDTO> trainProjectFindRespDTOs;
 
 }
