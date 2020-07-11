@@ -40,7 +40,7 @@ public interface TrainTeamMapper {
      * 测试用
      */
     @Deprecated
-    @Delete("delete from train_team")
+    @Delete("delete from train_team;")
     void removeAllTrainTeam();
     /**
      * 根据id删除对应的团队

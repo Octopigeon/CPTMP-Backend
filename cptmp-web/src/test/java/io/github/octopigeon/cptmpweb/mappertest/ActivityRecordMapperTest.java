@@ -30,18 +30,16 @@ class ActivityRecordMapperTest extends BaseTest {
     public void test(){
         ActivityRecord activityRecord=new ActivityRecord();
         activityRecord.setGmtCreate(new Date());
-        activityRecord.setId(BigInteger.valueOf(1));
         activityRecord.setUserId(BigInteger.valueOf(1));
         activityRecord.setTeamId(BigInteger.valueOf(1));
-        activityRecord.setState(0);
+        activityRecord.setState(1);
         activityRecord.setEvent("test1");
 
         ActivityRecord activityRecord2=new ActivityRecord();
         activityRecord2.setGmtCreate(new Date());
-        activityRecord2.setId(BigInteger.valueOf(2));
         activityRecord2.setUserId(BigInteger.valueOf(2));
         activityRecord2.setTeamId(BigInteger.valueOf(2));
-        activityRecord2.setState(0);
+        activityRecord2.setState(2);
         activityRecord2.setEvent("test2");
 
         activityRecordMapper.removeAllActivityRecord();
