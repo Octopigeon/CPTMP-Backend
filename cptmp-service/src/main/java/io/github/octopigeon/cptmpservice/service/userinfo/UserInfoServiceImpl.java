@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -136,16 +137,18 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     /**
      * 修改用户信息
      *
-     * @param baseUserInfo 修改后的用户信息
+     * @param userInfo 修改后的用户信息
      * @return 是否删除成功
      */
     @Override
-    public Boolean modify(BaseUserInfoDTO baseUserInfo) throws Exception {
-        if(baseUserInfo.getUserId()==null|| "".equals(baseUserInfo.getUsername()))
+    public Boolean modify(BaseUserInfoDTO userInfo) throws Exception {
+        if(userInfo.getUserId()==null|| "".equals(userInfo.getUsername()))
         {
             throw new ValueException("userId or username is illegal!");
         }
         try{
+            CptmpUser user = cptmpUserMapper.findUserByUsername(userInfo.getUsername());
+            BaseUserInfoDTO baseUserInfo = completeUserInfo(user, userInfo);
             cptmpUserMapper.updateUserInfoByUsername(baseUserInfo.getUsername(),baseUserInfo.getNickname(),
                     new Date(),baseUserInfo.getIntroduction(),baseUserInfo.getGender());
             RoleEnum role = RoleEnum.valueOf(RoleEnum.class, baseUserInfo.getRoleName());
@@ -195,7 +198,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     @Override
     public void updatePassword(String username, String newPassword) {
         String newPasswordEncoded = new CptmpUser().updatePassword(newPassword).getPassword();
-        cptmpUserMapper.updatePasswordByUsername(username, newPasswordEncoded);
+        cptmpUserMapper.updatePasswordByUsername(username, new Date(), newPasswordEncoded);
     }
 
     /**
@@ -245,10 +248,8 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     @Override
     public BaseUserInfoDTO findById(BigInteger id) throws Exception {
-        BaseUserInfoDTO baseUserInfoDTO = null;
-        //TODO 等着lgp添加
         CptmpUser cptmpUser = cptmpUserMapper.findUserById(id);
-        return getFullUserInfo(cptmpUser, baseUserInfoDTO);
+        return getFullUserInfo(cptmpUser);
     }
 
     /**
@@ -259,16 +260,61 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     @Override
     public BaseUserInfoDTO findBaseUserInfoByUsername(String username) {
-        BaseUserInfoDTO baseUserInfoDTO = null;
         CptmpUser cptmpUser = cptmpUserMapper.findUserByUsername(username);
-        return getFullUserInfo(cptmpUser, baseUserInfoDTO);
+        return getFullUserInfo(cptmpUser);
     }
 
-    private BaseUserInfoDTO getFullUserInfo(CptmpUser cptmpUser, BaseUserInfoDTO baseUserInfoDTO){
+    /**
+     * 补全userInfo
+     * @param cptmpUser usrModel
+     * @return userInfo类
+     */
+    private BaseUserInfoDTO completeUserInfo(CptmpUser cptmpUser, BaseUserInfoDTO userInfo) throws IllegalAccessException {
+
+        BaseUserInfoDTO originUserInfo = getFullUserInfo(cptmpUser);
+        RoleEnum role = RoleEnum.valueOf(RoleEnum.class, cptmpUser.getRoleName());
+        if ( role.compareTo(RoleEnum.ROLE_STUDENT_MEMBER) >= 0) {
+
+            StudentInfoDTO originStudentInfo = (StudentInfoDTO) originUserInfo;
+            StudentInfoDTO studentInfo = (StudentInfoDTO) userInfo;
+            return compareUserInfo(originStudentInfo, studentInfo);
+
+        }else if (role.compareTo(RoleEnum.ROLE_SCHOOL_ADMIN) >= 0) {
+
+            TeacherInfoDTO originTeacherInfo = (TeacherInfoDTO) originUserInfo;
+            TeacherInfoDTO teacherInfo = (TeacherInfoDTO) userInfo;
+            return compareUserInfo(originTeacherInfo, teacherInfo);
+        }else if (role.compareTo(RoleEnum.ROLE_ENTERPRISE_ADMIN) >= 0) {
+
+            EnterpriseAdminInfoDTO originAdminInfo = (EnterpriseAdminInfoDTO) originUserInfo;
+            EnterpriseAdminInfoDTO adminInfo = (EnterpriseAdminInfoDTO) userInfo;
+            return compareUserInfo(originAdminInfo, adminInfo);
+        }
+        return userInfo;
+    }
+
+    private BaseUserInfoDTO compareUserInfo(BaseUserInfoDTO originUserInfo, BaseUserInfoDTO userInfo) throws IllegalAccessException {
+        Class<? extends BaseUserInfoDTO> cls = originUserInfo.getClass();
+        Field[] fields = cls.getDeclaredFields();
+        for (Field f : fields) {
+            f.setAccessible(true);//设置属性可读
+            try {
+                if (f.get(userInfo) == null) {
+                    f.set(userInfo, f.get(originUserInfo));
+                }
+            } catch (IllegalArgumentException e) {
+                throw new IllegalAccessException();
+            }
+        }
+        return userInfo;
+    }
+
+    private BaseUserInfoDTO getFullUserInfo(CptmpUser cptmpUser){
         RoleEnum role = RoleEnum.valueOf(RoleEnum.class, cptmpUser.getRoleName());
         BigInteger userId = cptmpUser.getId();
         // TODO 增加系统管理员
         // 依次学生-老师-企业管理员
+        BaseUserInfoDTO baseUserInfoDTO;
         if ( role.compareTo(RoleEnum.ROLE_STUDENT_MEMBER) >= 0) {
             StudentInfoDTO studentInfoDTO = new StudentInfoDTO();
             BeanUtils.copyProperties(cptmpUser, studentInfoDTO);
