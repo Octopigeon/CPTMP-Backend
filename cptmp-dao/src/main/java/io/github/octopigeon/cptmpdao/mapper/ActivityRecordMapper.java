@@ -28,6 +28,12 @@ public interface ActivityRecordMapper {
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addActivityRecord(ActivityRecord activityRecord);
 
+    /**
+     * 测试用
+     */
+    @Deprecated
+    @Delete("delete from activity_record")
+    void removeAllActivityRecord();
 //    /**
 //     *  删除活动信息
 //     */
@@ -75,7 +81,7 @@ public interface ActivityRecordMapper {
      * @return 活动记录列表
      */
     @Select("select id, " + COLUMNS + " from activity_record")
-    @Results({
+    @Results(id = "activityRecord", value = {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.octopigeon.cptmpservice.CptmpStatusCode;
+import io.github.octopigeon.cptmpservice.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.EnterpriseAdminInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.StudentInfoDTO;
@@ -34,38 +35,37 @@ public class ModifyInfoController {
     public RespBean modifyInfo(@RequestBody String json) throws Exception
     {
         String role = new ObjectMapper().readValue(json,ObjectNode.class).get("roleName").asText();
-        switch (role) {
-            case "ROLE_STUDENT_MASTER":
-            case "ROLE_STUDENT_PM":
-            case "ROLE_STUDENT_PO":
-            case "ROLE_STUDENT_MEMBER":
-                StudentInfoDTO studentInfoDTO = new ObjectMapper().readValue(json, StudentInfoDTO.class);
-                if(modifyInfoService.modifyUserInfo(studentInfoDTO)==0)
-                {
-                    return RespBean.error(10000,"Username or id is empty.");
-                }
-                modifyInfoService.modifyStudentInfo(studentInfoDTO);
-                break;
-            case "ROLE_ENTERPRISE_ADMIN":
-            case "ROLE_SYSTEM_ADMIN":
-                EnterpriseAdminInfoDTO enterpriseAdminInfoDTO = new ObjectMapper().readValue(json, EnterpriseAdminInfoDTO.class);
-                if(modifyInfoService.modifyUserInfo(enterpriseAdminInfoDTO)==0)
-                {
-                    return RespBean.error(10000,"Username or id is empty.");
-                }
-                modifyInfoService.modifyEnterpriseAdminInfo(enterpriseAdminInfoDTO);
-                break;
-            case "ROLE_SCHOOL_ADMIN":
-            case "ROLE_SCHOOL_TEACHER":
-                TeacherInfoDTO teacherInfoDTO = new ObjectMapper().readValue(json, TeacherInfoDTO.class);
-                if(modifyInfoService.modifyUserInfo(teacherInfoDTO)==0)
-                {
-                    return RespBean.error(10000,"Username or id is empty.");
-                }
-                modifyInfoService.modifyTeacherInfo(teacherInfoDTO);
-                break;
-            default:
-                return RespBean.error(10001,"Rolename is empty.");
+        if(role.equals(RoleEnum.ROLE_STUDENT_MASTER.name())||role.equals(RoleEnum.ROLE_STUDENT_PM.name())
+                ||role.equals(RoleEnum.ROLE_STUDENT_PO.name())||role.equals(RoleEnum.ROLE_STUDENT_MEMBER.name()))
+        {
+            StudentInfoDTO studentInfoDTO = new ObjectMapper().readValue(json, StudentInfoDTO.class);
+            if(modifyInfoService.modifyUserInfo(studentInfoDTO)==0)
+            {
+                return RespBean.error(10000,"Username or id is empty.");
+            }
+            modifyInfoService.modifyStudentInfo(studentInfoDTO);
+        }
+        else if(role.equals(RoleEnum.ROLE_ENTERPRISE_ADMIN.name())||role.equals(RoleEnum.ROLE_SYSTEM_ADMIN.name()))
+        {
+            EnterpriseAdminInfoDTO enterpriseAdminInfoDTO = new ObjectMapper().readValue(json, EnterpriseAdminInfoDTO.class);
+            if(modifyInfoService.modifyUserInfo(enterpriseAdminInfoDTO)==0)
+            {
+                return RespBean.error(10000,"Username or id is empty.");
+            }
+            modifyInfoService.modifyEnterpriseAdminInfo(enterpriseAdminInfoDTO);
+        }
+        else if(role.equals(RoleEnum.ROLE_SCHOOL_ADMIN.name())||role.equals(RoleEnum.ROLE_SCHOOL_TEACHER.name()))
+        {
+            TeacherInfoDTO teacherInfoDTO = new ObjectMapper().readValue(json, TeacherInfoDTO.class);
+            if(modifyInfoService.modifyUserInfo(teacherInfoDTO)==0)
+            {
+                return RespBean.error(10000,"Username or id is empty.");
+            }
+            modifyInfoService.modifyTeacherInfo(teacherInfoDTO);
+        }
+        else
+        {
+            return RespBean.error(10001,"Rolename is empty.");
         }
 
         return RespBean.ok("Updated Successfully.");

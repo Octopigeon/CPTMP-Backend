@@ -1,7 +1,10 @@
 package io.github.octopigeon.cptmpweb.mappertest;
 
 import io.github.octopigeon.cptmpdao.mapper.TrainMapper;
+import io.github.octopigeon.cptmpdao.mapper.TrainProjectMapper;
+import io.github.octopigeon.cptmpdao.mapper.TrainTeamMapper;
 import io.github.octopigeon.cptmpdao.model.Train;
+import io.github.octopigeon.cptmpdao.model.TrainProject;
 import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -19,6 +22,7 @@ import java.util.Date;
  * @date 2020/7/10
  */
 public class TrainMapperTest extends BaseTest {
+
     @Autowired
     private TrainMapper trainMapper;
     @Test
@@ -28,24 +32,25 @@ public class TrainMapperTest extends BaseTest {
         train1.setAcceptStandard("test1");
         train1.setSchoolId(BigInteger.valueOf(1));
         train1.setSchoolId(BigInteger.valueOf(1));
-        train1.setContent("test1  content");
+        train1.setContent("test1");
         train1.setStartDate(new Date());
         train1.setFinishDate(new Date());
         train1.setGmtCreate(new Date());
-        train1.setResourceLibrary("www.baidu.com");
+        train1.setResourceLibrary("test1");
 
         Train train2 =new Train();
         train2.setProcessId(BigInteger.valueOf(2));
         train2.setAcceptStandard("test2");
         train2.setSchoolId(BigInteger.valueOf(2));
         train2.setSchoolId(BigInteger.valueOf(2));
-        train2.setContent("test2  content");
+        train2.setContent("test2");
         train2.setStartDate(new Date());
         train2.setFinishDate(new Date());
         train2.setGmtCreate(new Date());
-        train2.setResourceLibrary("www.hao123.com");
+        train2.setResourceLibrary("test2");
 
-        trainMapper.removeAllTrainProjects();
+
+        trainMapper.removeAllTrain();
         trainMapper.addTrainProject(train1);
         trainMapper.addTrainProject(train2);
         Assertions.assertEquals(2, trainMapper.findAllTrain().size());
@@ -53,7 +58,7 @@ public class TrainMapperTest extends BaseTest {
         Assertions.assertEquals("test1",trainMapper.findAllTrain().get(0).getAcceptStandard());
         trainMapper.removeTrainProjectById(trainMapper.findAllTrain().get(0).getId());
 
-        trainMapper.updateTrainProjectById(trainMapper.findAllTrain().get(0).getId(),new Date(),BigInteger.valueOf(3),BigInteger.valueOf(3),new Date(),new Date(),"test3","test3","test3");
+        trainMapper.updateTrainProjectById(trainMapper.findAllTrain().get(0).getId(),new Date(),BigInteger.valueOf(2),BigInteger.valueOf(22),new Date(),new Date(),"test3","test3","test3");
         Assertions.assertEquals("test3",trainMapper.findAllTrain().get(0).getContent());
         Assertions.assertEquals(1,trainMapper.findAllTrain().size());
 

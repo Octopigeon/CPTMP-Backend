@@ -1,5 +1,6 @@
 package io.github.octopigeon.cptmpweb.mappertest;
 
+import io.github.octopigeon.cptmpdao.mapper.ActivityRecordMapper;
 import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.mapper.DailyRecordMapper;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
@@ -33,20 +34,22 @@ public class DailyRecordMapperTest extends BaseTest {
         dailyRecord1.setGmtCreate(new Date());
         dailyRecord1.setUserId(BigInteger.valueOf(1));
         dailyRecord1.setTeamId(BigInteger.valueOf(1));
-        dailyRecord1.setRecordType(0);
-        dailyRecord1.setDocumentPath("E://");
-        dailyRecord1.setTitle("lgp");
-        dailyRecord1.setContent("sah");
+        dailyRecord1.setRecordType(1);
+        dailyRecord1.setDocumentPath("test1");
+        dailyRecord1.setTitle("test1");
+        dailyRecord1.setContent("test1");
 
         DailyRecord dailyRecord2 = new DailyRecord();
         dailyRecord2.setGmtCreate(new Date());
         dailyRecord2.setUserId(BigInteger.valueOf(2));
         dailyRecord2.setTeamId(BigInteger.valueOf(2));
-        dailyRecord2.setRecordType(1);
-        dailyRecord2.setDocumentPath("E://");
-        dailyRecord2.setTitle("wxc");
-        dailyRecord2.setContent("lhr");
+        dailyRecord2.setRecordType(2);
+        dailyRecord2.setDocumentPath("test2");
+        dailyRecord2.setTitle("test2");
+        dailyRecord2.setContent("test2");
 
+
+        dailyRecordMapper.removeAllDailyRecord();
         dailyRecordMapper.addDailyRecord(dailyRecord1);
         dailyRecordMapper.addDailyRecord(dailyRecord2);
 
@@ -55,6 +58,7 @@ public class DailyRecordMapperTest extends BaseTest {
         Assertions.assertEquals(2,dailyRecords.size());
 
         dailyRecords=dailyRecordMapper.findDailyRecordByUserId(BigInteger.valueOf(1));
+        Assertions.assertEquals("test1",dailyRecords.get(0).getTitle());
         Assertions.assertEquals(1,dailyRecords.size());
 //
 //        dailyRecordMapper.removeDailyRecordByUserId(BigInteger.valueOf(1));

@@ -28,16 +28,16 @@ public class TrainProjectMapperTest extends BaseTest {
         trainProject1.setTrainId(BigInteger.valueOf(1));
         trainProject1.setProjectName("test1");
         trainProject1.setProjectLevel(1);
-        trainProject1.setProjectContent("test1  content");
-        trainProject1.setResourceLibrary("www.baidu.com");
+        trainProject1.setProjectContent("test1");
+        trainProject1.setResourceLibrary("test1");
 
         TrainProject trainProject2=new TrainProject();
         trainProject2.setGmtCreate(new Date());
         trainProject2.setTrainId(BigInteger.valueOf(2));
         trainProject2.setProjectName("test2");
         trainProject2.setProjectLevel(2);
-        trainProject2.setProjectContent("test2  content");
-        trainProject2.setResourceLibrary("www.baidu.com2");
+        trainProject2.setProjectContent("test2");
+        trainProject2.setResourceLibrary("test2");
 
         trainProjectMapper.removeAllTrainProjects();
         trainProjectMapper.addTrainProject(trainProject1);
@@ -48,8 +48,8 @@ public class TrainProjectMapperTest extends BaseTest {
         Assertions.assertEquals(trainProject2.getProjectContent(),trainProjectMapper.findTrainProjectByProjectNameAmbiguously("2").get(0).getProjectContent());
         Assertions.assertEquals(1,trainProjectMapper.findAllTrainProject().size());
 
-        trainProjectMapper.updateTrainProjectByProjectName(new Date(), BigInteger.valueOf(3), "test2", 3,"test3 content","www");
-        Assertions.assertEquals("test3 content",trainProjectMapper.findTrainProjectByProjectNameAmbiguously("test2").get(0).getProjectContent());
+        trainProjectMapper.updateTrainProjectByProjectName(new Date(), BigInteger.valueOf(2), "test2", 3,"test3","www");
+        Assertions.assertEquals("test3",trainProjectMapper.findTrainProjectByProjectNameAmbiguously("test2").get(0).getProjectContent());
 
         Assertions.assertEquals(1, trainProjectMapper.findTrainProjectByProjectNameAmbiguously("test2").size());
 
