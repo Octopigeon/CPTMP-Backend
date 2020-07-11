@@ -1,6 +1,5 @@
 package io.github.octopigeon.cptmpweb.servicetest;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.mapper.EnterpriseAdminMapper;
 import io.github.octopigeon.cptmpdao.mapper.SchoolInstructorMapper;
@@ -13,7 +12,7 @@ import io.github.octopigeon.cptmpservice.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.EnterpriseAdminInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.StudentInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.TeacherInfoDTO;
-import io.github.octopigeon.cptmpservice.service.GetUserInfoService;
+import io.github.octopigeon.cptmpservice.service.UserInfoService;
 import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -28,7 +27,7 @@ import java.util.Date;
  * @last-check-in anlow
  * @date 2020/7/10
  */
-public class GetUserInfoServiceTest extends BaseTest {
+public class UserInfoServiceTest extends BaseTest {
 
     @Autowired
     private CptmpUserMapper cptmpUserMapper;
@@ -43,7 +42,7 @@ public class GetUserInfoServiceTest extends BaseTest {
     private SchoolInstructorMapper schoolInstructorMapper;
 
     @Autowired
-    private GetUserInfoService getUserInfoService;
+    private UserInfoService userInfoService;
 
     @Test
     public void test() {
@@ -68,7 +67,7 @@ public class GetUserInfoServiceTest extends BaseTest {
         schoolInstructor.setSchoolName("wasdgf");
         schoolInstructor.setUserId(cptmpUserMapper.findUserByUsername("test1").getId());
         schoolInstructorMapper.addSchoolInstructor(schoolInstructor);
-        TeacherInfoDTO teacherInfoDTO = (TeacherInfoDTO)  getUserInfoService.findBaseUserInfoByUsername("test1");
+        TeacherInfoDTO teacherInfoDTO = (TeacherInfoDTO)  userInfoService.findBaseUserInfoByUsername("test1");
         Assertions.assertEquals("wxc", teacherInfoDTO.getName());
         Assertions.assertEquals("123", teacherInfoDTO.getEmployeeId());
         Assertions.assertEquals("wasdgf", teacherInfoDTO.getSchoolName());
@@ -85,7 +84,7 @@ public class GetUserInfoServiceTest extends BaseTest {
         schoolStudent.setStudentId("2143241");
         schoolStudent.setUserId(cptmpUserMapper.findUserByUsername("test2").getId());
         schoolStudentMapper.addSchoolStudent(schoolStudent);
-        StudentInfoDTO studentInfoDTO = (StudentInfoDTO) getUserInfoService.findBaseUserInfoByUsername("test2");
+        StudentInfoDTO studentInfoDTO = (StudentInfoDTO) userInfoService.findBaseUserInfoByUsername("test2");
         Assertions.assertEquals("lgp", studentInfoDTO.getName());
         Assertions.assertEquals("2143241", studentInfoDTO.getStudentId());
         Assertions.assertEquals("wasdgf", studentInfoDTO.getSchoolName());
@@ -101,7 +100,7 @@ public class GetUserInfoServiceTest extends BaseTest {
         enterpriseAdmin.setName("lhr");
         enterpriseAdmin.setUserId(cptmpUserMapper.findUserByUsername("test3").getId());
         enterpriseAdminMapper.addEnterpriseAdmin(enterpriseAdmin);
-        EnterpriseAdminInfoDTO enterpriseAdminInfoDTO = (EnterpriseAdminInfoDTO) getUserInfoService.findBaseUserInfoByUsername("test3");
+        EnterpriseAdminInfoDTO enterpriseAdminInfoDTO = (EnterpriseAdminInfoDTO) userInfoService.findBaseUserInfoByUsername("test3");
         Assertions.assertEquals("lhr", enterpriseAdminInfoDTO.getName());
         Assertions.assertEquals("sdafasdf", enterpriseAdminInfoDTO.getEmployeeId());
         Assertions.assertEquals(cptmpUserMapper.findUserByUsername("test3").getId(), enterpriseAdminInfoDTO.getUserId());

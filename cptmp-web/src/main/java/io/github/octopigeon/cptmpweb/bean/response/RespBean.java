@@ -22,7 +22,9 @@ public class RespBean {
     protected String msg;
 
     public RespBean() {
+        this.status = CptmpStatusCode.OK;
         this.date = new Date();
+        this.msg = "success";
     }
 
     public static RespBean ok(String msg) {
@@ -37,9 +39,10 @@ public class RespBean {
         return new RespBean(status, msg);
     }
 
-    private RespBean(Integer status, String msg) {
+    public RespBean(Integer status, String msg) {
         this.status = status;
         this.date = new Date();
         this.msg = msg;
     }
+
 }
