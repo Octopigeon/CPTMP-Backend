@@ -19,7 +19,7 @@ import java.util.Optional;
  * @version 1.0
  * @date 2020/7/8
  * @last-check-in anlow
- * @date 2020/7/9
+ * @date 2020/7/11
  */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -29,14 +29,20 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    /**
+     * 支持用户名或者邮箱登录
+     * @param username 用户名或者邮箱
+     * @return 返回UserDetails
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        logger.info("Current username: " + username);
         CptmpUser cptmpUser = cptmpUserMapper.findUserByUsername(username);
+        if (cptmpUser == null) {
+            cptmpUser = cptmpUserMapper.findUserByEmail(username);
+        }
         Optional<CptmpUser> userOptional = Optional.ofNullable(cptmpUser);
         if (userOptional.isPresent()) {
-            logger.info("Current password: " + cptmpUser.getPassword());
-            return new User(username,
+            return new User(cptmpUser.getUsername(),
                     cptmpUser.getPassword(),
                     cptmpUser.getEnabled(),
                     cptmpUser.getAccountNonExpired(),
