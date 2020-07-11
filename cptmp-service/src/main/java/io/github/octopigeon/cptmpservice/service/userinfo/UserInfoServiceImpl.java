@@ -21,6 +21,7 @@ import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
@@ -51,8 +52,18 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+
+    @Autowired
     public UserInfoServiceImpl(FileProperties fileProperties) throws Exception {
         super(fileProperties);
+    }
+
+    @Override
+    public Boolean validateOriginPassword(String username, String originPassword) {
+        return passwordEncoder.matches(originPassword, cptmpUserMapper.findPasswordByUsername(username));
     }
 
     /**
@@ -103,7 +114,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
             parsedUserInfo.setUserId(registeredUser.getId());
             //添加角色
             addRole(parsedUserInfo);
-            //TODO 调用邮件服务， 发送激活链接admin/activate/{userId}
+            //TODO 调用邮件服务， 发送激活链接admin/activate/{token}
             emailService.sendSimpleMessage(registeredUser.getEmail(), "章鱼鸽实训平台", "");
         }catch (Exception e) {
             throw new Exception(e);
@@ -144,7 +155,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
                 //TODO 此处不应该存在studentface修改，告知lgp修改mapper
                 StudentInfoDTO studentInfo = (StudentInfoDTO)baseUserInfo;
                 schoolStudentMapper.updateSchoolStudetnByUserId(studentInfo.getUserId(),new Date(),
-                        studentInfo.getName(),studentInfo.getStudentId(),studentInfo.getSchoolName(),studentInfo.getStudentFace());
+                        studentInfo.getName(),studentInfo.getStudentId(),studentInfo.getSchoolName());
             }
             // 老师
             else if(role.compareTo(RoleEnum.ROLE_SCHOOL_ADMIN) >= 0)
@@ -174,6 +185,17 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     public void activateAccount(BigInteger userId) {
         CptmpUser cptmpUser = cptmpUserMapper.findUserById(userId);
         cptmpUserMapper.updateEnabledByUsername(cptmpUser.getUsername(), true);
+    }
+
+    /**
+     * 更新密码
+     * @param username 用户名
+     * @param newPassword 新密码
+     */
+    @Override
+    public void updatePassword(String username, String newPassword) {
+        String newPasswordEncoded = new CptmpUser().updatePassword(newPassword).getPassword();
+        cptmpUserMapper.updatePasswordByUsername(username, newPasswordEncoded);
     }
 
     /**
