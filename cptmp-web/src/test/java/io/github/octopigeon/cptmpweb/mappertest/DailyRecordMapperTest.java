@@ -1,5 +1,6 @@
 package io.github.octopigeon.cptmpweb.mappertest;
 
+import io.github.octopigeon.cptmpdao.mapper.ActivityRecordMapper;
 import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.mapper.DailyRecordMapper;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
@@ -47,6 +48,8 @@ public class DailyRecordMapperTest extends BaseTest {
         dailyRecord2.setTitle("wxc");
         dailyRecord2.setContent("lhr");
 
+
+        dailyRecordMapper.removeAllDailyRecord();
         dailyRecordMapper.addDailyRecord(dailyRecord1);
         dailyRecordMapper.addDailyRecord(dailyRecord2);
 
@@ -55,6 +58,7 @@ public class DailyRecordMapperTest extends BaseTest {
         Assertions.assertEquals(2,dailyRecords.size());
 
         dailyRecords=dailyRecordMapper.findDailyRecordByUserId(BigInteger.valueOf(1));
+        Assertions.assertEquals("lgp",dailyRecords.get(0).getTitle());
         Assertions.assertEquals(1,dailyRecords.size());
 //
 //        dailyRecordMapper.removeDailyRecordByUserId(BigInteger.valueOf(1));
