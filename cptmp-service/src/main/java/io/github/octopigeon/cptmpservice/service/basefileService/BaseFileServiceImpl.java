@@ -1,9 +1,7 @@
-package io.github.octopigeon.cptmpservice.service;
+package io.github.octopigeon.cptmpservice.service.basefileService;
 
-import io.github.octopigeon.cptmpdao.mapper.AttachmentFileMapper;
-import io.github.octopigeon.cptmpdao.model.AttachmentFile;
-import io.github.octopigeon.cptmpservice.FileProperties;
-import io.github.octopigeon.cptmpservice.dto.FileDTO;
+import io.github.octopigeon.cptmpservice.config.FileProperties;
+import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -13,7 +11,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.nio.file.*;
 import java.util.Calendar;
@@ -23,23 +20,20 @@ import java.util.Random;
 
 /**
  * @author Gh Li
- * @version 1.0
+ * @version 1.1
  * @date 2020/7/10
  * @last-check-in Gh Li
- * @date 2020/7/10
+ * @date 2020/7/11
  */
 @Service
-public class FileServiceImpl implements FileService{
+public class BaseFileServiceImpl implements BaseFileService {
     // 文件在本地存储的地址
     private final Path fileStorageLocation;
 
     @Autowired
-    private AttachmentFileMapper attachmentFileMapper;
+    public BaseFileServiceImpl(FileProperties fileProperties) throws Exception {
 
-    @Autowired
-    public FileServiceImpl(FileProperties fileProperties) throws Exception {
-
-        String path = fileProperties.getUploadBaseDir()+fileProperties.getUploadFile();
+        String path = fileProperties.getUploadDir();
         this.fileStorageLocation = Paths.get(path).toAbsolutePath().normalize();
         try {
             Files.createDirectories(this.fileStorageLocation);
@@ -50,14 +44,12 @@ public class FileServiceImpl implements FileService{
 
     /**
      * 单个文件上传接收服务
-     * @param file 多文件
-     * @param userId 上传的用户
-     * @param teamId 上传所属团队，可为空
-     * @return 文件对应的url
+     * @param file 文件流
+     * @return 文件相关信息
      * @throws Exception
      */
     @Override
-    public FileDTO singleStoreFile(MultipartFile file, BigInteger userId, BigInteger teamId) throws Exception {
+    public FileDTO storeFile(MultipartFile file) throws Exception {
         String originName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         try{
             if(originName.contains("..")){
@@ -73,7 +65,7 @@ public class FileServiceImpl implements FileService{
                 throw new Exception("Could not create the directory where the uploaded files will be stored.", ex);
             }
             String extension = FilenameUtils.getExtension(originName);
-            String fileName = productFilename(extension);
+            String fileName = String.format("%s.%s", productFilename(), extension);
             Path filePath = realPath.resolve(fileName);
             // 文件存储
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
@@ -85,26 +77,10 @@ public class FileServiceImpl implements FileService{
             fileResp.setOriginalName(originName);
             fileResp.setFileSize(file.getSize());
             fileResp.setFileType(file.getContentType());
-            //数据库操作
-            addFileRecord(fileResp, userId, teamId);
             return fileResp;
         } catch (Exception ex) {
             throw new Exception("Could not store file " + originName + ". Please try again!", ex);
         }
-    }
-
-    private void addFileRecord(FileDTO fileInfo, BigInteger userId, BigInteger teamId)
-    {
-        AttachmentFile attachmentFile = new AttachmentFile();
-        attachmentFile.setFileName(fileInfo.getFileName());
-        attachmentFile.setFilePath(fileInfo.getFilePath());
-        attachmentFile.setFileSize(BigInteger.valueOf(fileInfo.getFileSize()));
-        attachmentFile.setFileType(fileInfo.getFileType());
-        attachmentFile.setGmtCreate(fileInfo.getGmtCreate());
-        attachmentFile.setOriginName(fileInfo.getOriginalName());
-        attachmentFile.setUserId(userId);
-        attachmentFile.setTeamId(teamId);
-        attachmentFileMapper.addAttachmentFile(attachmentFile);
     }
 
     /**
@@ -130,38 +106,12 @@ public class FileServiceImpl implements FileService{
         }
     }
 
-    /**
-     * 删除文件
-     *
-     * @param fileName 文件名
-     * @return 是否删除成功
-     * @throws Exception
-     */
-    @Override
-    public Boolean deleteFile(String fileName, String year, String month, String day) throws Exception {
-        try {
-            Path path = Paths.get(this.fileStorageLocation.toString(), year, month, day);
-            Path filePath = path.resolve(fileName).normalize();
-            if(attachmentFileMapper.findAttachmentFileByfileName(fileName) != null)
-            {
-                // 删除索引
-                attachmentFileMapper.removeAttachmentFile(fileName);
-                // 删除文件
-                if(filePath.toFile().delete()){
-                    return true;
-                }
-                else {
-                    throw new Exception("File delete failed");
-                }
-            }else {
-                throw new Exception("File not found " + fileName);
-            }
-        } catch (Exception e){
-            throw new Exception("File not found " + fileName, e);
-        }
-    }
 
-    private String productFilename(String extension){
+    /**
+     * 产生文件名，不需要管扩展名
+     * @return
+     */
+    private String productFilename(){
         Random rand = new Random();
         int random = rand.nextInt();
 
@@ -170,6 +120,6 @@ public class FileServiceImpl implements FileService{
         int intMonth = calCurrent.get(Calendar.MONTH) + 1;
         int intYear = calCurrent.get(Calendar.YEAR);
 
-        return String.format("%d_%d_%d_%d.%s", intYear,intMonth,intDay,(random > 0 ? random : ( -1) * random), extension);
+        return String.format("%d_%d_%d_%d", intYear,intMonth,intDay,(random > 0 ? random : ( -1) * random));
     }
 }

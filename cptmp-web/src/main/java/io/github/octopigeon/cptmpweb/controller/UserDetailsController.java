@@ -3,8 +3,8 @@ package io.github.octopigeon.cptmpweb.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.github.octopigeon.cptmpservice.dto.BaseUserInfoDTO;
-import io.github.octopigeon.cptmpservice.service.GetUserInfoService;
+import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
+import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserDetailsController {
 
     @Autowired
-    private GetUserInfoService getUserInfoService;
+    private UserInfoService UserInfoService;
 
     /**
      * 根据用户名，得到用户基本信息
@@ -33,7 +33,7 @@ public class UserDetailsController {
     public BaseUserInfoDTO getMyBasicInfo(
         @RequestBody String json
     ) throws JsonProcessingException {
-        return getUserInfoService.findBaseUserInfoByUsername(new ObjectMapper().readValue(json, ObjectNode.class)
+        return UserInfoService.findBaseUserInfoByUsername(new ObjectMapper().readValue(json, ObjectNode.class)
                 .get("username").asText());
     }
 

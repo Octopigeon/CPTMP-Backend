@@ -1,6 +1,6 @@
 package io.github.octopigeon.cptmpweb.config;
 
-import io.github.octopigeon.cptmpservice.service.UserDetailsServiceImpl;
+import io.github.octopigeon.cptmpservice.service.otherservice.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

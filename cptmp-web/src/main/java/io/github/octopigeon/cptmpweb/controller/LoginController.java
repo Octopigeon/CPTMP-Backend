@@ -1,6 +1,6 @@
 package io.github.octopigeon.cptmpweb.controller;
 
-import io.github.octopigeon.cptmpservice.CptmpStatusCode;
+import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;

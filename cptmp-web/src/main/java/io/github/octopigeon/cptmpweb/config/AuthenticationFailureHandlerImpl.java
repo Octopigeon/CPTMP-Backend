@@ -1,7 +1,7 @@
 package io.github.octopigeon.cptmpweb.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.octopigeon.cptmpservice.CptmpStatusCode;
+import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AccountExpiredException;

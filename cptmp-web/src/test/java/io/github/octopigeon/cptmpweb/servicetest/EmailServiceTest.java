@@ -1,6 +1,6 @@
 package io.github.octopigeon.cptmpweb.servicetest;
 
-import io.github.octopigeon.cptmpservice.service.EmailService;
+import io.github.octopigeon.cptmpservice.service.otherservice.EmailService;
 import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
