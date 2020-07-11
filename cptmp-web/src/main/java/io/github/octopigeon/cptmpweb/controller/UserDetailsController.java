@@ -11,6 +11,7 @@ import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,16 +33,13 @@ public class UserDetailsController {
 
     /**
      * 根据用户名，得到用户基本信息
-     * @param json 前端传来的json
      * @return 返回用户基本信息json
      */
     @GetMapping("/api/user/me/basic-info")
-    public RespBeanWithBaseUserInfoDTO getMyBasicInfo(
-        @RequestBody String json
-    ) throws JsonProcessingException {
+    public RespBeanWithBaseUserInfoDTO getMyBasicInfo() throws JsonProcessingException {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         RespBeanWithBaseUserInfoDTO respBean = new RespBeanWithBaseUserInfoDTO();
-        respBean.setBaseUserInfoDTO(userInfoService.findBaseUserInfoByUsername(new ObjectMapper().readValue(json, ObjectNode.class)
-                .get("username").asText()));
+        respBean.setBaseUserInfoDTO(userInfoService.findBaseUserInfoByUsername(username));
         return respBean;
     }
 
