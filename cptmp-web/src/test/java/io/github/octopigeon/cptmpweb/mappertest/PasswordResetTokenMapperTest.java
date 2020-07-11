@@ -46,6 +46,7 @@ public class PasswordResetTokenMapperTest extends BaseTest {
         cptmpUser.updatePassword("123456");
         cptmpUser.setEmail(userEmail);
         cptmpUser.setRoleName("ROLE_SCHOOL_TEACHER");
+        cptmpUser.setNickname("test");
         cptmpUser.setEnabled(true);
         cptmpUser.setAccountNonExpired(true);
         cptmpUser.setCredentialsNonExpired(true);
