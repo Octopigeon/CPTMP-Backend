@@ -28,7 +28,7 @@ public interface TrainProjectMapper {
             "project_content, resource_library";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{trainId}, #{projectName}, #{projectLevel}, " +
             "#{projectContent}, #{resourceLibrary}";
-    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, train_id = #{trainId}, uk_project_name = #{projectName}, " +
+    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, idx_train_id = #{trainId}, uk_project_name = #{projectName}, " +
             "project_level = #{projectLevel}, project_content = #{projectContent}, resource_library = #{resourceLibrary}";
 
     /**
