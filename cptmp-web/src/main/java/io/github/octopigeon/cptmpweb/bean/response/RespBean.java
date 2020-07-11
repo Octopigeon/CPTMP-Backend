@@ -1,6 +1,5 @@
-package io.github.octopigeon.cptmpweb.bean;
+package io.github.octopigeon.cptmpweb.bean.response;
 
-import com.fasterxml.jackson.annotation.JsonSetter;
 import io.github.octopigeon.cptmpservice.CptmpStatusCode;
 import lombok.Data;
 
@@ -11,23 +10,19 @@ import java.util.Date;
  * @version 1.0
  * @date 2020/7/9
  * @last-check-in anlow
- * @date 2020/7/9
+ * @date 2020/7/10
  */
 @Data
 public class RespBean {
     /** 状态码 */
-    private Integer status;
+    protected Integer status;
     /** 时间 */
-    private final Date date;
+    protected final Date date;
     /** 返回信息 */
-    private String msg;
+    protected String msg;
 
-    private RespBean() {
+    public RespBean() {
         this.date = new Date();
-    }
-
-    public static RespBean build() {
-        return new RespBean();
     }
 
     public static RespBean ok(String msg) {
