@@ -52,7 +52,7 @@ public class ModifyInfoServiceImpl implements ModifyInfoService{
 
         try{
             cptmpUserMapper.updateUserInfoByUsername(baseUserInfo.getUsername(),baseUserInfo.getNickname(),
-                    new Date(),baseUserInfo.getIntroduction(),baseUserInfo.getGender());
+                    new Date(),baseUserInfo.getIntroduction(),baseUserInfo.getMale());
             return 1;
         }
         catch(Exception e)
