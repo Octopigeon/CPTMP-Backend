@@ -2,15 +2,13 @@ package io.github.octopigeon.cptmpweb.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.octopigeon.cptmpservice.CptmpStatusCode;
-import io.github.octopigeon.cptmpweb.bean.RespBean;
-import lombok.extern.slf4j.Slf4j;
+import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.AccountStatusException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationException;
 import org.springframework.stereotype.Component;

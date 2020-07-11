@@ -1,10 +1,8 @@
 package io.github.octopigeon.cptmpdao.model;
 
-import com.alibaba.fastjson.JSON;
 import lombok.Data;
 
 import java.math.BigInteger;
-import java.net.URL;
 import java.util.Date;
 
 /**
@@ -16,20 +14,21 @@ import java.util.Date;
  * @date 2020/7/9
  */
 @Data
-public class TrainProject {
+public class Train {
     private BigInteger id;
     private Date gmtCreate;
     private Date gmtModified;
-    private BigInteger trainId;
-    private String projectName;
+    private BigInteger schoolId;
+    private BigInteger processId;
+    private Date startDate;
+    private Date finishDate;
+    private String content;
     /**
-     * 数字代表难度系数
+     * 验收标准
      */
-    private Integer projectLevel;
-    private String projectContent;
+    private String acceptStandard;
     /**
-     * 项目资源
+     * 实训资源
      */
     private String resourceLibrary;
-
 }

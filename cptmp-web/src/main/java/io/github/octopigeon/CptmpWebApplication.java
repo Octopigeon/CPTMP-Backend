@@ -1,9 +1,12 @@
 package io.github.octopigeon;
 
+import io.github.octopigeon.cptmpservice.FileProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
+@EnableConfigurationProperties(FileProperties.class)
 @SpringBootApplication
 @EnableGlobalMethodSecurity(
         prePostEnabled = true,
