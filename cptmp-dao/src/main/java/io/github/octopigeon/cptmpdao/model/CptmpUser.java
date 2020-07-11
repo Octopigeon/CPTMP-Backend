@@ -78,18 +78,26 @@ public class CptmpUser {
      * @return 头像地址
      */
     public String getAvatar(){
-        if (avatar.length() > 0) {
+        if ((avatar == null) || (avatar.length() > 0)) {
             return avatar;
         } else {
-            // 小写的邮箱地址 MD5
-            String emailMD5 = DigestUtils.md5DigestAsHex(email.getBytes()).toLowerCase();
+            try {
+                if ((email == null) || (email.length() == 0)) {
+                    return "https://www.gravatar.com/avatar/0/?d=mp&s=60&r=g";
+                }
 
-            // d 默认头像类型
-            // s 图像大小
-            // r 限制级
-            String format = "https://www.gravatar.com/avatar/" + emailMD5 + "/?d=mp&s=60&r=g";
+                // 小写的邮箱地址 MD5
+                String emailMD5 = DigestUtils.md5DigestAsHex(email.getBytes()).toLowerCase();
 
-            return format;
+                // d 默认头像类型
+                // s 图像大小
+                // r 限制级
+                String format = "https://www.gravatar.com/avatar/" + emailMD5 + "/?d=mp&s=60&r=g";
+
+                return format;
+            } catch (Exception e) {
+                return "https://www.gravatar.com/avatar/0/?d=mp&s=60&r=g";
+            }
         }
     }
 }
