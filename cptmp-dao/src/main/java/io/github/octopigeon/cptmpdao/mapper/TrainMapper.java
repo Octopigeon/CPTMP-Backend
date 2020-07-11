@@ -41,6 +41,7 @@ public interface TrainMapper {
      * 根据实训id删除
      * @param id：实训id
      */
+
     @Delete("delete from train where id = #{id}")
     void removeTrainProjectById(BigInteger id);
 
@@ -49,7 +50,7 @@ public interface TrainMapper {
      */
     @Deprecated
     @Delete("delete from train")
-    void removeAllTrainProjects();
+    void removeAllTrain();
 
 //    /**
 //     * 根据实训名称删除

@@ -24,11 +24,11 @@ import java.util.List;
 @Mapper
 public interface TrainProjectMapper {
 
-    String COLUMNS = "gmt_create, gmt_modified, train_id, uk_project_name, project_level, " +
+    String COLUMNS = "gmt_create, gmt_modified, idx_train_id, uk_project_name, project_level, " +
             "project_content, resource_library";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{trainId}, #{projectName}, #{projectLevel}, " +
             "#{projectContent}, #{resourceLibrary}";
-    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, train_id = #{trainId}, uk_project_name = #{projectName}, " +
+    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, idx_train_id = #{trainId}, uk_project_name = #{projectName}, " +
             "project_level = #{projectLevel}, project_content = #{projectContent}, resource_library = #{resourceLibrary}";
 
     /**
@@ -96,7 +96,7 @@ public interface TrainProjectMapper {
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
             @Result(column = "uk_project_name", property = "projectName", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "train_id", property = "trainId", jdbcType = JdbcType.BIGINT),
+            @Result(column = "idx_train_id", property = "trainId", jdbcType = JdbcType.BIGINT),
             @Result(column = "project_level", property = "projectLevel", jdbcType = JdbcType.INTEGER),
             @Result(column = "project_content", property = "projectContent", jdbcType = JdbcType.VARCHAR),
             @Result(column = "resource_library", property = "resourceLibrary", jdbcType = JdbcType.VARCHAR)
