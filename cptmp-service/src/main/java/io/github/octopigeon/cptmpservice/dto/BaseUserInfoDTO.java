@@ -27,15 +27,18 @@ public abstract class BaseUserInfoDTO{
     private String username;
     @JsonIgnore
     private String password;
+    @JsonIgnore
     private String nickname;
+    private String avatar;
     /** 默认为Null */
     private BigDecimal phoneNumber;
     /** 0-female, 1-male 默认为Null */
-    private Boolean gender;
+    private Boolean male;
     private String introduction;
 
     /** 返回携带用户账号 */
     private BigInteger userId;
     /** 返回携带邀请码 */
+    @JsonIgnore
     private String invitationCode;
 }
