@@ -110,7 +110,7 @@ College Practice Training Management Platform
 ``` 
 {
     "status": 0,
-    "date": "2020-07-11T10:03:57.710+00:00",
+    "date": "2020-07-11T18:12:16.758+00:00",
     "msg": "success",
     "data": {
         "email": "123@qq.com",
@@ -118,8 +118,8 @@ College Practice Training Management Platform
         "username": "test",
         "avatar": "124124321",
         "phone_number": 31241234,
-        "male": true,
-        "introduction": "asdasd",
+        "gender": true,
+        "introduction": "我是大鸽",
         "user_id": 4,
         "name": "wxc",
         "common_id": "123123"
