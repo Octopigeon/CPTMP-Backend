@@ -31,7 +31,7 @@ public class ModifyUserInfoServiceTest extends BaseTest {
         StudentInfoDTO studentInfo = new StudentInfoDTO();
         studentInfo.setUserId(BigInteger.ONE);
         studentInfo.setUsername("key");
-        studentInfo.setGender(false);
+        studentInfo.setMale(false);
         studentInfo.setRoleName("ROLE_STUDENT_MEMBER");
         studentInfo.setIntroduction("不错不错");
         studentInfo.setNickname("manta");
@@ -49,7 +49,7 @@ public class ModifyUserInfoServiceTest extends BaseTest {
         TeacherInfoDTO teacherInfo = new TeacherInfoDTO();
         teacherInfo.setUserId(BigInteger.valueOf(2));
         teacherInfo.setUsername("test1");
-        teacherInfo.setGender(false);
+        teacherInfo.setMale(false);
         teacherInfo.setRoleName("ROLE_SCHOOL_TEACHER");
         teacherInfo.setIntroduction("不错");
         teacherInfo.setNickname("manta");
@@ -66,7 +66,7 @@ public class ModifyUserInfoServiceTest extends BaseTest {
         EnterpriseAdminInfoDTO enterpriseAdminInfo = new EnterpriseAdminInfoDTO();
         enterpriseAdminInfo.setUserId(BigInteger.valueOf(3));
         enterpriseAdminInfo.setUsername("test2");
-        enterpriseAdminInfo.setGender(true);
+        enterpriseAdminInfo.setMale(true);
         enterpriseAdminInfo.setRoleName("ROLE_ENTERPRISE_ADMIN");
         enterpriseAdminInfo.setIntroduction("我是员工");
         enterpriseAdminInfo.setNickname("manta");

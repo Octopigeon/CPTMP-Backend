@@ -106,30 +106,23 @@ College Practice Training Management Platform
 + HTTP方法：GET
 + 返回类型：json
 + 说明：根据用户名，得到用户基本信息
-+ 调用实例：
-```
-{
-    "username": "test"
-}
-```
 + 返回json:
 ``` 
 {
     "status": 0,
-    "date": "2020-07-11T07:56:42.676+00:00",
+    "date": "2020-07-11T10:03:57.710+00:00",
     "msg": "success",
-    "basic_info": {
+    "data": {
         "email": "123@qq.com",
         "role_name": "ROLE_ENTERPRISE_ADMIN",
         "username": "test",
-        "nickname": "test_nick",
-        "phone_number": null,
-        "gender": null,
-        "introduction": null,
+        "avatar": "124124321",
+        "phone_number": 31241234,
+        "male": true,
+        "introduction": "asdasd",
         "user_id": 4,
-        "invitation_code": null,
         "name": "wxc",
-        "employee_id": "123123"
+        "common_id": "123123"
     }
 }
 ```
@@ -141,16 +134,17 @@ College Practice Training Management Platform
 + 调用实例：
 ```
 {
-    "username": "test"
+    "origin_password": "123",
+    "new_password": "123"
 }
 ```
 + 返回json:
 ```
 // 成功 
 {
-    "username": "test",
-    "origin_password": "123",
-    "new_password": "123"
+    "status": 0,
+    "date": "2020-07-11T09:36:51.368+00:00",
+    "msg": "reset password success"
 }
 // 失败
 {

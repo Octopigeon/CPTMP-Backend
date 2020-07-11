@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
@@ -63,6 +64,10 @@ public interface CptmpUserMapper {
     })
     CptmpUser findUserByUsername(String username);
 
+    @Select("select id, " + COLUMNS + " from cptmp_user where uk_email = #{email}")
+    @ResultMap("user")
+    CptmpUser findUserByEmail(String email);
+
     @Select("select idx_password from cptmp_user where uk_username = #{username}")
     String findPasswordByUsername(String username);
 
@@ -104,5 +109,8 @@ public interface CptmpUserMapper {
 
     @Update(UPDATE_HEADER + "idx_password = #{password}" + UPDATE_TAIL_USERNAME)
     void updatePasswordByUsername(String username, String password);
+
+    @Update(UPDATE_HEADER + "gmt_modified = #{gmtModified}, introduction = #{introduction}" + UPDATE_TAIL_USERNAME)
+    void updateBasicInfoByUsername(Date gmtModified, String introduction, String username);
 
 }
