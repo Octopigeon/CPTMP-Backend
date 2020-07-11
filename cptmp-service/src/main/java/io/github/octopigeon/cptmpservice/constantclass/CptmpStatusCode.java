@@ -1,6 +1,4 @@
-package io.github.octopigeon.cptmpservice;
-
-import org.omg.CORBA.PUBLIC_MEMBER;
+package io.github.octopigeon.cptmpservice.constantclass;
 
 /**
  * @author anlow

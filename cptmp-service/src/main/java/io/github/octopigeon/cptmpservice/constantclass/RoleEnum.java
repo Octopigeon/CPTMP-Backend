@@ -1,4 +1,4 @@
-package io.github.octopigeon.cptmpservice;
+package io.github.octopigeon.cptmpservice.constantclass;
 
 /**
  * 前后端都存英文标识符
@@ -17,12 +17,6 @@ public enum RoleEnum {
     ROLE_SCHOOL_ADMIN("学校管理员"),
     //学校普通老师
     ROLE_SCHOOL_TEACHER("指导老师"),
-    //项目经理学生
-    ROLE_STUDENT_MASTER("项目经理学生"),
-    //技术总管学生
-    ROLE_STUDENT_PM("技术总管学生"),
-    //产品经理学生
-    ROLE_STUDENT_PO("产品经理学生"),
     //普通学生
     ROLE_STUDENT_MEMBER("普通成员学生");
 
@@ -32,7 +26,4 @@ public enum RoleEnum {
         this.roleName = roleName;
     }
 
-    public String getRoleName() {
-        return roleName;
-    }
 }

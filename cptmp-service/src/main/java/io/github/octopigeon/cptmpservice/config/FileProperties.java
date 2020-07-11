@@ -1,4 +1,4 @@
-package io.github.octopigeon.cptmpservice;
+package io.github.octopigeon.cptmpservice.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,8 +13,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "file")
 @Data
 public class FileProperties {
-    private String uploadBaseDir;
-    private String uploadFile;
-    private String uploadUserAvatar;
-    private String uploadUserFace;
+    private String uploadDir;
 }

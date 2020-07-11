@@ -1,9 +1,9 @@
 package io.github.octopigeon.cptmpweb.servicetest;
 
-import io.github.octopigeon.cptmpservice.dto.EnterpriseAdminInfoDTO;
-import io.github.octopigeon.cptmpservice.dto.StudentInfoDTO;
-import io.github.octopigeon.cptmpservice.dto.TeacherInfoDTO;
-import io.github.octopigeon.cptmpservice.service.ModifyInfoService;
+import io.github.octopigeon.cptmpservice.dto.cptmpuser.EnterpriseAdminInfoDTO;
+import io.github.octopigeon.cptmpservice.dto.cptmpuser.StudentInfoDTO;
+import io.github.octopigeon.cptmpservice.dto.cptmpuser.TeacherInfoDTO;
+import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
 import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ import java.math.BigInteger;
 public class ModifyUserInfoServiceTest extends BaseTest {
 
     @Autowired
-    private  ModifyInfoService modifyInfoService;
+    private UserInfoService userInfoService;
 
 
     @Test
@@ -31,7 +31,7 @@ public class ModifyUserInfoServiceTest extends BaseTest {
         StudentInfoDTO studentInfo = new StudentInfoDTO();
         studentInfo.setUserId(BigInteger.ONE);
         studentInfo.setUsername("key");
-        studentInfo.setMale(false);
+        studentInfo.setGender(false);
         studentInfo.setRoleName("ROLE_STUDENT_MEMBER");
         studentInfo.setIntroduction("不错不错");
         studentInfo.setNickname("manta");
@@ -39,8 +39,7 @@ public class ModifyUserInfoServiceTest extends BaseTest {
         studentInfo.setName("testname");
         studentInfo.setStudentFace("face");
         studentInfo.setStudentId("1");
-        modifyInfoService.modifyUserInfo(studentInfo);
-        modifyInfoService.modifyStudentInfo(studentInfo);
+        userInfoService.modifyUserInfo(studentInfo);
     }
 
     @Test
@@ -49,15 +48,14 @@ public class ModifyUserInfoServiceTest extends BaseTest {
         TeacherInfoDTO teacherInfo = new TeacherInfoDTO();
         teacherInfo.setUserId(BigInteger.valueOf(2));
         teacherInfo.setUsername("test1");
-        teacherInfo.setMale(false);
+        teacherInfo.setGender(false);
         teacherInfo.setRoleName("ROLE_SCHOOL_TEACHER");
         teacherInfo.setIntroduction("不错");
         teacherInfo.setNickname("manta");
         teacherInfo.setSchoolName("武汉大学");
         teacherInfo.setName("testname");
         teacherInfo.setEmployeeId("33");
-        modifyInfoService.modifyUserInfo(teacherInfo);
-        modifyInfoService.modifyTeacherInfo(teacherInfo);
+        userInfoService.modifyUserInfo(teacherInfo);
     }
 
     @Test
@@ -66,13 +64,12 @@ public class ModifyUserInfoServiceTest extends BaseTest {
         EnterpriseAdminInfoDTO enterpriseAdminInfo = new EnterpriseAdminInfoDTO();
         enterpriseAdminInfo.setUserId(BigInteger.valueOf(3));
         enterpriseAdminInfo.setUsername("test2");
-        enterpriseAdminInfo.setMale(true);
+        enterpriseAdminInfo.setGender(true);
         enterpriseAdminInfo.setRoleName("ROLE_ENTERPRISE_ADMIN");
         enterpriseAdminInfo.setIntroduction("我是员工");
         enterpriseAdminInfo.setNickname("manta");
         enterpriseAdminInfo.setName("员工二号");
         enterpriseAdminInfo.setEmployeeId("22");
-        modifyInfoService.modifyUserInfo(enterpriseAdminInfo);
-        modifyInfoService.modifyEnterpriseAdminInfo(enterpriseAdminInfo);
+        userInfoService.modifyUserInfo(enterpriseAdminInfo);
     }
 }

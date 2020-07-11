@@ -1,6 +1,6 @@
 package io.github.octopigeon.cptmpweb.bean.response;
 
-import io.github.octopigeon.cptmpservice.CptmpStatusCode;
+import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import lombok.Data;
 
 import java.util.Date;
