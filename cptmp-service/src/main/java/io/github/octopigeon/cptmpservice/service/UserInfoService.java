@@ -11,6 +11,7 @@ import io.github.octopigeon.cptmpservice.dto.StudentInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.TeacherInfoDTO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import io.github.octopigeon.cptmpservice.RoleEnum;
 
@@ -22,10 +23,10 @@ import java.math.BigInteger;
  * @date 2020/7/10
  * 用于处理前端对用户信息的请求(/api/me)
  * @last-check-in anlow
- * @date 2020/7/10
+ * @date 2020/7/11
  */
 @Service
-public class GetUserInfoService {
+public class UserInfoService {
 
     @Autowired
     private CptmpUserMapper cptmpUserMapper;
@@ -38,6 +39,9 @@ public class GetUserInfoService {
 
     @Autowired
     private SchoolInstructorMapper schoolInstructorMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * 根据用户名得到用户基本信息，以及角色类型
@@ -77,6 +81,21 @@ public class GetUserInfoService {
             };
         }
         return baseUserInfoDTO;
+    }
+
+    /**
+     * 用于验证用户输入的原密码是否正确
+     * @param username 用户名
+     * @param originPassword 用户输入的原密码
+     * @return 是否正确
+     */
+    public Boolean validateOriginPassword(String username, String originPassword) {
+        return passwordEncoder.matches(originPassword, cptmpUserMapper.findPasswordByUsername(username));
+    }
+
+    public void updatePassword(String username, String newPassword) {
+        String newPasswordEncoded = new CptmpUser().updatePassword(newPassword).getPassword();
+        cptmpUserMapper.updatePasswordByUsername(username, newPasswordEncoded);
     }
 
 }
