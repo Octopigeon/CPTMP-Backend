@@ -11,7 +11,7 @@ import java.math.BigInteger;
  * @author Gh Li
  * @version 1.1
  * @date 2020/7/8
- * @last-check-in Gh Li
+ * @last-check-in anlow
  * @date 2020/7/11
  */
 @Data
@@ -33,7 +33,7 @@ public abstract class BaseUserInfoDTO{
     /** 默认为Null */
     private BigDecimal phoneNumber;
     /** 0-female, 1-male 默认为Null */
-    private Boolean male;
+    private Boolean gender;
     private String introduction;
 
     /** 返回携带用户账号 */
