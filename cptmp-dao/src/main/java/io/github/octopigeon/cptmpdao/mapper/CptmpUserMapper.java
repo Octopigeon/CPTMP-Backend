@@ -79,6 +79,32 @@ public interface CptmpUserMapper {
     @ResultMap(value = "user")
     List<CptmpUser> findAllUsers();
 
+    @Select("select idx_password from cptmp_user where uk_username = #{username}")
+    @Result(column = "idx_password", property = "password", jdbcType = JdbcType.VARCHAR)
+    String findPasswordByUsername(String username);
+
+    @Select("select id, " + COLUMNS + " from cptmp_user where id = #{userId}")
+    @Results(id = "user", value = {
+            @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
+            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
+            @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
+            @Result(column = "introduction", property = "introduction", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "uk_email", property = "email", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "phone_number", property = "phoneNumber", jdbcType = JdbcType.DECIMAL),
+            @Result(column = "gender", property = "male", jdbcType = JdbcType.TINYINT),
+            @Result(column = "avatar", property = "avatar", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "uk_username", property = "username", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "idx_password", property = "password", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "nickname", property = "nickname", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "idx_role_name", property = "roleName", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "enabled", property = "enabled", jdbcType = JdbcType.TINYINT),
+            @Result(column = "account_non_expired", property = "accountNonExpired", jdbcType = JdbcType.TINYINT),
+            @Result(column = "credentials_non_expired", property = "credentialsNonExpired", jdbcType = JdbcType.TINYINT),
+            @Result(column = "account_non_locked", property = "accountNonLocked", jdbcType = JdbcType.TINYINT),
+            @Result(column = "invitation_code", property = "invitationCode", jdbcType = JdbcType.VARCHAR)
+    })
+    CptmpUser findUserById(BigInteger userId);
+
     @Update(UPDATE_HEADER + "enabled = #{enabled}" + UPDATE_TAIL_USERNAME)
     void updateEnabledByUsername(String username, Boolean enabled);
 
@@ -107,10 +133,9 @@ public interface CptmpUserMapper {
     @Update(UPDATE_HEADER + "nickname = #{nickname},gmt_modified = #{gmtModified},introduction = #{introduction},gender = #{male}" + UPDATE_TAIL_USERNAME)
     void updateUserInfoByUsername(String username, String nickname, Date gmtModified, String introduction, boolean male);
 
-    @Update(UPDATE_HEADER + "idx_password = #{password}" + UPDATE_TAIL_USERNAME)
-    void updatePasswordByUsername(String username, String password);
+    @Update(UPDATE_HEADER + "gmt_modified = #{gmtModified}, idx_password = #{password}" + UPDATE_TAIL_USERNAME)
+    void updatePasswordByUsername(String username, Date gmtModified, String password);
 
-    @Update(UPDATE_HEADER + "gmt_modified = #{gmtModified}, introduction = #{introduction}" + UPDATE_TAIL_USERNAME)
-    void updateBasicInfoByUsername(Date gmtModified, String introduction, String username);
-
+    @Update(UPDATE_HEADER + "gmt_modified = #{gmtModified}, avatar = #{avatar} where id = #{userId}")
+    void updateAvatarById(BigInteger userId, Date gmtModified, String filePath);
 }
