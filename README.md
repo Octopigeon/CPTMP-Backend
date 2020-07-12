@@ -164,16 +164,18 @@ College Practice Training Management Platform
 // 成功
 [
     {
-        "username": "test-123456",
-        "name": "wxc",
+        "username": "test-3241",
+        "name": "crl",
         "password": "123",
-        "email": "111@qq.com"
+        "email": "4132ssdf5@qq.com",
+        "organization_id": 2
     },
     {
-        "username": "test-123457",
-        "name": "lgp",
+        "username": "test-5411256",
+        "name": "sah",
         "password": "123",
-        "email": "222@qq.com"
+        "email": "222sf552@qq.com",
+        "organization_id": 2
     }
 ]
 // 失败
@@ -182,19 +184,22 @@ College Practice Training Management Platform
         "username": "test-123456",
         "name": "wxc",
         "password": "123",
-        "email": "111@qq.com"
+        "email": "111@qq.com"，
+        "organization_id": 2
     },
     {
         "username": "test-123457",
         "name": "lgp",
         "password": "123",
-        "email": "222@qq.com"
+        "email": "222@qq.com"，
+        "organization_id": 2
     },
     {
         "username": "test-123457",
         "name": "ty",
         "password": "123",
-        "email": "222@qq.com"
+        "email": "222@qq.com"，
+        "organization_id": 2
     }
 ]
 ```
