@@ -19,10 +19,10 @@
 //import java.util.List;
 //
 ///**
-// * @author Gh Li
+// * @author 李国豪
 // * @version 1.0
 // * @date 2020/7/9
-// * @last-check-in Gh Li
+// * @last-check-in 李国豪
 // * @date 2020/7/9
 // */
 //public class RegistrationServiceTest extends BaseTest {
