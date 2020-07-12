@@ -15,7 +15,7 @@ import java.math.BigInteger;
  * @date 2020/7/11
  */
 @Data
-public abstract class BaseUserInfoDTO{
+public class BaseUserInfoDTO{
     /**
      * 必须进行导入的属性
      */
@@ -25,11 +25,22 @@ public abstract class BaseUserInfoDTO{
      * 可产生默认值，也可导入的属性
      */
     private String username;
+    /** 真实姓名 */
+    private String name;
+
     @JsonIgnore
     private String password;
     @JsonIgnore
     private String nickname;
+
+    /** 头像url */
     private String avatar;
+    /** 学号，工号等 */
+    private String commonId;
+    /** 人脸数据url */
+    private String faceInfo;
+    /** 组织Id */
+    private BigInteger organizationId;
     /** 默认为Null */
     private BigDecimal phoneNumber;
     /** 0-female, 1-male 默认为Null */

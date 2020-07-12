@@ -62,16 +62,16 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
     /**
      * 上传用户头像
      * @param file 文件
-     * @param userId 用户id
+     * @param username 用户名
      * @return
      */
-    String uploadAvatar(MultipartFile file, BigInteger userId) throws Exception;
+    String uploadAvatar(MultipartFile file, String username) throws Exception;
 
     /**
      * 上传人脸数据
      * @param file 人脸图片
-     * @param userId 用户id
+     * @param username 用户id
      */
-    void uploadFace(MultipartFile file, BigInteger userId) throws Exception;
+    void uploadFace(MultipartFile file, String username) throws Exception;
 
 }
