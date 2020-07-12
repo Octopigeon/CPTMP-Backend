@@ -61,9 +61,6 @@ public interface OrganizationMapper {
     void removeOrganizationById(BigInteger id,Date gmtDeleted);
 
 
-
-
-
     /**
      * 查询所有组织
      * @return 组织列表
