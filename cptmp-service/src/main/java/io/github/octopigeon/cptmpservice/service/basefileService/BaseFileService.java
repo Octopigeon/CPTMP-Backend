@@ -14,12 +14,20 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public interface BaseFileService {
     /**
-     * 单个文件上传接收服务
+     * 公开文件接收服务
      * @param file 多文件
      * @return 文件名
      * @throws Exception
      */
-    FileDTO storeFile(MultipartFile file) throws Exception;
+    FileDTO storePublicFile(MultipartFile file) throws Exception;
+
+    /**
+     * 私密附件接收服务
+     * @param file 多文件
+     * @return 文件名
+     * @throws Exception
+     */
+    FileDTO storePrivateFile(MultipartFile file) throws Exception;
 
     /**
      * 文件下载服务

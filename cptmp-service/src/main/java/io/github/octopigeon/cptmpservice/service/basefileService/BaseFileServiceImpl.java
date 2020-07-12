@@ -13,10 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.*;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 /**
  * @author Gh Li
@@ -27,16 +24,24 @@ import java.util.Random;
  */
 @Service
 public class BaseFileServiceImpl implements BaseFileService {
-    // 文件在本地存储的地址
-    private final Path fileStorageLocation;
+    // 公开文件在本地存储的地址
+    private final Path publicFileStorageLocation;
+    // 隐私文件在本地存储的地址
+    private final Path privateFileStorageLocation;
+    private final String publicFileUrl = "storage";
+    private final String privateFileUrl = "api/storage";
+    private final String domain;
 
     @Autowired
     public BaseFileServiceImpl(FileProperties fileProperties) throws Exception {
 
         String path = fileProperties.getUploadDir();
-        this.fileStorageLocation = Paths.get(path).toAbsolutePath().normalize();
+        this.domain = fileProperties.getDomain();
+        this.publicFileStorageLocation = Paths.get(path, "storage").toAbsolutePath().normalize();
+        this.privateFileStorageLocation = Paths.get(path, "private").toAbsolutePath().normalize();
         try {
-            Files.createDirectories(this.fileStorageLocation);
+            Files.createDirectories(this.publicFileStorageLocation);
+            Files.createDirectories(this.privateFileStorageLocation);
         } catch (Exception ex) {
             throw new Exception("Could not create the directory where the uploaded files will be stored.", ex);
         }
@@ -49,7 +54,16 @@ public class BaseFileServiceImpl implements BaseFileService {
      * @throws Exception
      */
     @Override
-    public FileDTO storeFile(MultipartFile file) throws Exception {
+    public FileDTO storePublicFile(MultipartFile file) throws Exception {
+        return storeFile(file, this.publicFileStorageLocation.toString(), this.publicFileUrl);
+    }
+
+    @Override
+    public FileDTO storePrivateFile(MultipartFile file) throws Exception {
+        return storeFile(file, this.privateFileStorageLocation.toString(), this.privateFileUrl);
+    }
+
+    private FileDTO storeFile(MultipartFile file, String storagePath, String url) throws Exception{
         String originName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         try{
             if(originName.contains("..")){
@@ -58,7 +72,7 @@ public class BaseFileServiceImpl implements BaseFileService {
             // 创建路径
             Calendar cal = Calendar.getInstance();
             String relativePath = String.format("%d\\%d\\%d\\",cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DATE));
-            Path realPath = Paths.get(this.fileStorageLocation.toString(), relativePath).toAbsolutePath().normalize();
+            Path realPath = Paths.get(storagePath, relativePath).toAbsolutePath().normalize();
             try {
                 Files.createDirectories(realPath);
             } catch (Exception ex) {
@@ -73,7 +87,7 @@ public class BaseFileServiceImpl implements BaseFileService {
             FileDTO fileResp = new FileDTO();
             fileResp.setGmtCreate(new Date());
             fileResp.setFileName(fileName);
-            fileResp.setFilePath(String.format("/storage/%d/%d/%d/%s", cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DATE), fileName));
+            fileResp.setFilePath(String.format("%s/%s/%d/%d/%d/%s", this.domain, url, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DATE), fileName));
             fileResp.setOriginalName(originName);
             fileResp.setFileSize(file.getSize());
             fileResp.setFileType(file.getContentType());
@@ -112,14 +126,7 @@ public class BaseFileServiceImpl implements BaseFileService {
      * @return
      */
     private String productFilename(){
-        Random rand = new Random();
-        int random = rand.nextInt();
 
-        Calendar calCurrent = Calendar.getInstance();
-        int intDay = calCurrent.get(Calendar.DATE);
-        int intMonth = calCurrent.get(Calendar.MONTH) + 1;
-        int intYear = calCurrent.get(Calendar.YEAR);
-
-        return String.format("%d_%d_%d_%d", intYear,intMonth,intDay,(random > 0 ? random : ( -1) * random));
+        return UUID.randomUUID().toString();
     }
 }

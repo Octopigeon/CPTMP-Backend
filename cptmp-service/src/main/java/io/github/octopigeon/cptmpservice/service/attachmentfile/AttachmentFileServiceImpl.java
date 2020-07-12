@@ -24,6 +24,7 @@ public class AttachmentFileServiceImpl extends BaseFileServiceImpl implements At
     @Autowired
     private AttachmentFileMapper attachmentFileMapper;
 
+    @Autowired
     public AttachmentFileServiceImpl(FileProperties fileProperties) throws Exception {
         super(fileProperties);
     }

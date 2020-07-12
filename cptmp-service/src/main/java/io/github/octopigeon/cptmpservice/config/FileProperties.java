@@ -14,4 +14,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 public class FileProperties {
     private String uploadDir;
+    private String domain;
 }
