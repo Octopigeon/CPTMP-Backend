@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * @author 李国鹏
- * @version 2.1
+ * @version 2.0
  * @date 2020/7/9
  * <p>
  * last-check-in 李国鹏
@@ -41,7 +41,7 @@ public interface TrainMapper {
      * @param gmtDeleted 删除日期
      */
     @Deprecated
-    @Delete("update train set gmt_deleted = #{gmtDeleted}")
+    @Update("update train set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
     void removeAllTrain(Date gmtDeleted);
 
     /**
@@ -50,7 +50,7 @@ public interface TrainMapper {
      * @param gmtDeleted 删除日期
      */
 
-    @Delete("update train set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
+    @Update("update train set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
     void removeTrainProjectById(BigInteger id,Date gmtDeleted);
 
 

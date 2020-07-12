@@ -45,7 +45,7 @@ public class PasswordResetServiceTest extends BaseTest {
         cptmpUser.setAccountNonExpired(true);
         cptmpUser.setCredentialsNonExpired(true);
         cptmpUser.setAccountNonLocked(true);
-        cptmpUserMapper.removeAllUsers();
+        cptmpUserMapper.removeAllUsersTest();
         cptmpUserMapper.addUser(cptmpUser);
 
         passwordResetTokenMapper.removeAllPasswordResetTokens();
@@ -55,6 +55,9 @@ public class PasswordResetServiceTest extends BaseTest {
         String token = passwordResetTokenMapper.findAllPasswordResetTokens().get(0).getToken();
         Assertions.assertFalse(passwordResetService.authToken(token, userEmail));
         Assertions.assertEquals(0, passwordResetTokenMapper.findAllPasswordResetTokens().size());
+
+
+
     }
 
 }

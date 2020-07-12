@@ -14,11 +14,11 @@ import java.util.List;
 
 /**
  * @author 李国鹏
- * @version 1.2
+ * @version 2.0
  * @date 2020/7/9
  * <p>
  * last-check-in 李国鹏
- * @date 2020/7/10
+ * @date 2020/7/12
  */
 @Repository
 @Mapper
@@ -44,7 +44,7 @@ public interface TrainProjectMapper {
      * 测试用
      */
     @Deprecated
-    @Delete("update train_project set gmt_deleted = #{gmtDeleted}")
+    @Update("update train_project set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
     void removeAllTrainProjects(Date gmtDeleted);
 
 
@@ -53,7 +53,7 @@ public interface TrainProjectMapper {
      * @param id：项目id
      * @param gmtDeleted 删除日期
      */
-    @Delete("update train_project set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
+    @Update("update train_project set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
     void removeTrainProjectById(BigInteger id,Date gmtDeleted);
 
     /**
@@ -61,7 +61,7 @@ public interface TrainProjectMapper {
      * @param projectName：项目名称
      * @param gmtDeleted 删除日期
      */
-    @Delete("update train_project set gmt_deleted = #{gmtDeleted} where idx_project_name = #{projectName} and gmt_deleted is null")
+    @Update("update train_project set gmt_deleted = #{gmtDeleted} where idx_project_name = #{projectName} and gmt_deleted is null")
     void removeTrainProjectByProjectName(String projectName,Date gmtDeleted);
 
 

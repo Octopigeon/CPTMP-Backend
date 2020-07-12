@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 /**
  * @author 李国鹏
- * @version 2.1
+ * @version 2.0
  * @date 2020/7/8
  *
  * @last-check-in 李国鹏
@@ -25,6 +25,7 @@ public interface ActivityRecordMapper {
     String COLUMNS="gmt_create, gmt_modified, gmt_deleted, idx_user_id, idx_team_id, state_record, event_record";
     String PROPS="#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{userId}, #{teamId}, #{state}, #{event}";
     String UPDATE_CONTENT=" idx_user_id = #{userId}, idx_team_id = #{teamId},gmt_modified = #{gmtModified}, state_record = #{state}, event_record = #{event}";
+
     @Insert("insert into activity_record (" + COLUMNS + ") values ( " + PROPS +" )")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addActivityRecord(ActivityRecord activityRecord);
@@ -35,7 +36,7 @@ public interface ActivityRecordMapper {
      * @param gmtDeleted 删除日期
      */
     @Deprecated
-    @Delete("update activity_record set gmt_deleted = #{gmtDeleted}")
+    @Update("update activity_record set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
     void removeActivityRecordByAll(Date gmtDeleted);
 //
 //    /**
@@ -43,7 +44,7 @@ public interface ActivityRecordMapper {
 //     * @param id：活动记录id
 //     * @param gmtDeleted 删除日期
 //     */
-//    @Delete("update activity_record set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
+//    @Update("update activity_record set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
 //    void removeActivityRecordById(BigInteger id,Date gmtDeleted);
 //
 //

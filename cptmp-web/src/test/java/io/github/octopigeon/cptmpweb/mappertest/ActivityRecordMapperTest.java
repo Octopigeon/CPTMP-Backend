@@ -16,11 +16,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author 李国鹏
- * @version 1.2
+ * @version 2.0
  * @date 2020/7/8
  * <p>
  * last-check-in 李国鹏
- * @date 2020/7/10
+ * @date 2020/7/12
  */
 
 class ActivityRecordMapperTest extends BaseTest {
