@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -47,6 +48,9 @@ public class PasswordResetTokenMapperTest extends BaseTest {
         cptmpUser.setEmail(userEmail);
         cptmpUser.setRoleName("ROLE_SCHOOL_TEACHER");
         cptmpUser.setNickname("test");
+        cptmpUser.setCommonId("124124");
+        cptmpUser.setName("wxc");
+        cptmpUser.setOrganizationId(BigInteger.valueOf(1L));
         cptmpUser.setEnabled(true);
         cptmpUser.setAccountNonExpired(true);
         cptmpUser.setCredentialsNonExpired(true);

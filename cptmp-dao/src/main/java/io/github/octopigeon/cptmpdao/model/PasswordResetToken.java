@@ -10,7 +10,7 @@ import java.util.Date;
  * @version 1.0
  * @date 2020/7/9
  * @last-check-in 魏啸冲
- * @date 2020/7/9
+ * @date 2020/7/12
  */
 @Data
 public class PasswordResetToken {

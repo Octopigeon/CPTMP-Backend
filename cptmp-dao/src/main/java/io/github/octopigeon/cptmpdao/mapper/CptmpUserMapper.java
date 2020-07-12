@@ -137,16 +137,14 @@ public interface CptmpUserMapper {
      */
     @Update(UPDATE_HEADER+UPDATE_CONTENT+" where (id = #{id}) and gmt_deleted is null")
     void updateUserById(BigInteger id, Date gmtModified, String username, String introduction, String email, BigDecimal phoneNumber, Boolean gender,
-                              String password, String name,String commonId,String organizationId, String nickname, String roleName, Boolean enabled, Boolean accountNonExpired,  Boolean credentialsNonExpired,
-                              Boolean accountNonLocked);
+                        String password, String name,String commonId,BigInteger organizationId, String nickname, String roleName, Boolean enabled, Boolean accountNonExpired,  Boolean credentialsNonExpired,
+                        Boolean accountNonLocked);
 
     /**
      *根据用户名更新
      */
     @Update(UPDATE_HEADER+UPDATE_CONTENT+UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
-    void updateUserByUserName(String username, Date gmtModified, String introduction, String email, BigDecimal phoneNumber, Boolean gender,
-                              String password, String name,String commonId,String organizationId,String nickname, String roleName, Boolean enabled, Boolean accountNonExpired,  Boolean credentialsNonExpired,
-                              Boolean accountNonLocked);
+    void updateUserByUserName(String username, Date gmtModified, CptmpUser user);
 
     /**
      *根据用户名更新是否注销

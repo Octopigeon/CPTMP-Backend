@@ -16,7 +16,7 @@ import java.util.Date;
  * @version 2.0
  * @date 2020/7/8
  *
- * @last-check-in 李国鹏
+ * @last-check-in 魏啸冲
  * @date 2020/7/12
  */
 public class CptmpUserMapperTest extends BaseTest {
@@ -65,16 +65,12 @@ public class CptmpUserMapperTest extends BaseTest {
         cptmpUserMapper.removeAllUsersTest();
         cptmpUserMapper.addUser(cptmpUser1);
         cptmpUserMapper.addUser(cptmpUser2);
-//        Assertions.assertEquals(2, cptmpUserMapper.findAllUsers().size());
-//
-//        cptmpUserMapper.removeUserById(cptmpUserMapper.findAllUsers().get(0).getId(),new Date());
-//        Assertions.assertEquals(1, cptmpUserMapper.findAllUsers().size());
-//
-//        cptmpUserMapper.updateUserByUserName("test2",new Date(),"test3","test2", BigDecimal.valueOf(11),true, "test3","test3","test2","test2","test3","test3",true,
-//                true,true,true);
-//        Assertions.assertEquals("test3",cptmpUserMapper.findUserByUsername("test2").getIntroduction());
+        Assertions.assertEquals(2, cptmpUserMapper.findAllUsers().size());
 
-//        cptmpUserMapper.removeAllUsers(new Date());
-//        Assertions.assertEquals(0,cptmpUserMapper.findAllUsers().size());
+        cptmpUserMapper.removeUserById(cptmpUserMapper.findAllUsers().get(0).getId(),new Date());
+        Assertions.assertEquals(1, cptmpUserMapper.findAllUsers().size());
+
+        cptmpUserMapper.removeAllUsers(new Date());
+        Assertions.assertEquals(0,cptmpUserMapper.findAllUsers().size());
     }
 }
