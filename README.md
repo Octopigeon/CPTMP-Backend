@@ -156,9 +156,11 @@ College Practice Training Management Platform
 
 # RegisterController
 ## /api/user/enterprise-admin
+## /api/user/teacher
+## /api/user/student
 + HTTP方法：POST
 + 返回类型：json
-+ 说明：导入注册企业用户
++ 说明：导入注册各种用户，**特别注意：超管注册企业账户需要将自己的orgId传给后端（因为超管和企业管理员都是属于企业的，是同一个组织）**，而注册老师和学生则是传相应的学校id
 + 调用实例：
 ``` 
 // 成功
