@@ -252,7 +252,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     private BaseUserInfoDTO completeUserInfo(CptmpUser cptmpUser, BaseUserInfoDTO userInfo) throws IllegalAccessException {
 
         BaseUserInfoDTO originUserInfo = getFullUserInfo(cptmpUser);
-        return compareUserInfo(originUserInfo, userInfo);;
+        return compareUserInfo(originUserInfo, userInfo);
     }
 
     private BaseUserInfoDTO compareUserInfo(BaseUserInfoDTO originUserInfo, BaseUserInfoDTO userInfo) throws IllegalAccessException {
