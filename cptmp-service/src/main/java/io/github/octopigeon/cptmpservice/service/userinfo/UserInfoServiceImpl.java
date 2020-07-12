@@ -38,7 +38,7 @@ import java.util.List;
  * @date 2020/7/11
  */
 @Service
-public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfoService{
+public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfoService {
 
     @Autowired
     private CptmpUserMapper cptmpUserMapper;
@@ -72,6 +72,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     /**
      * 验证邀请码
      * TODO 等lgp学校验证码
+     *
      * @param userInfo ：用户信息类
      * @return 验证码是否有效
      */
@@ -86,16 +87,16 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     /**
      * 批量添加
      * 批量注册用户
+     *
      * @param dtos
      */
     @Override
     public void bulkAdd(List<BaseUserInfoDTO> dtos) throws Exception {
-        try
-        {
+        try {
             for (BaseUserInfoDTO userInfo : dtos) {
                 add(userInfo);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new Exception(e);
         }
     }
@@ -103,12 +104,12 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     /**
      * 添加数据
      * 邀请注册用户
+     *
      * @param dto ：dto实体
      */
     @Override
     public void add(BaseUserInfoDTO dto) throws Exception {
-        try
-        {
+        try {
             BaseUserInfoDTO parsedUserInfo = parseUserInfo(dto);
             CptmpUser user = userInfoToUser(parsedUserInfo);
             //添加用户
@@ -118,8 +119,8 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
             //添加角色
             addRole(parsedUserInfo);
             //TODO 调用邮件服务， 发送激活链接admin/activate/{token}
-            emailService.sendSimpleMessage(registeredUser.getEmail(), "章鱼鸽实训平台", "");
-        }catch (Exception e) {
+//            emailService.sendSimpleMessage(registeredUser.getEmail(), "章鱼鸽实训平台", "");
+        } catch (Exception e) {
             throw new Exception(e);
         }
     }
@@ -144,46 +145,43 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     @Override
     public Boolean modify(BaseUserInfoDTO userInfo) throws Exception {
-        if(userInfo.getUserId()==null|| "".equals(userInfo.getUsername()))
-        {
+        if (userInfo.getUserId() == null || "".equals(userInfo.getUsername())) {
             throw new ValueException("userId or username is illegal!");
         }
-        try{
+        try {
             CptmpUser user = cptmpUserMapper.findUserByUsername(userInfo.getUsername());
             BaseUserInfoDTO baseUserInfo = completeUserInfo(user, userInfo);
-            cptmpUserMapper.updateUserInfoByUsername(baseUserInfo.getUsername(),baseUserInfo.getNickname(),
-                    new Date(),baseUserInfo.getIntroduction(),baseUserInfo.getGender());
+            cptmpUserMapper.updateUserInfoByUsername(baseUserInfo.getUsername(), baseUserInfo.getNickname(),
+                    new Date(), baseUserInfo.getIntroduction(), baseUserInfo.getGender());
             RoleEnum role = RoleEnum.valueOf(RoleEnum.class, baseUserInfo.getRoleName());
             // 学生
-            if(role.compareTo(RoleEnum.ROLE_STUDENT_MEMBER) >= 0)
-            {
+            if (role.compareTo(RoleEnum.ROLE_STUDENT_MEMBER) >= 0) {
                 //TODO 此处不应该存在studentface修改，告知lgp修改mapper
-                StudentInfoDTO studentInfo = (StudentInfoDTO)baseUserInfo;
-                schoolStudentMapper.updateSchoolStudetnByUserId(studentInfo.getUserId(),new Date(),
-                        studentInfo.getName(),studentInfo.getStudentId(),studentInfo.getSchoolName());
+                StudentInfoDTO studentInfo = (StudentInfoDTO) baseUserInfo;
+                schoolStudentMapper.updateSchoolStudetnByUserId(studentInfo.getUserId(), new Date(),
+                        studentInfo.getName(), studentInfo.getStudentId(), studentInfo.getSchoolName());
             }
             // 老师
-            else if(role.compareTo(RoleEnum.ROLE_SCHOOL_ADMIN) >= 0)
-            {
-                TeacherInfoDTO teacherInfo = (TeacherInfoDTO)baseUserInfo;
-                schoolInstructorMapper.updateSchoolInstructorByUserId(teacherInfo.getUserId(),new Date(),
-                        teacherInfo.getName(),teacherInfo.getEmployeeId(),teacherInfo.getSchoolName());
+            else if (role.compareTo(RoleEnum.ROLE_SCHOOL_ADMIN) >= 0) {
+                TeacherInfoDTO teacherInfo = (TeacherInfoDTO) baseUserInfo;
+                schoolInstructorMapper.updateSchoolInstructorByUserId(teacherInfo.getUserId(), new Date(),
+                        teacherInfo.getName(), teacherInfo.getEmployeeId(), teacherInfo.getSchoolName());
             }
             // 企业管理员
-            else if(role.compareTo(RoleEnum.ROLE_ENTERPRISE_ADMIN) >= 0)
-            {
-                EnterpriseAdminInfoDTO enterpriseAdminInfo = (EnterpriseAdminInfoDTO)baseUserInfo;
-                enterpriseAdminMapper.updateEnterprseAdminByUserId(enterpriseAdminInfo.getUserId(),new Date(),
-                        enterpriseAdminInfo.getName(),enterpriseAdminInfo.getEmployeeId());
+            else if (role.compareTo(RoleEnum.ROLE_ENTERPRISE_ADMIN) >= 0) {
+                EnterpriseAdminInfoDTO enterpriseAdminInfo = (EnterpriseAdminInfoDTO) baseUserInfo;
+                enterpriseAdminMapper.updateEnterprseAdminByUserId(enterpriseAdminInfo.getUserId(), new Date(),
+                        enterpriseAdminInfo.getName(), enterpriseAdminInfo.getEmployeeId());
             }
             return true;
-        }catch (Exception ex){
+        } catch (Exception ex) {
             throw new Exception("Modify userInfo failed");
         }
     }
 
     /**
      * 激活账号
+     *
      * @param userId 用户id
      */
     @Override
@@ -194,7 +192,8 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     /**
      * 更新密码
-     * @param username 用户名
+     *
+     * @param username    用户名
      * @param newPassword 新密码
      */
     @Override
@@ -212,11 +211,11 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     @Override
     public String uploadAvatar(MultipartFile file, BigInteger userId) throws Exception {
-        try{
+        try {
             FileDTO fileInfo = storeFile(file);
             cptmpUserMapper.updateAvatarById(userId, new Date(), fileInfo.getFilePath());
             return fileInfo.getFilePath();
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new Exception("Avatar upload failed!");
         }
     }
@@ -229,13 +228,13 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     @Override
     public void uploadFace(MultipartFile file, BigInteger userId) throws Exception {
-        try{
+        try {
             FileDTO fileInfo = storeFile(file);
             CptmpUser user = cptmpUserMapper.findUserById(userId);
-            if(RoleEnum.ROLE_STUDENT_MEMBER.name().equals(user.getRoleName())){
+            if (RoleEnum.ROLE_STUDENT_MEMBER.name().equals(user.getRoleName())) {
                 schoolStudentMapper.updateFaceInfoByUserId(userId, new Date(), fileInfo.getFilePath());
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new Exception("Face info upload failed!");
         }
     }
@@ -268,6 +267,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     /**
      * 补全userInfo
+     *
      * @param cptmpUser usrModel
      * @return userInfo类
      */
@@ -275,18 +275,18 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
         BaseUserInfoDTO originUserInfo = getFullUserInfo(cptmpUser);
         RoleEnum role = RoleEnum.valueOf(RoleEnum.class, cptmpUser.getRoleName());
-        if ( role.compareTo(RoleEnum.ROLE_STUDENT_MEMBER) >= 0) {
+        if (role.compareTo(RoleEnum.ROLE_STUDENT_MEMBER) >= 0) {
 
             StudentInfoDTO originStudentInfo = (StudentInfoDTO) originUserInfo;
             StudentInfoDTO studentInfo = (StudentInfoDTO) userInfo;
             return compareUserInfo(originStudentInfo, studentInfo);
 
-        }else if (role.compareTo(RoleEnum.ROLE_SCHOOL_ADMIN) >= 0) {
+        } else if (role.compareTo(RoleEnum.ROLE_SCHOOL_ADMIN) >= 0) {
 
             TeacherInfoDTO originTeacherInfo = (TeacherInfoDTO) originUserInfo;
             TeacherInfoDTO teacherInfo = (TeacherInfoDTO) userInfo;
             return compareUserInfo(originTeacherInfo, teacherInfo);
-        }else if (role.compareTo(RoleEnum.ROLE_ENTERPRISE_ADMIN) >= 0) {
+        } else if (role.compareTo(RoleEnum.ROLE_ENTERPRISE_ADMIN) >= 0) {
 
             EnterpriseAdminInfoDTO originAdminInfo = (EnterpriseAdminInfoDTO) originUserInfo;
             EnterpriseAdminInfoDTO adminInfo = (EnterpriseAdminInfoDTO) userInfo;
@@ -311,13 +311,13 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         return userInfo;
     }
 
-    private BaseUserInfoDTO getFullUserInfo(CptmpUser cptmpUser){
+    private BaseUserInfoDTO getFullUserInfo(CptmpUser cptmpUser) {
         RoleEnum role = RoleEnum.valueOf(RoleEnum.class, cptmpUser.getRoleName());
         BigInteger userId = cptmpUser.getId();
         // TODO 增加系统管理员
         // 依次学生-老师-企业管理员
         BaseUserInfoDTO baseUserInfoDTO;
-        if ( role.compareTo(RoleEnum.ROLE_STUDENT_MEMBER) >= 0) {
+        if (role.compareTo(RoleEnum.ROLE_STUDENT_MEMBER) >= 0) {
             StudentInfoDTO studentInfoDTO = new StudentInfoDTO();
             BeanUtils.copyProperties(cptmpUser, studentInfoDTO);
             BeanUtils.copyProperties(schoolStudentMapper.findSchoolStudentByUserId(userId)
@@ -344,26 +344,22 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     /**
      * 为userInfo添加默认值
+     *
      * @param userInfo userInfo类
      * @return userInfo类
      */
-    private BaseUserInfoDTO parseUserInfo(BaseUserInfoDTO userInfo) throws ValueException
-    {
+    private BaseUserInfoDTO parseUserInfo(BaseUserInfoDTO userInfo) throws ValueException {
         userInfo.setPassword(userInfo.getPassword());
-        if(userInfo.getUsername() == null)
-        {
+        if (userInfo.getUsername() == null) {
             userInfo.setUsername(productUserName(userInfo));
         }
-        if(userInfo.getNickname() == null)
-        {
+        if (userInfo.getNickname() == null) {
             userInfo.setNickname(productNickname());
         }
-        if(!validateEmailFormat(userInfo.getEmail()))
-        {
+        if (!validateEmailFormat(userInfo.getEmail())) {
             throw new ValueException("E-mail format is invalidation");
         }
-        if(userInfo.getPhoneNumber()!=null && validatePhoneNumberFormat(userInfo.getPhoneNumber().toString()))
-        {
+        if (userInfo.getPhoneNumber() != null && validatePhoneNumberFormat(userInfo.getPhoneNumber().toString())) {
             throw new ValueException("Phone number format is invalidation");
         }
         return userInfo;
@@ -371,46 +367,42 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     /**
      * 产生20位字母命名
+     *
      * @return 随机昵称
      */
-    private String productNickname()
-    {
+    private String productNickname() {
         return RandomStringUtils.randomAlphabetic(20);
     }
 
     /**
      * 产生用户名
+     *
      * @param userInfo
      * @return
      */
-    private String productUserName(BaseUserInfoDTO userInfo)
-    {
+    private String productUserName(BaseUserInfoDTO userInfo) {
         String roleName = userInfo.getRoleName();
         RoleEnum role = RoleEnum.valueOf(RoleEnum.class, roleName);
         String userName = "";
         // 学生
-        if(role.compareTo(RoleEnum.ROLE_STUDENT_MEMBER) >= 0)
-        {
-            StudentInfoDTO studentInfo = (StudentInfoDTO)userInfo;
+        if (role.compareTo(RoleEnum.ROLE_STUDENT_MEMBER) >= 0) {
+            StudentInfoDTO studentInfo = (StudentInfoDTO) userInfo;
             userName = studentInfo.getSchoolName() + studentInfo.getStudentId();
         }
         // 老师
-        else if(role.compareTo(RoleEnum.ROLE_SCHOOL_ADMIN) >= 0)
-        {
-            TeacherInfoDTO teacherInfo = (TeacherInfoDTO)userInfo;
+        else if (role.compareTo(RoleEnum.ROLE_SCHOOL_ADMIN) >= 0) {
+            TeacherInfoDTO teacherInfo = (TeacherInfoDTO) userInfo;
             userName = teacherInfo.getSchoolName() + teacherInfo.getEmployeeId();
         }
         // 企业管理员
-        else if(role.compareTo(RoleEnum.ROLE_ENTERPRISE_ADMIN) >= 0)
-        {
-            EnterpriseAdminInfoDTO adminInfo = (EnterpriseAdminInfoDTO)userInfo;
+        else if (role.compareTo(RoleEnum.ROLE_ENTERPRISE_ADMIN) >= 0) {
+            EnterpriseAdminInfoDTO adminInfo = (EnterpriseAdminInfoDTO) userInfo;
             userName = adminInfo.getEmployeeId();
         }
         return userName;
     }
 
-    private Boolean validateEmailFormat(String email)
-    {
+    private Boolean validateEmailFormat(String email) {
         String check = "^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4})*$";
         boolean tag = true;
         if (!email.matches(check)) {
@@ -419,8 +411,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         return tag;
     }
 
-    private Boolean validatePhoneNumberFormat(String phoneNumber)
-    {
+    private Boolean validatePhoneNumberFormat(String phoneNumber) {
         String check = "^(?:\\+?86)?1(?:3(?:4[^9\\D]|[5-9]\\d)|5[^3-6\\D]\\d|7[28]\\d|8[23478]\\d|9[578]\\d)\\d{7}$";
         boolean tag = true;
         if (!phoneNumber.matches(check)) {
@@ -431,11 +422,11 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     /**
      * 将BaseUserInfoDTO转化成CptmpUser
+     *
      * @param userInfo；BaseUserInfoDTO类
      * @return CptmpUser
      */
-    private CptmpUser userInfoToUser(BaseUserInfoDTO userInfo)
-    {
+    private CptmpUser userInfoToUser(BaseUserInfoDTO userInfo) {
         CptmpUser user = new CptmpUser();
         user.setEmail(userInfo.getEmail());
         user.setRoleName(userInfo.getRoleName());
@@ -457,32 +448,28 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     /**
      * 进行角色的添加
+     *
      * @param userInfo BaseUserInfoDTO类
      */
-    private void addRole(BaseUserInfoDTO userInfo)
-    {
+    private void addRole(BaseUserInfoDTO userInfo) {
         String roleName = userInfo.getRoleName();
         RoleEnum role = RoleEnum.valueOf(RoleEnum.class, roleName);
         // 学生
-        if(role.compareTo(RoleEnum.ROLE_STUDENT_MEMBER) >= 0)
-        {
+        if (role.compareTo(RoleEnum.ROLE_STUDENT_MEMBER) >= 0) {
             addStudentRole(userInfo);
         }
         // 老师
-        else if(role.compareTo(RoleEnum.ROLE_SCHOOL_ADMIN) >= 0)
-        {
+        else if (role.compareTo(RoleEnum.ROLE_SCHOOL_ADMIN) >= 0) {
             addTeacherRole(userInfo);
         }
         // 企业管理员
-        else if(role.compareTo(RoleEnum.ROLE_ENTERPRISE_ADMIN) >= 0)
-        {
+        else if (role.compareTo(RoleEnum.ROLE_ENTERPRISE_ADMIN) >= 0) {
             addEnterpriseAdminRole(userInfo);
         }
     }
 
-    private void addStudentRole(BaseUserInfoDTO userInfo)
-    {
-        StudentInfoDTO studentInfo = (StudentInfoDTO)userInfo;
+    private void addStudentRole(BaseUserInfoDTO userInfo) {
+        StudentInfoDTO studentInfo = (StudentInfoDTO) userInfo;
         SchoolStudent student = new SchoolStudent();
         student.setStudentId(studentInfo.getStudentId());
         student.setName(studentInfo.getName());
@@ -492,9 +479,8 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         schoolStudentMapper.addSchoolStudent(student);
     }
 
-    private void addEnterpriseAdminRole(BaseUserInfoDTO userInfo)
-    {
-        EnterpriseAdminInfoDTO adminInfo = (EnterpriseAdminInfoDTO)userInfo;
+    private void addEnterpriseAdminRole(BaseUserInfoDTO userInfo) {
+        EnterpriseAdminInfoDTO adminInfo = (EnterpriseAdminInfoDTO) userInfo;
         EnterpriseAdmin admin = new EnterpriseAdmin();
         admin.setEmployeeId(adminInfo.getEmployeeId());
         admin.setName(adminInfo.getName());
@@ -503,9 +489,8 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         enterpriseAdminMapper.addEnterpriseAdmin(admin);
     }
 
-    private void addTeacherRole(BaseUserInfoDTO userInfo)
-    {
-        TeacherInfoDTO teacherInfo = (TeacherInfoDTO)userInfo;
+    private void addTeacherRole(BaseUserInfoDTO userInfo) {
+        TeacherInfoDTO teacherInfo = (TeacherInfoDTO) userInfo;
         SchoolInstructor teacher = new SchoolInstructor();
         teacher.setEmployeeId(teacherInfo.getEmployeeId());
         teacher.setName(teacherInfo.getName());
