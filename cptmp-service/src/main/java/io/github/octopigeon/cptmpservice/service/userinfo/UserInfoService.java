@@ -10,10 +10,10 @@ import java.math.BigInteger;
 import java.util.List;
 
 /**
- * @author Gh Li
+ * @author 李国豪
  * @version 1.0
  * @date 2020/7/11
- * @last-check-in Gh Li
+ * @last-check-in 李国豪
  * @date 2020/7/11
  */
 @Service
@@ -28,16 +28,14 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
     Boolean validateOriginPassword(String username, String originPassword);
 
     /**
-     * 验证邀请码
-     * @param userInfo：用户信息类
-     * @return 验证码是否有效
-     */
-    Boolean validateInvitationCode(BaseUserInfoDTO userInfo);
-
-    /**
      * 批量添加注册
      */
     void bulkAdd(List<BaseUserInfoDTO> dtos) throws Exception;
+
+    /**
+     * 邀请码注册
+     */
+    void addByInvitationCode(BaseUserInfoDTO dto, String invitationCode) throws Exception;
 
     /**
      * 根据用户名得到用户基本信息，以及角色类型
