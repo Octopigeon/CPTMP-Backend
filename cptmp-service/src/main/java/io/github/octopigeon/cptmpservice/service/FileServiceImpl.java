@@ -102,8 +102,6 @@ public class FileServiceImpl implements FileService{
         attachmentFile.setFileType(fileInfo.getFileType());
         attachmentFile.setGmtCreate(fileInfo.getGmtCreate());
         attachmentFile.setOriginName(fileInfo.getOriginalName());
-        attachmentFile.setUserId(userId);
-        attachmentFile.setTeamId(teamId);
         attachmentFileMapper.addAttachmentFile(attachmentFile);
     }
 
@@ -145,7 +143,7 @@ public class FileServiceImpl implements FileService{
             if(attachmentFileMapper.findAttachmentFileByfileName(fileName) != null)
             {
                 // 删除索引
-                attachmentFileMapper.removeAttachmentFile(fileName);
+                attachmentFileMapper.removeAttachmentFileByName(fileName,new Date());
                 // 删除文件
                 if(filePath.toFile().delete()){
                     return true;
