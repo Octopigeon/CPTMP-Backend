@@ -24,17 +24,16 @@ public interface CptmpUserMapper {
 
     String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, introduction, uk_email, phone_number, " +
             "gender, avatar, idx_name, uk_common_id, idx_organization_id, uk_username, idx_password, idx_role_name, enabled, " +
-            "account_non_expired, credentials_non_expired, account_non_locked,  idx_nickname";
+            "account_non_expired, credentials_non_expired, account_non_locked";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{introduction}, #{email}, #{phoneNumber}, " +
             "#{gender}, #{avatar}, #{name}, #{commonId}, #{organizationId}, #{username}, #{password}, #{roleName}, #{enabled}, " +
-            "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked},  #{nickname}";
+            "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}";
     String UPDATE_HEADER = "update cptmp_user set ";
     String UPDATE_TAIL_USERNAME = " where (uk_username = #{username})";
     String UPDATE_CONTENT = " gmt_modified = #{gmtModified},  introduction = #{introduction}, " +
             "uk_email = #{email}, phone_number = #{phoneNumber}, gender = #{gender}, uk_username = #{username}, idx_password = #{password}, " +
             "idx_name = #{name}, uk_common_id = #{commonId}, idx_organization_id = #{organizationId},idx_role_name = #{roleName}, enabled = #{enabled}, account_non_expired = #{accountNonExpired}, " +
-            "credentials_non_expired = #{credentialsNonExpired}, account_non_locked = #{accountNonLocked}," +
-            "  idx_nickname = #{nickname}";
+            "credentials_non_expired = #{credentialsNonExpired}, account_non_locked = #{accountNonLocked},";
 
     /**
      * 插入实训
@@ -88,7 +87,6 @@ public interface CptmpUserMapper {
             @Result(column = "idx_organization_id", property = "organizationId", jdbcType = JdbcType.BIGINT),
             @Result(column = "uk_username", property = "username", jdbcType = JdbcType.VARCHAR),
             @Result(column = "idx_password", property = "password", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "idx_nickname", property = "nickname", jdbcType = JdbcType.VARCHAR),
             @Result(column = "idx_role_name", property = "roleName", jdbcType = JdbcType.VARCHAR),
             @Result(column = "enabled", property = "enabled", jdbcType = JdbcType.TINYINT),
             @Result(column = "account_non_expired", property = "accountNonExpired", jdbcType = JdbcType.TINYINT),
@@ -136,9 +134,7 @@ public interface CptmpUserMapper {
      *根据id更新
      */
     @Update(UPDATE_HEADER+UPDATE_CONTENT+" where (id = #{id}) and gmt_deleted is null")
-    void updateUserById(BigInteger id, Date gmtModified, String username, String introduction, String email, BigDecimal phoneNumber, Boolean gender,
-                        String password, String name,String commonId,BigInteger organizationId, String nickname, String roleName, Boolean enabled, Boolean accountNonExpired,  Boolean credentialsNonExpired,
-                        Boolean accountNonLocked);
+    void updateUserById(BigInteger id, Date gmtModified, CptmpUser user);
 
     /**
      *根据用户名更新
@@ -171,13 +167,12 @@ public interface CptmpUserMapper {
     /**
      * 更新用户常规信息
      * @param username
-     * @param nickname
      * @param gmtModified
      * @param introduction
      * @param gender
      */
-    @Update(UPDATE_HEADER + "nickname = #{nickname},gmt_modified = #{gmtModified},introduction = #{introduction},gender = #{gender}" + UPDATE_TAIL_USERNAME)
-    void updateUserInfoByUsername(String username, String nickname, Date gmtModified, String introduction, boolean gender);
+    @Update(UPDATE_HEADER + "gmt_modified = #{gmtModified},introduction = #{introduction},gender = #{gender}" + UPDATE_TAIL_USERNAME)
+    void updateUserInfoByUsername(String username, Date gmtModified, String introduction, boolean gender);
 
     @Update(UPDATE_HEADER + "idx_password = #{password}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
     void updatePasswordByUsername(String username, Date gmtModified, String password);

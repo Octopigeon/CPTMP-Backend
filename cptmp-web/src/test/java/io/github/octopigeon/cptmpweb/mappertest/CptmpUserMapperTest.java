@@ -37,7 +37,6 @@ public class CptmpUserMapperTest extends BaseTest {
         cptmpUser1.setOrganizationId(BigInteger.valueOf(1));
         cptmpUser1.updatePassword("123456");
         cptmpUser1.setEmail("111@11.com");
-        cptmpUser1.setNickname("aaa");
         cptmpUser1.setRoleName("ROLE_SCHOOL_TEACHER");
         cptmpUser1.setEnabled(true);
         cptmpUser1.setAccountNonExpired(true);
@@ -52,7 +51,6 @@ public class CptmpUserMapperTest extends BaseTest {
         cptmpUser2.setOrganizationId(BigInteger.valueOf(2));
         cptmpUser2.updatePassword("123456");
         cptmpUser2.setEmail("121@11.com");
-        cptmpUser2.setNickname("sfd");
         cptmpUser2.setRoleName("ROLE_SCHOOL_ADMIN");
         cptmpUser2.setEnabled(true);
         cptmpUser2.setAccountNonExpired(true);

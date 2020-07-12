@@ -30,8 +30,6 @@ public class BaseUserInfoDTO{
 
     @JsonIgnore
     private String password;
-    @JsonIgnore
-    private String nickname;
 
     /** 头像url */
     private String avatar;
