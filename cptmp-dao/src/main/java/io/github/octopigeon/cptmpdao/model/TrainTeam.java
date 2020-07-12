@@ -19,6 +19,7 @@ public class TrainTeam {
     private BigInteger id;
     private Date gmtCreate;
     private Date gmtModified;
+    private Date gmtDeleted;
     private BigInteger trainProjectId;
     private String teamName;
     private BigInteger masterUserId;

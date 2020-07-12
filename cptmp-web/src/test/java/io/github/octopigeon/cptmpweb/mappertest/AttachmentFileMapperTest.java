@@ -1,0 +1,64 @@
+package io.github.octopigeon.cptmpweb.mappertest;
+
+import io.github.octopigeon.cptmpdao.mapper.AttachmentFileMapper;
+import io.github.octopigeon.cptmpdao.mapper.DailyRecordMapper;
+import io.github.octopigeon.cptmpdao.model.AttachmentFile;
+import io.github.octopigeon.cptmpdao.model.DailyRecord;
+import io.github.octopigeon.cptmpweb.BaseTest;
+import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.math.BigInteger;
+import java.util.Date;
+
+/**
+ * @author 李国鹏
+ * @version 1.0
+ * @date 2020/7/12
+ * <p>
+ * last-check-in 李国鹏
+ * @date 2020/7/12
+ */
+public class AttachmentFileMapperTest extends BaseTest {
+    @Autowired
+    private AttachmentFileMapper attachmentFileMapper;
+
+    @Test
+    public void test() {
+        AttachmentFile attachmentFile1 = new AttachmentFile();
+        attachmentFile1.setGmtCreate(new Date());
+        attachmentFile1.setFileName("test1");
+        attachmentFile1.setFilePath("test1");
+        attachmentFile1.setFileType("test1");
+        attachmentFile1.setOriginName("test1");
+        attachmentFile1.setFileSize(BigInteger.valueOf(1));
+
+
+        AttachmentFile attachmentFile2 = new AttachmentFile();
+        attachmentFile2.setGmtCreate(new Date());
+        attachmentFile2.setFileName("test2");
+        attachmentFile2.setFilePath("test2");
+        attachmentFile2.setFileType("test2");
+        attachmentFile2.setOriginName("test2");
+        attachmentFile2.setFileSize(BigInteger.valueOf(2));
+
+        attachmentFileMapper.removeAllAttachmentFileTest();
+        attachmentFileMapper.addAttachmentFile(attachmentFile1);
+        attachmentFileMapper.addAttachmentFile(attachmentFile2);
+        Assertions.assertEquals(2, attachmentFileMapper.findAllAttachmentFile().size());
+
+        attachmentFileMapper.removeAttachmentFileByName("test1", new Date());
+        Assertions.assertEquals(1, attachmentFileMapper.findAllAttachmentFile().size());
+
+        attachmentFileMapper.updateOriginNameByFileName("test2", new Date(), "test3");
+        Assertions.assertEquals("test3", attachmentFileMapper.findAllAttachmentFile().get(0).getOriginName());
+
+        attachmentFileMapper.updateAttachmentFileByFileName("test2", new Date(), "test4", "test4", BigInteger.valueOf(4), "test4");
+        Assertions.assertEquals("test4", attachmentFileMapper.findAllAttachmentFile().get(0).getFilePath());
+
+        attachmentFileMapper.removeAllAttachmentFile(new Date());
+        Assertions.assertEquals(0, attachmentFileMapper.findAllAttachmentFile().size());
+
+    }
+    }

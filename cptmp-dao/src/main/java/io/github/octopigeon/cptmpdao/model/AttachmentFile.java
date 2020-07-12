@@ -18,6 +18,7 @@ public class AttachmentFile {
     private Date gmtCreate;
     /** nullable */
     private Date gmtModified;
+    private Date gmtDeleted;
     /** 后端存储使用唯一文件名 */
     private String fileName;
     /** 唯一文件路径 */
@@ -28,8 +29,4 @@ public class AttachmentFile {
     private BigInteger fileSize;
     /** 文件类型 */
     private String fileType;
-    /** 用户id */
-    private BigInteger userId;
-    /** 团队id nullable */
-    private BigInteger teamId;
 }
