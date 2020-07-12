@@ -50,15 +50,15 @@ public class TrainMapperTest extends BaseTest {
         train2.setResourceLibrary("test2");
 
 
-        trainMapper.removeAllTrain();
+        trainMapper.removeAllTrain(new Date());
         trainMapper.addTrainProject(train1);
         trainMapper.addTrainProject(train2);
         Assertions.assertEquals(2, trainMapper.findAllTrain().size());
 
         Assertions.assertEquals("test1",trainMapper.findAllTrain().get(0).getAcceptStandard());
-        trainMapper.removeTrainProjectById(trainMapper.findAllTrain().get(0).getId());
+        trainMapper.removeTrainProjectById(trainMapper.findAllTrain().get(0).getId(),new Date());
 
-        trainMapper.updateTrainProjectById(trainMapper.findAllTrain().get(0).getId(),new Date(),BigInteger.valueOf(2),BigInteger.valueOf(22),new Date(),new Date(),"test3","test3","test3");
+        trainMapper.updateTrainProjectById(trainMapper.findAllTrain().get(0).getId(),new Date(),BigInteger.valueOf(2),BigInteger.valueOf(22),new Date(),new Date(),"test3","test3");
         Assertions.assertEquals("test3",trainMapper.findAllTrain().get(0).getContent());
         Assertions.assertEquals(1,trainMapper.findAllTrain().size());
 

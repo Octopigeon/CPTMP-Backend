@@ -2,33 +2,24 @@ package io.github.octopigeon.cptmpdao.model;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
+
 /**
- * @author 李国鹏
- * @version 1.3
- * @date 2020/7/8
- *
- * @last-check-in 李国鹏
- * @date 2020/7/12
+ * @author 陈若琳
+ * @version 1.0
+ * @date 2020/07/12
+ * @last-check-in 陈若琳
+ * @date 2020/07/12
  */
 @Data
-//活动记录
-public class ActivityRecord {
+public class StudentTeam {
     private BigInteger id;
     private Date gmtCreate;
     private Date gmtModified;
     private Date gmtDeleted;
     private BigInteger userId;
     private BigInteger teamId;
-    /**
-     * 0表示待完成
-     * 1表示已完成
-     * 其余表示进行中
-     *
-     */
-    private int state;
-    private String event;
-
-
+    private BigDecimal studentGrade;
 }
