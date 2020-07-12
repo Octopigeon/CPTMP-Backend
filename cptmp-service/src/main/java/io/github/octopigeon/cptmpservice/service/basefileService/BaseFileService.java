@@ -38,5 +38,16 @@ public interface BaseFileService {
      * @return 资源文件
      * @throws Exception
      */
-    Resource loadFile(String fileName, String year, String month, String day) throws Exception;
+    Resource loadPublicFile(String fileName, String year, String month, String day) throws Exception;
+
+    /**
+     * 文件下载服务
+     * @param fileName 文件名
+     * @param year 上传时间年份
+     * @param month 上传时间月份
+     * @param day 上传时间日期
+     * @return 资源文件
+     * @throws Exception
+     */
+    Resource loadPrivateFile(String fileName, String year, String month, String day) throws Exception;
 }

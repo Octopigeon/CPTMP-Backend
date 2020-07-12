@@ -48,7 +48,7 @@ public class BaseFileServiceImpl implements BaseFileService {
     }
 
     /**
-     * 单个文件上传接收服务
+     * 公开文件上传接收服务
      * @param file 文件流
      * @return 文件相关信息
      * @throws Exception
@@ -58,9 +58,54 @@ public class BaseFileServiceImpl implements BaseFileService {
         return storeFile(file, this.publicFileStorageLocation.toString(), this.publicFileUrl);
     }
 
+    /**
+     * 私密附件接收服务
+     * @param file 多文件
+     * @return 文件名
+     * @throws Exception
+     */
     @Override
     public FileDTO storePrivateFile(MultipartFile file) throws Exception {
         return storeFile(file, this.privateFileStorageLocation.toString(), this.privateFileUrl);
+    }
+
+    /**
+     * 文件下载服务
+     *
+     * @param fileName 文件的url
+     * @return 是否传输成功
+     * @throws IOException
+     */
+    @Override
+    public Resource loadPublicFile(String fileName, String year, String month, String day) throws Exception {
+        return loadFile(fileName, year, month, day, this.publicFileStorageLocation.toString());
+    }
+
+    /**
+     * 文件下载服务
+     *
+     * @param fileName 文件的url
+     * @return 是否传输成功
+     * @throws IOException
+     */
+    @Override
+    public Resource loadPrivateFile(String fileName, String year, String month, String day) throws Exception {
+        return loadFile(fileName, year, month, day, this.privateFileStorageLocation.toString());
+    }
+
+    private Resource loadFile(String fileName, String year, String month, String day, String storagePath) throws Exception{
+        try {
+            Path path = Paths.get(storagePath, year, month, day);
+            Path filePath = path.resolve(fileName).normalize();
+            Resource resource = new UrlResource(filePath.toUri());
+            if(resource.exists()) {
+                return resource;
+            } else {
+                throw new Exception("File not found " + fileName);
+            }
+        } catch (MalformedURLException ex) {
+            throw new Exception("File not found " + fileName, ex);
+        }
     }
 
     private FileDTO storeFile(MultipartFile file, String storagePath, String url) throws Exception{
@@ -96,30 +141,6 @@ public class BaseFileServiceImpl implements BaseFileService {
             throw new Exception("Could not store file " + originName + ". Please try again!", ex);
         }
     }
-
-    /**
-     * 文件下载服务
-     *
-     * @param fileName 文件的url
-     * @return 是否传输成功
-     * @throws IOException
-     */
-    @Override
-    public Resource loadFile(String fileName, String year, String month, String day) throws Exception {
-        try {
-            Path path = Paths.get(this.fileStorageLocation.toString(), year, month, day);
-            Path filePath = path.resolve(fileName).normalize();
-            Resource resource = new UrlResource(filePath.toUri());
-            if(resource.exists()) {
-                return resource;
-            } else {
-                throw new Exception("File not found " + fileName);
-            }
-        } catch (MalformedURLException ex) {
-            throw new Exception("File not found " + fileName, ex);
-        }
-    }
-
 
     /**
      * 产生文件名，不需要管扩展名
