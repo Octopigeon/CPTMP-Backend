@@ -11,7 +11,7 @@ College Practice Training Management Platform
 + cptmp-web包括controller类，向前端提供各种api，调用service中封装的方法实现相应的功能
 + 三个子模块间的依赖关系为：web->service->dao
 
-# API说明
+# 目前已和前端对接的API说明
 更新时间：2020/7/9
 
 # 登录/登出
