@@ -20,6 +20,7 @@ public class TrainProject {
     private BigInteger id;
     private Date gmtCreate;
     private Date gmtModified;
+    private Date gmtDeleted;
     private BigInteger trainId;
     private String projectName;
     /**

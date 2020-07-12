@@ -39,16 +39,16 @@ public class TrainProjectMapperTest extends BaseTest {
         trainProject2.setProjectContent("test2");
         trainProject2.setResourceLibrary("test2");
 
-        trainProjectMapper.removeAllTrainProjects();
+        trainProjectMapper.removeAllTrainProjects(new Date());
         trainProjectMapper.addTrainProject(trainProject1);
         trainProjectMapper.addTrainProject(trainProject2);
         Assertions.assertEquals(2,trainProjectMapper.findAllTrainProject().size());
 
-        trainProjectMapper.removeTrainProjectByProjectName("test1");
+        trainProjectMapper.removeTrainProjectByProjectName("test1",new Date());
         Assertions.assertEquals(trainProject2.getProjectContent(),trainProjectMapper.findTrainProjectByProjectNameAmbiguously("2").get(0).getProjectContent());
         Assertions.assertEquals(1,trainProjectMapper.findAllTrainProject().size());
 
-        trainProjectMapper.updateTrainProjectByProjectName(new Date(), BigInteger.valueOf(2), "test2", 3,"test3","www");
+        trainProjectMapper.updateTrainProjectByProjectName("test2",new Date(), BigInteger.valueOf(2),BigInteger.valueOf(2),2,"test3");
         Assertions.assertEquals("test3",trainProjectMapper.findTrainProjectByProjectNameAmbiguously("test2").get(0).getProjectContent());
 
         Assertions.assertEquals(1, trainProjectMapper.findTrainProjectByProjectNameAmbiguously("test2").size());
