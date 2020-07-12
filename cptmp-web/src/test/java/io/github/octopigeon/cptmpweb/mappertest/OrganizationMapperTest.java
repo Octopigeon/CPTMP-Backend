@@ -28,6 +28,9 @@ public class OrganizationMapperTest extends BaseTest {
     @Test
     public void Test()
     {
+        /**
+         * 设置数据
+         */
         Organization organization1 = new Organization();
         organization1.setName("test1");
         organization1.setId(BigInteger.valueOf(1));
@@ -44,13 +47,23 @@ public class OrganizationMapperTest extends BaseTest {
         organization2.setWebsiteUrl("test2");
         organization2.setInvitationCode("test2");
 
+        /**
+         * 添加
+         */
+        organizationMapper.removeAllOrganizationTest(new Date());
         organizationMapper.addOrganization(organization1);
         organizationMapper.addOrganization(organization2);
         Assertions.assertEquals(2,organizationMapper.findAllOrganization().size());
 
+        /**
+         * 删除
+         */
         organizationMapper.removeOrganizationById(organizationMapper.findAllOrganization().get(0).getId(),new Date());
         Assertions.assertEquals(1,organizationMapper.findAllOrganization().size());
 
+        /**
+         * 更新
+         */
         organizationMapper.updateOrganizationById(organizationMapper.findAllOrganization().get(0).getId(),new Date(),"test3","test3","test3","test3");
         Assertions.assertEquals("test3",organizationMapper.findAllOrganization().get(0).getWebsiteUrl());
 

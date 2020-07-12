@@ -46,10 +46,18 @@ public interface OrganizationMapper {
     @Update("update cptmp_organization set "+UPDATE_CONTENT+"where id = #{id} and gmt_deleted is null")
     void updateOrganizationById(BigInteger id,Date gmtModified,String name,String organizationDescription,String websiteUrl,String invitationCode);
 
+    /**
+     * 测试删除
+     * @param gmtDeleted 删除日期
+     */
     @Deprecated
     @Delete("delete from cptmp_organization")
     void removeAllOrganizationTest(Date gmtDeleted);
 
+    /**
+     * 删除所有组织
+     * @param gmtDeleted 删除日期
+     */
     @Update("update cptmp_organization set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
     void removeAllOrganization(Date gmtDeleted);
     /**
@@ -59,9 +67,6 @@ public interface OrganizationMapper {
      */
     @Update("update cptmp_organization set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
     void removeOrganizationById(BigInteger id,Date gmtDeleted);
-
-
-
 
 
     /**

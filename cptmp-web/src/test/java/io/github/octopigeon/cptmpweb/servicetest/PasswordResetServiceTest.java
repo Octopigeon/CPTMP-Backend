@@ -14,10 +14,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author anlow
+ * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/10
- * @last-check-in anlow
+ * @last-check-in 魏啸冲
  * @date 2020/7/10
  */
 public class PasswordResetServiceTest extends BaseTest {

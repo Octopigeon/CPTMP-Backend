@@ -11,7 +11,7 @@ import java.math.BigInteger;
  * @author 李国豪
  * @version 1.1
  * @date 2020/7/8
- * @last-check-in anlow
+ * @last-check-in 魏啸冲
  * @date 2020/7/11
  */
 @Data
@@ -30,8 +30,6 @@ public class BaseUserInfoDTO{
 
     @JsonIgnore
     private String password;
-    @JsonIgnore
-    private String nickname;
 
     /** 头像url */
     private String avatar;
