@@ -35,13 +35,23 @@ public interface StudentTeamMapper {
     void addStudentTeam(StudentTeam studentTeam);
 
     /**
-     * 更新团队成绩
+     * 更新个人成绩
      * @param teamId 团队id
-     * @param grade 团队成绩
+     * @param grade 个人成绩
+     * @param userId 个人id
      * @param gmtModified 最后修改时间
      */
-    @Update("update student_team set grade = #{grade},gmt_modified = #{gmtModified} where team_id = #{teamId}")
-    void updateGradeById(BigInteger teamId,int grade,Date gmtModified);
+    @Update("update student_team set grade = #{grade},gmt_modified = #{gmtModified} where team_id = #{teamId} and user_id = #{userId}")
+    void updateGradeById(BigInteger teamId,BigInteger userId,int grade,Date gmtModified);
+
+    /**
+     * 根据id删除记录
+     * @param teamId 团队id
+     * @param userId 学生id
+     * @param isDelete 删除时间
+     */
+    @Update("update student_team set is_delete = #{isDelete} where team_id = #{teamId} and user_id = #{userId}")
+    void DeleteStudentTeamById(BigInteger teamId,BigInteger userId,Date isDelete);
 
     /**
      * 根据id删除对应信息
@@ -56,7 +66,7 @@ public interface StudentTeamMapper {
      * 查询所有对应关系
      * @return 对应关系列表
      */
-    @Select("select " + COLUMNS + ",gmt_modified,grade from student_team")
+    @Select("select " + COLUMNS + ",gmt_modified,grade from student_team where is_delete is null")
     @Results({
             @Result(column = "team_id", property = "teamId", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
@@ -71,7 +81,7 @@ public interface StudentTeamMapper {
      * @param teamId 团队id
      * @return 对应关系列表
      */
-    @Select("select " + COLUMNS + ",gmt_modified,grade from student_team where team_id = #{teamId}")
+    @Select("select " + COLUMNS + ",gmt_modified,grade from student_team where team_id = #{teamId} and is_delete is null")
     @Results({
             @Result(column = "team_id", property = "teamId", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
@@ -86,7 +96,7 @@ public interface StudentTeamMapper {
      * @param userId 用户id
      * @return 对应关系列表
      */
-    @Select("select " + COLUMNS + ",gmt_modified,grade from student_team where user_id = #{userId}")
+    @Select("select " + COLUMNS + ",gmt_modified,grade from student_team where user_id = #{userId} and is_delete is null")
     @Results({
             @Result(column = "team_id", property = "teamId", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),

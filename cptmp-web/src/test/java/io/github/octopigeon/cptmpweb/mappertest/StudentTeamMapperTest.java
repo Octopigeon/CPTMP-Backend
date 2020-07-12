@@ -28,7 +28,7 @@ public class StudentTeamMapperTest extends BaseTest {
         StudentTeam studentTeam1 = new StudentTeam();
         studentTeam1.setGmtCreate(new Date());
         studentTeam1.setTeamId(BigInteger.ONE);
-        studentTeam1.setUserId(BigInteger.ONE);
+        studentTeam1.setUserId(BigInteger.valueOf(2));
         studentTeamMapper.addStudentTeam(studentTeam1);
 
         StudentTeam studentTeam2 = new StudentTeam();
@@ -39,11 +39,14 @@ public class StudentTeamMapperTest extends BaseTest {
 
         Assertions.assertEquals(2,studentTeamMapper.findAllStudentTeam().size());
 
-        studentTeamMapper.removeStudentTeamById(BigInteger.ONE,BigInteger.ONE);
+        studentTeamMapper.removeStudentTeamById(BigInteger.ONE,BigInteger.valueOf(2));
         Assertions.assertEquals(1,studentTeamMapper.findAllStudentTeam().size());
 
-        studentTeamMapper.updateGradeById(BigInteger.TEN,90,new Date());
+        studentTeamMapper.updateGradeById(BigInteger.TEN,BigInteger.TEN,90,new Date());
         Assertions.assertEquals(90,studentTeamMapper.findAllStudentTeam().get(0).getGrade());
+
+        studentTeamMapper.DeleteStudentTeamById(BigInteger.TEN,BigInteger.TEN,new Date());
+        Assertions.assertEquals(0,studentTeamMapper.findAllStudentTeam().size());
 
 
     }

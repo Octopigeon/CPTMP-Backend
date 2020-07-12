@@ -19,4 +19,5 @@ public class StudentTeam {
     private int grade;
     private Date gmtCreate;
     private Date gmtModified;
+    private Date isDelete;
 }
