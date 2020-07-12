@@ -1,3 +1,4 @@
+// TODO 此controller与下层对接的相应接口尚未完成，等完成后再去掉注释
 //package io.github.octopigeon.cptmpweb.controller;
 //
 //import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,11 +17,11 @@
 //import java.util.List;
 //
 ///**
-// * @author anlow
+// * @author 魏啸冲
 // * @version 1.0
 // * @date 2020/7/10
 // * 所有实训项目查询的接口
-// * @last-check-in anlow
+// * @last-check-in 魏啸冲
 // * @date 2020/7/10
 // */
 //@RestController

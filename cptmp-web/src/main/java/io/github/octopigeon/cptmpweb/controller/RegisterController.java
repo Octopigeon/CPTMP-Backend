@@ -25,11 +25,11 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * @author anlow
+ * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/11
  * 提供各种用户注册的api
- * @last-check-in anlow
+ * @last-check-in 魏啸冲
  * @date 2020/7/11
  */
 @RestController
@@ -39,18 +39,20 @@ public class RegisterController {
     private UserInfoService userInfoService;
 
     /**
-     * 企业管理员账户由系统管理员导入
+     * 企业管理员账户由系统管理员导入，权限限定为系统管理员
      * @param json 一个列表，每项包含username, password, email
      * @return 返回失败名单
      */
     @Secured(CptmpRole.ROLE_SYSTEM_ADMIN)
     @PostMapping("/api/user/enterprise-admin")
     public RespBeanWithFailedRegisterList registerEnterpriseAdmin(@RequestBody String json) throws JsonProcessingException {
+        // 解析前端发来的一个json数组，每项包含username，name，password，email四项
         ObjectMapper objectMapper = new ObjectMapper();
         ReqBeanWithEnterpriseAdminRegisterInfo[] reqBeanWithEnterpriseAdminRegisterInfos
                 = objectMapper.readValue(json, ReqBeanWithEnterpriseAdminRegisterInfo[].class);
         List<Integer> registerFailedList = new ArrayList<>();
         for (int i = 0; i < reqBeanWithEnterpriseAdminRegisterInfos.length; i++) {
+            // 遍历每个信息，逐一执行注册操作
             ReqBeanWithEnterpriseAdminRegisterInfo reqBeanWithEnterpriseAdminRegisterInfo
                     = reqBeanWithEnterpriseAdminRegisterInfos[i];
             try {
