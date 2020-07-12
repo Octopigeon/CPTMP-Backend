@@ -26,6 +26,9 @@ public class CptmpUserMapperTest extends BaseTest {
 
     @Test
     public void test() {
+        /**
+         * 设置数据
+         */
         CptmpUser cptmpUser1 = new CptmpUser();
         cptmpUser1.setGmtCreate(new Date());
         cptmpUser1.setUsername("test1");
@@ -56,6 +59,9 @@ public class CptmpUserMapperTest extends BaseTest {
         cptmpUser2.setCredentialsNonExpired(true);
         cptmpUser2.setAccountNonLocked(true);
 
+        /**
+         * 添加
+         */
         cptmpUserMapper.removeAllUsersTest();
         cptmpUserMapper.addUser(cptmpUser1);
         cptmpUserMapper.addUser(cptmpUser2);

@@ -26,6 +26,9 @@ public class AttachmentFileMapperTest extends BaseTest {
 
     @Test
     public void test() {
+        /**
+         * 设置两条数据
+         */
         AttachmentFile attachmentFile1 = new AttachmentFile();
         attachmentFile1.setGmtCreate(new Date());
         attachmentFile1.setFileName("test1");
@@ -43,14 +46,23 @@ public class AttachmentFileMapperTest extends BaseTest {
         attachmentFile2.setOriginName("test2");
         attachmentFile2.setFileSize(BigInteger.valueOf(2));
 
+        /**
+         * 添加
+         */
         attachmentFileMapper.removeAllAttachmentFileTest();
         attachmentFileMapper.addAttachmentFile(attachmentFile1);
         attachmentFileMapper.addAttachmentFile(attachmentFile2);
         Assertions.assertEquals(2, attachmentFileMapper.findAllAttachmentFile().size());
 
+        /**
+         * 删除
+         */
         attachmentFileMapper.removeAttachmentFileByName("test1", new Date());
         Assertions.assertEquals(1, attachmentFileMapper.findAllAttachmentFile().size());
 
+        /**
+         * 更新
+         */
         attachmentFileMapper.updateOriginNameByFileName("test2", new Date(), "test3");
         Assertions.assertEquals("test3", attachmentFileMapper.findAllAttachmentFile().get(0).getOriginName());
 

@@ -12,8 +12,8 @@ import java.util.List;
  * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/9
- * @last-check-in 魏啸冲
- * @date 2020/7/9
+ * @last-check-in 李国鹏
+ * @date 2020/7/12
  */
 @Repository
 @Mapper
@@ -22,10 +22,19 @@ public interface PasswordResetTokenMapper {
     String COLUMNS = "gmt_create, gmt_modified, uk_token, idx_email";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{token}, #{email}";
 
+    /**
+     * 添加密码
+     * @param passwordResetToken 密码
+     */
     @Insert("insert password_reset_token (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void addPasswordResetToken(PasswordResetToken passwordResetToken);
 
+    /**
+     * 测试
+     * @param token token
+     * @param email email
+     */
     @Deprecated
     @Update("update password_reset_token set uk_token = #{token} where idx_email = #{email}")
     void updateTokenByEmail(String token, String email);
@@ -68,6 +77,9 @@ public interface PasswordResetTokenMapper {
     })
     List<PasswordResetToken> findAllPasswordResetTokens();
 
+    /**
+     * 测试删除
+     */
     @Deprecated
     @Delete("delete from password_reset_token")
     void removeAllPasswordResetTokens();

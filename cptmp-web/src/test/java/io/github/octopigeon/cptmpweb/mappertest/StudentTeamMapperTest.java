@@ -15,7 +15,7 @@ import java.util.Date;
  * @author 陈若琳
  * @version 1.0
  * @date 2020/07/12
- * @last-check-in 陈若琳
+ * @last-check-in 李国鹏
  * @date 2020/07/12
  */
 public class StudentTeamMapperTest extends BaseTest {
@@ -26,6 +26,9 @@ public class StudentTeamMapperTest extends BaseTest {
     @Test
     public void Test()
     {
+        /**
+         * 设置数据
+         */
         StudentTeam studentTeam1 = new StudentTeam();
         studentTeam1.setGmtCreate(new Date());
         studentTeam1.setTeamId(BigInteger.valueOf(1));
@@ -38,15 +41,24 @@ public class StudentTeamMapperTest extends BaseTest {
         studentTeam2.setUserId(BigInteger.valueOf(2));
         studentTeam2.setStudentGrade(BigDecimal.valueOf(2));
 
+        /**
+         * 添加
+         */
         studentTeamMapper.removeActivityRecordByAllTest(new Date());
         studentTeamMapper.addStudentTeam(studentTeam1);
         studentTeamMapper.addStudentTeam(studentTeam2);
 
         Assertions.assertEquals(2,studentTeamMapper.findAllStudentTeam().size());
 
+        /**
+         * 删除
+         */
         studentTeamMapper.removeStudentTeamById(studentTeamMapper.findAllStudentTeam().get(0).getId(),new Date());
         Assertions.assertEquals(1,studentTeamMapper.findAllStudentTeam().size());
 
+        /**
+         * 更新
+         */
         studentTeamMapper.updateGradeById(BigInteger.valueOf(1),BigInteger.valueOf(1),new Date(),BigInteger.valueOf(1),BigDecimal.valueOf(1));
         Assertions.assertEquals(BigDecimal.valueOf(2),studentTeamMapper.findAllStudentTeam().get(0).getStudentGrade());
 

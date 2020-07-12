@@ -27,6 +27,9 @@ public class TrainTeamMapperTest extends BaseTest {
     private TrainTeamMapper trainTeamMapper;
     @Test
     public void test(){
+        /**
+         * 设置数据
+         */
         TrainTeam trainTeam1=new TrainTeam();
         trainTeam1.setGmtCreate(new Date());
         trainTeam1.setTeamName("test1");
@@ -48,14 +51,23 @@ public class TrainTeamMapperTest extends BaseTest {
         trainTeam2.setTeamGrade(BigDecimal.valueOf(90.0));
 
 
+        /**
+         * 添加
+         */
         trainTeamMapper.removeAllTrainTeam(new Date());
         trainTeamMapper.addTrainTeam(trainTeam1);
         trainTeamMapper.addTrainTeam(trainTeam2);
         Assertions.assertEquals(2,trainTeamMapper.findAllTrainTeam().size());
 
+        /**
+         * 删除
+         */
         trainTeamMapper.removeTrainTeamByTeamName("test1",new Date());
         Assertions.assertEquals(1,trainTeamMapper.findAllTrainTeam().size());
 
+        /**
+         * 更新
+         */
         trainTeamMapper.updateTrainTeamByTeamName("test2",new Date(), BigInteger.valueOf(2), BigInteger.valueOf(3),BigInteger.valueOf(3),BigInteger.valueOf(3),BigDecimal.valueOf(99));
         Assertions.assertEquals(BigInteger.valueOf(3),trainTeamMapper.findAllTrainTeam().get(0).getPoUserId());
 

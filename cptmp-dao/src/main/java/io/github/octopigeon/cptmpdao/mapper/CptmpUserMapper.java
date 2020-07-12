@@ -45,7 +45,7 @@ public interface CptmpUserMapper {
     void addUser(CptmpUser cptmpUser);
 
     /**
-     * 测试
+     * 测试删除
      */
     @Deprecated
     @Delete("delete from cptmp_user")
@@ -54,6 +54,7 @@ public interface CptmpUserMapper {
 
     /**
      * 删除用户
+     * @param gmtDeleted 删除日期
      */
     @Update("update cptmp_user set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
     void removeAllUsers(Date gmtDeleted);
@@ -61,6 +62,7 @@ public interface CptmpUserMapper {
     /**
      * 通过id删除
      * @param id 用户id
+     * @param gmtDeleted 删除日期
      */
     @Update("update cptmp_user set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
     void removeUserById(BigInteger id, Date gmtDeleted);
@@ -68,6 +70,7 @@ public interface CptmpUserMapper {
     /**
      * 通过用户名获取用户，可以用来进行登录验证
      * @param username 用户名，唯一
+     * @return 用户
      */
     @Select("select id, " + COLUMNS + " from cptmp_user where uk_username = #{username} and gmt_deleted is null")
     @Results(id = "user", value = {
@@ -95,14 +98,29 @@ public interface CptmpUserMapper {
     })
     CptmpUser findUserByUsername(String username);
 
+    /**
+     * 根据id查询
+     * @param userId id
+     * @return 用户
+     */
     @Select("select id, " + COLUMNS + " from cptmp_user where id = #{userID} and gmt_deleted is null")
     @ResultMap("user")
     CptmpUser findUserById(BigInteger userId);
 
+    /**
+     * 根据email查询
+     * @param email email
+     * @return 用户
+     */
     @Select("select id, " + COLUMNS + " from cptmp_user where uk_email = #{email} and gmt_deleted is null")
     @ResultMap("user")
     CptmpUser findUserByEmail(String email);
 
+    /**
+     * 根据用户名查询
+     * @param username 用户名
+     * @return 用户
+     */
     @Select("select idx_password from cptmp_user where uk_username = #{username} and gmt_deleted is null")
     String findPasswordByUsername(String username);
 
@@ -114,21 +132,31 @@ public interface CptmpUserMapper {
     @ResultMap(value = "user")
     List<CptmpUser> findAllUsers();
 
-    //avator
-
+    /**
+     *根据id更新
+     */
     @Update(UPDATE_HEADER+UPDATE_CONTENT+" where (id = #{id}) and gmt_deleted is null")
     void updateUserById(BigInteger id, Date gmtModified, String username, String introduction, String email, BigDecimal phoneNumber, Boolean gender,
                               String password, String name,String commonId,String organizationId, String nickname, String roleName, Boolean enabled, Boolean accountNonExpired,  Boolean credentialsNonExpired,
                               Boolean accountNonLocked);
 
+    /**
+     *根据用户名更新
+     */
     @Update(UPDATE_HEADER+UPDATE_CONTENT+UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
     void updateUserByUserName(String username, Date gmtModified, String introduction, String email, BigDecimal phoneNumber, Boolean gender,
                               String password, String name,String commonId,String organizationId,String nickname, String roleName, Boolean enabled, Boolean accountNonExpired,  Boolean credentialsNonExpired,
                               Boolean accountNonLocked);
 
+    /**
+     *根据用户名更新是否注销
+     */
     @Update(UPDATE_HEADER + "enabled = #{enabled}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
     void updateEnabledByUsername(String username, Boolean enabled);
 
+    /**
+     *根据用户名更新账号
+     */
     @Update(UPDATE_HEADER + "account_non_expired = #{accountNonExpired}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
     void updateAccountNonExpiredByUsername(String username, Boolean accountNonExpired);
 

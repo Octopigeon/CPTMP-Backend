@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author 李国鹏
- * @version 2.0
+ * @version 1.0
  * @date 2020/7/8
  * <p>
  * last-check-in 李国鹏
@@ -28,6 +28,9 @@ class ActivityRecordMapperTest extends BaseTest {
     private ActivityRecordMapper activityRecordMapper;
     @Test
     public void test(){
+        /**
+         * 设置两条数据
+         */
         ActivityRecord activityRecord=new ActivityRecord();
         activityRecord.setGmtCreate(new Date());
         activityRecord.setUserId(BigInteger.valueOf(1));
@@ -42,11 +45,17 @@ class ActivityRecordMapperTest extends BaseTest {
         activityRecord2.setState(2);
         activityRecord2.setEvent("test2");
 
+        /**
+         * 添加
+         */
         activityRecordMapper.removeActivityRecordByAll(new Date());
         activityRecordMapper.addActivityRecord(activityRecord);
         activityRecordMapper.addActivityRecord(activityRecord2);
         Assertions.assertEquals(2,activityRecordMapper.findAllActivityRecord().size());
 
+        /**
+         * 查询
+         */
         Assertions.assertEquals("test1",activityRecordMapper.findActivityRecordByUserId(BigInteger.valueOf(1)).get(0).getEvent());
 
 //        activityRecordMapper.removeActivityRecordById(activityRecordMapper.findAllActivityRecord().get(0).getId(),new Date());
