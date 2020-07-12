@@ -13,10 +13,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 
@@ -97,6 +95,22 @@ public class UserDetailsController {
         }
     }
 
+    @PutMapping("/api/user/me/avatar")
+    public RespBeanWithBaseUserInfoDTO updateAvatar(
+            @RequestParam("file") MultipartFile avatar
+            )  {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        RespBeanWithBaseUserInfoDTO respBeanWithBaseUserInfoDTO;
+        try {
+            respBeanWithBaseUserInfoDTO = new RespBeanWithBaseUserInfoDTO();
+            userInfoService.uploadAvatar(avatar, username);
+            respBeanWithBaseUserInfoDTO.setBaseUserInfoDTO(userInfoService.findBaseUserInfoByUsername(username));
+            return respBeanWithBaseUserInfoDTO;
+        } catch (Exception e) {
+            respBeanWithBaseUserInfoDTO = new RespBeanWithBaseUserInfoDTO(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "update avatar failed");
+            return respBeanWithBaseUserInfoDTO;
+        }
+    }
     // TODO 修改用户信息的接口
 
 }
@@ -105,7 +119,16 @@ public class UserDetailsController {
 @EqualsAndHashCode(callSuper = true)
 class RespBeanWithBaseUserInfoDTO extends RespBean {
 
+    public RespBeanWithBaseUserInfoDTO() {
+        super();
+    }
+
+    public RespBeanWithBaseUserInfoDTO(Integer status, String msg) {
+        super(status, msg);
+    }
+
     @JsonProperty("data")
     private BaseUserInfoDTO baseUserInfoDTO;
 
 }
+
