@@ -4,10 +4,11 @@ import com.fasterxml.jackson.annotation.JsonRootName;
 import lombok.Data;
 
 /**
- * @author anlow
+ * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/9
- * @last-check-in anlow
+ * 登录消息，用于反序列化一段包含username和password的json
+ * @last-check-in 魏啸冲
  * @date 2020/7/9
  */
 @Data

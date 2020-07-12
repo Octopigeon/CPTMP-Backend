@@ -10,10 +10,10 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * @author anlow
+ * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/9
- * @last-check-in anlow
+ * @last-check-in 李国豪
  * @date 2020/7/9
  */
 @Service
@@ -30,6 +30,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     public void createPasswordResetTokenForUser(String userEmail) {
         String token = UUID.randomUUID().toString();
         PasswordResetToken passwordResetToken = new PasswordResetToken();
+        // 设置邮箱基本信息，创建时间（用于比对是否过期），token，对应的用户邮箱
         passwordResetToken.setGmtCreate(new Date());
         passwordResetToken.setToken(token);
         passwordResetToken.setEmail(userEmail);
