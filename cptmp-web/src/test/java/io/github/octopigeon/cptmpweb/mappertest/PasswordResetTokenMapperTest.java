@@ -51,7 +51,7 @@ public class PasswordResetTokenMapperTest extends BaseTest {
         cptmpUser.setAccountNonExpired(true);
         cptmpUser.setCredentialsNonExpired(true);
         cptmpUser.setAccountNonLocked(true);
-        cptmpUserMapper.removeAllUsers();
+        cptmpUserMapper.removeAllUsersTest();
         cptmpUserMapper.addUser(cptmpUser);
 
         passwordResetTokenMapper.removeAllPasswordResetTokens();
