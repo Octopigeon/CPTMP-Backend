@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * @author anlow
+ * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/9
- * @last-check-in anlow
+ * @last-check-in 魏啸冲
  * @date 2020/7/9
  */
 public class PasswordResetTokenMapperTest extends BaseTest {

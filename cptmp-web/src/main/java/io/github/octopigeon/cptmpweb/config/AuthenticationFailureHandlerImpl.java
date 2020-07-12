@@ -20,15 +20,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * @author anlow
+ * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/8
- * @last-check-in anlow
+ * 自定义登录失败处理器
+ * @last-check-in 魏啸冲
  * @date 2020/7/9
  */
 @Component
 public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHandler {
-
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest httpServletRequest,
@@ -36,6 +36,7 @@ public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHa
                                         AuthenticationException e) throws IOException, ServletException {
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
         RespBean respBean;
+        // 捕获不同的登录异常，并返回相应的状态码
         if (e instanceof BadCredentialsException) {
             respBean = RespBean.error(CptmpStatusCode.AUTH_FAILED_BAD_CREDENTIALS, "authenticate failed, bad credentials, wrong password or username(best guess)");
         } else if (e instanceof RememberMeAuthenticationException) {
