@@ -73,8 +73,8 @@ public interface TrainMapper {
     /**
      * 根据id改资源
      * @param id 实训id
-     * @param gmtModified
-     * @param resourceLibrary
+     * @param gmtModified 修改时间
+     * @param resourceLibrary 资源库
      */
     @Update("update train set resource_library = #{resourceLibrary} where id = #{id} and gmt_deleted is null")
     void updateTrainProjectResourceById(BigInteger id,Date gmtModified,String resourceLibrary);

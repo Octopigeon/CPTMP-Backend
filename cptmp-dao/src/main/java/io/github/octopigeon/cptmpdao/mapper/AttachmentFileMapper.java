@@ -43,7 +43,8 @@ public interface AttachmentFileMapper {
     void removeAllAttachmentFileTest();
 
     /**
-     * 删除
+     * 删除所有文件
+     * @param gmtDeleted 删除日期
      */
     @Update("update attachment_file set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
     void removeAllAttachmentFile(Date gmtDeleted);

@@ -19,7 +19,7 @@ import java.util.Date;
  * @date 2020/7/9
  * <p>
  * last-check-in 李国鹏
- * @date 2020/7/10
+ * @date 2020/7/12
  */
 public class TrainMapperTest extends BaseTest {
 
@@ -27,6 +27,9 @@ public class TrainMapperTest extends BaseTest {
     private TrainMapper trainMapper;
     @Test
     public void test(){
+        /**
+         * 设置数据
+         */
         Train train1 =new Train();
         train1.setProcessId(BigInteger.valueOf(1));
         train1.setAcceptStandard("test1");
@@ -50,14 +53,23 @@ public class TrainMapperTest extends BaseTest {
         train2.setResourceLibrary("test2");
 
 
+        /**
+         * 添加
+         */
         trainMapper.removeAllTrain(new Date());
         trainMapper.addTrainProject(train1);
         trainMapper.addTrainProject(train2);
         Assertions.assertEquals(2, trainMapper.findAllTrain().size());
 
+        /**
+         * 删除
+         */
         Assertions.assertEquals("test1",trainMapper.findAllTrain().get(0).getAcceptStandard());
         trainMapper.removeTrainProjectById(trainMapper.findAllTrain().get(0).getId(),new Date());
 
+        /**
+         * 更新
+         */
         trainMapper.updateTrainProjectById(trainMapper.findAllTrain().get(0).getId(),new Date(),BigInteger.valueOf(2),BigInteger.valueOf(22),new Date(),new Date(),"test3","test3");
         Assertions.assertEquals("test3",trainMapper.findAllTrain().get(0).getContent());
         Assertions.assertEquals(1,trainMapper.findAllTrain().size());

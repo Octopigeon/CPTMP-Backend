@@ -21,7 +21,7 @@ import java.util.List;
  * @date 2020/7/8
  *
  * last-check-in 李国鹏
- * @date 2020/7/10
+ * @date 2020/7/12
  */
 public class DailyRecordMapperTest extends BaseTest {
     @Autowired
@@ -30,6 +30,9 @@ public class DailyRecordMapperTest extends BaseTest {
     @Test
     public void test()
     {
+        /**
+         * 设置数据
+         */
         DailyRecord dailyRecord1 = new DailyRecord();
         dailyRecord1.setGmtCreate(new Date());
         dailyRecord1.setUserId(BigInteger.valueOf(1));
@@ -49,11 +52,17 @@ public class DailyRecordMapperTest extends BaseTest {
         dailyRecord2.setContent("test2");
 
 
+        /**
+         * 添加
+         */
         dailyRecordMapper.removeAllDailyRecord(new Date());
         dailyRecordMapper.addDailyRecord(dailyRecord1);
         dailyRecordMapper.addDailyRecord(dailyRecord2);
         Assertions.assertEquals(2,dailyRecordMapper.findAllDailyRecord().size());
 
+        /**
+         * 删除
+         */
         dailyRecordMapper.removeDailyRecordByUserId(BigInteger.valueOf(1),new Date());
         Assertions.assertEquals(1,dailyRecordMapper.findAllDailyRecord().size());
 
@@ -61,6 +70,9 @@ public class DailyRecordMapperTest extends BaseTest {
         dailyRecordMapper.removeDailyRecordByTeamId(BigInteger.valueOf(1),new Date());
         Assertions.assertEquals(1,dailyRecordMapper.findAllDailyRecord().size());
 
+        /**
+         * 更新
+         */
         dailyRecordMapper.updateDailyRecordByUserId(BigInteger.valueOf(2),new Date(),BigInteger.valueOf(2),"test3","test3",2);
         Assertions.assertEquals("test3",dailyRecordMapper.findDailyRecordByTeamId(BigInteger.valueOf(2)).get(0).getContent());
 
