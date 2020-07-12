@@ -18,4 +18,5 @@ public class TrainProjectDTO {
     private Integer level;
     private String content;
     private String resourceLibrary;
+    private BigInteger trainId;
 }
