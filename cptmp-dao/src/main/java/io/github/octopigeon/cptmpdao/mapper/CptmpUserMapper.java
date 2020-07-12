@@ -96,30 +96,12 @@ public interface CptmpUserMapper {
     CptmpUser findUserByUsername(String username);
 
     @Select("select id, " + COLUMNS + " from cptmp_user where id = #{userID} and gmt_deleted is null")
-    @Results(id = "user", value = {
-            @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
-            @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
-            @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
-            @Result(column = "gmt_deleted", property = "gmtDeleted", jdbcType = JdbcType.DATE),
-            @Result(column = "introduction", property = "introduction", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "uk_email", property = "email", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "phone_number", property = "phoneNumber", jdbcType = JdbcType.DECIMAL),
-            @Result(column = "gender", property = "gender", jdbcType = JdbcType.TINYINT),
-            @Result(column = "avatar", property = "avatar", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "idx_name", property = "name", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "uk_common_id", property = "commonId", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "idx_organization_id", property = "organizationId", jdbcType = JdbcType.BIGINT),
-            @Result(column = "uk_username", property = "username", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "idx_password", property = "password", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "idx_nickname", property = "nickname", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "idx_role_name", property = "roleName", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "enabled", property = "enabled", jdbcType = JdbcType.TINYINT),
-            @Result(column = "account_non_expired", property = "accountNonExpired", jdbcType = JdbcType.TINYINT),
-            @Result(column = "credentials_non_expired", property = "credentialsNonExpired", jdbcType = JdbcType.TINYINT),
-            @Result(column = "account_non_locked", property = "accountNonLocked", jdbcType = JdbcType.TINYINT),
-
-    })
+    @ResultMap("user")
     CptmpUser findUserById(BigInteger userId);
+
+    @Select("select id, " + COLUMNS + " from cptmp_user where uk_email = #{email} and gmt_deleted is null")
+    @ResultMap("user")
+    CptmpUser findUserByEmail(String email);
 
     @Select("select idx_password from cptmp_user where uk_username = #{username} and gmt_deleted is null")
     String findPasswordByUsername(String username);
