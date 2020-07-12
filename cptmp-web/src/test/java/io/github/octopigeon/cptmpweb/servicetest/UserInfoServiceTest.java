@@ -57,7 +57,7 @@ public class UserInfoServiceTest extends BaseTest {
         cptmpUser.setAccountNonExpired(true);
         cptmpUser.setCredentialsNonExpired(true);
         cptmpUser.setAccountNonLocked(true);
-        cptmpUserMapper.removeAllUsers();
+        cptmpUserMapper.removeAllUsersTest();
         // 测试老师
         cptmpUserMapper.addUser(cptmpUser);
         SchoolInstructor schoolInstructor = new SchoolInstructor();
