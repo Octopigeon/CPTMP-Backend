@@ -15,11 +15,11 @@ import java.util.Date;
 
 /**
  * @author anlow
- * @version 1.2
+ * @version 2.0
  * @date 2020/7/7
  *
  * Gravatar 支持
- * @last-check-in Eric_Lian
+ * @last-check-in 李国鹏
  * @date 2020/7/11
  */
 @Data
@@ -31,6 +31,10 @@ public class CptmpUser {
     private Date gmtCreate;
     private String username;
     private String nickname;
+    private String name;
+    private String commonId;
+    private BigInteger organizationId;
+
 
     @Setter(AccessLevel.PRIVATE)
     private String password;
@@ -52,6 +56,7 @@ public class CptmpUser {
     private Boolean accountNonLocked;
     /** nullable */
     private Date gmtModified;
+    private Date gmtDeleted;
     /** nullable */
     private String introduction;
     /** nullable */
@@ -65,8 +70,7 @@ public class CptmpUser {
     /** nullable */
     private String avatar;
 
-    /** nullable */
-    private String invitationCode;
+
 
     public CptmpUser updatePassword(String password) {
         this.password = ENCODER.encode(password);
