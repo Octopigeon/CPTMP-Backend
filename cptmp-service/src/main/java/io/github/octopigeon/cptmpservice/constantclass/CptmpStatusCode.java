@@ -1,14 +1,15 @@
 package io.github.octopigeon.cptmpservice.constantclass;
 
 /**
- * @author anlow
+ * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/7
- * @last-check-in anlow
+ * @last-check-in 魏啸冲
  * @date 2020/7/12
  */
 public class CptmpStatusCode {
 
+    /** 成功信息 */
     public static int OK = 0;
 
     /** 登录验证失败 */

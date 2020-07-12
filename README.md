@@ -11,7 +11,7 @@ College Practice Training Management Platform
 + cptmp-web包括controller类，向前端提供各种api，调用service中封装的方法实现相应的功能
 + 三个子模块间的依赖关系为：web->service->dao
 
-# API说明
+# 目前已和前端对接的API说明
 更新时间：2020/7/9
 
 # 登录/登出
@@ -156,24 +156,28 @@ College Practice Training Management Platform
 
 # RegisterController
 ## /api/user/enterprise-admin
+## /api/user/teacher
+## /api/user/student
 + HTTP方法：POST
 + 返回类型：json
-+ 说明：导入注册企业用户
++ 说明：导入注册各种用户，**特别注意：超管注册企业账户需要将自己的orgId传给后端（因为超管和企业管理员都是属于企业的，是同一个组织）**，而注册老师和学生则是传相应的学校id
 + 调用实例：
 ``` 
 // 成功
 [
     {
-        "username": "test-123456",
-        "name": "wxc",
+        "username": "test-3241",
+        "name": "crl",
         "password": "123",
-        "email": "111@qq.com"
+        "email": "4132ssdf5@qq.com",
+        "organization_id": 2
     },
     {
-        "username": "test-123457",
-        "name": "lgp",
+        "username": "test-5411256",
+        "name": "sah",
         "password": "123",
-        "email": "222@qq.com"
+        "email": "222sf552@qq.com",
+        "organization_id": 2
     }
 ]
 // 失败
@@ -182,19 +186,22 @@ College Practice Training Management Platform
         "username": "test-123456",
         "name": "wxc",
         "password": "123",
-        "email": "111@qq.com"
+        "email": "111@qq.com"，
+        "organization_id": 2
     },
     {
         "username": "test-123457",
         "name": "lgp",
         "password": "123",
-        "email": "222@qq.com"
+        "email": "222@qq.com"，
+        "organization_id": 2
     },
     {
         "username": "test-123457",
         "name": "ty",
         "password": "123",
-        "email": "222@qq.com"
+        "email": "222@qq.com"，
+        "organization_id": 2
     }
 ]
 ```

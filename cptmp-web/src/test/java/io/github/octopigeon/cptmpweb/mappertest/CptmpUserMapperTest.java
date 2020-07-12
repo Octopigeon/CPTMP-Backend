@@ -12,11 +12,11 @@ import java.math.BigInteger;
 import java.util.Date;
 
 /**
- * @author anlow
+ * @author 魏啸冲
  * @version 2.0
  * @date 2020/7/8
  *
- * @last-check-in 李国鹏
+ * @last-check-in 魏啸冲
  * @date 2020/7/12
  */
 public class CptmpUserMapperTest extends BaseTest {
@@ -26,6 +26,9 @@ public class CptmpUserMapperTest extends BaseTest {
 
     @Test
     public void test() {
+        /**
+         * 设置数据
+         */
         CptmpUser cptmpUser1 = new CptmpUser();
         cptmpUser1.setGmtCreate(new Date());
         cptmpUser1.setUsername("test1");
@@ -34,7 +37,6 @@ public class CptmpUserMapperTest extends BaseTest {
         cptmpUser1.setOrganizationId(BigInteger.valueOf(1));
         cptmpUser1.updatePassword("123456");
         cptmpUser1.setEmail("111@11.com");
-        cptmpUser1.setNickname("aaa");
         cptmpUser1.setRoleName("ROLE_SCHOOL_TEACHER");
         cptmpUser1.setEnabled(true);
         cptmpUser1.setAccountNonExpired(true);
@@ -49,26 +51,24 @@ public class CptmpUserMapperTest extends BaseTest {
         cptmpUser2.setOrganizationId(BigInteger.valueOf(2));
         cptmpUser2.updatePassword("123456");
         cptmpUser2.setEmail("121@11.com");
-        cptmpUser2.setNickname("sfd");
         cptmpUser2.setRoleName("ROLE_SCHOOL_ADMIN");
         cptmpUser2.setEnabled(true);
         cptmpUser2.setAccountNonExpired(true);
         cptmpUser2.setCredentialsNonExpired(true);
         cptmpUser2.setAccountNonLocked(true);
 
+        /**
+         * 添加
+         */
         cptmpUserMapper.removeAllUsersTest();
         cptmpUserMapper.addUser(cptmpUser1);
         cptmpUserMapper.addUser(cptmpUser2);
-//        Assertions.assertEquals(2, cptmpUserMapper.findAllUsers().size());
-//
-//        cptmpUserMapper.removeUserById(cptmpUserMapper.findAllUsers().get(0).getId(),new Date());
-//        Assertions.assertEquals(1, cptmpUserMapper.findAllUsers().size());
-//
-//        cptmpUserMapper.updateUserByUserName("test2",new Date(),"test3","test2", BigDecimal.valueOf(11),true, "test3","test3","test2","test2","test3","test3",true,
-//                true,true,true);
-//        Assertions.assertEquals("test3",cptmpUserMapper.findUserByUsername("test2").getIntroduction());
+        Assertions.assertEquals(2, cptmpUserMapper.findAllUsers().size());
 
-//        cptmpUserMapper.removeAllUsers(new Date());
-//        Assertions.assertEquals(0,cptmpUserMapper.findAllUsers().size());
+        cptmpUserMapper.removeUserById(cptmpUserMapper.findAllUsers().get(0).getId(),new Date());
+        Assertions.assertEquals(1, cptmpUserMapper.findAllUsers().size());
+
+        cptmpUserMapper.removeAllUsers(new Date());
+        Assertions.assertEquals(0,cptmpUserMapper.findAllUsers().size());
     }
 }

@@ -99,7 +99,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
             parsedUserInfo.setOrganizationId(organizationId);
             CptmpUser user = userInfoToUser(parsedUserInfo);
             cptmpUserMapper.addUser(user);
-            emailService.sendSimpleMessage(user.getEmail(), emailTemplate.ACTIVATE_SUBJECT, emailTemplate.ACTIVATE_TEXT);
+            // emailService.sendSimpleMessage(user.getEmail(), emailTemplate.ACTIVATE_SUBJECT, emailTemplate.ACTIVATE_TEXT);
         }catch (Exception e){
             throw new Exception(e.getMessage());
         }
@@ -118,7 +118,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
             CptmpUser user = userInfoToUser(parsedUserInfo);
             //添加用户
             cptmpUserMapper.addUser(user);
-            emailService.sendSimpleMessage(user.getEmail(), emailTemplate.ACTIVATE_SUBJECT, emailTemplate.ACTIVATE_TEXT);
+            // emailService.sendSimpleMessage(user.getEmail(), emailTemplate.ACTIVATE_SUBJECT, emailTemplate.ACTIVATE_TEXT);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -150,7 +150,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         try {
             CptmpUser user = cptmpUserMapper.findUserByUsername(userInfo.getUsername());
             BaseUserInfoDTO baseUserInfo = completeUserInfo(user, userInfo);
-            cptmpUserMapper.updateUserInfoByUsername(baseUserInfo.getUsername(), baseUserInfo.getNickname(),
+            cptmpUserMapper.updateUserInfoByUsername(baseUserInfo.getUsername(),
                     new Date(), baseUserInfo.getIntroduction(), baseUserInfo.getGender());
             return true;
         } catch (Exception ex) {
@@ -282,7 +282,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         baseUserInfoDTO.setGender(cptmpUser.getGender());
         baseUserInfoDTO.setIntroduction(cptmpUser.getIntroduction());
         baseUserInfoDTO.setName(cptmpUser.getName());
-        baseUserInfoDTO.setNickname(cptmpUser.getNickname());
         baseUserInfoDTO.setOrganizationId(cptmpUser.getOrganizationId());
         baseUserInfoDTO.setPhoneNumber(cptmpUser.getPhoneNumber());
         baseUserInfoDTO.setRoleName(cptmpUser.getRoleName());
@@ -300,9 +299,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         userInfo.setPassword(userInfo.getPassword());
         if (userInfo.getUsername() == null) {
             userInfo.setUsername(productUserName(userInfo));
-        }
-        if (userInfo.getNickname() == null) {
-            userInfo.setNickname(productNickname());
         }
         if (!validateEmailFormat(userInfo.getEmail())) {
             throw new ValueException("E-mail format is invalidation");
@@ -367,7 +363,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         user.setPhoneNumber(userInfo.getPhoneNumber());
         user.setGender(userInfo.getGender());
         user.setUsername(userInfo.getUsername());
-        user.setNickname(userInfo.getNickname());
         user.setGmtCreate(new Date());
         user.setEnabled(false);
         user.setAccountNonExpired(true);

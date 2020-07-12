@@ -1,8 +1,6 @@
 package io.github.octopigeon.cptmpdao.mapper;
 
 import io.github.octopigeon.cptmpdao.model.DailyRecord;
-import io.github.octopigeon.cptmpdao.model.EnterpriseAdmin;
-import lombok.Data;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Repository;
