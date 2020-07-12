@@ -4,7 +4,7 @@ import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.mapper.PasswordResetTokenMapper;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpdao.model.PasswordResetToken;
-import io.github.octopigeon.cptmpservice.service.PasswordResetService;
+import io.github.octopigeon.cptmpservice.service.passwordtoken.PasswordResetService;
 import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author anlow
