@@ -42,29 +42,17 @@ class ActivityRecordMapperTest extends BaseTest {
         activityRecord2.setState(2);
         activityRecord2.setEvent("test2");
 
-        activityRecordMapper.removeAllActivityRecord();
-        List<ActivityRecord> activityRecords;
+        activityRecordMapper.removeActivityRecordByAll(new Date());
         activityRecordMapper.addActivityRecord(activityRecord);
         activityRecordMapper.addActivityRecord(activityRecord2);
-        activityRecords=activityRecordMapper.findAllActivityRecord();
-        Assertions.assertEquals(2,activityRecords.size());
+        Assertions.assertEquals(2,activityRecordMapper.findAllActivityRecord().size());
 
-        activityRecords=activityRecordMapper.findActivityRecordByUserId(BigInteger.valueOf(1));
-        Assertions.assertEquals("test1",activityRecords.get(0).getEvent());
-        Assertions.assertEquals(1,activityRecords.size());
+        Assertions.assertEquals("test1",activityRecordMapper.findActivityRecordByUserId(BigInteger.valueOf(1)).get(0).getEvent());
 
-//        activityRecordMapper.updateActivityRecordByUserId(BigInteger.valueOf(1),BigInteger.valueOf(1),new Date(),BigInteger.valueOf(1),"更新完成");
-//        activityRecordMapper.removeActivityRecordByUserId(BigInteger.valueOf(1));
-//        int n=1;
-//        if(activityRecordMapper.findActivityRecordByUserId(BigInteger.valueOf(1))==null){
-//            n=0;
-//        }
-//        Assertions.assertEquals(0,n);
-//        activityRecordMapper.removeActivityRecordByAll();
-//        int m=1;
-//        if(activityRecordMapper.findActivityRecordByUserId(BigInteger.valueOf(1))==null){
-//            m=0;
-//        }
-//        Assertions.assertEquals(0,m);
+//        activityRecordMapper.removeActivityRecordById(activityRecordMapper.findAllActivityRecord().get(0).getId(),new Date());
+//        Assertions.assertEquals(1,activityRecordMapper.findAllActivityRecord().size());
+//
+//        activityRecordMapper.updateActivityRecordByUserId(BigInteger.valueOf(2),BigInteger.valueOf(2),BigInteger.valueOf(2),new Date(),BigInteger.valueOf(2),"test2");
+//        Assertions.assertEquals("test2",activityRecordMapper.findActivityRecordByUserId(BigInteger.valueOf(2)).get(0).getEvent());
     }
 }

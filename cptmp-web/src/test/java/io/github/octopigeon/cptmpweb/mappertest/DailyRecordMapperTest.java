@@ -49,26 +49,23 @@ public class DailyRecordMapperTest extends BaseTest {
         dailyRecord2.setContent("test2");
 
 
-        dailyRecordMapper.removeAllDailyRecord();
+        dailyRecordMapper.removeAllDailyRecord(new Date());
         dailyRecordMapper.addDailyRecord(dailyRecord1);
         dailyRecordMapper.addDailyRecord(dailyRecord2);
+        Assertions.assertEquals(2,dailyRecordMapper.findAllDailyRecord().size());
 
-        List<DailyRecord> dailyRecords;
-        dailyRecords=dailyRecordMapper.findAllDailyRecord();
-        Assertions.assertEquals(2,dailyRecords.size());
+        dailyRecordMapper.removeDailyRecordByUserId(BigInteger.valueOf(1),new Date());
+        Assertions.assertEquals(1,dailyRecordMapper.findAllDailyRecord().size());
 
-        dailyRecords=dailyRecordMapper.findDailyRecordByUserId(BigInteger.valueOf(1));
-        Assertions.assertEquals("test1",dailyRecords.get(0).getTitle());
-        Assertions.assertEquals(1,dailyRecords.size());
-//
-//        dailyRecordMapper.removeDailyRecordByUserId(BigInteger.valueOf(1));
-//        dailyRecords=dailyRecordMapper.findAllDailyRecord();
-//        Assertions.assertEquals(1,dailyRecords.size());
-//
-//        dailyRecordMapper.updateDailyRecordByUserId(new Date(),"test","lgp",BigInteger.valueOf(2), BigInteger.valueOf(2), "C://",0);
-//        dailyRecords=dailyRecordMapper.findDailyRecordByUserId(BigInteger.valueOf(2));
-//        Assertions.assertEquals("lgp",dailyRecords.get(0).getContent());
+        dailyRecordMapper.addDailyRecord(dailyRecord1);
+        dailyRecordMapper.removeDailyRecordByTeamId(BigInteger.valueOf(1),new Date());
+        Assertions.assertEquals(1,dailyRecordMapper.findAllDailyRecord().size());
 
+        dailyRecordMapper.updateDailyRecordByUserId(BigInteger.valueOf(2),new Date(),BigInteger.valueOf(2),"test3","test3",2);
+        Assertions.assertEquals("test3",dailyRecordMapper.findDailyRecordByTeamId(BigInteger.valueOf(2)).get(0).getContent());
+
+        dailyRecordMapper.updateDailyRecordByTeamId(BigInteger.valueOf(2),new Date(),BigInteger.valueOf(2),"test4","test4",2);
+        Assertions.assertEquals("test4",dailyRecordMapper.findDailyRecordByTeamId(BigInteger.valueOf(2)).get(0).getContent());
 
 
 

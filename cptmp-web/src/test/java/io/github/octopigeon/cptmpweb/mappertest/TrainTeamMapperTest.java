@@ -48,16 +48,16 @@ public class TrainTeamMapperTest extends BaseTest {
         trainTeam2.setTeamGrade(BigDecimal.valueOf(90.0));
 
 
-        trainTeamMapper.removeAllTrainTeam();
+        trainTeamMapper.removeAllTrainTeam(new Date());
         trainTeamMapper.addTrainTeam(trainTeam1);
         trainTeamMapper.addTrainTeam(trainTeam2);
         Assertions.assertEquals(2,trainTeamMapper.findAllTrainTeam().size());
 
-        trainTeamMapper.removeTrainTeamByTeamName("test1");
+        trainTeamMapper.removeTrainTeamByTeamName("test1",new Date());
         Assertions.assertEquals(1,trainTeamMapper.findAllTrainTeam().size());
 
-        trainTeamMapper.updateTrainTeamByTeamName(new Date(), BigInteger.valueOf(2), "test2",BigInteger.valueOf(3),BigInteger.valueOf(3),BigInteger.valueOf(3),"http",BigDecimal.valueOf(99));
-        Assertions.assertEquals(BigInteger.valueOf(2),trainTeamMapper.findAllTrainTeam().get(0).getTrainProjectId());
+        trainTeamMapper.updateTrainTeamByTeamName("test2",new Date(), BigInteger.valueOf(2), BigInteger.valueOf(3),BigInteger.valueOf(3),BigInteger.valueOf(3),BigDecimal.valueOf(99));
+        Assertions.assertEquals(BigInteger.valueOf(3),trainTeamMapper.findAllTrainTeam().get(0).getPoUserId());
 
 
     }
