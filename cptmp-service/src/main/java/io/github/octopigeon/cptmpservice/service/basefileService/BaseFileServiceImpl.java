@@ -36,7 +36,8 @@ public class BaseFileServiceImpl implements BaseFileService {
     public BaseFileServiceImpl(FileProperties fileProperties) throws Exception {
 
         String path = fileProperties.getUploadDir();
-        this.domain = fileProperties.getDomain();
+        // this.domain = fileProperties.getDomain();
+        this.domain = "";
         this.publicFileStorageLocation = Paths.get(path, "storage").toAbsolutePath().normalize();
         this.privateFileStorageLocation = Paths.get(path, "private").toAbsolutePath().normalize();
         try {
