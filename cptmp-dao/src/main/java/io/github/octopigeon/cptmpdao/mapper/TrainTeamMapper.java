@@ -13,11 +13,11 @@ import java.util.List;
 
 /**
  * @author 李国鹏
- * @version 1.2
+ * @version 2.0
  * @date 2020/7/9
  * <p>
  * last-check-in 李国鹏
- * @date 2020/7/10
+ * @date 2020/7/12
  */
 @Repository
 @Mapper
@@ -41,14 +41,14 @@ public interface TrainTeamMapper {
      * @param gmtDeleted 删除时间
      */
     @Deprecated
-    @Delete("update train_team set gmt_deleted = #{gmtDeleted}")
+    @Update("update train_team set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
     void removeAllTrainTeam(Date gmtDeleted);
     /**
      * 根据id删除对应的团队
      * @param id：团队id
      * @param gmtDeleted 删除日期
      */
-    @Delete("update train_team set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
+    @Update("update train_team set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
     void removeTrainTeamById(BigInteger id,Date gmtDeleted);
 
     /**
@@ -56,7 +56,7 @@ public interface TrainTeamMapper {
      * @param teamName 团队名称
      * @param gmtDeleted 删除日期
      */
-    @Delete("update train_team set gmt_deleted = #{gmtDeleted} where idx_team_name = #{teamName} and gmt_deleted is null")
+    @Update("update train_team set gmt_deleted = #{gmtDeleted} where idx_team_name = #{teamName} and gmt_deleted is null")
     void removeTrainTeamByTeamName(String teamName,Date gmtDeleted);
 
     /**

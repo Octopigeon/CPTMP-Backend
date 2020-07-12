@@ -13,7 +13,7 @@ import java.util.List;
 
 /**
  * @author 李国鹏
- * @version 2.1
+ * @version 2.0
  * @date 2020/7/8
  * <p>
  * last-check-in 李国鹏
@@ -37,7 +37,7 @@ public interface DailyRecordMapper {
      * @param gmtDeleted 删除日期
      */
     @Deprecated
-    @Delete("update daily_record set gmt_deleted = #{gmtDeleted}")
+    @Update("update daily_record set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
     void removeAllDailyRecord(Date gmtDeleted);
 
     /**
@@ -45,7 +45,7 @@ public interface DailyRecordMapper {
      * @param id：日志id
      * @param gmtDeleted 删除日期
      */
-    @Delete("update daily_record set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
+    @Update("update daily_record set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
     void removeDailyRecordById(BigInteger id,Date gmtDeleted);
 
     /**
@@ -53,7 +53,7 @@ public interface DailyRecordMapper {
      * @param userId 用户id
      * @param gmtDeleted 删除日期
      */
-    @Delete("update daily_record set gmt_deleted = #{gmtDeleted} where idx_user_id = #{userId} and gmt_deleted is null")
+    @Update("update daily_record set gmt_deleted = #{gmtDeleted} where idx_user_id = #{userId} and gmt_deleted is null")
     void removeDailyRecordByUserId(BigInteger userId,Date gmtDeleted);
 
     /**
@@ -61,7 +61,7 @@ public interface DailyRecordMapper {
      * @param teamId 团队id
      * @param gmtDeleted 删除日期
      */
-    @Delete("update daily_record set gmt_deleted = #{gmtDeleted} where idx_team_id = #{teamId} and gmt_deleted is null")
+    @Update("update daily_record set gmt_deleted = #{gmtDeleted} where idx_team_id = #{teamId} and gmt_deleted is null")
     void removeDailyRecordByTeamId(BigInteger teamId,Date gmtDeleted);
 
     /**
