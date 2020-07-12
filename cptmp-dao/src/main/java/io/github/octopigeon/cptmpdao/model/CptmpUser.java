@@ -30,7 +30,6 @@ public class CptmpUser {
     private BigInteger id;
     private Date gmtCreate;
     private String username;
-    private String nickname;
     private String name;
     private String commonId;
     private BigInteger organizationId;
