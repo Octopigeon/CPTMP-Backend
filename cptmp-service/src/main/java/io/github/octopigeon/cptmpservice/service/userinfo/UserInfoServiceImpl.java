@@ -206,14 +206,14 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      * 上传用户头像
      *
      * @param file   文件
-     * @param userId 用户id
+     * @param username 用户名
      * @return 头像链接
      */
     @Override
-    public String uploadAvatar(MultipartFile file, BigInteger userId) throws Exception {
+    public String uploadAvatar(MultipartFile file, String username) throws Exception {
         try{
             FileDTO fileInfo = storePublicFile(file);
-            cptmpUserMapper.updateAvatarById(userId, new Date(), fileInfo.getFilePath());
+            cptmpUserMapper.updateAvatarByUsername(username, new Date(), fileInfo.getFilePath());
             return fileInfo.getFilePath();
         } catch (Exception e) {
             throw new Exception("Avatar upload failed!");
@@ -224,15 +224,15 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      * 上传人脸数据
      *
      * @param file   人脸图片
-     * @param userId 用户id
+     * @param username 用户名
      */
     @Override
-    public void uploadFace(MultipartFile file, BigInteger userId) throws Exception {
+    public void uploadFace(MultipartFile file, String username) throws Exception {
         try{
             FileDTO fileInfo = storePublicFile(file);
-            CptmpUser user = cptmpUserMapper.findUserById(userId);
+            CptmpUser user = cptmpUserMapper.findUserByUsername(username);
             if (RoleEnum.ROLE_STUDENT_MEMBER.name().equals(user.getRoleName())) {
-                schoolStudentMapper.updateFaceInfoByUserId(userId, new Date(), fileInfo.getFilePath());
+                schoolStudentMapper.updateFaceInfoByUserId(user.getId(), new Date(), fileInfo.getFilePath());
             }
         } catch (Exception e) {
             throw new Exception("Face info upload failed!");
