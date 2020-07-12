@@ -211,8 +211,8 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     @Override
     public String uploadAvatar(MultipartFile file, BigInteger userId) throws Exception {
-        try {
-            FileDTO fileInfo = storeFile(file);
+        try{
+            FileDTO fileInfo = storePublicFile(file);
             cptmpUserMapper.updateAvatarById(userId, new Date(), fileInfo.getFilePath());
             return fileInfo.getFilePath();
         } catch (Exception e) {
@@ -228,8 +228,8 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     @Override
     public void uploadFace(MultipartFile file, BigInteger userId) throws Exception {
-        try {
-            FileDTO fileInfo = storeFile(file);
+        try{
+            FileDTO fileInfo = storePublicFile(file);
             CptmpUser user = cptmpUserMapper.findUserById(userId);
             if (RoleEnum.ROLE_STUDENT_MEMBER.name().equals(user.getRoleName())) {
                 schoolStudentMapper.updateFaceInfoByUserId(userId, new Date(), fileInfo.getFilePath());

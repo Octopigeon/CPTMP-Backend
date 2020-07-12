@@ -2,12 +2,9 @@ package io.github.octopigeon.cptmpservice.service.attachmentfile;
 
 import io.github.octopigeon.cptmpdao.mapper.AttachmentFileMapper;
 import io.github.octopigeon.cptmpdao.model.AttachmentFile;
-import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
-import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 
@@ -19,40 +16,19 @@ import java.math.BigInteger;
  * @date 2020/7/11
  */
 @Service
-public class AttachmentFileServiceImpl extends BaseFileServiceImpl implements AttachmentFileService {
+public class AttachmentFileServiceImpl implements AttachmentFileService {
 
     @Autowired
     private AttachmentFileMapper attachmentFileMapper;
 
-    public AttachmentFileServiceImpl(FileProperties fileProperties) throws Exception {
-        super(fileProperties);
-    }
-
-    /**
-     * 移除文件
-     * @param fileName 文件名
-     * @throws Exception
-     */
-    @Override
-    public void remove(String fileName) throws Exception {
-        if(attachmentFileMapper.findAttachmentFileByfileName(fileName) != null)
-        {
-            // 删除索引
-            attachmentFileMapper.removeAttachmentFile(fileName);
-        }else {
-            throw new Exception("File not found " + fileName);
-        }
-    }
-
     /**
      * 添加文件
-     * @param file 文件
+     * @param fileInfo 文件dto
      * @throws Exception
      */
     @Override
-    public void add(MultipartFile file) throws Exception {
+    public void add(FileDTO fileInfo) throws Exception {
         try{
-            FileDTO fileInfo = storeFile(file);
             AttachmentFile attachmentFile = new AttachmentFile();
             attachmentFile.setFileName(fileInfo.getFileName());
             attachmentFile.setFilePath(fileInfo.getFilePath());
@@ -64,5 +40,46 @@ public class AttachmentFileServiceImpl extends BaseFileServiceImpl implements At
         }catch (Exception e){
             throw new Exception("文件添加失败");
         }
+    }
+
+    /**
+     * 移除数据
+     *
+     * @param dto ：dto实体
+     */
+    @Override
+    public void remove(FileDTO dto) throws Exception {
+        String fileName = dto.getFileName();
+        if(attachmentFileMapper.findAttachmentFileByfileName(fileName) != null)
+        {
+            // 删除索引
+            attachmentFileMapper.removeAttachmentFile(fileName);
+        }else {
+            throw new Exception("File not found " + fileName);
+        }
+    }
+
+    /**
+     * 更新的文件实体
+     *
+     * @param dto
+     * @return 是否删除成功
+     */
+    @Override
+    @Deprecated
+    public Boolean modify(FileDTO dto) throws Exception {
+        return null;
+    }
+
+    /**
+     * 基础查询服务，每个表都需要支持通过id查询
+     *
+     * @param id 查询
+     * @return dto
+     */
+    @Override
+    @Deprecated
+    public FileDTO findById(BigInteger id) throws Exception {
+        return null;
     }
 }
