@@ -24,7 +24,7 @@ import java.math.BigDecimal;
  * @date 2020/7/10
  * 用于提供各种与用户信息交互的接口
  * @last-check-in anlow
- * @date 2020/7/11
+ * @date 2020/7/12
  */
 @RestController
 public class UserDetailsController {
