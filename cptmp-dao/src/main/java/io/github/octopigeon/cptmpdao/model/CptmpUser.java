@@ -60,7 +60,7 @@ public class CptmpUser {
      * 0-female, 1-male
      * nullable
      */
-    private Boolean male;
+    private Boolean gender;
 
     /** nullable */
     private String avatar;

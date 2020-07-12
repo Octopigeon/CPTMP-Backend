@@ -110,7 +110,7 @@ College Practice Training Management Platform
 ``` 
 {
     "status": 0,
-    "date": "2020-07-11T10:03:57.710+00:00",
+    "date": "2020-07-11T18:12:16.758+00:00",
     "msg": "success",
     "data": {
         "email": "123@qq.com",
@@ -118,8 +118,8 @@ College Practice Training Management Platform
         "username": "test",
         "avatar": "124124321",
         "phone_number": 31241234,
-        "male": true,
-        "introduction": "asdasd",
+        "gender": true,
+        "introduction": "我是大鸽",
         "user_id": 4,
         "name": "wxc",
         "common_id": "123123"
@@ -151,5 +151,69 @@ College Practice Training Management Platform
     "status": 9,
     "date": "2020-07-11T07:58:48.703+00:00",
     "msg": "wrong origin password"
+}
+```
+
+# RegisterController
+## /api/user/enterprise-admin
++ HTTP方法：POST
++ 返回类型：json
++ 说明：导入注册企业用户
++ 调用实例：
+``` 
+// 成功
+[
+    {
+        "username": "test-123456",
+        "name": "wxc",
+        "password": "123",
+        "email": "111@qq.com"
+    },
+    {
+        "username": "test-123457",
+        "name": "lgp",
+        "password": "123",
+        "email": "222@qq.com"
+    }
+]
+// 失败
+[
+    {
+        "username": "test-123456",
+        "name": "wxc",
+        "password": "123",
+        "email": "111@qq.com"
+    },
+    {
+        "username": "test-123457",
+        "name": "lgp",
+        "password": "123",
+        "email": "222@qq.com"
+    },
+    {
+        "username": "test-123457",
+        "name": "ty",
+        "password": "123",
+        "email": "222@qq.com"
+    }
+]
+```
++ 返回json：
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-12T01:48:09.955+00:00",
+    "msg": "all set",
+    "data": null
+}
+// 失败
+{
+    "status": 11,
+    "date": "2020-07-12T01:48:09.955+00:00",
+    "msg": "register failed",
+    "data": [
+        2
+    ]
 }
 ```

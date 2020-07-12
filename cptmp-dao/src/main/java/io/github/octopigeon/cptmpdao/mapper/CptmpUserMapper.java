@@ -26,7 +26,7 @@ public interface CptmpUserMapper {
             "gender, avatar, uk_username, idx_password, idx_role_name, enabled, " +
             "account_non_expired, credentials_non_expired, account_non_locked, invitation_code, idx_nickname";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{introduction}, #{email}, #{phoneNumber}, " +
-            "#{male}, #{avatar}, #{username}, #{password}, #{roleName}, #{enabled}, " +
+            "#{gender}, #{avatar}, #{username}, #{password}, #{roleName}, #{enabled}, " +
             "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}, #{invitationCode}, #{nickname}";
     String UPDATE_HEADER = "update cptmp_user set ";
     String UPDATE_TAIL_USERNAME = " where (uk_username = #{username})";
@@ -50,7 +50,7 @@ public interface CptmpUserMapper {
             @Result(column = "introduction", property = "introduction", jdbcType = JdbcType.VARCHAR),
             @Result(column = "uk_email", property = "email", jdbcType = JdbcType.VARCHAR),
             @Result(column = "phone_number", property = "phoneNumber", jdbcType = JdbcType.DECIMAL),
-            @Result(column = "gender", property = "male", jdbcType = JdbcType.TINYINT),
+            @Result(column = "gender", property = "gender", jdbcType = JdbcType.TINYINT),
             @Result(column = "avatar", property = "avatar", jdbcType = JdbcType.VARCHAR),
             @Result(column = "uk_username", property = "username", jdbcType = JdbcType.VARCHAR),
             @Result(column = "idx_password", property = "password", jdbcType = JdbcType.VARCHAR),
@@ -78,6 +78,10 @@ public interface CptmpUserMapper {
     @Select("select id, " + COLUMNS + " from cptmp_user")
     @ResultMap(value = "user")
     List<CptmpUser> findAllUsers();
+
+    @Select("select id, " + COLUMNS + " from cptmp_user where id = #{userId}")
+    @ResultMap("user")
+    CptmpUser findUserById(BigInteger userId);
 
     @Update(UPDATE_HEADER + "enabled = #{enabled}" + UPDATE_TAIL_USERNAME)
     void updateEnabledByUsername(String username, Boolean enabled);
@@ -107,10 +111,9 @@ public interface CptmpUserMapper {
     @Update(UPDATE_HEADER + "nickname = #{nickname},gmt_modified = #{gmtModified},introduction = #{introduction},gender = #{male}" + UPDATE_TAIL_USERNAME)
     void updateUserInfoByUsername(String username, String nickname, Date gmtModified, String introduction, boolean male);
 
-    @Update(UPDATE_HEADER + "idx_password = #{password}" + UPDATE_TAIL_USERNAME)
-    void updatePasswordByUsername(String username, String password);
+    @Update(UPDATE_HEADER + "gmt_modified = #{gmtModified}, idx_password = #{password}" + UPDATE_TAIL_USERNAME)
+    void updatePasswordByUsername(String username, Date gmtModified, String password);
 
-    @Update(UPDATE_HEADER + "gmt_modified = #{gmtModified}, introduction = #{introduction}" + UPDATE_TAIL_USERNAME)
-    void updateBasicInfoByUsername(Date gmtModified, String introduction, String username);
-
+    @Update(UPDATE_HEADER + "gmt_modified = #{gmtModified}, avatar = #{avatar} where id = #{userId}")
+    void updateAvatarById(BigInteger userId, Date gmtModified, String filePath);
 }

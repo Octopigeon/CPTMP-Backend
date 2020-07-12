@@ -4,11 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.github.octopigeon.cptmpservice.CptmpStatusCode;
-import io.github.octopigeon.cptmpservice.dto.BaseUserInfoDTO;
-import io.github.octopigeon.cptmpservice.service.ModifyInfoServiceImpl;
-import io.github.octopigeon.cptmpservice.service.UserInfoService;
+import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
+import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
+import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +34,6 @@ public class UserDetailsController {
     @Autowired
     private UserInfoService userInfoService;
 
-    /** 后面重构service的时候，将此服务下的方法移除 */
-    @Autowired
-    private ModifyInfoServiceImpl modifyInfoService;
-
     /**
      * 根据用户名，得到用户基本信息
      * @return 返回用户基本信息json
@@ -50,19 +46,33 @@ public class UserDetailsController {
         return respBean;
     }
 
+    /**
+     * 修改性别，简介信息
+     * @param json 包含性别和简介的json
+     * @return ok-成功 error-失败
+     */
     @PutMapping("/api/user/me/basic-info")
     public RespBean updateMyBasicInfo(@RequestBody String json) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO() {
         };
+        // TODO 等数据库重构，把name加进BaseUserInfoDTO中
+        String name = objectMapper.readValue(json, ObjectNode.class).get("name").asText();
+        Boolean gender = objectMapper.readValue(json, ObjectNode.class).get("gender").asBoolean();
         String introduction = objectMapper.readValue(json, ObjectNode.class).get("introduction").asText();
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        if (modifyInfoService.updateUserBasicInfo(username, introduction)) {
-            return RespBean.ok("update basic info successfully");
-        } else {
-            return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "update basic info failed");
+        baseUserInfoDTO.setUsername(username);
+        baseUserInfoDTO.setGender(gender);
+        baseUserInfoDTO.setIntroduction(introduction);
+        try {
+            if (userInfoService.modify(baseUserInfoDTO)) {
+                return RespBean.ok("update basic info successfully");
+            } else {
+                return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "update basic info failed");
+            }
+        } catch (Exception e) {
+            return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "modify info failed");
         }
-
     }
 
     /**
