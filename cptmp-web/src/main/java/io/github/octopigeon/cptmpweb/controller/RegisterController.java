@@ -43,8 +43,37 @@ public class RegisterController {
     @Secured(CptmpRole.ROLE_SYSTEM_ADMIN)
     @PostMapping("/api/user/enterprise-admin")
     public RespBeanWithFailedRegisterList registerEnterpriseAdmin(@RequestBody String json) throws JsonProcessingException {
+        return doRegister(json, CptmpRole.ROLE_ENTERPRISE_ADMIN);
+    }
+
+    /**
+     * 企业管理员可以导入教师账号
+     * @param json 其中orgId是各个学校的id，因此必须先创建学校，
+     *             才能导入其中的教师和学生
+     * @return 注册失败列表
+     */
+    @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
+    @PostMapping("/api/user/teacher")
+    public RespBeanWithFailedRegisterList registerTeacher(@RequestBody String json) throws JsonProcessingException {
+       return doRegister(json, CptmpRole.ROLE_SCHOOL_TEACHER);
+    }
+
+    @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
+    @PostMapping("/api/user/student")
+    public RespBeanWithFailedRegisterList registerStudent(@RequestBody String json) throws JsonProcessingException {
+        return doRegister(json, CptmpRole.ROLE_STUDENT_MEMBER);
+    }
+
+    /**
+     * 解析json，根据角色名注册用户
+     * @param json 前端发来的注册json，包含username，password，email，name，orgId五个字段
+     * @param roleName 设定的角色名
+     * @return 包含注册失败条目列表的信息
+     */
+    private RespBeanWithFailedRegisterList doRegister(String json, String roleName) throws JsonProcessingException {
         // 解析前端发来的一个json数组，每项包含username，name，password，email四项
-        // common_id由用户名拆解得到，organization_id由系统管理员的organization_id决定（都为企业）
+        // common_id由用户名拆解得到，organization_id由系统管理员的organization_id决定（都为企业），对于学生和老师
+        // 则为学校对应的id
         ObjectMapper objectMapper = new ObjectMapper();
         ReqBeanWithEnterpriseAdminRegisterInfo[] reqBeanWithEnterpriseAdminRegisterInfos
                 = objectMapper.readValue(json, ReqBeanWithEnterpriseAdminRegisterInfo[].class);
@@ -59,39 +88,7 @@ public class RegisterController {
                 );
                 // 用户名是一个前缀 + 横杠 + 工号
                 baseUserInfoDTO.setCommonId(reqBeanWithEnterpriseAdminRegisterInfo.getUsername().split("-")[1]);
-                baseUserInfoDTO.setRoleName(RoleEnum.ROLE_ENTERPRISE_ADMIN.name());
-                userInfoService.add(baseUserInfoDTO);
-            } catch (Exception e) {
-                e.printStackTrace();
-                registerFailedList.add(i);
-            }
-        }
-        return RespBeanWithFailedRegisterList.report(registerFailedList);
-    }
-
-    /**
-     * 企业管理员可以导入教师账号
-     * @param json 其中orgId是各个学校的id，因此必须先创建学校，
-     *             才能导入其中的教师和学生
-     * @return 注册失败列表
-     */
-    @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
-    @PostMapping("/api/user/teacher")
-    public RespBeanWithFailedRegisterList registerTeacher(@RequestBody String json) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        ReqBeanWithEnterpriseAdminRegisterInfo[] reqBeanWithEnterpriseAdminRegisterInfos
-                = objectMapper.readValue(json, ReqBeanWithEnterpriseAdminRegisterInfo[].class);
-        List<Integer> registerFailedList = new ArrayList<>();
-        for (int i = 0; i < reqBeanWithEnterpriseAdminRegisterInfos.length; i++) {
-            ReqBeanWithEnterpriseAdminRegisterInfo reqBeanWithEnterpriseAdminRegisterInfo
-                    = reqBeanWithEnterpriseAdminRegisterInfos[i];
-            try {
-                BaseUserInfoDTO baseUserInfoDTO = ReqBeanWithEnterpriseAdminRegisterInfo.registerTo(
-                        reqBeanWithEnterpriseAdminRegisterInfo
-                );
-                // 用户名是一个前缀 + 横杠 + 工号
-                baseUserInfoDTO.setCommonId(reqBeanWithEnterpriseAdminRegisterInfo.getUsername().split("-")[1]);
-                baseUserInfoDTO.setRoleName(RoleEnum.ROLE_SCHOOL_TEACHER.name());
+                baseUserInfoDTO.setRoleName(roleName);
                 userInfoService.add(baseUserInfoDTO);
             } catch (Exception e) {
                 e.printStackTrace();
