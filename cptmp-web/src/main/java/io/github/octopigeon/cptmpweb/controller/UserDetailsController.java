@@ -97,6 +97,10 @@ public class UserDetailsController {
         }
     }
 
+//    @PutMapping("/api/user/me/avatar")
+//    public RespBean updateAvatar() {
+//
+//    }
     // TODO 修改用户信息的接口
 
 }
