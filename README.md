@@ -153,3 +153,67 @@ College Practice Training Management Platform
     "msg": "wrong origin password"
 }
 ```
+
+# RegisterController
+## /api/user/enterprise-admin
++ HTTP方法：POST
++ 返回类型：json
++ 说明：导入注册企业用户
++ 调用实例：
+``` 
+// 成功
+[
+    {
+        "username": "test-123456",
+        "name": "wxc",
+        "password": "123",
+        "email": "111@qq.com"
+    },
+    {
+        "username": "test-123457",
+        "name": "lgp",
+        "password": "123",
+        "email": "222@qq.com"
+    }
+]
+// 失败
+[
+    {
+        "username": "test-123456",
+        "name": "wxc",
+        "password": "123",
+        "email": "111@qq.com"
+    },
+    {
+        "username": "test-123457",
+        "name": "lgp",
+        "password": "123",
+        "email": "222@qq.com"
+    },
+    {
+        "username": "test-123457",
+        "name": "ty",
+        "password": "123",
+        "email": "222@qq.com"
+    }
+]
+```
++ 返回json：
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-12T01:48:09.955+00:00",
+    "msg": "all set",
+    "data": null
+}
+// 失败
+{
+    "status": 11,
+    "date": "2020-07-12T01:48:09.955+00:00",
+    "msg": "register failed",
+    "data": [
+        2
+    ]
+}
+```
