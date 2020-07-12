@@ -14,10 +14,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * @author anlow
+ * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/7
- * @last-check-in anlow
+ * 自定义登录成功验证
+ * @last-check-in 魏啸冲
  * @date 2020/7/9
  */
 @Component
@@ -29,6 +30,7 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
                                         Authentication authentication) throws IOException, ServletException {
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
         PrintWriter out = httpServletResponse.getWriter();
+        // 状态为ok，返回一段成功消息
         out.write(new ObjectMapper().writeValueAsString(RespBean.ok("login successfully")));
         out.flush();
         out.close();

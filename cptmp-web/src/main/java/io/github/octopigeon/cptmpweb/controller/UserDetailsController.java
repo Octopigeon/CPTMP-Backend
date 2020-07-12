@@ -19,11 +19,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.math.BigDecimal;
 
 /**
- * @author anlow
+ * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/10
  * 用于提供各种与用户信息交互的接口
- * @last-check-in anlow
+ * @last-check-in 魏啸冲
  * @date 2020/7/12
  */
 @RestController
@@ -40,6 +40,7 @@ public class UserDetailsController {
     public RespBeanWithBaseUserInfoDTO getMyBasicInfo() throws JsonProcessingException {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         RespBeanWithBaseUserInfoDTO respBean = new RespBeanWithBaseUserInfoDTO();
+        // 通过用户名查找用户详细信息
         respBean.setBaseUserInfoDTO(userInfoService.findBaseUserInfoByUsername(username));
         return respBean;
     }
@@ -55,10 +56,13 @@ public class UserDetailsController {
         BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO() {
         };
         // TODO 等数据库重构，把name加进BaseUserInfoDTO中
+        // 前端发来的json包含name，gender，introduction三个字段
         String name = objectMapper.readValue(json, ObjectNode.class).get("name").asText();
         Boolean gender = objectMapper.readValue(json, ObjectNode.class).get("gender").asBoolean();
         String introduction = objectMapper.readValue(json, ObjectNode.class).get("introduction").asText();
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        // TODO 此处等name加紧数据库后还需要修改
+        // 将要修改的信息打包，传到service层
         baseUserInfoDTO.setUsername(username);
         baseUserInfoDTO.setGender(gender);
         baseUserInfoDTO.setIntroduction(introduction);
@@ -95,6 +99,11 @@ public class UserDetailsController {
         }
     }
 
+    /**
+     * 处理上传头像的api
+     * @param avatar 前端发来的key为file的一个图片文件
+     * @return 返回更新avatar后的用户基本信息
+     */
     @PutMapping("/api/user/me/avatar")
     public RespBeanWithBaseUserInfoDTO updateAvatar(
             @RequestParam("file") MultipartFile avatar
@@ -103,6 +112,7 @@ public class UserDetailsController {
         RespBeanWithBaseUserInfoDTO respBeanWithBaseUserInfoDTO;
         try {
             respBeanWithBaseUserInfoDTO = new RespBeanWithBaseUserInfoDTO();
+            // 调用service方法更新头像
             userInfoService.uploadAvatar(avatar, username);
             respBeanWithBaseUserInfoDTO.setBaseUserInfoDTO(userInfoService.findBaseUserInfoByUsername(username));
             return respBeanWithBaseUserInfoDTO;
