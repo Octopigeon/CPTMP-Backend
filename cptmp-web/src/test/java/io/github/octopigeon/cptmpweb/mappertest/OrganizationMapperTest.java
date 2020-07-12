@@ -50,6 +50,7 @@ public class OrganizationMapperTest extends BaseTest {
         /**
          * 添加
          */
+        organizationMapper.removeAllOrganizationTest(new Date());
         organizationMapper.addOrganization(organization1);
         organizationMapper.addOrganization(organization2);
         Assertions.assertEquals(2,organizationMapper.findAllOrganization().size());
