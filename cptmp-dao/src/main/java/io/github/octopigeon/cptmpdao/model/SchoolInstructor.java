@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import java.util.Date;
 
 /**
- * @author 魏啸冲,Gh Li
+ * @author 魏啸冲, 李国豪
  * @version 1.2
  * @date 2020/7/7
  */

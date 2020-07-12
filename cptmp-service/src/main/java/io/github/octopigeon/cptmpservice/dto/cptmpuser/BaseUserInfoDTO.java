@@ -8,7 +8,7 @@ import java.math.BigInteger;
 
 /**
  * 带有必要信息的UserDTO抽象类
- * @author Gh Li
+ * @author 李国豪
  * @version 1.1
  * @date 2020/7/8
  * @last-check-in 魏啸冲

@@ -4,10 +4,10 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * @author Gh Li
+ * @author 李国豪
  * @version 1.0
  * @date 2020/7/10
- * @last-check-in Gh Li
+ * @last-check-in 李国豪
  * @date 2020/7/10
  */
 @ConfigurationProperties(prefix = "file")

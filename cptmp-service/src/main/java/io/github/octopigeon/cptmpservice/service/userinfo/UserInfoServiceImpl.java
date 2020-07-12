@@ -1,25 +1,17 @@
 package io.github.octopigeon.cptmpservice.service.userinfo;
 
-import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
-import io.github.octopigeon.cptmpdao.mapper.EnterpriseAdminMapper;
-import io.github.octopigeon.cptmpdao.mapper.SchoolInstructorMapper;
-import io.github.octopigeon.cptmpdao.mapper.SchoolStudentMapper;
+import io.github.octopigeon.cptmpdao.mapper.*;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
-import io.github.octopigeon.cptmpdao.model.EnterpriseAdmin;
-import io.github.octopigeon.cptmpdao.model.SchoolInstructor;
-import io.github.octopigeon.cptmpdao.model.SchoolStudent;
+import io.github.octopigeon.cptmpdao.model.Organization;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
+import io.github.octopigeon.cptmpservice.constantclass.EmailTemplate;
 import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
-import io.github.octopigeon.cptmpservice.dto.cptmpuser.EnterpriseAdminInfoDTO;
-import io.github.octopigeon.cptmpservice.dto.cptmpuser.StudentInfoDTO;
-import io.github.octopigeon.cptmpservice.dto.cptmpuser.TeacherInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
 import io.github.octopigeon.cptmpservice.service.otherservice.EmailService;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.apache.commons.lang.RandomStringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -31,10 +23,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Gh Li
+ * @author 李国豪
  * @version 1.0
  * @date 2020/7/11
- * @last-check-in Gh Li
+ * @last-check-in 李国豪
  * @date 2020/7/11
  */
 @Service
@@ -44,13 +36,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     private CptmpUserMapper cptmpUserMapper;
 
     @Autowired
-    private EnterpriseAdminMapper enterpriseAdminMapper;
-
-    @Autowired
-    private SchoolStudentMapper schoolStudentMapper;
-
-    @Autowired
-    private SchoolInstructorMapper schoolInstructorMapper;
+    private OrganizationMapper organizationMapper;
 
     @Autowired
     private EmailService emailService;
@@ -58,6 +44,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private final EmailTemplate emailTemplate = new EmailTemplate();
 
     @Autowired
     public UserInfoServiceImpl(FileProperties fileProperties) throws Exception {
@@ -67,19 +54,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     @Override
     public Boolean validateOriginPassword(String username, String originPassword) {
         return passwordEncoder.matches(originPassword, cptmpUserMapper.findPasswordByUsername(username));
-    }
-
-    /**
-     * 验证邀请码
-     * TODO 等lgp学校验证码
-     *
-     * @param userInfo ：用户信息类
-     * @return 验证码是否有效
-     */
-    @Override
-    public Boolean validateInvitationCode(BaseUserInfoDTO userInfo) {
-        //
-        return null;
     }
 
     // 添加注册用户
@@ -102,6 +76,36 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     }
 
     /**
+     * 验证码注册
+     * @param dto 用户信息类
+     * @param invitationCode 邀请码
+     * @throws Exception
+     */
+    @Override
+    public void addByInvitationCode(BaseUserInfoDTO dto, String invitationCode) throws Exception {
+        try{
+            List<Organization> organizations = organizationMapper.findAllOrganization();
+            BigInteger organizationId = null;
+            for (Organization organization: organizations) {
+                if(organization.getInvitationCode().equals(invitationCode)){
+                    organizationId = organization.getId();
+                    break;
+                }
+            }
+            if(organizationId == null){
+                throw new ValueException("invatitation code is not existed!");
+            }
+            BaseUserInfoDTO parsedUserInfo = parseUserInfo(dto);
+            parsedUserInfo.setOrganizationId(organizationId);
+            CptmpUser user = userInfoToUser(parsedUserInfo);
+            cptmpUserMapper.addUser(user);
+            emailService.sendSimpleMessage(user.getEmail(), emailTemplate.ACTIVATE_SUBJECT, emailTemplate.ACTIVATE_TEXT);
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    /**
      * 添加数据
      * 邀请注册用户
      *
@@ -114,12 +118,9 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
             CptmpUser user = userInfoToUser(parsedUserInfo);
             //添加用户
             cptmpUserMapper.addUser(user);
-//            CptmpUser registeredUser = cptmpUserMapper.findUserByUsername(user.getUsername());
-//            parsedUserInfo.setUserId(registeredUser.getId());
-            //TODO 调用邮件服务， 发送激活链接admin/activate/{token}
-//            emailService.sendSimpleMessage(registeredUser.getEmail(), "章鱼鸽实训平台", "");
+            emailService.sendSimpleMessage(user.getEmail(), emailTemplate.ACTIVATE_SUBJECT, emailTemplate.ACTIVATE_TEXT);
         } catch (Exception e) {
-            throw new Exception(e);
+            throw new Exception(e.getMessage());
         }
     }
 
@@ -328,25 +329,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      * @return
      */
     private String productUserName(BaseUserInfoDTO userInfo) {
-//        String roleName = userInfo.getRoleName();
-//        RoleEnum role = RoleEnum.valueOf(RoleEnum.class, roleName);
-//        String userName = "";
-//        // 学生
-//        if (role.compareTo(RoleEnum.ROLE_STUDENT_MEMBER) >= 0) {
-//            StudentInfoDTO studentInfo = (StudentInfoDTO) userInfo;
-//            userName = studentInfo.getSchoolName() + studentInfo.getStudentId();
-//        }
-//        // 老师
-//        else if (role.compareTo(RoleEnum.ROLE_SCHOOL_ADMIN) >= 0) {
-//            TeacherInfoDTO teacherInfo = (TeacherInfoDTO) userInfo;
-//            userName = teacherInfo.getSchoolName() + teacherInfo.getEmployeeId();
-//        }
-//        // 企业管理员
-//        else if (role.compareTo(RoleEnum.ROLE_ENTERPRISE_ADMIN) >= 0) {
-//            EnterpriseAdminInfoDTO adminInfo = (EnterpriseAdminInfoDTO) userInfo;
-//            userName = adminInfo.getEmployeeId();
-//        }
-
         //根据organizationId查找organizationName
         String organizationName = "";
         String userName = organizationName + userInfo.getCommonId();
