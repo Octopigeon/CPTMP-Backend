@@ -6,9 +6,6 @@ import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalSer
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.math.BigInteger;
-import java.util.List;
-
 /**
  * @author 李国豪
  * @version 1.0
@@ -27,15 +24,15 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
      */
     Boolean validateOriginPassword(String username, String originPassword);
 
-    /**
-     * 批量添加注册
-     */
-    void bulkAdd(List<BaseUserInfoDTO> dtos) throws Exception;
+//    /**
+//     * 批量添加注册
+//     */
+//    void bulkAdd(List<BaseUserInfoDTO> dtos) throws Exception;
 
-    /**
-     * 邀请码注册
-     */
-    void addByInvitationCode(BaseUserInfoDTO dto, String invitationCode) throws Exception;
+//    /**
+//     * 邀请码注册
+//     */
+//    void addByInvitationCode(BaseUserInfoDTO dto, String invitationCode) throws Exception;
 
     /**
      * 根据用户名得到用户基本信息，以及角色类型
@@ -44,11 +41,11 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
      */
     BaseUserInfoDTO findBaseUserInfoByUsername(String username);
 
-    /**
-     * 激活账号
-     * @param userId
-     */
-    void activateAccount(BigInteger userId);
+//    /**
+//     * 激活账号
+//     * @param userId
+//     */
+//    void activateAccount(BigInteger userId);
 
     /**
      * 更新密码

@@ -93,7 +93,7 @@ public interface OrganizationMapper {
      * @param id 组织id
      * @return 组织列表
      */
-    @Select("select id, " + COLUMNS + " from organization where id = #{id} and gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from cptmp_organization where id = #{id} and gmt_deleted is null")
     @ResultMap("cptmpOrganization")
     Organization findOrganizationById(BigInteger id);
 
@@ -102,9 +102,18 @@ public interface OrganizationMapper {
      * @param name 组织名称
      * @return 组织列表
      */
-    @Select("select id, " + COLUMNS + " from university where uk_organization_name = #{name} and gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from cptmp_organization where uk_organization_name = #{name} and gmt_deleted is null")
     @ResultMap("cptmpOrganization")
     Organization findOrganizationByName(String name);
+
+    /**
+     * 根据组织邀请码进行查询
+     * @param invitationCode
+     * @return
+     */
+    @Select("select id, " + COLUMNS + " from cptmp_organization where invitation_code = #{invitationCode} and gmt_deleted is null")
+    @ResultMap("cptmpOrganization")
+    Organization findOrganizationByInvitationCode(String invitationCode);
 
 
 }
