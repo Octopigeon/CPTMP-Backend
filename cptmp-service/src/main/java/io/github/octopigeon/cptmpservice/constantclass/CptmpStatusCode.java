@@ -5,7 +5,7 @@ package io.github.octopigeon.cptmpservice.constantclass;
  * @version 1.0
  * @date 2020/7/7
  * @last-check-in 魏啸冲
- * @date 2020/7/12
+ * @date 2020/7/13
  */
 public class CptmpStatusCode {
 
@@ -33,5 +33,10 @@ public class CptmpStatusCode {
     public static int UPDATE_BASIC_INFO_FAILED = 10;
     /** 注册失败 */
     public static int REGISTER_FAILED = 11;
+
+    /** 邮箱验证失败 */
+    public static int EMAIL_VALIDATE_FAILED = 12;
+    /** 发送验证邮件失败 */
+    public static int SEND_TOKEN_EMAIL_FAILED = 13;
 
 }
