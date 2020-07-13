@@ -38,5 +38,7 @@ public class CptmpStatusCode {
     public static int EMAIL_VALIDATE_FAILED = 12;
     /** 发送验证邮件失败 */
     public static int SEND_TOKEN_EMAIL_FAILED = 13;
+    /** 邀请码无效 */
+    public static int FAKE_INVITATION_CODE = 14;
 
 }
