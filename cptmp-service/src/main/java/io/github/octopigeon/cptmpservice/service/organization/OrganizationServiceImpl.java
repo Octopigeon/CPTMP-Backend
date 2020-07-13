@@ -78,7 +78,7 @@ public class OrganizationServiceImpl implements OrganizationService{
         try{
             Organization organization = organizationMapper.findOrganizationById(dto.getId());
             BeanUtils.copyProperties(dto, organization, Utils.getNullPropertyNames(dto));
-            organizationMapper.updateOrganizationById(organization.getId(), new Date(), organization.getName(), organization.getDescription(), organization.getWebsiteUrl(), organization.getInvitationCode());
+            organizationMapper.updateOrganizationById(organization.getId(), new Date(), organization.getName(), organization.getRealName(), organization.getDescription(), organization.getWebsiteUrl(), organization.getInvitationCode());
             return true;
         }catch (Exception e){
             e.printStackTrace();
@@ -106,15 +106,29 @@ public class OrganizationServiceImpl implements OrganizationService{
      *
      * @param name 组织的名称
      * @return 组织相关信息
-     * @throws Exception
      */
     @Override
-    public OrganizationDTO findByName(String name) throws Exception {
+    public OrganizationDTO findByName(String name){
         Organization organization = organizationMapper.findOrganizationByName(name);
         OrganizationDTO dto = new OrganizationDTO();
         BeanUtils.copyProperties(organization, dto);
         return dto;
     }
+
+    /**
+     * 根据邀请码进行查询
+     *
+     * @param code 邀请码
+     * @return
+     */
+    @Override
+    public OrganizationDTO findByInvitationCode(String code){
+        Organization organization = organizationMapper.findOrganizationByInvitationCode(code);
+        OrganizationDTO dto = new OrganizationDTO();
+        BeanUtils.copyProperties(organization, dto);
+        return dto;
+    }
+
 
     /**
      * 产生邀请码
