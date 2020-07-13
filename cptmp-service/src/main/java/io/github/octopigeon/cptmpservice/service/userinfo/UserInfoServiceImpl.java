@@ -63,6 +63,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
                 add(userInfo);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Exception(e);
         }
     }
@@ -92,6 +93,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
             CptmpUser user = userInfoToUser(parsedUserInfo);
             cptmpUserMapper.addUser(user);
         }catch (Exception e){
+            e.printStackTrace();
             throw new Exception(e.getMessage());
         }
     }
@@ -110,6 +112,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
             //添加用户
             cptmpUserMapper.addUser(user);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Exception(e.getMessage());
         }
     }
@@ -144,6 +147,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
                     new Date(), baseUserInfo.getIntroduction(), baseUserInfo.getGender());
             return true;
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new Exception("Modify userInfo failed");
         }
     }
@@ -185,6 +189,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
             cptmpUserMapper.updateAvatarByUsername(username, new Date(), fileInfo.getFilePath());
             return fileInfo.getFilePath();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Exception("Avatar upload failed!");
         }
     }
@@ -257,6 +262,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
                     f.set(userInfo, f.get(originUserInfo));
                 }
             } catch (IllegalArgumentException e) {
+                e.printStackTrace();
                 throw new IllegalAccessException();
             }
         }
@@ -328,21 +334,14 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     private CptmpUser userInfoToUser(BaseUserInfoDTO userInfo) {
         CptmpUser user = new CptmpUser();
-        user.setEmail(userInfo.getEmail());
-        user.setRoleName(userInfo.getRoleName());
+        BeanUtils.copyProperties(userInfo, user);
         user.updatePassword(userInfo.getPassword());
-        user.setPhoneNumber(userInfo.getPhoneNumber());
-        user.setGender(userInfo.getGender());
-        user.setUsername(userInfo.getUsername());
         user.setGmtCreate(new Date());
         user.setEnabled(false);
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
         user.setIntroduction("");
-        user.setName(userInfo.getName());
-        user.setCommonId(userInfo.getCommonId());
-        user.setOrganizationId(userInfo.getOrganizationId());
         return user;
     }
 }

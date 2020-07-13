@@ -95,6 +95,7 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
             TrainProject trainProject = new TrainProject();
             BeanUtils.copyProperties(dto, trainProject);
             completeTrainProject(trainProject);
+            trainProjectMapper.updateTrainProjectById(trainProject.getId(), new Date(), trainProject.getName(), trainProject.getLevel(), trainProject.getContent());
             return true;
         }catch (Exception e){
             e.printStackTrace();
