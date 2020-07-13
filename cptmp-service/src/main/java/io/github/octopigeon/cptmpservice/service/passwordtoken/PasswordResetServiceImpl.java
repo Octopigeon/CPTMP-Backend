@@ -2,7 +2,6 @@ package io.github.octopigeon.cptmpservice.service.passwordtoken;
 
 import io.github.octopigeon.cptmpdao.mapper.PasswordResetTokenMapper;
 import io.github.octopigeon.cptmpdao.model.PasswordResetToken;
-import io.github.octopigeon.cptmpservice.service.passwordtoken.PasswordResetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
