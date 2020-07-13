@@ -3,13 +3,13 @@ package io.github.octopigeon.cptmpservice.service.organization;
 import io.github.octopigeon.cptmpdao.mapper.OrganizationMapper;
 import io.github.octopigeon.cptmpdao.model.Organization;
 import io.github.octopigeon.cptmpservice.dto.organization.OrganizationDTO;
+import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -75,9 +75,8 @@ public class OrganizationServiceImpl implements OrganizationService{
     @Override
     public Boolean modify(OrganizationDTO dto) throws Exception {
         try{
-            Organization organization = new Organization();
-            BeanUtils.copyProperties(dto, organization);
-            completeOrganization(organization);
+            Organization organization = organizationMapper.findOrganizationById(dto.getId());
+            BeanUtils.copyProperties(dto, organization, Utils.getNullPropertyNames(dto));
             organizationMapper.updateOrganizationById(organization.getId(), new Date(), organization.getName(), organization.getDescription(), organization.getWebsiteUrl(), organization.getInvitationCode());
             return true;
         }catch (Exception e){
@@ -122,24 +121,5 @@ public class OrganizationServiceImpl implements OrganizationService{
      */
     private String productInvitationCode(){
         return RandomStringUtils.randomAlphabetic(8);
-    }
-
-    private Organization completeOrganization(Organization organization) throws IllegalAccessException {
-        Organization origin = organizationMapper.findOrganizationById(organization.getId());
-        Class<? extends Organization> cls = organization.getClass();
-        Field[] fields = cls.getDeclaredFields();
-        for (Field f : fields) {
-            //设置属性可读
-            f.setAccessible(true);
-            try {
-                if (f.get(organization) == null) {
-                    f.set(organization, f.get(origin));
-                }
-            } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
-                throw new IllegalAccessException();
-            }
-        }
-        return organization;
     }
 }
