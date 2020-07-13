@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
- * 带有必要信息的UserDTO抽象类
+ * 带有必要信息的UserDTO类
  * @author 李国豪
  * @version 1.1
  * @date 2020/7/8
@@ -36,7 +36,7 @@ public class BaseUserInfoDTO{
     /** 学号，工号等 */
     private String commonId;
     /** 人脸数据url */
-    private String faceInfo;
+    //private String faceInfo;
     /** 组织Id */
     private BigInteger organizationId;
     /** 默认为Null */
