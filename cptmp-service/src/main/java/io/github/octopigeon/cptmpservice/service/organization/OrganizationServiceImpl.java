@@ -77,7 +77,7 @@ public class OrganizationServiceImpl implements OrganizationService{
         try{
             Organization organization = organizationMapper.findOrganizationById(dto.getId());
             BeanUtils.copyProperties(dto, organization, Utils.getNullPropertyNames(dto));
-            organizationMapper.updateOrganizationById(organization.getId(), new Date(), organization.getName(), organization.getDescription(), organization.getWebsiteUrl(), organization.getInvitationCode());
+            organizationMapper.updateOrganizationById(organization.getId(), new Date(), organization.getName(), organization.getRealName(), organization.getDescription(), organization.getWebsiteUrl(), organization.getInvitationCode());
             return true;
         }catch (Exception e){
             e.printStackTrace();
