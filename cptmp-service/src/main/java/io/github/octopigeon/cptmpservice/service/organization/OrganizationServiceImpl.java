@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * @author Gh Li
@@ -120,6 +121,7 @@ public class OrganizationServiceImpl implements OrganizationService{
      * @return
      */
     private String productInvitationCode(){
-        return RandomStringUtils.randomAlphabetic(8);
+        return UUID.randomUUID().toString();
+        // return RandomStringUtils.randomAlphabetic(8);
     }
 }
