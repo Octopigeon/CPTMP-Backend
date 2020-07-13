@@ -35,7 +35,7 @@ public class OrganizationMapperTest extends BaseTest {
         organization1.setName("test1");
         organization1.setId(BigInteger.valueOf(1));
         organization1.setGmtCreate(new Date());
-        organization1.setOrganizationDescription("test1");
+        organization1.setDescription("test1");
         organization1.setWebsiteUrl("test1");
         organization1.setInvitationCode("test1");
 
@@ -43,7 +43,7 @@ public class OrganizationMapperTest extends BaseTest {
         organization1.setId(BigInteger.valueOf(2));
         organization2.setName("test2");
         organization2.setGmtCreate(new Date());
-        organization2.setOrganizationDescription("test2");
+        organization2.setDescription("test2");
         organization2.setWebsiteUrl("test2");
         organization2.setInvitationCode("test2");
 
