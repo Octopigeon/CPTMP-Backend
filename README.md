@@ -126,6 +126,32 @@ College Practice Training Management Platform
     }
 }
 ```
++ HTTP方法：PUT
++ 返回类型：json
++ 说明：修改用户姓名，性别，个人简介
++ 调用示例:
+```
+{
+    "name": "李国鹏",
+    "gender": false,
+    "introduction": "我是大鸽"
+} 
+```
++ 返回json:
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-13T06:28:09.780+00:00",
+    "msg": "update basic info successfully"
+}
+// 失败
+{
+    "status": 10,
+    "date": "2020-07-13T06:19:25.123+00:00",
+    "msg": "modify info failed"
+}
+```
 
 ## /api/user/me/password
 + HTTP方法：PUT

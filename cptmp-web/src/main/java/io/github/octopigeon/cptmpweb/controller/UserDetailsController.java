@@ -44,7 +44,7 @@ public class UserDetailsController {
 
     /**
      * 修改性别，简介信息
-     * @param json 包含性别和简介的json
+     * @param json 包含姓名、性别和简介的json
      * @return ok-成功 error-失败
      */
     @PutMapping("/api/user/me/basic-info")
@@ -52,14 +52,13 @@ public class UserDetailsController {
         ObjectMapper objectMapper = new ObjectMapper();
         BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO() {
         };
-        // TODO 等数据库重构，把name加进BaseUserInfoDTO中
         // 前端发来的json包含name，gender，introduction三个字段
         String name = objectMapper.readValue(json, ObjectNode.class).get("name").asText();
         Boolean gender = objectMapper.readValue(json, ObjectNode.class).get("gender").asBoolean();
         String introduction = objectMapper.readValue(json, ObjectNode.class).get("introduction").asText();
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        // TODO 此处等name加紧数据库后还需要修改
         // 将要修改的信息打包，传到service层
+        baseUserInfoDTO.setName(name);
         baseUserInfoDTO.setUsername(username);
         baseUserInfoDTO.setGender(gender);
         baseUserInfoDTO.setIntroduction(introduction);
@@ -70,6 +69,7 @@ public class UserDetailsController {
                 return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "update basic info failed");
             }
         } catch (Exception e) {
+            e.printStackTrace();
             return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "modify info failed");
         }
     }

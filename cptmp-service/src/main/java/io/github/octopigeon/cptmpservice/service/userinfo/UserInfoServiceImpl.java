@@ -4,14 +4,14 @@ import io.github.octopigeon.cptmpdao.mapper.*;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpdao.model.Organization;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
-import io.github.octopigeon.cptmpservice.constantclass.EmailTemplate;
-import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
 import io.github.octopigeon.cptmpservice.service.otherservice.EmailService;
+import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,12 +39,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     private OrganizationMapper organizationMapper;
 
     @Autowired
-    private EmailService emailService;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
-
-    private final EmailTemplate emailTemplate = new EmailTemplate();
 
     @Autowired
     public UserInfoServiceImpl(FileProperties fileProperties) throws Exception {
@@ -71,6 +66,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
                 add(userInfo);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Exception(e);
         }
     }
@@ -99,8 +95,8 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
             parsedUserInfo.setOrganizationId(organizationId);
             CptmpUser user = userInfoToUser(parsedUserInfo);
             cptmpUserMapper.addUser(user);
-            // emailService.sendSimpleMessage(user.getEmail(), emailTemplate.ACTIVATE_SUBJECT, emailTemplate.ACTIVATE_TEXT);
         }catch (Exception e){
+            e.printStackTrace();
             throw new Exception(e.getMessage());
         }
     }
@@ -118,8 +114,8 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
             CptmpUser user = userInfoToUser(parsedUserInfo);
             //添加用户
             cptmpUserMapper.addUser(user);
-            // emailService.sendSimpleMessage(user.getEmail(), emailTemplate.ACTIVATE_SUBJECT, emailTemplate.ACTIVATE_TEXT);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Exception(e.getMessage());
         }
     }
@@ -138,22 +134,24 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     /**
      * 修改用户信息
-     *
+     * @last-check-in 魏啸冲 修改了一个bug，以及更换更新的方法
      * @param userInfo 修改后的用户信息
      * @return 是否删除成功
      */
     @Override
     public Boolean modify(BaseUserInfoDTO userInfo) throws Exception {
-        if (userInfo.getUserId() == null || "".equals(userInfo.getUsername())) {
+        if (userInfo.getUserId() == null && "".equals(userInfo.getUsername())) {
             throw new ValueException("userId or username is illegal!");
         }
         try {
             CptmpUser user = cptmpUserMapper.findUserByUsername(userInfo.getUsername());
-            BaseUserInfoDTO baseUserInfo = completeUserInfo(user, userInfo);
-            cptmpUserMapper.updateUserInfoByUsername(baseUserInfo.getUsername(),
-                    new Date(), baseUserInfo.getIntroduction(), baseUserInfo.getGender());
+            BeanUtils.copyProperties(userInfo, user, Utils.getNullPropertyNames(userInfo));
+            // 设置修改日期
+            user.setGmtModified(new Date());
+            cptmpUserMapper.updateUserByUserName(user);
             return true;
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new Exception("Modify userInfo failed");
         }
     }
@@ -195,28 +193,29 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
             cptmpUserMapper.updateAvatarByUsername(username, new Date(), fileInfo.getFilePath());
             return fileInfo.getFilePath();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new Exception("Avatar upload failed!");
         }
     }
 
-    /**
-     * 上传人脸数据
-     *
-     * @param file   人脸图片
-     * @param username 用户名
-     */
-    @Override
-    public void uploadFace(MultipartFile file, String username) throws Exception {
-        try{
-            FileDTO fileInfo = storePublicFile(file);
-            CptmpUser user = cptmpUserMapper.findUserByUsername(username);
-            if (RoleEnum.ROLE_STUDENT_MEMBER.name().equals(user.getRoleName())) {
-                cptmpUserMapper.updateFaceInfoById(user.getId(), new Date(), fileInfo.getFilePath());
-            }
-        } catch (Exception e) {
-            throw new Exception("Face info upload failed!");
-        }
-    }
+//    /**
+//     * 上传人脸数据
+//     *
+//     * @param file   人脸图片
+//     * @param username 用户名
+//     */
+//    @Override
+//    public void uploadFace(MultipartFile file, String username) throws Exception {
+//        try{
+//            FileDTO fileInfo = storePublicFile(file);
+//            CptmpUser user = cptmpUserMapper.findUserByUsername(username);
+//            if (RoleEnum.ROLE_STUDENT_MEMBER.name().equals(user.getRoleName())) {
+//                cptmpUserMapper.updateFaceInfoById(user.getId(), new Date(), fileInfo.getFilePath());
+//            }
+//        } catch (Exception e) {
+//            throw new Exception("Face info upload failed!");
+//        }
+//    }
 
     // 查询服务
 
@@ -244,48 +243,9 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         return getFullUserInfo(cptmpUser);
     }
 
-    /**
-     * 补全userInfo
-     *
-     * @param cptmpUser usrModel
-     * @return userInfo类
-     */
-    private BaseUserInfoDTO completeUserInfo(CptmpUser cptmpUser, BaseUserInfoDTO userInfo) throws IllegalAccessException {
-
-        BaseUserInfoDTO originUserInfo = getFullUserInfo(cptmpUser);
-        return compareUserInfo(originUserInfo, userInfo);
-    }
-
-    private BaseUserInfoDTO compareUserInfo(BaseUserInfoDTO originUserInfo, BaseUserInfoDTO userInfo) throws IllegalAccessException {
-        Class<? extends BaseUserInfoDTO> cls = originUserInfo.getClass();
-        Field[] fields = cls.getDeclaredFields();
-        for (Field f : fields) {
-            //设置属性可读
-            f.setAccessible(true);
-            try {
-                if (f.get(userInfo) == null) {
-                    f.set(userInfo, f.get(originUserInfo));
-                }
-            } catch (IllegalArgumentException e) {
-                throw new IllegalAccessException();
-            }
-        }
-        return userInfo;
-    }
-
     private BaseUserInfoDTO getFullUserInfo(CptmpUser cptmpUser) {
         BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
-        baseUserInfoDTO.setUserId(cptmpUser.getId());
-        baseUserInfoDTO.setCommonId(cptmpUser.getCommonId());
-        baseUserInfoDTO.setAvatar(cptmpUser.getAvatar());
-        baseUserInfoDTO.setEmail(cptmpUser.getEmail());
-        baseUserInfoDTO.setGender(cptmpUser.getGender());
-        baseUserInfoDTO.setIntroduction(cptmpUser.getIntroduction());
-        baseUserInfoDTO.setName(cptmpUser.getName());
-        baseUserInfoDTO.setOrganizationId(cptmpUser.getOrganizationId());
-        baseUserInfoDTO.setPhoneNumber(cptmpUser.getPhoneNumber());
-        baseUserInfoDTO.setRoleName(cptmpUser.getRoleName());
-        baseUserInfoDTO.setUsername(cptmpUser.getUsername());
+        BeanUtils.copyProperties(cptmpUser, baseUserInfoDTO);
         return baseUserInfoDTO;
     }
 
@@ -307,15 +267,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
             throw new ValueException("Phone number format is invalidation");
         }
         return userInfo;
-    }
-
-    /**
-     * 产生20位字母命名
-     *
-     * @return 随机昵称
-     */
-    private String productNickname() {
-        return RandomStringUtils.randomAlphabetic(20);
     }
 
     /**
@@ -357,21 +308,14 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     private CptmpUser userInfoToUser(BaseUserInfoDTO userInfo) {
         CptmpUser user = new CptmpUser();
-        user.setEmail(userInfo.getEmail());
-        user.setRoleName(userInfo.getRoleName());
+        BeanUtils.copyProperties(userInfo, user);
         user.updatePassword(userInfo.getPassword());
-        user.setPhoneNumber(userInfo.getPhoneNumber());
-        user.setGender(userInfo.getGender());
-        user.setUsername(userInfo.getUsername());
         user.setGmtCreate(new Date());
         user.setEnabled(false);
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
         user.setIntroduction("");
-        user.setName(userInfo.getName());
-        user.setCommonId(userInfo.getCommonId());
-        user.setOrganizationId(userInfo.getOrganizationId());
         return user;
     }
 }
