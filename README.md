@@ -224,3 +224,5 @@ College Practice Training Management Platform
     ]
 }
 ```
+
+## /api/org
