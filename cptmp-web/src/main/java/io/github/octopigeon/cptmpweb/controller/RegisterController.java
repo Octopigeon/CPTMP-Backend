@@ -3,6 +3,7 @@ package io.github.octopigeon.cptmpweb.controller;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
@@ -16,6 +17,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -96,13 +98,13 @@ public class RegisterController {
             // 遍历每个信息，逐一执行注册操作
             ReqBeanWithUserRegisterInfo reqBeanWithUserRegisterInfo
                     = reqBeanWithUserRegisterInfos[i];
-            try {
-                BaseUserInfoDTO baseUserInfoDTO = ReqBeanWithUserRegisterInfo.registerTo(
-                        reqBeanWithUserRegisterInfo
+           try {
+               String organizationName = organizationService.findById(reqBeanWithUserRegisterInfo.getOrganizationId()).getName();
+               BaseUserInfoDTO baseUserInfoDTO = ReqBeanWithUserRegisterInfo.registerTo(
+                        reqBeanWithUserRegisterInfo,
+                        roleName,
+                        organizationName
                 );
-                // 用户名是一个前缀 + 横杠 + 工号
-                baseUserInfoDTO.setCommonId(reqBeanWithUserRegisterInfo.getUsername().split("-")[1]);
-                baseUserInfoDTO.setRoleName(roleName);
                 userInfoService.add(baseUserInfoDTO);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -112,6 +114,11 @@ public class RegisterController {
         return RespBeanWithFailedRegisterList.report(registerFailedList);
     }
 
+    /**
+     * 企业管理员创建学校
+     * @param json 包含学校代号，学校名字，官方网站，简介
+     * @return 注册失败列表
+     */
     @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
     @PostMapping("/api/org")
     public RespBeanWithFailedRegisterList registerOrganization(@RequestBody String json) throws JsonProcessingException {
@@ -124,8 +131,11 @@ public class RegisterController {
                     = reqBeanWithOrganizationRegisterInfos[i];
             try {
                 OrganizationDTO organizationDTO = new OrganizationDTO();
-                organizationDTO.setName(reqBeanWithOrganizationRegisterInfo.getName());
-                // TODO 等李国豪加上真实名字字段
+                organizationDTO.setName(reqBeanWithOrganizationRegisterInfo.getCode());
+                organizationDTO.setRealName(reqBeanWithOrganizationRegisterInfo.getRealName());
+                organizationDTO.setDescription(reqBeanWithOrganizationRegisterInfo.getDescription());
+                organizationDTO.setWebsiteUrl(reqBeanWithOrganizationRegisterInfo.getWebsiteUrl());
+                organizationService.add(organizationDTO);
             } catch (Exception e) {
                 e.printStackTrace();
                 registerFailedList.add(i);
@@ -134,8 +144,9 @@ public class RegisterController {
         return RespBeanWithFailedRegisterList.report(registerFailedList);
     }
 
+    // TODO 等实训项目的表设计好了，再重新看一下这个api
     /**
-     * 获取json中的name，project_level，project_content三个字段
+     * 企业管理员创建实训项目获取json中的name，project_level，project_content三个字段
      * @param json 包含上述三个字段的json
      * @return 返回一个包含导入失败条目列表的json
      */
@@ -163,12 +174,66 @@ public class RegisterController {
         return RespBeanWithFailedRegisterList.report(registerFailedList);
     }
 
+    /**
+     * 验证邀请码的正确性，并返回状态给前端
+     * @return 邀请码是否有效
+     */
+    @GetMapping("/api/user/student/invite")
+    public RespBeanWithOrganizationDTO registerGuard(@RequestBody String json) throws JsonProcessingException {
+        String invitationCode = new ObjectMapper().readValue(json, ObjectNode.class).get("invitation_code").asText();
+        try {
+            OrganizationDTO organizationDTO = organizationService.findByInvitationCode(invitationCode);
+            if (organizationDTO.getInvitationCode().equals(invitationCode)) {
+                return new RespBeanWithOrganizationDTO(organizationDTO);
+            } else {
+                return new RespBeanWithOrganizationDTO(CptmpStatusCode.FAKE_INVITATION_CODE, "fake invitation code");
+            }
+        } catch (Exception e) {
+            return new RespBeanWithOrganizationDTO(CptmpStatusCode.FAKE_INVITATION_CODE, "fake invitation code");
+        }
+    }
+
+    /**
+     * 学生通过邀请码注册，此路径不需要登录
+     * @param json 包含学校信息，以及学生自己填写的个人信息，以及邀请码
+     * @return 注册结果（成功/失败）
+     */
+    @PostMapping("/api/user/student/invite")
+    public RespBean registerStudentByInvitationCode(@RequestBody String json) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String name = objectMapper.readValue(json, ObjectNode.class).get("name").asText();
+        String email = objectMapper.readValue(json, ObjectNode.class).get("email").asText();
+        // 学号
+        String username = objectMapper.readValue(json, ObjectNode.class).get("username").asText();
+        String password = objectMapper.readValue(json, ObjectNode.class).get("password").asText();
+        String invitationCode = objectMapper.readValue(json, ObjectNode.class).get("invitation_code").asText();
+        try {
+            BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
+            // 前缀 + 学号
+            baseUserInfoDTO.setUsername(username);
+            baseUserInfoDTO.setCommonId(username.split("-")[1]);
+            baseUserInfoDTO.setRoleName(CptmpRole.ROLE_STUDENT_MEMBER);
+            baseUserInfoDTO.setName(name);
+            baseUserInfoDTO.setPassword(password);
+            baseUserInfoDTO.setEmail(email);
+            baseUserInfoDTO.setOrganizationId(organizationService.findByInvitationCode(invitationCode).getId());
+            userInfoService.add(baseUserInfoDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.REGISTER_FAILED, "register failed");
+        }
+        return RespBean.ok("register success");
+    }
+
+
 }
 
 @Data
 class ReqBeanWithUserRegisterInfo {
 
-    private String username;
+    /** 学号或者工号 */
+    @JsonProperty("common_id")
+    private String commonId;
     private String name;
     private String password;
     private String email;
@@ -180,10 +245,15 @@ class ReqBeanWithUserRegisterInfo {
      * @param reqBeanWithUserRegisterInfo json子节点
      * @return 一个拥有上述五种属性的BaseUserInfo
      */
-    public static BaseUserInfoDTO registerTo(ReqBeanWithUserRegisterInfo reqBeanWithUserRegisterInfo) {
+    public static BaseUserInfoDTO registerTo(ReqBeanWithUserRegisterInfo reqBeanWithUserRegisterInfo
+            , String roleName
+            , String organizationName) {
         BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
-        baseUserInfoDTO.setUsername(reqBeanWithUserRegisterInfo.getUsername());
-        baseUserInfoDTO.setName((reqBeanWithUserRegisterInfo.getName()));
+        // 用户名是一个前缀 + 横杠 + 工
+        baseUserInfoDTO.setUsername(organizationName + "-" + reqBeanWithUserRegisterInfo.getCommonId());
+        baseUserInfoDTO.setCommonId(reqBeanWithUserRegisterInfo.getCommonId());
+        baseUserInfoDTO.setRoleName(roleName);
+        baseUserInfoDTO.setName(reqBeanWithUserRegisterInfo.getName());
         baseUserInfoDTO.setPassword(reqBeanWithUserRegisterInfo.getPassword());
         baseUserInfoDTO.setEmail(reqBeanWithUserRegisterInfo.getEmail());
         baseUserInfoDTO.setOrganizationId(reqBeanWithUserRegisterInfo.getOrganizationId());
@@ -194,11 +264,15 @@ class ReqBeanWithUserRegisterInfo {
 @Data
 class  ReqBeanWithOrganizationRegisterInfo {
 
-    // TODO 等lgh创建学校名字段
-
-    private String name;
+    /** 学校简称 */
+    @JsonProperty("code")
+    private String code;
+    /** 学校真实名字 */
+    @JsonProperty("real_name")
     private String realName;
+    @JsonProperty("website_url")
     private String websiteUrl;
+    @JsonProperty("description")
     private String description;
 
 }
@@ -239,5 +313,24 @@ class RespBeanWithFailedRegisterList extends RespBean {
 
     @JsonProperty("data")
     private List<Integer> failedList;
+
+}
+
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+class RespBeanWithOrganizationDTO extends RespBean {
+
+    public RespBeanWithOrganizationDTO(OrganizationDTO organizationDTO) {
+        super();
+        this.organizationDTO = organizationDTO;
+    }
+
+    public RespBeanWithOrganizationDTO(Integer status, String msg) {
+        super(status, msg);
+    }
+
+    @JsonProperty("data")
+    private OrganizationDTO organizationDTO;
 
 }
