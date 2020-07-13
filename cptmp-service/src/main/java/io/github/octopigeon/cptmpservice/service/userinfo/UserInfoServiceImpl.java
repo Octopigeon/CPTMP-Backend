@@ -2,25 +2,21 @@ package io.github.octopigeon.cptmpservice.service.userinfo;
 
 import io.github.octopigeon.cptmpdao.mapper.*;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
-import io.github.octopigeon.cptmpdao.model.Organization;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
+import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
-import io.github.octopigeon.cptmpservice.service.otherservice.EmailService;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
-import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author 李国豪
@@ -34,9 +30,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     @Autowired
     private CptmpUserMapper cptmpUserMapper;
-
-    @Autowired
-    private OrganizationMapper organizationMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -53,53 +46,53 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     // 添加注册用户
 
-    /**
-     * 批量添加
-     * 批量注册用户
-     *
-     * @param dtos
-     */
-    @Override
-    public void bulkAdd(List<BaseUserInfoDTO> dtos) throws Exception {
-        try {
-            for (BaseUserInfoDTO userInfo : dtos) {
-                add(userInfo);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception(e);
-        }
-    }
-
-    /**
-     * 验证码注册
-     * @param dto 用户信息类
-     * @param invitationCode 邀请码
-     * @throws Exception
-     */
-    @Override
-    public void addByInvitationCode(BaseUserInfoDTO dto, String invitationCode) throws Exception {
-        try{
-            List<Organization> organizations = organizationMapper.findAllOrganization();
-            BigInteger organizationId = null;
-            for (Organization organization: organizations) {
-                if(organization.getInvitationCode().equals(invitationCode)){
-                    organizationId = organization.getId();
-                    break;
-                }
-            }
-            if(organizationId == null){
-                throw new ValueException("invatitation code is not existed!");
-            }
-            BaseUserInfoDTO parsedUserInfo = parseUserInfo(dto);
-            parsedUserInfo.setOrganizationId(organizationId);
-            CptmpUser user = userInfoToUser(parsedUserInfo);
-            cptmpUserMapper.addUser(user);
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new Exception(e.getMessage());
-        }
-    }
+//    /**
+//     * 批量添加
+//     * 批量注册用户
+//     *
+//     * @param dtos
+//     */
+//    @Override
+//    public void bulkAdd(List<BaseUserInfoDTO> dtos) throws Exception {
+//        try {
+//            for (BaseUserInfoDTO userInfo : dtos) {
+//                add(userInfo);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new Exception(e);
+//        }
+//    }
+//
+//    /**
+//     * 验证码注册
+//     * @param dto 用户信息类
+//     * @param invitationCode 邀请码
+//     * @throws Exception
+//     */
+//    @Override
+//    public void addByInvitationCode(BaseUserInfoDTO dto, String invitationCode) throws Exception {
+//        try{
+//            List<Organization> organizations = organizationMapper.findAllOrganization();
+//            BigInteger organizationId = null;
+//            for (Organization organization: organizations) {
+//                if(organization.getInvitationCode().equals(invitationCode)){
+//                    organizationId = organization.getId();
+//                    break;
+//                }
+//            }
+//            if(organizationId == null){
+//                throw new ValueException("invatitation code is not existed!");
+//            }
+//            BaseUserInfoDTO parsedUserInfo = parseUserInfo(dto);
+//            parsedUserInfo.setOrganizationId(organizationId);
+//            CptmpUser user = userInfoToUser(parsedUserInfo);
+//            cptmpUserMapper.addUser(user);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            throw new Exception(e.getMessage());
+//        }
+//    }
 
     /**
      * 添加数据
@@ -156,16 +149,16 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         }
     }
 
-    /**
-     * 激活账号
-     *
-     * @param userId 用户id
-     */
-    @Override
-    public void activateAccount(BigInteger userId) {
-        CptmpUser cptmpUser = cptmpUserMapper.findUserById(userId);
-        cptmpUserMapper.updateEnabledByUsername(cptmpUser.getUsername(), true);
-    }
+//    /**
+//     * 激活账号
+//     *
+//     * @param userId 用户id
+//     */
+//    @Override
+//    public void activateAccount(BigInteger userId) {
+//        CptmpUser cptmpUser = cptmpUserMapper.findUserById(userId);
+//        cptmpUserMapper.updateEnabledByUsername(cptmpUser.getUsername(), true);
+//    }
 
     /**
      * 更新密码
@@ -258,28 +251,15 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     private BaseUserInfoDTO parseUserInfo(BaseUserInfoDTO userInfo) throws ValueException {
         userInfo.setPassword(userInfo.getPassword());
         if (userInfo.getUsername() == null) {
-            userInfo.setUsername(productUserName(userInfo));
+            throw new ValueException("userName value is invalid!");
         }
         if (!validateEmailFormat(userInfo.getEmail())) {
-            throw new ValueException("E-mail format is invalidation");
+            throw new ValueException("E-mail format is invalid");
         }
         if (userInfo.getPhoneNumber() != null && validatePhoneNumberFormat(userInfo.getPhoneNumber().toString())) {
             throw new ValueException("Phone number format is invalidation");
         }
         return userInfo;
-    }
-
-    /**
-     * 产生用户名
-     *
-     * @param userInfo
-     * @return
-     */
-    private String productUserName(BaseUserInfoDTO userInfo) {
-        //根据organizationId查找organizationName
-        String organizationName = "";
-        String userName = organizationName + userInfo.getCommonId();
-        return userName;
     }
 
     private Boolean validateEmailFormat(String email) {
@@ -311,7 +291,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         BeanUtils.copyProperties(userInfo, user);
         user.updatePassword(userInfo.getPassword());
         user.setGmtCreate(new Date());
-        user.setEnabled(false);
+        user.setEnabled(true);
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);

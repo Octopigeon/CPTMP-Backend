@@ -21,10 +21,10 @@ import java.util.List;
 @Mapper
 public interface OrganizationMapper {
 
-    String COLUMNS="uk_organization_name,organization_description,official_website_url,gmt_modified,gmt_create,gmt_deleted,invitation_code";
-    String PROPS="#{name}, #{description},#{websiteUrl},#{gmtModified},#{gmtCreate},#{gmtDeleted},#{invitationCode}";
+    String COLUMNS="uk_organization_name,uk_real_name, organization_description,official_website_url,gmt_modified,gmt_create,gmt_deleted,invitation_code";
+    String PROPS="#{name}, #{realName}, #{description},#{websiteUrl},#{gmtModified},#{gmtCreate},#{gmtDeleted},#{invitationCode}";
 
-    String UPDATE_CONTENT="uk_organization_name = #{name},organization_description = #{description}," +
+    String UPDATE_CONTENT="uk_organization_name = #{name},organization_description = #{description}, uk_real_name = #{realName}," +
             "official_website_url = #{websiteUrl}, gmt_modified = #{gmtModified},invitation_code = #{invitationCode}";
 
     /**
@@ -44,7 +44,7 @@ public interface OrganizationMapper {
      * @param invitationCode 邀请码
      */
     @Update("update cptmp_organization set "+UPDATE_CONTENT+"where id = #{id} and gmt_deleted is null")
-    void updateOrganizationById(BigInteger id,Date gmtModified,String name,String description,String websiteUrl,String invitationCode);
+    void updateOrganizationById(BigInteger id,Date gmtModified,String name,String description,String realName,String websiteUrl,String invitationCode);
 
     /**
      * 测试删除
@@ -80,6 +80,7 @@ public interface OrganizationMapper {
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
             @Result(column = "uk_organization_name", property = "name", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "uk_real_name", property = "realName", jdbcType = JdbcType.VARCHAR),
             @Result(column = "organization_description", property = "description", jdbcType = JdbcType.VARCHAR),
             @Result(column = "official_website_url", property = "websiteUrl", jdbcType = JdbcType.VARCHAR),
             @Result(column = "invitation_code", property = "invitationCode", jdbcType = JdbcType.VARCHAR)
@@ -92,7 +93,7 @@ public interface OrganizationMapper {
      * @param id 组织id
      * @return 组织列表
      */
-    @Select("select uk_id, " + COLUMNS + " from organization where uk_id = #{id} and gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from cptmp_organization where id = #{id} and gmt_deleted is null")
     @ResultMap("cptmpOrganization")
     Organization findOrganizationById(BigInteger id);
 
@@ -101,9 +102,18 @@ public interface OrganizationMapper {
      * @param name 组织名称
      * @return 组织列表
      */
-    @Select("select uk_id, " + COLUMNS + " from university where uk_organization_name = #{name} and gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from cptmp_organization where uk_organization_name = #{name} and gmt_deleted is null")
     @ResultMap("cptmpOrganization")
     Organization findOrganizationByName(String name);
+
+    /**
+     * 根据组织邀请码进行查询
+     * @param invitationCode
+     * @return
+     */
+    @Select("select id, " + COLUMNS + " from cptmp_organization where invitation_code = #{invitationCode} and gmt_deleted is null")
+    @ResultMap("cptmpOrganization")
+    Organization findOrganizationByInvitationCode(String invitationCode);
 
 
 }
