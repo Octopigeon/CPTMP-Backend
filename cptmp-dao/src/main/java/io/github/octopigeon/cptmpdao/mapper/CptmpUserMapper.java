@@ -15,8 +15,8 @@ import java.util.List;
  * @version 2.0
  * @date 2020/7/7
  *
- * @last-check-in 李国鹏
- * @date 2020/7/12
+ * @last-check-in 魏啸冲
+ * @date 2020/7/13
  */
 @Repository
 @Mapper
@@ -33,7 +33,7 @@ public interface CptmpUserMapper {
     String UPDATE_CONTENT = " gmt_modified = #{gmtModified},  introduction = #{introduction}, " +
             "uk_email = #{email}, phone_number = #{phoneNumber}, gender = #{gender}, uk_username = #{username}, idx_password = #{password}, " +
             "idx_name = #{name}, uk_common_id = #{commonId}, idx_organization_id = #{organizationId},idx_role_name = #{roleName}, enabled = #{enabled}, account_non_expired = #{accountNonExpired}, " +
-            "credentials_non_expired = #{credentialsNonExpired}, account_non_locked = #{accountNonLocked},";
+            "credentials_non_expired = #{credentialsNonExpired}, account_non_locked = #{accountNonLocked}";
 
     /**
      * 插入实训
@@ -140,7 +140,7 @@ public interface CptmpUserMapper {
      *根据用户名更新
      */
     @Update(UPDATE_HEADER+UPDATE_CONTENT+UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
-    void updateUserByUserName(String username, Date gmtModified, CptmpUser user);
+    void updateUserByUserName(CptmpUser user);
 
     /**
      *根据用户名更新是否注销
@@ -171,8 +171,8 @@ public interface CptmpUserMapper {
      * @param introduction
      * @param gender
      */
-    @Update(UPDATE_HEADER + "gmt_modified = #{gmtModified},introduction = #{introduction},gender = #{gender}" + UPDATE_TAIL_USERNAME)
-    void updateUserInfoByUsername(String username, Date gmtModified, String introduction, boolean gender);
+    @Update(UPDATE_HEADER + "gmt_modified = #{gmtModified}, idx_name = #{name}, introduction = #{introduction},gender = #{gender}" + UPDATE_TAIL_USERNAME)
+    void updateUserInfoByUsername(String username, Date gmtModified, String name, String introduction, boolean gender);
 
     @Update(UPDATE_HEADER + "idx_password = #{password}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
     void updatePasswordByUsername(String username, Date gmtModified, String password);

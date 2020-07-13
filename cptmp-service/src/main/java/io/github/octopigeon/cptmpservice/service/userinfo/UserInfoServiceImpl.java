@@ -7,7 +7,10 @@ import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
+import io.github.octopigeon.cptmpservice.service.otherservice.EmailService;
+import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -128,22 +131,24 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     /**
      * 修改用户信息
-     *
+     * @last-check-in 魏啸冲 修改了一个bug，以及更换更新的方法
      * @param userInfo 修改后的用户信息
      * @return 是否删除成功
      */
     @Override
     public Boolean modify(BaseUserInfoDTO userInfo) throws Exception {
-        if (userInfo.getUserId() == null || "".equals(userInfo.getUsername())) {
+        if (userInfo.getUserId() == null && "".equals(userInfo.getUsername())) {
             throw new ValueException("userId or username is illegal!");
         }
         try {
             CptmpUser user = cptmpUserMapper.findUserByUsername(userInfo.getUsername());
-            BaseUserInfoDTO baseUserInfo = completeUserInfo(user, userInfo);
-            cptmpUserMapper.updateUserInfoByUsername(baseUserInfo.getUsername(),
-                    new Date(), baseUserInfo.getIntroduction(), baseUserInfo.getGender());
+            BeanUtils.copyProperties(userInfo, user, Utils.getNullPropertyNames(userInfo));
+            // 设置修改日期
+            user.setGmtModified(new Date());
+            cptmpUserMapper.updateUserByUserName(user);
             return true;
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new Exception("Modify userInfo failed");
         }
     }
