@@ -17,7 +17,13 @@ public interface OrganizationService extends BaseNormalService<OrganizationDTO> 
      * 使用组织名进行查询
      * @param name 组织的名称
      * @return 组织相关信息
-     * @throws Exception
      */
-    OrganizationDTO findByName(String name) throws Exception;
+    OrganizationDTO findByName(String name);
+
+    /**
+     * 根据邀请码进行查询
+     * @param code 邀请码
+     * @return
+     */
+    OrganizationDTO findByInvitationCode(String code);
 }

@@ -28,7 +28,7 @@ public class TrainProjectMapperTest extends BaseTest {
 //         */
 //        TrainProject trainProject1=new TrainProject();
 //        trainProject1.setGmtCreate(new Date());
-//        trainProject1.setId(BigInteger.valueOf(1));
+//        trainProject1.setTrainId(BigInteger.valueOf(1));
 //        trainProject1.setProjectName("test1");
 //        trainProject1.setProjectLevel(1);
 //        trainProject1.setProjectContent("test1");
