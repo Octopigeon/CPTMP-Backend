@@ -6,7 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
+import io.github.octopigeon.cptmpservice.dto.organization.OrganizationDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainProjectDTO;
+import io.github.octopigeon.cptmpservice.service.organization.OrganizationService;
 import io.github.octopigeon.cptmpservice.service.trainproject.TrainProjectService;
 import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
@@ -38,6 +40,9 @@ public class RegisterController {
 
     @Autowired
     private TrainProjectService trainProjectService;
+
+    @Autowired
+    private OrganizationService organizationService;
 
     /**
      * 企业管理员账户由系统管理员导入，权限限定为系统管理员
@@ -84,19 +89,19 @@ public class RegisterController {
         // common_id由用户名拆解得到，organization_id由系统管理员的organization_id决定（都为企业），对于学生和老师
         // 则为学校对应的id
         ObjectMapper objectMapper = new ObjectMapper();
-        ReqBeanWithEnterpriseAdminRegisterInfo[] reqBeanWithEnterpriseAdminRegisterInfos
-                = objectMapper.readValue(json, ReqBeanWithEnterpriseAdminRegisterInfo[].class);
+        ReqBeanWithUserRegisterInfo[] reqBeanWithUserRegisterInfos
+                = objectMapper.readValue(json, ReqBeanWithUserRegisterInfo[].class);
         List<Integer> registerFailedList = new ArrayList<>();
-        for (int i = 0; i < reqBeanWithEnterpriseAdminRegisterInfos.length; i++) {
+        for (int i = 0; i < reqBeanWithUserRegisterInfos.length; i++) {
             // 遍历每个信息，逐一执行注册操作
-            ReqBeanWithEnterpriseAdminRegisterInfo reqBeanWithEnterpriseAdminRegisterInfo
-                    = reqBeanWithEnterpriseAdminRegisterInfos[i];
+            ReqBeanWithUserRegisterInfo reqBeanWithUserRegisterInfo
+                    = reqBeanWithUserRegisterInfos[i];
             try {
-                BaseUserInfoDTO baseUserInfoDTO = ReqBeanWithEnterpriseAdminRegisterInfo.registerTo(
-                        reqBeanWithEnterpriseAdminRegisterInfo
+                BaseUserInfoDTO baseUserInfoDTO = ReqBeanWithUserRegisterInfo.registerTo(
+                        reqBeanWithUserRegisterInfo
                 );
                 // 用户名是一个前缀 + 横杠 + 工号
-                baseUserInfoDTO.setCommonId(reqBeanWithEnterpriseAdminRegisterInfo.getUsername().split("-")[1]);
+                baseUserInfoDTO.setCommonId(reqBeanWithUserRegisterInfo.getUsername().split("-")[1]);
                 baseUserInfoDTO.setRoleName(roleName);
                 userInfoService.add(baseUserInfoDTO);
             } catch (Exception e) {
@@ -118,7 +123,9 @@ public class RegisterController {
             ReqBeanWithOrganizationRegisterInfo reqBeanWithOrganizationRegisterInfo
                     = reqBeanWithOrganizationRegisterInfos[i];
             try {
-                // TODO 等lgh的DTO
+                OrganizationDTO organizationDTO = new OrganizationDTO();
+                organizationDTO.setName(reqBeanWithOrganizationRegisterInfo.getName());
+                // TODO 等李国豪加上真实名字字段
             } catch (Exception e) {
                 e.printStackTrace();
                 registerFailedList.add(i);
@@ -159,7 +166,7 @@ public class RegisterController {
 }
 
 @Data
-class ReqBeanWithEnterpriseAdminRegisterInfo {
+class ReqBeanWithUserRegisterInfo {
 
     private String username;
     private String name;
@@ -170,16 +177,16 @@ class ReqBeanWithEnterpriseAdminRegisterInfo {
 
     /**
      * 用于将username, name, password, email, orgId封装成一个BaseUserInfo
-     * @param reqBeanWithEnterpriseAdminRegisterInfo json子节点
+     * @param reqBeanWithUserRegisterInfo json子节点
      * @return 一个拥有上述五种属性的BaseUserInfo
      */
-    public static BaseUserInfoDTO registerTo(ReqBeanWithEnterpriseAdminRegisterInfo reqBeanWithEnterpriseAdminRegisterInfo) {
+    public static BaseUserInfoDTO registerTo(ReqBeanWithUserRegisterInfo reqBeanWithUserRegisterInfo) {
         BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
-        baseUserInfoDTO.setUsername(reqBeanWithEnterpriseAdminRegisterInfo.getUsername());
-        baseUserInfoDTO.setName((reqBeanWithEnterpriseAdminRegisterInfo.getName()));
-        baseUserInfoDTO.setPassword(reqBeanWithEnterpriseAdminRegisterInfo.getPassword());
-        baseUserInfoDTO.setEmail(reqBeanWithEnterpriseAdminRegisterInfo.getEmail());
-        baseUserInfoDTO.setOrganizationId(reqBeanWithEnterpriseAdminRegisterInfo.getOrganizationId());
+        baseUserInfoDTO.setUsername(reqBeanWithUserRegisterInfo.getUsername());
+        baseUserInfoDTO.setName((reqBeanWithUserRegisterInfo.getName()));
+        baseUserInfoDTO.setPassword(reqBeanWithUserRegisterInfo.getPassword());
+        baseUserInfoDTO.setEmail(reqBeanWithUserRegisterInfo.getEmail());
+        baseUserInfoDTO.setOrganizationId(reqBeanWithUserRegisterInfo.getOrganizationId());
         return baseUserInfoDTO;
     }
 }
@@ -187,7 +194,12 @@ class ReqBeanWithEnterpriseAdminRegisterInfo {
 @Data
 class  ReqBeanWithOrganizationRegisterInfo {
 
+    // TODO 等lgh创建学校名字段
+
     private String name;
+    private String realName;
+    private String websiteUrl;
+    private String description;
 
 }
 
