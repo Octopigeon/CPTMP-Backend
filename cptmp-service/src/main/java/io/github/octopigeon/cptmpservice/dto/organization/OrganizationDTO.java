@@ -15,6 +15,7 @@ import java.math.BigInteger;
 public class OrganizationDTO {
     private BigInteger id;
     private String name;
+    private String realName;
     private String description;
     private String websiteUrl;
     private String invitationCode;

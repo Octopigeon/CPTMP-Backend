@@ -258,28 +258,15 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     private BaseUserInfoDTO parseUserInfo(BaseUserInfoDTO userInfo) throws ValueException {
         userInfo.setPassword(userInfo.getPassword());
         if (userInfo.getUsername() == null) {
-            userInfo.setUsername(productUserName(userInfo));
+            throw new ValueException("userName value is invalid!");
         }
         if (!validateEmailFormat(userInfo.getEmail())) {
-            throw new ValueException("E-mail format is invalidation");
+            throw new ValueException("E-mail format is invalid");
         }
         if (userInfo.getPhoneNumber() != null && validatePhoneNumberFormat(userInfo.getPhoneNumber().toString())) {
             throw new ValueException("Phone number format is invalidation");
         }
         return userInfo;
-    }
-
-    /**
-     * 产生用户名
-     *
-     * @param userInfo
-     * @return
-     */
-    private String productUserName(BaseUserInfoDTO userInfo) {
-        //根据organizationId查找organizationName
-        String organizationName = "";
-        String userName = organizationName + userInfo.getCommonId();
-        return userName;
     }
 
     private Boolean validateEmailFormat(String email) {
