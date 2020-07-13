@@ -40,6 +40,7 @@ public class OrganizationServiceImpl implements OrganizationService{
             organization.setInvitationCode(productInvitationCode());
             organizationMapper.addOrganization(organization);
         }catch (Exception e){
+            e.printStackTrace();
             throw new Exception("add organization failed！");
         }
     }
@@ -60,6 +61,7 @@ public class OrganizationServiceImpl implements OrganizationService{
                 throw new ValueException("organization is not existed!");
             }
         }catch (Exception e){
+            e.printStackTrace();
             throw new Exception(e);
         }
     }
@@ -79,6 +81,7 @@ public class OrganizationServiceImpl implements OrganizationService{
             organizationMapper.updateOrganizationById(organization.getId(), new Date(), organization.getName(), organization.getDescription(), organization.getWebsiteUrl(), organization.getInvitationCode());
             return true;
         }catch (Exception e){
+            e.printStackTrace();
             throw new Exception(e);
         }
     }
@@ -133,6 +136,7 @@ public class OrganizationServiceImpl implements OrganizationService{
                     f.set(organization, f.get(origin));
                 }
             } catch (IllegalArgumentException | IllegalAccessException e) {
+                e.printStackTrace();
                 throw new IllegalAccessException();
             }
         }

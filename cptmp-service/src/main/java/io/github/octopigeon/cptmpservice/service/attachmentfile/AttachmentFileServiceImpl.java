@@ -39,6 +39,7 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
             attachmentFile.setOriginName(fileInfo.getOriginalName());
             attachmentFileMapper.addAttachmentFile(attachmentFile);
         }catch (Exception e){
+            e.printStackTrace();
             throw new Exception("文件添加失败");
         }
     }
