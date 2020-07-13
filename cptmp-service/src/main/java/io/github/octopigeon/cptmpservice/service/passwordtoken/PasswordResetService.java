@@ -14,8 +14,9 @@ public interface PasswordResetService {
     /**
      * 为用户创建修改密码的token
      * @param userEmail 用户邮箱
+     * @return 返回生成的token
      */
-    void createPasswordResetTokenForUser(String userEmail);
+    String createPasswordResetTokenForUser(String userEmail);
 
     /**
      * 根据用户提供的token，查找token，验证前端提交的邮箱

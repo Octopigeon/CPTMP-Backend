@@ -27,7 +27,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
      * @param userEmail 用户邮箱
      */
     @Override
-    public void createPasswordResetTokenForUser(String userEmail) {
+    public String createPasswordResetTokenForUser(String userEmail) {
         String token = UUID.randomUUID().toString();
         PasswordResetToken passwordResetToken = new PasswordResetToken();
         // 设置邮箱基本信息，创建时间（用于比对是否过期），token，对应的用户邮箱
@@ -35,6 +35,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
         passwordResetToken.setToken(token);
         passwordResetToken.setEmail(userEmail);
         passwordResetTokenMapper.addPasswordResetToken(passwordResetToken);
+        return token;
     }
 
     /**
