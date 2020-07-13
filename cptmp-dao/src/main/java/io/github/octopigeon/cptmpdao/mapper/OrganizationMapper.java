@@ -22,7 +22,7 @@ import java.util.List;
 public interface OrganizationMapper {
 
     String COLUMNS="uk_organization_name,uk_real_name, organization_description,official_website_url,gmt_modified,gmt_create,gmt_deleted,invitation_code";
-    String PROPS="#{name}, #{description},#{websiteUrl},#{gmtModified},#{gmtCreate},#{gmtDeleted},#{invitationCode}";
+    String PROPS="#{name}, #{realName}, #{description},#{websiteUrl},#{gmtModified},#{gmtCreate},#{gmtDeleted},#{invitationCode}";
 
     String UPDATE_CONTENT="uk_organization_name = #{name},organization_description = #{description}, uk_real_name = #{realName}," +
             "official_website_url = #{websiteUrl}, gmt_modified = #{gmtModified},invitation_code = #{invitationCode}";

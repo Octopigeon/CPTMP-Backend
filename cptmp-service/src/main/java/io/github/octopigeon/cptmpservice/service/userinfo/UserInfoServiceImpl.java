@@ -4,6 +4,7 @@ import io.github.octopigeon.cptmpdao.mapper.*;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpdao.model.Organization;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
+import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
@@ -299,6 +300,9 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         user.updatePassword(userInfo.getPassword());
         user.setGmtCreate(new Date());
         user.setEnabled(false);
+        if(RoleEnum.ROLE_ENTERPRISE_ADMIN.name().equals(user.getRoleName())){
+            user.setEnabled(true);
+        }
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
