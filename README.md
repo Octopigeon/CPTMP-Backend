@@ -189,45 +189,20 @@ College Practice Training Management Platform
 + 说明：导入注册各种用户，**特别注意：超管注册企业账户需要将自己的orgId传给后端（因为超管和企业管理员都是属于企业的，是同一个组织）**，而注册老师和学生则是传相应的学校id
 + 调用实例：
 ``` 
-// 成功
 [
     {
-        "username": "test-3241",
-        "name": "crl",
-        "password": "123",
-        "email": "4132ssdf5@qq.com",
+        "common_id": "1000302060342",
+        "name": "王恒",
+        "password": 123,
+        "email": "whnb@qq.com",
         "organization_id": 2
     },
     {
-        "username": "test-5411256",
-        "name": "sah",
-        "password": "123",
-        "email": "222sf552@qq.com",
-        "organization_id": 2
-    }
-]
-// 失败
-[
-    {
-        "username": "test-123456",
-        "name": "wxc",
-        "password": "123",
-        "email": "111@qq.com"，
-        "organization_id": 2
-    },
-    {
-        "username": "test-123457",
-        "name": "lgp",
-        "password": "123",
-        "email": "222@qq.com"，
-        "organization_id": 2
-    },
-    {
-        "username": "test-123457",
-        "name": "ty",
-        "password": "123",
-        "email": "222@qq.com"，
-        "organization_id": 2
+        "common_id": "1000432423552",
+        "name": "王竖",
+        "password": 123,
+        "email": "whtnbl@qq.com",
+        "organization_id": 5
     }
 ]
 ```
@@ -246,9 +221,109 @@ College Practice Training Management Platform
     "date": "2020-07-12T01:48:09.955+00:00",
     "msg": "register failed",
     "data": [
-        2
+        0
     ]
 }
 ```
 
 ## /api/org
++ HTTP方法：POST
++ 返回类型：json
++ 说明：企业集体注册学校
++ 调用实例：
+``` 
+[
+    {
+        "code": "WHU",
+        "real_name": "武汉大学",
+        "website_url": "www.whu.edu.cn",
+        "description": "湖北省武汉市武汉大学"
+    },
+    {
+        "code": "HUST",
+        "real_name": "华中科技大学",
+        "website_url": "www.hust.edu.cn",
+        "description": "湖北省武汉市华中科技大学"
+    }
+]
+```
++ 返回json：
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-13T12:17:08.750+00:00",
+    "msg": "all set",
+    "data": null
+}
+// 失败
+{
+    "status": 11,
+    "date": "2020-07-13T12:21:12.932+00:00",
+    "msg": "register failed",
+    "data": [
+        0
+    ]
+}
+```
+
+## /api/user/student/invite
++ HTTP方法：GET
++ 返回类型：json
++ 说明：验证邀请链接是否有效
++ 调用实例：
+``` 
+{
+    "invitation_code": "a4c49014-bd4c-4c20-94b3-a3485bae6e23"
+}
+```
++ 返回实例：
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-13T14:11:53.656+00:00",
+    "msg": "success",
+    "data": {
+        "name": "WHU",
+        "real_name": "武汉大学",
+        "description": "湖北省武汉市武汉大学",
+        "website_url": "www.whu.edu.cn"
+    }
+}
+// 失败
+{
+    "status": 14,
+    "date": "2020-07-13T14:12:15.078+00:00",
+    "msg": "fake invitation code",
+    "data": null
+}
+```
++ HTTP方法：POST
++ 返回类型：json
++ 说明：学生注册
++ 调用实例：
+``` 
+{
+    "name": "李国豪",
+    "email": "2018302011123@whu.edu.cn",
+    "username": "WHU-2018302011123",
+    "password": 123,
+    "invitation_code": "a4c49014-bd4c-4c20-94b3-a3485bae6e23"
+}
+```
++ 返回实例：
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-13T13:52:11.829+00:00",
+    "msg": "register success"
+}
+// 失败
+{
+    "status": 11,
+    "date": "2020-07-13T13:52:48.798+00:00",
+    "msg": "register failed"
+}
+```
