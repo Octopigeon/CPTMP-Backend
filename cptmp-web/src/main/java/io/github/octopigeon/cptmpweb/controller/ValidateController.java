@@ -9,6 +9,8 @@ import io.github.octopigeon.cptmpservice.service.otherservice.EmailService;
 import io.github.octopigeon.cptmpservice.service.passwordtoken.PasswordResetService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,10 +31,10 @@ public class ValidateController {
     private EmailService emailService;
 
     @Autowired
-    private EmailTemplate emailTemplate;
-
-    @Autowired
     private PasswordResetService passwordResetService;
+
+    @Value("domain.name")
+    private String domain;
 
     /**
      * 用于激活账户或者修改邮箱时验证是否成功
@@ -67,8 +69,8 @@ public class ValidateController {
         String email = objectMapper.readValue(json, ObjectNode.class).get("email").asText();
         try {
             String token = passwordResetService.createPasswordResetTokenForUser(email);
-            String text = emailTemplate.generateLink(token, email);
-            emailService.sendSimpleMessage(email, emailTemplate.ACTIVATE_SUBJECT, text);
+            String text = EmailTemplate.generateLink(domain, token, email);
+            emailService.sendSimpleMessage(email, EmailTemplate.ACTIVATE_SUBJECT, text);
             return RespBean.ok("send token email success");
         } catch (Exception e) {
             e.printStackTrace();
