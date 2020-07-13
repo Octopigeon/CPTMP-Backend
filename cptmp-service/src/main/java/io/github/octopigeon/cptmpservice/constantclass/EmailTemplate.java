@@ -11,21 +11,14 @@ import org.springframework.stereotype.Component;
  * @last-check-in 魏啸冲
  * @date 2020/7/13
  */
-@Component
 public final class EmailTemplate {
 
-    @Autowired
-    private Environment environment;
-
     /** 邮件抬头 */
-    public final String ACTIVATE_SUBJECT = "嗨你好，这里是🐙🕊！";
-
-    /** 激活链接抬头 */
-    public final String ACTIVATE_TEXT = "http://" + environment.getProperty("domain.name") + "/verify/email;token=";
+    public static final String ACTIVATE_SUBJECT = "嗨你好，这里是🐙🕊！";
 
     /** 生成激活链接 */
-    public String generateLink(String token, String email) {
-        return ACTIVATE_TEXT + token + ";email=" + email;
+    public static String generateLink(String domain, String token, String email) {
+        return  "http://" + domain + "/verify/email;token=" + token + ";email=" + email;
     }
 
 }

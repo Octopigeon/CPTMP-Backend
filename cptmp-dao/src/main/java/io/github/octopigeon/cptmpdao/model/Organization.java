@@ -22,6 +22,7 @@ public class Organization {
     private Date gmtModified;
     private Date gmtDeleted;
     private String name;
+    private String realName;
     private String description;
     private  String websiteUrl;
     private String invitationCode;
