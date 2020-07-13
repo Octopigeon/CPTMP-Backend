@@ -6,6 +6,8 @@ import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalSer
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigInteger;
+
 /**
  * @author 李国豪
  * @version 1.0
@@ -41,11 +43,11 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
      */
     BaseUserInfoDTO findBaseUserInfoByUsername(String username);
 
-//    /**
-//     * 激活账号
-//     * @param userId
-//     */
-//    void activateAccount(BigInteger userId);
+    /**
+     * 激活账号
+     * @param userId
+     */
+    void activateAccount(BigInteger userId);
 
     /**
      * 删除账号（软删除）

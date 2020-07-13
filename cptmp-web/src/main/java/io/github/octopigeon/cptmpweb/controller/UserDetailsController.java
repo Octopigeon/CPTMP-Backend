@@ -147,6 +147,28 @@ public class UserDetailsController {
         return RespBeanWithFailedList.report(deleteFailedList);
     }
 
+    /**
+     * 企业管理员批量删除用户
+     * @param json 传来包含批量删除用户的信息(userId)
+     * @return 返回删除失败的信息
+     */
+    @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
+    @PutMapping("/api/user")
+    public RespBeanWithFailedList restoreAccount(@RequestBody String json) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        BigInteger[] restoreList = objectMapper.readValue(json, BigInteger[].class);
+        List<Integer> restoreFailedList = new ArrayList<>();
+        for (int i = 0; i < restoreList.length; i++) {
+            try {
+                userInfoService.activateAccount(restoreList[i]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                restoreFailedList.add(i);
+            }
+        }
+        return RespBeanWithFailedList.report(restoreFailedList);
+    }
+
 }
 
 @Data
