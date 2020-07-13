@@ -12,19 +12,19 @@ import java.util.List;
 
 /**
  * @author 陈若琳
- * @version 2.0
+ * @version 2.1
  * @date 2020/07/12
- * @last-check-in 李国鹏
- * @date 2020/07/12
+ * @last-check-in 李国豪
+ * @date 2020/07/13
  */
 @Repository
 @Mapper
 public interface OrganizationMapper {
 
     String COLUMNS="uk_organization_name,organization_description,official_website_url,gmt_modified,gmt_create,gmt_deleted,invitation_code";
-    String PROPS="#{name}, #{organizationDescription},#{websiteUrl},#{gmtModified},#{gmtCreate},#{gmtDeleted},#{invitationCode}";
+    String PROPS="#{name}, #{description},#{websiteUrl},#{gmtModified},#{gmtCreate},#{gmtDeleted},#{invitationCode}";
 
-    String UPDATE_CONTENT="uk_organization_name = #{name},organization_description = #{organizationDescription}," +
+    String UPDATE_CONTENT="uk_organization_name = #{name},organization_description = #{description}," +
             "official_website_url = #{websiteUrl}, gmt_modified = #{gmtModified},invitation_code = #{invitationCode}";
 
     /**
@@ -38,13 +38,13 @@ public interface OrganizationMapper {
     /**
      * 根据id修改组织信息
      * @param id 组织id
-     * @param organizationDescription 组织简介
+     * @param description 组织简介
      * @param websiteUrl 组织官网
      * @param gmtModified 最后修改时间
      * @param invitationCode 邀请码
      */
     @Update("update cptmp_organization set "+UPDATE_CONTENT+"where id = #{id} and gmt_deleted is null")
-    void updateOrganizationById(BigInteger id,Date gmtModified,String name,String organizationDescription,String websiteUrl,String invitationCode);
+    void updateOrganizationById(BigInteger id,Date gmtModified,String name,String description,String websiteUrl,String invitationCode);
 
     /**
      * 测试删除
@@ -80,7 +80,7 @@ public interface OrganizationMapper {
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
             @Result(column = "uk_organization_name", property = "name", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "organization_description", property = "organizationDescription", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "organization_description", property = "description", jdbcType = JdbcType.VARCHAR),
             @Result(column = "official_website_url", property = "websiteUrl", jdbcType = JdbcType.VARCHAR),
             @Result(column = "invitation_code", property = "invitationCode", jdbcType = JdbcType.VARCHAR)
     })
