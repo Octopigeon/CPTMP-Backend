@@ -8,13 +8,13 @@ import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainProjectDTO;
 import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
+import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
@@ -92,9 +92,8 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
     @Override
     public Boolean modify(TrainProjectDTO dto) throws Exception {
         try {
-            TrainProject trainProject = new TrainProject();
-            BeanUtils.copyProperties(dto, trainProject);
-            completeTrainProject(trainProject);
+            TrainProject trainProject = trainProjectMapper.findTrainProjectById(dto.getId());
+            BeanUtils.copyProperties(dto, trainProject, Utils.getNullPropertyNames(dto));
             trainProjectMapper.updateTrainProjectById(trainProject.getId(), new Date(), trainProject.getName(), trainProject.getLevel(), trainProject.getContent());
             return true;
         }catch (Exception e){
@@ -153,23 +152,5 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
             trainProjectDTOS.add(trainProjectDTO);
         }
         return trainProjectDTOS;
-    }
-
-    private void completeTrainProject(TrainProject trainProject) throws IllegalAccessException {
-        TrainProject origin = trainProjectMapper.findTrainProjectById(trainProject.getId());
-        Class<? extends TrainProject> cls = trainProject.getClass();
-        Field[] fields = cls.getDeclaredFields();
-        for (Field f : fields) {
-            //设置属性可读
-            f.setAccessible(true);
-            try {
-                if (f.get(trainProject) == null) {
-                    f.set(trainProject, f.get(origin));
-                }
-            } catch (IllegalArgumentException | IllegalAccessException e) {
-                e.printStackTrace();
-                throw new IllegalAccessException();
-            }
-        }
     }
 }

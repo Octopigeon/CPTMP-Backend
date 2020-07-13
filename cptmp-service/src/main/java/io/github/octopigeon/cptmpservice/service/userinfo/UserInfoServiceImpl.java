@@ -243,36 +243,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         return getFullUserInfo(cptmpUser);
     }
 
-    /**
-     * 补全userInfo
-     *
-     * @param cptmpUser usrModel
-     * @return userInfo类
-     */
-    private BaseUserInfoDTO completeUserInfo(CptmpUser cptmpUser, BaseUserInfoDTO userInfo) throws IllegalAccessException {
-
-        BaseUserInfoDTO originUserInfo = getFullUserInfo(cptmpUser);
-        return compareUserInfo(originUserInfo, userInfo);
-    }
-
-    private BaseUserInfoDTO compareUserInfo(BaseUserInfoDTO originUserInfo, BaseUserInfoDTO userInfo) throws IllegalAccessException {
-        Class<? extends BaseUserInfoDTO> cls = originUserInfo.getClass();
-        Field[] fields = cls.getDeclaredFields();
-        for (Field f : fields) {
-            //设置属性可读
-            f.setAccessible(true);
-            try {
-                if (f.get(userInfo) == null) {
-                    f.set(userInfo, f.get(originUserInfo));
-                }
-            } catch (IllegalArgumentException e) {
-                e.printStackTrace();
-                throw new IllegalAccessException();
-            }
-        }
-        return userInfo;
-    }
-
     private BaseUserInfoDTO getFullUserInfo(CptmpUser cptmpUser) {
         BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
         BeanUtils.copyProperties(cptmpUser, baseUserInfoDTO);
