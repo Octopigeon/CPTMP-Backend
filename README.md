@@ -180,6 +180,35 @@ College Practice Training Management Platform
 }
 ```
 
+## /api/user
++ HTTP方法：DELETE
++ 返回类型：json
++ 说明：删除账户（软删除，disable）（注：此处的错误码用的是注册失败的错误码，后面有可能会改，前端建议判断的时候只要状态码非0都算失败）
++ 调用实例：
+``` 
+[
+    2,
+    4
+]
+```
++ 返回实例：
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-13T15:50:38.933+00:00",
+    "msg": "all set",
+    "data": null
+}
+// 失败
+{
+    "status": 11,
+    "date": "2020-07-13T15:50:38.933+00:00",
+    "msg": ""operation failed"",
+    "data": null
+}
+```
+
 # RegisterController
 ## /api/user/enterprise-admin
 ## /api/user/teacher
