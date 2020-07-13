@@ -4,14 +4,11 @@ import io.github.octopigeon.cptmpdao.mapper.*;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpdao.model.Organization;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
-import io.github.octopigeon.cptmpservice.constantclass.EmailTemplate;
-import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
-import io.github.octopigeon.cptmpservice.service.otherservice.EmailService;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
-import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,12 +36,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     private OrganizationMapper organizationMapper;
 
     @Autowired
-    private EmailService emailService;
-
-    @Autowired
     private PasswordEncoder passwordEncoder;
-
-    private final EmailTemplate emailTemplate = new EmailTemplate();
 
     @Autowired
     public UserInfoServiceImpl(FileProperties fileProperties) throws Exception {
@@ -99,7 +91,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
             parsedUserInfo.setOrganizationId(organizationId);
             CptmpUser user = userInfoToUser(parsedUserInfo);
             cptmpUserMapper.addUser(user);
-            // emailService.sendSimpleMessage(user.getEmail(), emailTemplate.ACTIVATE_SUBJECT, emailTemplate.ACTIVATE_TEXT);
         }catch (Exception e){
             throw new Exception(e.getMessage());
         }
@@ -118,7 +109,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
             CptmpUser user = userInfoToUser(parsedUserInfo);
             //添加用户
             cptmpUserMapper.addUser(user);
-            // emailService.sendSimpleMessage(user.getEmail(), emailTemplate.ACTIVATE_SUBJECT, emailTemplate.ACTIVATE_TEXT);
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
@@ -199,24 +189,24 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         }
     }
 
-    /**
-     * 上传人脸数据
-     *
-     * @param file   人脸图片
-     * @param username 用户名
-     */
-    @Override
-    public void uploadFace(MultipartFile file, String username) throws Exception {
-        try{
-            FileDTO fileInfo = storePublicFile(file);
-            CptmpUser user = cptmpUserMapper.findUserByUsername(username);
-            if (RoleEnum.ROLE_STUDENT_MEMBER.name().equals(user.getRoleName())) {
-                cptmpUserMapper.updateFaceInfoById(user.getId(), new Date(), fileInfo.getFilePath());
-            }
-        } catch (Exception e) {
-            throw new Exception("Face info upload failed!");
-        }
-    }
+//    /**
+//     * 上传人脸数据
+//     *
+//     * @param file   人脸图片
+//     * @param username 用户名
+//     */
+//    @Override
+//    public void uploadFace(MultipartFile file, String username) throws Exception {
+//        try{
+//            FileDTO fileInfo = storePublicFile(file);
+//            CptmpUser user = cptmpUserMapper.findUserByUsername(username);
+//            if (RoleEnum.ROLE_STUDENT_MEMBER.name().equals(user.getRoleName())) {
+//                cptmpUserMapper.updateFaceInfoById(user.getId(), new Date(), fileInfo.getFilePath());
+//            }
+//        } catch (Exception e) {
+//            throw new Exception("Face info upload failed!");
+//        }
+//    }
 
     // 查询服务
 
@@ -275,17 +265,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     private BaseUserInfoDTO getFullUserInfo(CptmpUser cptmpUser) {
         BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
-        baseUserInfoDTO.setUserId(cptmpUser.getId());
-        baseUserInfoDTO.setCommonId(cptmpUser.getCommonId());
-        baseUserInfoDTO.setAvatar(cptmpUser.getAvatar());
-        baseUserInfoDTO.setEmail(cptmpUser.getEmail());
-        baseUserInfoDTO.setGender(cptmpUser.getGender());
-        baseUserInfoDTO.setIntroduction(cptmpUser.getIntroduction());
-        baseUserInfoDTO.setName(cptmpUser.getName());
-        baseUserInfoDTO.setOrganizationId(cptmpUser.getOrganizationId());
-        baseUserInfoDTO.setPhoneNumber(cptmpUser.getPhoneNumber());
-        baseUserInfoDTO.setRoleName(cptmpUser.getRoleName());
-        baseUserInfoDTO.setUsername(cptmpUser.getUsername());
+        BeanUtils.copyProperties(cptmpUser, baseUserInfoDTO);
         return baseUserInfoDTO;
     }
 
@@ -307,15 +287,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
             throw new ValueException("Phone number format is invalidation");
         }
         return userInfo;
-    }
-
-    /**
-     * 产生20位字母命名
-     *
-     * @return 随机昵称
-     */
-    private String productNickname() {
-        return RandomStringUtils.randomAlphabetic(20);
     }
 
     /**
