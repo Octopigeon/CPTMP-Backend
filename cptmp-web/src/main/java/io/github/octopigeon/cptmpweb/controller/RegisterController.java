@@ -5,8 +5,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
-import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
+import io.github.octopigeon.cptmpservice.dto.trainproject.TrainProjectDTO;
+import io.github.octopigeon.cptmpservice.service.trainproject.TrainProjectService;
 import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
@@ -25,7 +26,7 @@ import java.util.List;
  * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/11
- * 提供各种用户注册的api
+ * 提供各种用户注册，学校注册，实训项目注册，实训注册的api（所有可以批量导入的）
  * @last-check-in 魏啸冲
  * @date 2020/7/13
  */
@@ -35,6 +36,9 @@ public class RegisterController {
     @Autowired
     private UserInfoService userInfoService;
 
+    @Autowired
+    private TrainProjectService trainProjectService;
+
     /**
      * 企业管理员账户由系统管理员导入，权限限定为系统管理员
      * @param json 一个列表，每项包含username, password, name, email, commonId, orgId
@@ -43,7 +47,7 @@ public class RegisterController {
     @Secured(CptmpRole.ROLE_SYSTEM_ADMIN)
     @PostMapping("/api/user/enterprise-admin")
     public RespBeanWithFailedRegisterList registerEnterpriseAdmin(@RequestBody String json) throws JsonProcessingException {
-        return doRegister(json, CptmpRole.ROLE_ENTERPRISE_ADMIN);
+        return registerRole(json, CptmpRole.ROLE_ENTERPRISE_ADMIN);
     }
 
     /**
@@ -55,13 +59,18 @@ public class RegisterController {
     @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
     @PostMapping("/api/user/teacher")
     public RespBeanWithFailedRegisterList registerTeacher(@RequestBody String json) throws JsonProcessingException {
-       return doRegister(json, CptmpRole.ROLE_SCHOOL_TEACHER);
+       return registerRole(json, CptmpRole.ROLE_SCHOOL_TEACHER);
     }
 
+    /**
+     * 企业管理员可以导入学生账号
+     * @param json 与教师一样
+     * @return 注册失败列表
+     */
     @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
     @PostMapping("/api/user/student")
     public RespBeanWithFailedRegisterList registerStudent(@RequestBody String json) throws JsonProcessingException {
-        return doRegister(json, CptmpRole.ROLE_STUDENT_MEMBER);
+        return registerRole(json, CptmpRole.ROLE_STUDENT_MEMBER);
     }
 
     /**
@@ -70,7 +79,7 @@ public class RegisterController {
      * @param roleName 设定的角色名
      * @return 包含注册失败条目列表的信息
      */
-    private RespBeanWithFailedRegisterList doRegister(String json, String roleName) throws JsonProcessingException {
+    private RespBeanWithFailedRegisterList registerRole(String json, String roleName) throws JsonProcessingException {
         // 解析前端发来的一个json数组，每项包含username，name，password，email四项
         // common_id由用户名拆解得到，organization_id由系统管理员的organization_id决定（都为企业），对于学生和老师
         // 则为学校对应的id
@@ -90,6 +99,55 @@ public class RegisterController {
                 baseUserInfoDTO.setCommonId(reqBeanWithEnterpriseAdminRegisterInfo.getUsername().split("-")[1]);
                 baseUserInfoDTO.setRoleName(roleName);
                 userInfoService.add(baseUserInfoDTO);
+            } catch (Exception e) {
+                e.printStackTrace();
+                registerFailedList.add(i);
+            }
+        }
+        return RespBeanWithFailedRegisterList.report(registerFailedList);
+    }
+
+    @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
+    @PostMapping("/api/org")
+    public RespBeanWithFailedRegisterList registerOrganization(@RequestBody String json) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ReqBeanWithOrganizationRegisterInfo[] reqBeanWithOrganizationRegisterInfos
+                = objectMapper.readValue(json, ReqBeanWithOrganizationRegisterInfo[].class);
+        List<Integer> registerFailedList = new ArrayList<>();
+        for (int i = 0; i < reqBeanWithOrganizationRegisterInfos.length; i++) {
+            ReqBeanWithOrganizationRegisterInfo reqBeanWithOrganizationRegisterInfo
+                    = reqBeanWithOrganizationRegisterInfos[i];
+            try {
+                // TODO 等lgh的DTO
+            } catch (Exception e) {
+                e.printStackTrace();
+                registerFailedList.add(i);
+            }
+        }
+        return RespBeanWithFailedRegisterList.report(registerFailedList);
+    }
+
+    /**
+     * 获取json中的name，project_level，project_content三个字段
+     * @param json 包含上述三个字段的json
+     * @return 返回一个包含导入失败条目列表的json
+     */
+    @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
+    @PostMapping("/api/train-project")
+    public RespBeanWithFailedRegisterList registerTrainProject(@RequestBody String json) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        ReqBeanWithTrainProjectRegisterInfo[] reqBeanWithTrainProjectRegisterInfos
+                = objectMapper.readValue(json, ReqBeanWithTrainProjectRegisterInfo[].class);
+        List<Integer> registerFailedList = new ArrayList<>();
+        for (int i = 0; i < reqBeanWithTrainProjectRegisterInfos.length; i++) {
+            ReqBeanWithTrainProjectRegisterInfo reqBeanWithTrainProjectRegisterInfo
+                    = reqBeanWithTrainProjectRegisterInfos[i];
+            try {
+                TrainProjectDTO trainProjectDTO = new TrainProjectDTO();
+                trainProjectDTO.setName(reqBeanWithTrainProjectRegisterInfo.getProjectName());
+                trainProjectDTO.setLevel(reqBeanWithTrainProjectRegisterInfo.getProjectLevel());
+                trainProjectDTO.setContent(reqBeanWithTrainProjectRegisterInfo.getProjectContent());
+                trainProjectService.add(trainProjectDTO);
             } catch (Exception e) {
                 e.printStackTrace();
                 registerFailedList.add(i);
@@ -124,6 +182,23 @@ class ReqBeanWithEnterpriseAdminRegisterInfo {
         baseUserInfoDTO.setOrganizationId(reqBeanWithEnterpriseAdminRegisterInfo.getOrganizationId());
         return baseUserInfoDTO;
     }
+}
+
+@Data
+class  ReqBeanWithOrganizationRegisterInfo {
+
+    private String name;
+
+}
+
+@Data
+class  ReqBeanWithTrainProjectRegisterInfo {
+
+    private String projectName;
+    private Integer projectLevel;
+    /** 实训简介 */
+    private String projectContent;
+
 }
 
 @EqualsAndHashCode(callSuper = true)
