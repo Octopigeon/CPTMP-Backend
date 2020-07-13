@@ -149,16 +149,16 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         }
     }
 
-//    /**
-//     * 激活账号
-//     *
-//     * @param userId 用户id
-//     */
-//    @Override
-//    public void activateAccount(BigInteger userId) {
-//        CptmpUser cptmpUser = cptmpUserMapper.findUserById(userId);
-//        cptmpUserMapper.updateEnabledByUsername(cptmpUser.getUsername(), true);
-//    }
+    /**
+     * 激活账号（用于删除账号错误时恢复）
+     *
+     * @param userId 用户id
+     */
+    @Override
+    public void activateAccount(BigInteger userId) {
+        CptmpUser cptmpUser = cptmpUserMapper.findUserById(userId);
+        cptmpUserMapper.updateEnabledByUsername(cptmpUser.getUsername(), true);
+    }
 
     /**
      * 删除账号
