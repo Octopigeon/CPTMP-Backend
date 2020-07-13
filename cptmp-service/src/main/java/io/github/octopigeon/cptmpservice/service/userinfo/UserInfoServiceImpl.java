@@ -22,8 +22,8 @@ import java.util.Date;
  * @author 李国豪
  * @version 1.0
  * @date 2020/7/11
- * @last-check-in 李国豪
- * @date 2020/7/11
+ * @last-check-in 魏啸冲
+ * @date 2020/7/13
  */
 @Service
 public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfoService {
@@ -149,16 +149,26 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         }
     }
 
-//    /**
-//     * 激活账号
-//     *
-//     * @param userId 用户id
-//     */
-//    @Override
-//    public void activateAccount(BigInteger userId) {
-//        CptmpUser cptmpUser = cptmpUserMapper.findUserById(userId);
-//        cptmpUserMapper.updateEnabledByUsername(cptmpUser.getUsername(), true);
-//    }
+    /**
+     * 激活账号（用于删除账号错误时恢复）
+     *
+     * @param userId 用户id
+     */
+    @Override
+    public void activateAccount(BigInteger userId) {
+        CptmpUser cptmpUser = cptmpUserMapper.findUserById(userId);
+        cptmpUserMapper.updateEnabledByUsername(cptmpUser.getUsername(), true);
+    }
+
+    /**
+     * 删除账号
+     * @param userId
+     */
+    @Override
+    public void disableAccount(BigInteger userId) {
+        CptmpUser cptmpUser = cptmpUserMapper.findUserById(userId);
+        cptmpUserMapper.updateEnabledByUsername(cptmpUser.getUsername(), false);
+    }
 
     /**
      * 更新密码

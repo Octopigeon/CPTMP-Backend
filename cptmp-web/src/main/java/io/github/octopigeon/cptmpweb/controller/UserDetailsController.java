@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
@@ -11,9 +12,14 @@ import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author 魏啸冲
@@ -43,7 +49,7 @@ public class UserDetailsController {
     }
 
     /**
-     * 修改性别，简介信息
+     * 修改用户信息，如姓名，性别，简介信息等
      * @param json 包含姓名、性别和简介的json
      * @return ok-成功 error-失败
      */
@@ -118,7 +124,50 @@ public class UserDetailsController {
             return respBeanWithBaseUserInfoDTO;
         }
     }
-    // TODO 修改用户信息的接口
+
+    /**
+     * 企业管理员批量删除用户
+     * @param json 传来包含批量删除用户的信息(userId)
+     * @return 返回删除失败的信息
+     */
+    @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
+    @DeleteMapping("/api/user")
+    public RespBeanWithFailedList deleteUsers(@RequestBody String json) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        BigInteger[] deleteList = objectMapper.readValue(json, BigInteger[].class);
+        List<Integer> deleteFailedList = new ArrayList<>();
+        for (int i = 0; i < deleteList.length; i++) {
+            try {
+                userInfoService.disableAccount(deleteList[i]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                deleteFailedList.add(i);
+            }
+        }
+        return RespBeanWithFailedList.report(deleteFailedList);
+    }
+
+    /**
+     * 企业管理员批量删除用户
+     * @param json 传来包含批量删除用户的信息(userId)
+     * @return 返回删除失败的信息
+     */
+    @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
+    @PutMapping("/api/user")
+    public RespBeanWithFailedList restoreAccount(@RequestBody String json) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        BigInteger[] restoreList = objectMapper.readValue(json, BigInteger[].class);
+        List<Integer> restoreFailedList = new ArrayList<>();
+        for (int i = 0; i < restoreList.length; i++) {
+            try {
+                userInfoService.activateAccount(restoreList[i]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                restoreFailedList.add(i);
+            }
+        }
+        return RespBeanWithFailedList.report(restoreFailedList);
+    }
 
 }
 
