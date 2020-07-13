@@ -26,8 +26,8 @@ import java.util.List;
  * @author 李国豪
  * @version 1.0
  * @date 2020/7/11
- * @last-check-in 李国豪
- * @date 2020/7/11
+ * @last-check-in 魏啸冲
+ * @date 2020/7/13
  */
 @Service
 public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfoService {
@@ -165,6 +165,16 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     public void activateAccount(BigInteger userId) {
         CptmpUser cptmpUser = cptmpUserMapper.findUserById(userId);
         cptmpUserMapper.updateEnabledByUsername(cptmpUser.getUsername(), true);
+    }
+
+    /**
+     * 删除账号
+     * @param userId
+     */
+    @Override
+    public void disableAccount(BigInteger userId) {
+        CptmpUser cptmpUser = cptmpUserMapper.findUserById(userId);
+        cptmpUserMapper.updateEnabledByUsername(cptmpUser.getUsername(), false);
     }
 
     /**

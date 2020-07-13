@@ -5,7 +5,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
-import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
@@ -42,7 +41,7 @@ public class RegisterController {
      */
     @Secured(CptmpRole.ROLE_SYSTEM_ADMIN)
     @PostMapping("/api/user/enterprise-admin")
-    public RespBeanWithFailedRegisterList registerEnterpriseAdmin(@RequestBody String json) throws JsonProcessingException {
+    public RespBeanWithFailedList registerEnterpriseAdmin(@RequestBody String json) throws JsonProcessingException {
         return doRegister(json, CptmpRole.ROLE_ENTERPRISE_ADMIN);
     }
 
@@ -54,13 +53,13 @@ public class RegisterController {
      */
     @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
     @PostMapping("/api/user/teacher")
-    public RespBeanWithFailedRegisterList registerTeacher(@RequestBody String json) throws JsonProcessingException {
+    public RespBeanWithFailedList registerTeacher(@RequestBody String json) throws JsonProcessingException {
        return doRegister(json, CptmpRole.ROLE_SCHOOL_TEACHER);
     }
 
     @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
     @PostMapping("/api/user/student")
-    public RespBeanWithFailedRegisterList registerStudent(@RequestBody String json) throws JsonProcessingException {
+    public RespBeanWithFailedList registerStudent(@RequestBody String json) throws JsonProcessingException {
         return doRegister(json, CptmpRole.ROLE_STUDENT_MEMBER);
     }
 
@@ -70,7 +69,7 @@ public class RegisterController {
      * @param roleName 设定的角色名
      * @return 包含注册失败条目列表的信息
      */
-    private RespBeanWithFailedRegisterList doRegister(String json, String roleName) throws JsonProcessingException {
+    private RespBeanWithFailedList doRegister(String json, String roleName) throws JsonProcessingException {
         // 解析前端发来的一个json数组，每项包含username，name，password，email四项
         // common_id由用户名拆解得到，organization_id由系统管理员的organization_id决定（都为企业），对于学生和老师
         // 则为学校对应的id
@@ -95,7 +94,7 @@ public class RegisterController {
                 registerFailedList.add(i);
             }
         }
-        return RespBeanWithFailedRegisterList.report(registerFailedList);
+        return RespBeanWithFailedList.report(registerFailedList);
     }
 
 }
@@ -128,9 +127,9 @@ class ReqBeanWithEnterpriseAdminRegisterInfo {
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-class RespBeanWithFailedRegisterList extends RespBean {
+class RespBeanWithFailedList extends RespBean {
 
-    public RespBeanWithFailedRegisterList(Integer status, String msg) {
+    public RespBeanWithFailedList(Integer status, String msg) {
         super(status, msg);
     }
 
@@ -139,14 +138,14 @@ class RespBeanWithFailedRegisterList extends RespBean {
      * @param failedList 失败条目序号列表
      * @return 一个返回体
      */
-    public static RespBeanWithFailedRegisterList report(List<Integer> failedList) {
+    public static RespBeanWithFailedList report(List<Integer> failedList) {
         if (failedList.size() == 0) {
-            return new RespBeanWithFailedRegisterList(CptmpStatusCode.OK, "all set");
+            return new RespBeanWithFailedList(CptmpStatusCode.OK, "all set");
         } else {
-            RespBeanWithFailedRegisterList respBeanWithFailedRegisterList
-                    = new RespBeanWithFailedRegisterList(CptmpStatusCode.REGISTER_FAILED, "register failed");
-            respBeanWithFailedRegisterList.setFailedList(failedList);
-            return respBeanWithFailedRegisterList;
+            RespBeanWithFailedList respBeanWithFailedList
+                    = new RespBeanWithFailedList(CptmpStatusCode.REGISTER_FAILED, "register failed");
+            respBeanWithFailedList.setFailedList(failedList);
+            return respBeanWithFailedList;
         }
     }
 
