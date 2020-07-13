@@ -14,22 +14,22 @@ import java.util.List;
 
 /**
  * @author 李国鹏
- * @version 2.0
+ * @version 2.1
  * @date 2020/7/9
  * <p>
- * last-check-in 李国鹏
- * @date 2020/7/12
+ * last-check-in 李国豪
+ * @date 2020/7/13
  */
 @Repository
 @Mapper
 public interface TrainProjectMapper {
 
-    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, idx_train_id, idx_project_name, project_level, " +
+    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, idx_project_name, project_level, " +
             "project_content, resource_library";
-    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{trainId}, #{projectName}, #{projectLevel}, " +
-            "#{projectContent}, #{resourceLibrary}";
-    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, idx_train_id = #{trainId}, idx_project_name = #{projectName}, " +
-            "project_level = #{projectLevel}, project_content = #{projectContent}";
+    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{name}, #{level}, " +
+            "#{content}, #{resourceLibrary}";
+    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, idx_project_name = #{name}, " +
+            "project_level = #{level}, project_content = #{content}";
 
     /**
      * 插入实训项目
@@ -58,11 +58,11 @@ public interface TrainProjectMapper {
 
     /**
      * 根据项目名称删除对应的项目
-     * @param projectName：项目名称
+     * @param name：项目名称
      * @param gmtDeleted 删除日期
      */
-    @Update("update train_project set gmt_deleted = #{gmtDeleted} where idx_project_name = #{projectName} and gmt_deleted is null")
-    void removeTrainProjectByProjectName(String projectName,Date gmtDeleted);
+    @Update("update train_project set gmt_deleted = #{gmtDeleted} where idx_project_name = #{name} and gmt_deleted is null")
+    void removeTrainProjectByProjectName(String name,Date gmtDeleted);
 
 
 
@@ -70,13 +70,12 @@ public interface TrainProjectMapper {
      * 根据id修改实训项目
      * @param id 实训id
      * @param gmtModified 修改时间
-     * @param trainId 实训id
-     * @param projectName 项目姓名
-     * @param projectLevel 项目难度
-     * @param projectContent 项目内容描述
+     * @param name 项目姓名
+     * @param level 项目难度
+     * @param content 项目内容描述
      */
     @Update("update train_project set "+ UPDATE_CONTENT +" where id = #{id} and gmt_deleted is null")
-    void updateTrainProjectById(BigInteger id, Date gmtModified, BigInteger trainId, String projectName, Integer projectLevel, String projectContent);
+    void updateTrainProjectById(BigInteger id, Date gmtModified, String name, Integer level, String content);
 
 
     /**
@@ -90,14 +89,14 @@ public interface TrainProjectMapper {
 
     /**
      * 根据名称修改实训项目
+     * @param name 实训名字
      * @param gmtModified 修改时间
-     * @param trainId 实训id
-     * @param projectName 项目姓名
-     * @param projectLevel 项目难度
-     * @param projectContent 项目内容描述
+     * @param name 项目姓名
+     * @param level 项目难度
+     * @param content 项目内容描述
      */
     @Update("update train_project set "+ UPDATE_CONTENT +" where idx_project_name = #{projectName} and gmt_deleted is null")
-    void updateTrainProjectByProjectName(String projectName,Date gmtModified,BigInteger id,  BigInteger trainId,  Integer projectLevel, String projectContent);
+    void updateTrainProjectByProjectName(String projectName, Date gmtModified, String name, Integer level, String content);
 
 
     /**
@@ -120,10 +119,9 @@ public interface TrainProjectMapper {
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_deleted", property = "gmtDeleted", jdbcType = JdbcType.DATE),
-            @Result(column = "idx_project_name", property = "projectName", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "idx_train_id", property = "trainId", jdbcType = JdbcType.BIGINT),
-            @Result(column = "project_level", property = "projectLevel", jdbcType = JdbcType.INTEGER),
-            @Result(column = "project_content", property = "projectContent", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "idx_project_name", property = "name", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "project_level", property = "level", jdbcType = JdbcType.INTEGER),
+            @Result(column = "project_content", property = "content", jdbcType = JdbcType.VARCHAR),
             @Result(column = "resource_library", property = "resourceLibrary", jdbcType = JdbcType.VARCHAR)
 
     })

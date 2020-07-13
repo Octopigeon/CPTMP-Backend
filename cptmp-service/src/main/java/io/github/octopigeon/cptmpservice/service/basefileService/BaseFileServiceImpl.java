@@ -44,6 +44,7 @@ public class BaseFileServiceImpl implements BaseFileService {
             Files.createDirectories(this.publicFileStorageLocation);
             Files.createDirectories(this.privateFileStorageLocation);
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new Exception("Could not create the directory where the uploaded files will be stored.", ex);
         }
     }
@@ -105,6 +106,7 @@ public class BaseFileServiceImpl implements BaseFileService {
                 throw new Exception("File not found " + fileName);
             }
         } catch (MalformedURLException ex) {
+            ex.printStackTrace();
             throw new Exception("File not found " + fileName, ex);
         }
     }
@@ -139,6 +141,7 @@ public class BaseFileServiceImpl implements BaseFileService {
             fileResp.setFileType(file.getContentType());
             return fileResp;
         } catch (Exception ex) {
+            ex.printStackTrace();
             throw new Exception("Could not store file " + originName + ". Please try again!", ex);
         }
     }
