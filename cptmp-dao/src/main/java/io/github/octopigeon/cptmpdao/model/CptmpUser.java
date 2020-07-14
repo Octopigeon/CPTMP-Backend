@@ -20,7 +20,7 @@ import java.util.Date;
  *
  * Gravatar 支持
  * @last-check-in 李国鹏
- * @date 2020/7/11
+ * @date 2020/7/14
  */
 @Data
 public class CptmpUser {
@@ -29,8 +29,10 @@ public class CptmpUser {
 
     private BigInteger id;
     private Date gmtCreate;
-    private String username;
+    private Date gmtModified;
+    private Date gmtDeleted;
     private String name;
+    private String username;
     private String commonId;
     private BigInteger organizationId;
 
@@ -52,10 +54,7 @@ public class CptmpUser {
     private Boolean credentialsNonExpired;
     private Boolean accountNonLocked;
     /** nullable */
-    private Date gmtModified;
-    private Date gmtDeleted;
     /** nullable */
-    private String introduction;
     /** nullable */
     private BigDecimal phoneNumber;
     /**

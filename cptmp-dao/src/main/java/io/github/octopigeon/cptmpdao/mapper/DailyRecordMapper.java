@@ -32,10 +32,15 @@ public interface DailyRecordMapper {
     void addDailyRecord(DailyRecord dailyRecord);
     /**
      * 测试用
-     * @param gmtDeleted 删除日期
      */
     @Deprecated
-    @Update("update daily_record set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
+    @Delete("delete from daily_record")
+    void removeAllDailyRecordTest();
+
+    /**
+     * @param gmtDeleted 删除日期
+     */
+    @Delete("delete from daily_record")
     void removeAllDailyRecord(Date gmtDeleted);
 
     /**
@@ -64,16 +69,9 @@ public interface DailyRecordMapper {
 
     /**
      * 根据日志id修改日志
-     * @param id 日志id
-     * @param gmtModified 修改时间
-     * @param title 标题
-     * @param content 内容
-     * @param userId 用户id
-     * @param teamId 团队id
-     * @param recordType 文件类型
      */
     @Update("update daily_record set "+ UPDATE_CONTENT+" where id = #{id} and gmt_deleted is null")
-    void updateDailyRecordById(BigInteger id, Date gmtModified, BigInteger userId, BigInteger teamId,  String title, String content, int recordType);
+    void updateDailyRecordById(DailyRecord dailyRecord);
 
     /**
      * 根据id改文件路径
@@ -88,41 +86,29 @@ public interface DailyRecordMapper {
 
     /**
      * 根据用户id修改日志
-     * @param gmtModified 修改时间
-     * @param title 标题
-     * @param content 内容
-     * @param userId 用户id
-     * @param teamId 团队id
-     * @param recordType 文件类型
      */
     @Update("update daily_record set "+UPDATE_CONTENT+" where idx_user_id = #{userId} and gmt_deleted is null")
-    void updateDailyRecordByUserId(BigInteger userId, Date gmtModified, BigInteger teamId,  String title, String content, int recordType);
+    void updateDailyRecordByUserId(DailyRecord dailyRecord);
 
     /**
-     * 根据id改文件路径
+     * 根据用户id改文件路径
      * @param userId 用户id
      * @param gmtModified 修改时间
      * @param documentPath 文件路径
      * @return
      */
     @Update("update daily_record set gmt_modified = #{gmtModified}, document_path = #{documentPath} where idx_user_id = #{userId} and gmt_deleted is null")
-    Void updateDailyRecordDocumentByUserId(BigInteger userId,Date gmtModified, String documentPath);
+    void updateDailyRecordDocumentByUserId(BigInteger userId,Date gmtModified, String documentPath);
 
 
     /**
-     * 根据用户id修改日志
-     * @param gmtModified 修改时间
-     * @param title 标题
-     * @param content 内容
-     * @param userId 用户id
-     * @param teamId 团队id
-     * @param recordType 文件类型
+     * 根据团队id修改日志
      */
     @Update("update daily_record set "+UPDATE_CONTENT+" where idx_team_id = #{teamId} and gmt_deleted is null")
-    void updateDailyRecordByTeamId( BigInteger teamId, Date gmtModified, BigInteger userId,  String title, String content, int recordType);
+    void updateDailyRecordByTeamId( DailyRecord dailyRecord);
 
     /**
-     * 根据id改文件路径
+     * 根据团队改文件路径
      * @param teamId 团队id
      * @param gmtModified 修改时间
      * @param documentPath 文件路径

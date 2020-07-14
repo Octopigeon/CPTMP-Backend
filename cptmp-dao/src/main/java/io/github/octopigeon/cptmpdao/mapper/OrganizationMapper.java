@@ -14,17 +14,17 @@ import java.util.List;
  * @author 陈若琳
  * @version 2.1
  * @date 2020/07/12
- * @last-check-in 李国豪
- * @date 2020/07/13
+ * @last-check-in 李国鹏
+ * @date 2020/07/14
  */
 @Repository
 @Mapper
 public interface OrganizationMapper {
 
-    String COLUMNS="uk_organization_name,uk_real_name, organization_description,official_website_url,gmt_modified,gmt_create,gmt_deleted,invitation_code";
+    String COLUMNS="uk_name,uk_real_name, organization_description,official_website_url,gmt_modified,gmt_create,gmt_deleted,invitation_code";
     String PROPS="#{name}, #{realName}, #{description},#{websiteUrl},#{gmtModified},#{gmtCreate},#{gmtDeleted},#{invitationCode}";
 
-    String UPDATE_CONTENT="uk_organization_name = #{name},organization_description = #{description}, uk_real_name = #{realName}," +
+    String UPDATE_CONTENT="uk_name = #{name},organization_description = #{description}, uk_real_name = #{realName}," +
             "official_website_url = #{websiteUrl}, gmt_modified = #{gmtModified},invitation_code = #{invitationCode}";
 
     /**
@@ -37,14 +37,9 @@ public interface OrganizationMapper {
 
     /**
      * 根据id修改组织信息
-     * @param id 组织id
-     * @param description 组织简介
-     * @param websiteUrl 组织官网
-     * @param gmtModified 最后修改时间
-     * @param invitationCode 邀请码
      */
     @Update("update cptmp_organization set "+UPDATE_CONTENT+"where id = #{id} and gmt_deleted is null")
-    void updateOrganizationById(BigInteger id,Date gmtModified,String name,String description,String realName,String websiteUrl,String invitationCode);
+    void updateOrganizationById(Organization organization);
 
     /**
      * 测试删除
@@ -79,7 +74,7 @@ public interface OrganizationMapper {
             @Result(column = "gmt_deleted", property = "gmtDeleted", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
-            @Result(column = "uk_organization_name", property = "name", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "uk_name", property = "name", jdbcType = JdbcType.VARCHAR),
             @Result(column = "uk_real_name", property = "realName", jdbcType = JdbcType.VARCHAR),
             @Result(column = "organization_description", property = "description", jdbcType = JdbcType.VARCHAR),
             @Result(column = "official_website_url", property = "websiteUrl", jdbcType = JdbcType.VARCHAR),
@@ -102,7 +97,7 @@ public interface OrganizationMapper {
      * @param name 组织名称
      * @return 组织列表
      */
-    @Select("select id, " + COLUMNS + " from cptmp_organization where uk_organization_name = #{name} and gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from cptmp_organization where uk_name = #{name} and gmt_deleted is null")
     @ResultMap("cptmpOrganization")
     Organization findOrganizationByName(String name);
 

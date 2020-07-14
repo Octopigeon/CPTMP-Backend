@@ -14,7 +14,7 @@ import java.util.Date;
  * @date 2020/7/13
  */
 @Data
-public class TrainProject {
+public class Project {
     private BigInteger id;
     private Date gmtCreate;
     private Date gmtModified;

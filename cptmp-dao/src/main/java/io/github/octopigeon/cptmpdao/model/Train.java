@@ -30,7 +30,7 @@ public class Train {
     /**
      * 验收标准
      */
-    private String acceptStandard;
+    private String standard;
     /**
      * 实训资源
      */
