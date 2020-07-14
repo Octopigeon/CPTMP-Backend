@@ -94,7 +94,7 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
         try {
             TrainProject trainProject = trainProjectMapper.findTrainProjectById(dto.getId());
             BeanUtils.copyProperties(dto, trainProject, Utils.getNullPropertyNames(dto));
-            trainProjectMapper.updateTrainProjectById(trainProject.getId(), new Date(), trainProject.getName(), trainProject.getLevel(), trainProject.getContent());
+            trainProjectMapper.updateTrainProjectById(trainProject);
             return true;
         }catch (Exception e){
             e.printStackTrace();
@@ -144,7 +144,7 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
      */
     @Override
     public List<TrainProjectDTO> findByLikeName(String name) {
-        List<TrainProject> trainProjects = trainProjectMapper.findTrainProjectByProjectNameAmbiguously(name);
+        List<TrainProject> trainProjects = trainProjectMapper.findTrainProjectByNameAmbiguously(name);
         List<TrainProjectDTO> trainProjectDTOS = new ArrayList<>();
         for (TrainProject trainProject: trainProjects) {
             TrainProjectDTO trainProjectDTO = new TrainProjectDTO();

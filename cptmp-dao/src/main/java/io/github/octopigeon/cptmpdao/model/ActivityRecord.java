@@ -30,5 +30,4 @@ public class ActivityRecord {
     private int state;
     private String event;
 
-
 }

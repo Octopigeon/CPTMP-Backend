@@ -30,7 +30,7 @@ public interface TrainTeamMapper {
     String COLUMNS="gmt_create, gmt_modified, gmt_deleted, idx_train_project_id, idx_team_name, idx_master_user_id, idx_pm_user_id, idx_po_user_id, code_base_url, team_grade";
     String PROPS="#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{trainProjectId}, #{teamName}, #{masterUserId}, #{pmUserId}, #{poUserId}, #{codeBaseUrl}, #{teamGrade}";
     String UPDATE_CONTENT="gmt_modified = #{gmtModified}, idx_train_project_id = #{trainProjectId}, idx_team_name = #{teamName}, " +
-            "idx_master_user_id = #{masterUserId}, idx_pm_user_id = #{masterUserId}, idx_po_user_id = #{masterUserId},team_grade = #{teamGrade}";
+            "idx_master_user_id = #{masterUserId}, idx_pm_user_id = #{masterUserId}, idx_po_user_id = #{masterUserId}, code_base_url = #{codeBaseUrl},team_grade = #{teamGrade}";
 
     @Insert("insert into train_team (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -38,9 +38,14 @@ public interface TrainTeamMapper {
 
     /**
      * 测试用
-     * @param gmtDeleted 删除时间
      */
     @Deprecated
+    @Delete("delete from train_team")
+    void removeAllTrainTeamTest();
+    /**
+     * 测试用
+     * @param gmtDeleted 删除时间
+     */
     @Update("update train_team set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
     void removeAllTrainTeam(Date gmtDeleted);
     /**
@@ -61,17 +66,9 @@ public interface TrainTeamMapper {
 
     /**
      * 根据团队id修改
-     * @param id 团队id
-     * @param gmtModified 修改时间
-     * @param trainProjectId 项目id
-     * @param teamName 团队名称
-     * @param masterUserId 项目经理
-     * @param pmUserId 产品经理
-     * @param poUserId 运营经理
-     * @param teamGrade 成绩
      */
     @Update("update train_team set "+ UPDATE_CONTENT+"  where id = #{id} and gmt_deleted is null")
-    void updateTrainTeamById(BigInteger id, Date gmtModified, BigInteger trainProjectId, String teamName, BigInteger masterUserId, BigInteger pmUserId, BigInteger poUserId, BigDecimal teamGrade);
+    void updateTrainTeamById(TrainTeam trainTeam);
 
     /**
      * 修改代码库
@@ -83,16 +80,9 @@ public interface TrainTeamMapper {
     void updateTrainTeamCodeBaseById(BigInteger id, Date gmtModified,String codeBase);
     /**
      * 根据团队名修改
-     * @param gmtModified 修改时间
-     * @param trainProjectId 项目id
-     * @param teamName 团队名称
-     * @param masterUserId 项目经理
-     * @param pmUserId 产品经理
-     * @param poUserId 运营经理
-     * @param teamGrade 成绩
      */
     @Update("update train_team set "+ UPDATE_CONTENT+"  where idx_team_name = #{teamName} and gmt_deleted is null")
-    void updateTrainTeamByTeamName( String teamName,Date gmtModified, BigInteger trainProjectId, BigInteger masterUserId, BigInteger pmUserId, BigInteger poUserId, BigDecimal teamGrade);
+    void updateTrainTeamByTeamName(TrainTeam trainTeam);
 
     /**
      * 修改代码库

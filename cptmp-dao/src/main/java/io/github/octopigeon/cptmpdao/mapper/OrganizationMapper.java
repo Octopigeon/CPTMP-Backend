@@ -14,8 +14,8 @@ import java.util.List;
  * @author 陈若琳
  * @version 2.1
  * @date 2020/07/12
- * @last-check-in 李国豪
- * @date 2020/07/13
+ * @last-check-in 李国鹏
+ * @date 2020/07/14
  */
 @Repository
 @Mapper
@@ -37,14 +37,9 @@ public interface OrganizationMapper {
 
     /**
      * 根据id修改组织信息
-     * @param id 组织id
-     * @param description 组织简介
-     * @param websiteUrl 组织官网
-     * @param gmtModified 最后修改时间
-     * @param invitationCode 邀请码
      */
     @Update("update cptmp_organization set "+UPDATE_CONTENT+"where id = #{id} and gmt_deleted is null")
-    void updateOrganizationById(BigInteger id,Date gmtModified,String name,String description,String realName,String websiteUrl,String invitationCode);
+    void updateOrganizationById(Organization organization);
 
     /**
      * 测试删除

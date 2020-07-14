@@ -54,7 +54,7 @@ public class TrainTeamMapperTest extends BaseTest {
         /**
          * 添加
          */
-        trainTeamMapper.removeAllTrainTeam(new Date());
+        trainTeamMapper.removeAllTrainTeamTest();
         trainTeamMapper.addTrainTeam(trainTeam1);
         trainTeamMapper.addTrainTeam(trainTeam2);
         Assertions.assertEquals(2,trainTeamMapper.findAllTrainTeam().size());
@@ -68,9 +68,13 @@ public class TrainTeamMapperTest extends BaseTest {
         /**
          * 更新
          */
-        trainTeamMapper.updateTrainTeamByTeamName("test2",new Date(), BigInteger.valueOf(2), BigInteger.valueOf(3),BigInteger.valueOf(3),BigInteger.valueOf(3),BigDecimal.valueOf(99));
-        Assertions.assertEquals(BigInteger.valueOf(3),trainTeamMapper.findAllTrainTeam().get(0).getPoUserId());
+        TrainTeam trainTeam3=trainTeamMapper.findAllTrainTeam().get(0);
+        trainTeam3.setCodeBaseUrl("test3");
+        trainTeamMapper.updateTrainTeamByTeamName(trainTeam3);
+        Assertions.assertEquals("test3",trainTeamMapper.findAllTrainTeam().get(0).getCodeBaseUrl());
 
+        trainTeamMapper.removeAllTrainTeam(new Date());
+        Assertions.assertEquals(0,trainTeamMapper.findAllTrainTeam().size());
 
     }
 }

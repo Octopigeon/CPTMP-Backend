@@ -44,7 +44,7 @@ public class StudentTeamMapperTest extends BaseTest {
         /**
          * 添加
          */
-        studentTeamMapper.removeActivityRecordByAllTest(new Date());
+        studentTeamMapper.removeActivityRecordByAllTest();
         studentTeamMapper.addStudentTeam(studentTeam1);
         studentTeamMapper.addStudentTeam(studentTeam2);
 
@@ -59,11 +59,12 @@ public class StudentTeamMapperTest extends BaseTest {
         /**
          * 更新
          */
-        studentTeamMapper.updateGradeById(BigInteger.valueOf(1),BigInteger.valueOf(1),new Date(),BigInteger.valueOf(1),BigDecimal.valueOf(1));
+        StudentTeam studentTeam3=studentTeamMapper.findAllStudentTeam().get(0);
+        studentTeam3.setStudentGrade(BigDecimal.valueOf(2));
+        studentTeamMapper.updateGradeById(studentTeam3);
         Assertions.assertEquals(BigDecimal.valueOf(2),studentTeamMapper.findAllStudentTeam().get(0).getStudentGrade());
 
-
-
-
+        studentTeamMapper.removeActivityRecordByAll(new Date());
+        Assertions.assertEquals(0,studentTeamMapper.findAllStudentTeam().size());
     }
 }

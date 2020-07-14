@@ -31,12 +31,12 @@ class ActivityRecordMapperTest extends BaseTest {
         /**
          * 设置两条数据
          */
-        ActivityRecord activityRecord=new ActivityRecord();
-        activityRecord.setGmtCreate(new Date());
-        activityRecord.setUserId(BigInteger.valueOf(1));
-        activityRecord.setTeamId(BigInteger.valueOf(1));
-        activityRecord.setState(1);
-        activityRecord.setEvent("test1");
+        ActivityRecord activityRecord1=new ActivityRecord();
+        activityRecord1.setGmtCreate(new Date());
+        activityRecord1.setUserId(BigInteger.valueOf(1));
+        activityRecord1.setTeamId(BigInteger.valueOf(1));
+        activityRecord1.setState(1);
+        activityRecord1.setEvent("test1");
 
         ActivityRecord activityRecord2=new ActivityRecord();
         activityRecord2.setGmtCreate(new Date());
@@ -48,8 +48,8 @@ class ActivityRecordMapperTest extends BaseTest {
         /**
          * 添加
          */
-        activityRecordMapper.removeActivityRecordByAll(new Date());
-        activityRecordMapper.addActivityRecord(activityRecord);
+        activityRecordMapper.removeAllActivityRecordTest(new Date());
+        activityRecordMapper.addActivityRecord(activityRecord1);
         activityRecordMapper.addActivityRecord(activityRecord2);
         Assertions.assertEquals(2,activityRecordMapper.findAllActivityRecord().size());
 
@@ -58,10 +58,12 @@ class ActivityRecordMapperTest extends BaseTest {
          */
         Assertions.assertEquals("test1",activityRecordMapper.findActivityRecordByUserId(BigInteger.valueOf(1)).get(0).getEvent());
 
-//        activityRecordMapper.removeActivityRecordById(activityRecordMapper.findAllActivityRecord().get(0).getId(),new Date());
-//        Assertions.assertEquals(1,activityRecordMapper.findAllActivityRecord().size());
-//
-//        activityRecordMapper.updateActivityRecordByUserId(BigInteger.valueOf(2),BigInteger.valueOf(2),BigInteger.valueOf(2),new Date(),BigInteger.valueOf(2),"test2");
-//        Assertions.assertEquals("test2",activityRecordMapper.findActivityRecordByUserId(BigInteger.valueOf(2)).get(0).getEvent());
+        activityRecordMapper.removeActivityRecordById(activityRecordMapper.findAllActivityRecord().get(0).getId(),new Date());
+        Assertions.assertEquals(1,activityRecordMapper.findAllActivityRecord().size());
+
+//        ActivityRecord activityRecord3=activityRecordMapper.findAllActivityRecord().get(0);
+//        activityRecord3.setEvent("test3");
+//        activityRecordMapper.updateActivityRecordById(activityRecord3);
+//        Assertions.assertEquals("test3",activityRecordMapper.findActivityRecordByUserId(BigInteger.valueOf(2)).get(0).getEvent());
     }
 }

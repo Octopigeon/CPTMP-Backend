@@ -37,11 +37,17 @@ public interface StudentTeamMapper {
 
     /**
      *  删除
-     * @param gmtDeleted 删除日期
      */
     @Deprecated
+    @Delete("delete from student_team")
+    void removeActivityRecordByAllTest();
+
+    /**
+     *  删除
+     * @param gmtDeleted 删除日期
+     */
     @Update("update student_team set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
-    void removeActivityRecordByAllTest(Date gmtDeleted);
+    void removeActivityRecordByAll(Date gmtDeleted);
 
     /**
      * 根据id删除记录
@@ -54,13 +60,9 @@ public interface StudentTeamMapper {
 
     /**
      * 更新个人成绩
-     * @param teamId 团队id
-     * @param studentGrade 个人成绩
-     * @param userId 个人id
-     * @param gmtModified 最后修改时间
      */
     @Update("update student_team set "+UPDATE_CONTENT+" where id = #{id} and gmt_deleted is null")
-    void updateGradeById(BigInteger id,BigInteger teamId,Date gmtModified, BigInteger userId, BigDecimal studentGrade);
+    void updateGradeById(StudentTeam studentTeam);
 
 
 
