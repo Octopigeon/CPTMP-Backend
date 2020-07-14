@@ -1,11 +1,16 @@
 package io.github.octopigeon.cptmpweb.mappertest;
 
+import io.github.octopigeon.cptmpdao.mapper.ActivityRecordMapper;
+import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.mapper.DailyRecordMapper;
+import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpdao.model.DailyRecord;
 import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 
 import java.math.BigInteger;
 import java.util.Date;
