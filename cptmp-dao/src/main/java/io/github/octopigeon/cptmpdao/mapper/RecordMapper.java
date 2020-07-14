@@ -1,5 +1,5 @@
 package io.github.octopigeon.cptmpdao.mapper;
-import io.github.octopigeon.cptmpdao.model.ActivityRecord;
+import io.github.octopigeon.cptmpdao.model.Record;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Repository;
@@ -17,56 +17,56 @@ import java.util.List;
  */
 @Repository
 @Mapper
-public interface ActivityRecordMapper {
+public interface RecordMapper {
     /**
-     * 向activity record中插入一条数据
-     * @param activityRecord：类
+     * 向record中插入一条数据
+     * @param record：类
      */
     String COLUMNS="gmt_create, gmt_modified, gmt_deleted, idx_user_id, idx_team_id, state_record, event_record";
     String PROPS="#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{userId}, #{teamId}, #{state}, #{event}";
     String UPDATE_CONTENT=" gmt_create = #{gmtCreate},gmt_modified = #{gmtModified},gmt_deleted = #{gmtDeleted},idx_user_id = #{userId}, idx_team_id = #{teamId}, state_record = #{state}, event_record = #{event}";
 
-    @Insert("insert into activity_record (" + COLUMNS + ") values ( " + PROPS +" )")
+    @Insert("insert into record (" + COLUMNS + ") values ( " + PROPS +" )")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    void addActivityRecord(ActivityRecord activityRecord);
+    void addRecord(Record record);
 
 
     /**
      *  删除活动信息
      */
     @Deprecated
-    @Delete("delete from activity_record")
-    void removeAllActivityRecordTest();
+    @Delete("delete from record")
+    void removeAllRecordTest();
 
     /**
      *  删除活动信息
      * @param gmtDeleted 删除日期
      */
-    @Update("update activity_record set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
-    void removeActivityRecordByAll(Date gmtDeleted);
+    @Update("update record set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
+    void removeRecordByAll(Date gmtDeleted);
 
     /**
      * 根据id删除对应的活动信息
      * @param id：活动记录id
      * @param gmtDeleted 删除日期
      */
-    @Update("update activity_record set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
-    void removeActivityRecordById(BigInteger id, Date gmtDeleted);
+    @Update("update record set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
+    void removeRecordById(BigInteger id, Date gmtDeleted);
 
 
     /**
      * 根据id修改
      */
-    @Update("update activity_record set "+UPDATE_CONTENT+" where id = #{id} and gmt_deleted is null")
-    void updateActivityRecordById(ActivityRecord activityRecord);
+    @Update("update record set "+UPDATE_CONTENT+" where id = #{id} and gmt_deleted is null")
+    void updateRecordById(Record record);
 
 
     /**
      * 查找所有活动记录
      * @return 活动记录列表
      */
-    @Select("select id, " + COLUMNS + " from activity_record where gmt_deleted is null")
-    @Results(id = "activityRecord", value = {
+    @Select("select id, " + COLUMNS + " from record where gmt_deleted is null")
+    @Results(id = "record", value = {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
@@ -76,25 +76,25 @@ public interface ActivityRecordMapper {
             @Result(column = "state_record", property = "state", jdbcType = JdbcType.BIGINT),
             @Result(column = "event_record", property = "event", jdbcType = JdbcType.VARCHAR)
     })
-    List<ActivityRecord> findAllActivityRecord();
+    List<Record> findAllRecord();
 
     /**
      * 按照活动人id查找活动记录
      * @param userId:活动人id
      * @return 活动记录列表
      */
-    @Select("select id, " + COLUMNS + " from activity_record where idx_user_id = #{userId} and gmt_deleted is null")
-    @ResultMap("activityRecord")
-    List<ActivityRecord> findActivityRecordByUserId(BigInteger userId);
+    @Select("select id, " + COLUMNS + " from record where idx_user_id = #{userId} and gmt_deleted is null")
+    @ResultMap("record")
+    List<Record> findRecordByUserId(BigInteger userId);
 
     /**
      * 按照团队id查找活动记录
      * @param teamId：团队id
      * @return 活动记录列表
      */
-    @Select("select id, " + COLUMNS + " from activity_record where idx_team_id = #{teamId} and gmt_deleted is null")
-    @ResultMap("activityRecord")
-    List<ActivityRecord> findActivityRecordByTeamId(BigInteger teamId);
+    @Select("select id, " + COLUMNS + " from record where idx_team_id = #{teamId} and gmt_deleted is null")
+    @ResultMap("record")
+    List<Record> findRecordByTeamId(BigInteger teamId);
 
 }
 

@@ -14,7 +14,7 @@ import java.util.Date;
  */
 @Data
 //活动记录
-public class ActivityRecord {
+public class Record {
     private BigInteger id;
     private Date gmtCreate;
     private Date gmtModified;
