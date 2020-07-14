@@ -23,7 +23,7 @@ public class Train {
     /** 实训名字 */
     private String name;
     private BigInteger organizationId;
-    private Date startTime;
+    private Date starTime;
     private Date endTime;
     private String content;
     /**
