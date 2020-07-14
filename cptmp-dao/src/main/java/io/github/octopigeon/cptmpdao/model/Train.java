@@ -20,10 +20,11 @@ public class Train {
     private Date gmtCreate;
     private Date gmtModified;
     private Date gmtDeleted;
+    /** 实训名字 */
     private String name;
     private BigInteger organizationId;
-    private Date startDate;
-    private Date finishDate;
+    private Date startTime;
+    private Date endTime;
     private String content;
     /**
      * 验收标准
@@ -33,5 +34,6 @@ public class Train {
      * 实训资源
      */
     private String resourceLibrary;
+
     private String gpsInfo;
 }

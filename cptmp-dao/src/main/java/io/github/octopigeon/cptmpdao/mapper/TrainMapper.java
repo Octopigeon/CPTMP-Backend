@@ -14,19 +14,21 @@ import java.util.List;
  * @version 2.0
  * @date 2020/7/9
  * <p>
- * last-check-in 魏啸冲
+ * last-check-in 李国鹏
  * @date 2020/7/14
  */
 @Repository
 @Mapper
 public interface TrainMapper {
 
-    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted,uk_name, organization_id, start_date, " +
-            "finish_date, content, standard, resource_library, gps_info";
-    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted},#{name}, #{organizationId}, #{startDate}, " +
-            "#{finishDate}, #{content}, #{standard}, #{resourceLibrary},#{gpsInfo}";
-    String UPDATE_CONTENT = "organization_id = #{organizationId}, gmt_modified = #{gmtModified},uk_name = #{name}, start_date = #{startDate}, " +
-            "finish_date = #{finishDate}, content = #{content}, standard = #{standard},gps_info = #{gpsInfo}";
+    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted,uk_name, organization_id, start_time, " +
+            "end_time, content, standard, resource_library, gps_info";
+    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted},#{name}, #{organizationId}, #{startTime}, " +
+            "#{endTime}, #{content}, #{standard}, #{resourceLibrary}, #{gpsInfo}";
+    String UPDATE_CONTENT = "organization_id = #{organizationId}, gmt_modified = #{gmtModified},uk_name = #{name}, start_time = #{startTime}, " +
+            "end_time = #{endTime}, content = #{content}, standard = #{standard},gps_info = #{gpsInfo}";
+    String SOFT_DELETE_TAIL = "gmt_deleted is null";
+
 
     /**
      * 插入实训
@@ -47,22 +49,30 @@ public interface TrainMapper {
      * 测试用
      * @param gmtDeleted 删除日期
      */
-    @Update("update train set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
+    @Update("update train set gmt_deleted = #{gmtDeleted} where "+SOFT_DELETE_TAIL)
     void removeAllTrain(Date gmtDeleted);
+    void removeAllTrain();
 
     /**
      * 根据实训id删除
      * @param id：实训id
      * @param gmtDeleted 删除日期
      */
-    @Update("update train set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
+    @Update("update train set gmt_deleted = #{gmtDeleted} where id = #{id} and "+SOFT_DELETE_TAIL)
     void removeTrainById(BigInteger id, Date gmtDeleted);
 
     /**
      * 根据实训id改
      */
-    @Update("update train set "+ UPDATE_CONTENT +" where id = #{id} and gmt_deleted is null")
+    @Update("update train set "+ UPDATE_CONTENT +" where id = #{id} and "+SOFT_DELETE_TAIL)
     void updateTrainProjectById(Train train);
+    /**
+     * 删除一个学校的所有实训项目
+     * @param organizationId 组织id
+     * @param gmtDeleted 删除日期
+     */
+    @Update("update train set gmt_deleted = #{gmtDeleted} where organization_id = #{organizationId} and " + SOFT_DELETE_TAIL)
+    void removeTrainsByOrganizationId(BigInteger organizationId, Date gmtDeleted);
 
     /**
      * 按id更新train的信息
@@ -79,16 +89,16 @@ public interface TrainMapper {
     @Results(id = "train", value = {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
-            @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
-            @Result(column = "uk_name", property = "name", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
+            @Result(column = "gmt_deleted", property = "gmtDeleted", jdbcType = JdbcType.DATE),
+            @Result(column = "idx_name", property = "name", jdbcType = JdbcType.VARCHAR),
             @Result(column = "organization_id", property = "organizationId", jdbcType = JdbcType.BIGINT),
-            @Result(column = "start_date", property = "startDate", jdbcType = JdbcType.DATE),
-            @Result(column = "finish_date", property = "finishDate", jdbcType = JdbcType.DATE),
+            @Result(column = "start_time", property = "start_time", jdbcType = JdbcType.DATE),
+            @Result(column = "end_time", property = "endTime", jdbcType = JdbcType.DATE),
             @Result(column = "content", property = "content", jdbcType = JdbcType.VARCHAR),
             @Result(column = "standard", property = "standard", jdbcType = JdbcType.VARCHAR),
             @Result(column = "resource_library", property = "resourceLibrary", jdbcType = JdbcType.VARCHAR),
             @Result(column = "gps_info", property = "gpsInfo", jdbcType = JdbcType.VARCHAR)
-
     })
     List<Train> findAllTrain();
 
@@ -109,4 +119,12 @@ public interface TrainMapper {
 //    @Select("select id, " + COLUMNS + " from train where uk_project_name like concat('%', #{projectName}, '%') and gmt_deleted is null")
 //    @ResultMap("train")
 //    List<Train> findTrainProjectByProjectNameAmbiguously(String projectName);
+    /**
+     * 根据项目名查找项目，模糊查找
+     * @param name：项目名称
+     * @return 项目
+     */
+    @Select("select id, " + COLUMNS + " from train where idx_name like concat('%', #{name}, '%') and " + SOFT_DELETE_TAIL)
+    @ResultMap("train")
+    List<Train> findTrainByNameAmbiguously(String name);
 }
