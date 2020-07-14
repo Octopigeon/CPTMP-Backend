@@ -9,7 +9,7 @@ import java.util.Date;
  * @author 李国鹏
  * @version 1.1
  * @date 2020/7/9
- * <p>
+ * 对应train_project表
  * last-check-in 李国豪
  * @date 2020/7/13
  */

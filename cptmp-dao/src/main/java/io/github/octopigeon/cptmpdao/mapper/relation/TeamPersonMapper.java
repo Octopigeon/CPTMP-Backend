@@ -44,7 +44,7 @@ public interface TeamPersonMapper {
      */
     @Deprecated
     @Delete("delete from team_person")
-    void removeAllTeamPersons();
+    void removeAllTeamPersonsTest();
 
     /**
      * 根据id删除记录

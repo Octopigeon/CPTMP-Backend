@@ -51,7 +51,7 @@ public class TrainAndProcessAndEventMapperTest extends BaseTest {
 
     @Test
     public void test() throws Exception {
-        organizationMapper.removeAllOrganizationTest(new Date());
+        organizationMapper.removeAllOrganizationTest();
         OrganizationDTO organizationDTO = new OrganizationDTO();
         organizationDTO.setName("THU");
         organizationDTO.setRealName("清华大学");
@@ -69,7 +69,7 @@ public class TrainAndProcessAndEventMapperTest extends BaseTest {
         train.setStartTime(new Date());
         train.setEndTime(new Date());
         train.setContent("啊这");
-        train.setStandard("啊这也");
+        train.setAcceptStandard("啊这也");
         train.setResourceLibrary("{}");
         train.setGpsInfo("{}");
         trainMapper.addTrain(train);

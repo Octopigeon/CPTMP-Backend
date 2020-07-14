@@ -86,7 +86,7 @@ public interface TrainMapper {
             @Result(column = "gmt_deleted", property = "gmtDeleted", jdbcType = JdbcType.DATE),
             @Result(column = "idx_name", property = "name", jdbcType = JdbcType.VARCHAR),
             @Result(column = "organization_id", property = "organizationId", jdbcType = JdbcType.BIGINT),
-            @Result(column = "start_time", property = "start_time", jdbcType = JdbcType.DATE),
+            @Result(column = "start_time", property = "startTime", jdbcType = JdbcType.DATE),
             @Result(column = "end_time", property = "endTime", jdbcType = JdbcType.DATE),
             @Result(column = "content", property = "content", jdbcType = JdbcType.VARCHAR),
             @Result(column = "accept_standard", property = "acceptStandard", jdbcType = JdbcType.VARCHAR),
