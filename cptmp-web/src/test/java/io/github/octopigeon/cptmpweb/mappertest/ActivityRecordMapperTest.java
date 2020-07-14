@@ -7,12 +7,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.xml.ws.Service;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author 李国鹏
@@ -48,7 +46,7 @@ class ActivityRecordMapperTest extends BaseTest {
         /**
          * 添加
          */
-        activityRecordMapper.removeAllActivityRecordTest(new Date());
+        activityRecordMapper.removeAllActivityRecordTest();
         activityRecordMapper.addActivityRecord(activityRecord1);
         activityRecordMapper.addActivityRecord(activityRecord2);
         Assertions.assertEquals(2,activityRecordMapper.findAllActivityRecord().size());

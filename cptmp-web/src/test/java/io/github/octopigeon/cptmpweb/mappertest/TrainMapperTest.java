@@ -1,10 +1,7 @@
 package io.github.octopigeon.cptmpweb.mappertest;
 
 import io.github.octopigeon.cptmpdao.mapper.TrainMapper;
-import io.github.octopigeon.cptmpdao.mapper.TrainProjectMapper;
-import io.github.octopigeon.cptmpdao.mapper.TrainTeamMapper;
 import io.github.octopigeon.cptmpdao.model.Train;
-import io.github.octopigeon.cptmpdao.model.TrainProject;
 import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -31,32 +28,32 @@ public class TrainMapperTest extends BaseTest {
          * 设置数据
          */
         Train train1 =new Train();
-        train1.setProcessId(BigInteger.valueOf(1));
-        train1.setAcceptStandard("test1");
-        train1.setSchoolId(BigInteger.valueOf(1));
-        train1.setSchoolId(BigInteger.valueOf(1));
+        train1.setStandard("test1");
+        train1.setOrganizationId(BigInteger.valueOf(1));
         train1.setContent("test1");
+        train1.setName("test1");
         train1.setStartDate(new Date());
         train1.setFinishDate(new Date());
         train1.setGmtCreate(new Date());
         train1.setResourceLibrary("test1");
+        train1.setGpsInfo("test1");
 
         Train train2 =new Train();
-        train2.setProcessId(BigInteger.valueOf(2));
-        train2.setAcceptStandard("test2");
-        train2.setSchoolId(BigInteger.valueOf(2));
-        train2.setSchoolId(BigInteger.valueOf(2));
+        train2.setStandard("test2");
+        train2.setName("test2");
+        train2.setOrganizationId(BigInteger.valueOf(2));
         train2.setContent("test2");
         train2.setStartDate(new Date());
         train2.setFinishDate(new Date());
         train2.setGmtCreate(new Date());
         train2.setResourceLibrary("test2");
+        train2.setGpsInfo("test2");
 
 
         /**
          * 添加
          */
-        trainMapper.removeAllTrain(new Date());
+        trainMapper.removeAllTrainTest();
         trainMapper.addTrainProject(train1);
         trainMapper.addTrainProject(train2);
         Assertions.assertEquals(2, trainMapper.findAllTrain().size());
@@ -64,7 +61,7 @@ public class TrainMapperTest extends BaseTest {
         /**
          * 删除
          */
-        Assertions.assertEquals("test1",trainMapper.findAllTrain().get(0).getAcceptStandard());
+        Assertions.assertEquals("test1",trainMapper.findAllTrain().get(0).getStandard());
         trainMapper.removeTrainProjectById(trainMapper.findAllTrain().get(0).getId(),new Date());
 
         /**

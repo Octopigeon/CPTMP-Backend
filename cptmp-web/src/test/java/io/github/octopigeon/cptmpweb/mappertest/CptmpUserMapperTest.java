@@ -65,15 +65,15 @@ public class CptmpUserMapperTest extends BaseTest {
         cptmpUserMapper.addUser(cptmpUser2);
         Assertions.assertEquals(2, cptmpUserMapper.findAllUsers().size());
 
-        cptmpUserMapper.removeUserById(cptmpUserMapper.findAllUsers().get(0).getId(),new Date());
+        cptmpUserMapper.hideUserById(cptmpUserMapper.findAllUsers().get(0).getId(),new Date());
         Assertions.assertEquals(1, cptmpUserMapper.findAllUsers().size());
 
         CptmpUser cptmpUser3=cptmpUserMapper.findAllUsers().get(0);
-        cptmpUser3.setIntroduction("test3");
+        cptmpUser3.setPhoneNumber(BigDecimal.valueOf(3));
         cptmpUserMapper.updateUserById(cptmpUser3);
-        Assertions.assertEquals("test3",cptmpUserMapper.findAllUsers().get(0).getIntroduction());
+        Assertions.assertEquals(BigDecimal.valueOf(3),cptmpUserMapper.findAllUsers().get(0).getPhoneNumber());
 
-        cptmpUserMapper.removeAllUsers(new Date());
+        cptmpUserMapper.hideAllUsers(new Date());
         Assertions.assertEquals(0,cptmpUserMapper.findAllUsers().size());
     }
 }

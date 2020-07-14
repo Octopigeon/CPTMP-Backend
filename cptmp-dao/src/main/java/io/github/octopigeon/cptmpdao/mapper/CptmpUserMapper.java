@@ -22,19 +22,21 @@ import java.util.List;
 @Mapper
 public interface CptmpUserMapper {
 
-    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, introduction, uk_email, phone_number, " +
+    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, uk_email, phone_number, " +
             "gender, avatar, idx_name, uk_common_id, idx_organization_id, uk_username, idx_password, idx_role_name, enabled, " +
             "account_non_expired, credentials_non_expired, account_non_locked";
-    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{introduction}, #{email}, #{phoneNumber}, " +
+    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{email}, #{phoneNumber}, " +
             "#{gender}, #{avatar}, #{name}, #{commonId}, #{organizationId}, #{username}, #{password}, #{roleName}, #{enabled}, " +
             "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}";
     String UPDATE_HEADER = "update cptmp_user set ";
     String UPDATE_TAIL_USERNAME = " where (uk_username = #{username})";
-    String UPDATE_CONTENT = " gmt_modified = #{gmtModified},  introduction = #{introduction}, " +
+    String UPDATE_CONTENT = " gmt_modified = #{gmtModified}, " +
             "uk_email = #{email}, phone_number = #{phoneNumber}, gender = #{gender}, uk_username = #{username}, idx_password = #{password}, " +
             "idx_name = #{name}, uk_common_id = #{commonId}, idx_organization_id = #{organizationId},idx_role_name = #{roleName}, enabled = #{enabled}, account_non_expired = #{accountNonExpired}, " +
             "credentials_non_expired = #{credentialsNonExpired}, account_non_locked = #{accountNonLocked}";
 
+    String REMOVE_CONTENT=" gmt_modified = null, gmt_deleted = null, uk_email = null, phone_number = null, " +
+            "gender = null, avatar = null";
     /**
      * 插入实训
      * @param cptmpUser 用户
@@ -52,19 +54,49 @@ public interface CptmpUserMapper {
 
 
     /**
-     * 删除用户
+     * 删除用户(隐藏)
      * @param gmtDeleted 删除日期
      */
     @Update("update cptmp_user set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
+    void hideAllUsers(Date gmtDeleted);
+
+    /**
+     * 删除用户
+     * @param gmtDeleted 删除日期
+     */
+    @Update("update cptmp_user set "+ REMOVE_CONTENT +" where gmt_deleted is null")
     void removeAllUsers(Date gmtDeleted);
+
+
+    /**
+     * 恢复用户
+     */
+    @Update("update cptmp_user set gmt_deleted = null")
+    void restoreAllUsers();
+
+    /**
+     * 通过id删除（隐藏）
+     * @param id 用户id
+     * @param gmtDeleted 删除日期
+     */
+    @Update("update cptmp_user set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
+    void hideUserById(BigInteger id, Date gmtDeleted);
 
     /**
      * 通过id删除
      * @param id 用户id
      * @param gmtDeleted 删除日期
      */
-    @Update("update cptmp_user set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
+    @Update("update cptmp_user set "+REMOVE_CONTENT+" where id = #{id} and gmt_deleted is null")
     void removeUserById(BigInteger id, Date gmtDeleted);
+
+    /**
+     * 通过id删除
+     * @param id 用户id
+     * @param gmtDeleted 删除日期
+     */
+    @Update("update cptmp_user set "+REMOVE_CONTENT+" where id = #{id}")
+    void restoreUserById(BigInteger id, Date gmtDeleted);
 
     /**
      * 通过用户名获取用户，可以用来进行登录验证
@@ -77,7 +109,6 @@ public interface CptmpUserMapper {
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_deleted", property = "gmtDeleted", jdbcType = JdbcType.DATE),
-            @Result(column = "introduction", property = "introduction", jdbcType = JdbcType.VARCHAR),
             @Result(column = "uk_email", property = "email", jdbcType = JdbcType.VARCHAR),
             @Result(column = "phone_number", property = "phoneNumber", jdbcType = JdbcType.DECIMAL),
             @Result(column = "gender", property = "gender", jdbcType = JdbcType.TINYINT),
@@ -168,11 +199,10 @@ public interface CptmpUserMapper {
      * 更新用户常规信息
      * @param username
      * @param gmtModified
-     * @param introduction
      * @param gender
      */
-    @Update(UPDATE_HEADER + "gmt_modified = #{gmtModified}, idx_name = #{name}, introduction = #{introduction},gender = #{gender}" + UPDATE_TAIL_USERNAME)
-    void updateUserInfoByUsername(String username, Date gmtModified, String name, String introduction, boolean gender);
+    @Update(UPDATE_HEADER + "gmt_modified = #{gmtModified}, idx_name = #{name},gender = #{gender}" + UPDATE_TAIL_USERNAME)
+    void updateUserInfoByUsername(String username, Date gmtModified, String name, boolean gender);
 
     @Update(UPDATE_HEADER + "idx_password = #{password}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
     void updatePasswordByUsername(String username, Date gmtModified, String password);
