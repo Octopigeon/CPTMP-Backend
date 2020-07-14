@@ -41,6 +41,7 @@ public interface TeamMapper {
     @Delete("delete from team")
     void removeAllTeamTest();
     /**
+     * 测试用
      * @param gmtDeleted 删除时间
      */
     @Update("update team set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
@@ -119,6 +120,7 @@ public interface TeamMapper {
     @Select("select id, " + COLUMNS + " from team where id = #{id} and gmt_deleted is null")
     @ResultMap("team")
     Team findTeamByTeamId(BigInteger id);
+    Team findTrainTeamByTeamId(BigInteger teamId);
 
     /**
      * 根据团队名查找项目
