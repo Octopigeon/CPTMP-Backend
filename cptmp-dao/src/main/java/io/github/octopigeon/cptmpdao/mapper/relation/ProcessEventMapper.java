@@ -1,7 +1,6 @@
 package io.github.octopigeon.cptmpdao.mapper.relation;
 
 import io.github.octopigeon.cptmpdao.model.relation.ProcessEvent;
-import kotlin.internal.DynamicExtension;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Repository;
