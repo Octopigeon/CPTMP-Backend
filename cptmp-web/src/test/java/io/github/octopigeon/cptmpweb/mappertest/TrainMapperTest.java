@@ -32,7 +32,7 @@ public class TrainMapperTest extends BaseTest {
         train1.setOrganizationId(BigInteger.valueOf(1));
         train1.setContent("test1");
         train1.setName("test1");
-        train1.setStartTime(new Date());
+        train1.setStarTime(new Date());
         train1.setEndTime(new Date());
         train1.setGmtCreate(new Date());
         train1.setResourceLibrary("test1");
@@ -43,7 +43,7 @@ public class TrainMapperTest extends BaseTest {
         train2.setName("test2");
         train2.setOrganizationId(BigInteger.valueOf(2));
         train2.setContent("test2");
-        train2.setStartTime(new Date());
+        train2.setStarTime(new Date());
         train2.setEndTime(new Date());
         train2.setGmtCreate(new Date());
         train2.setResourceLibrary("test2");
