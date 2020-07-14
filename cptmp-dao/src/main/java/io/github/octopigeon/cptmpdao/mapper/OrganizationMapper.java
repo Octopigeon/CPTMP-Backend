@@ -14,21 +14,23 @@ import java.util.List;
  * @author 陈若琳
  * @version 2.1
  * @date 2020/07/12
- * @last-check-in 李国鹏
+ * @last-check-in 魏啸冲
  * @date 2020/07/14
  */
 @Repository
 @Mapper
 public interface OrganizationMapper {
 
-    String COLUMNS="uk_name,uk_real_name, organization_description,official_website_url,gmt_modified,gmt_create,gmt_deleted,invitation_code";
-    String PROPS="#{name}, #{realName}, #{description},#{websiteUrl},#{gmtModified},#{gmtCreate},#{gmtDeleted},#{invitationCode}";
+    String COLUMNS = "uk_name, uk_real_name, organization_description, official_website_url, gmt_modified" +
+            ", gmt_create, gmt_deleted, invitation_code";
+    String PROPS = "#{name}, #{realName}, #{description}, #{websiteUrl}, #{gmtModified}, #{gmtCreate}, #{gmtDeleted}, #{invitationCode}";
 
-    String UPDATE_CONTENT="uk_name = #{name},organization_description = #{description}, uk_real_name = #{realName}," +
-            "official_website_url = #{websiteUrl}, gmt_modified = #{gmtModified},invitation_code = #{invitationCode}";
+    String UPDATE_CONTENT = "uk_name = #{name}, organization_description = #{description}, uk_real_name = #{realName}," +
+            "official_website_url = #{websiteUrl}, gmt_modified = #{gmtModified}, invitation_code = #{invitationCode}";
 
     /**
      * 创建组织
+     *
      * @param organization 组织对象
      */
     @Insert("insert into cptmp_organization (" + COLUMNS + ") values (" + PROPS + ")")
@@ -38,34 +40,38 @@ public interface OrganizationMapper {
     /**
      * 根据id修改组织信息
      */
-    @Update("update cptmp_organization set "+UPDATE_CONTENT+"where id = #{id} and gmt_deleted is null")
+    @Update("update cptmp_organization set " + UPDATE_CONTENT + "where id = #{id} and gmt_deleted is null")
     void updateOrganizationById(Organization organization);
 
     /**
      * 测试删除
-     * @param gmtDeleted 删除日期
+     *
      */
     @Deprecated
     @Delete("delete from cptmp_organization")
-    void removeAllOrganizationTest(Date gmtDeleted);
+    void removeAllOrganizationTest();
 
     /**
      * 删除所有组织
+     *
      * @param gmtDeleted 删除日期
      */
     @Update("update cptmp_organization set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
     void removeAllOrganization(Date gmtDeleted);
+
     /**
      * 根据id删除组织(软删除）
-     * @param id 组织id
+     *
+     * @param id         组织id
      * @param gmtDeleted 删除时间
      */
     @Update("update cptmp_organization set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
-    void removeOrganizationById(BigInteger id,Date gmtDeleted);
+    void removeOrganizationById(BigInteger id, Date gmtDeleted);
 
 
     /**
      * 查询所有组织
+     *
      * @return 组织列表
      */
     @Select("select id, " + COLUMNS + " from cptmp_organization where gmt_deleted is null")
@@ -85,6 +91,7 @@ public interface OrganizationMapper {
 
     /**
      * 根据id查询组织
+     *
      * @param id 组织id
      * @return 组织列表
      */
@@ -94,6 +101,7 @@ public interface OrganizationMapper {
 
     /**
      * 根据名称查询组织
+     *
      * @param name 组织名称
      * @return 组织列表
      */
@@ -103,6 +111,7 @@ public interface OrganizationMapper {
 
     /**
      * 根据组织邀请码进行查询
+     *
      * @param invitationCode
      * @return
      */

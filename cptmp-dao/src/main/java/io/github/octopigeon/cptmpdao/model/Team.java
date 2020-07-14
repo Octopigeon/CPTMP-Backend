@@ -24,7 +24,7 @@ public class Team {
     private String name;
     private String avatar;
     private BigInteger projectId;
-    private String codeUrl;
+    private String repoUrl;
     private String evaluation;
     private Integer teamGrade;
 }
