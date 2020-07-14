@@ -29,49 +29,47 @@ public class TeamMapperTest extends BaseTest {
          */
         Team team1 =new Team();
         team1.setGmtCreate(new Date());
-        team1.setTeamName("test1");
-        team1.setCodeBaseUrl("test1");
-        team1.setMasterUserId(BigInteger.valueOf(1));
-        team1.setPmUserId(BigInteger.valueOf(1));
-        team1.setPoUserId(BigInteger.valueOf(1));
-        team1.setTrainProjectId(BigInteger.valueOf(1));
-        team1.setTeamGrade(BigDecimal.valueOf(100.0));
+        team1.setName("test1");
+        team1.setCodeUrl("test1");
+        team1.setAvatar("test1");
+        team1.setEvaluation("test1");
+        team1.setProjectId(BigInteger.valueOf(1));
+        team1.setTeamGrade(100);
 
         Team team2 =new Team();
         team2.setGmtCreate(new Date());
-        team2.setTeamName("test2");
-        team2.setCodeBaseUrl("test2");
-        team2.setMasterUserId(BigInteger.valueOf(2));
-        team2.setPmUserId(BigInteger.valueOf(2));
-        team2.setPoUserId(BigInteger.valueOf(2));
-        team2.setTrainProjectId(BigInteger.valueOf(2));
-        team2.setTeamGrade(BigDecimal.valueOf(90.0));
+        team2.setName("test2");
+        team2.setCodeUrl("test2");
+        team2.setAvatar("test2");
+        team2.setEvaluation("test2");
+        team2.setProjectId(BigInteger.valueOf(2));
+        team2.setTeamGrade(90);
 
 
         /**
          * 添加
          */
-        teamMapper.removeAllTrainTeamTest();
-        teamMapper.addTrainTeam(team1);
-        teamMapper.addTrainTeam(team2);
-        Assertions.assertEquals(2, teamMapper.findAllTrainTeam().size());
+        teamMapper.removeAllTeamTest();
+        teamMapper.addTeam(team1);
+        teamMapper.addTeam(team2);
+        Assertions.assertEquals(2, teamMapper.findAllTeam().size());
 
         /**
          * 删除
          */
-        teamMapper.removeTrainTeamByTeamName("test1",new Date());
-        Assertions.assertEquals(1, teamMapper.findAllTrainTeam().size());
+        teamMapper.removeTeamByName("test1",new Date());
+        Assertions.assertEquals(1, teamMapper.findAllTeam().size());
 
         /**
          * 更新
          */
-        Team team3 = teamMapper.findAllTrainTeam().get(0);
-        team3.setCodeBaseUrl("test3");
-        teamMapper.updateTrainTeamByTeamName(team3);
-        Assertions.assertEquals("test3", teamMapper.findAllTrainTeam().get(0).getCodeBaseUrl());
+        Team team3 = teamMapper.findAllTeam().get(0);
+        team3.setEvaluation("test3");
+        teamMapper.updateTeamByName(team3);
+        Assertions.assertEquals("test3", teamMapper.findAllTeam().get(0).getEvaluation());
 
-        teamMapper.removeAllTrainTeam(new Date());
-        Assertions.assertEquals(0, teamMapper.findAllTrainTeam().size());
+        teamMapper.removeAllTeam(new Date());
+        Assertions.assertEquals(0, teamMapper.findAllTeam().size());
 
     }
 }
