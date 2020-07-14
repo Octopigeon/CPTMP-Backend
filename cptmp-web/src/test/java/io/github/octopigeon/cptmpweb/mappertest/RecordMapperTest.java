@@ -58,9 +58,9 @@ class RecordMapperTest extends BaseTest {
         recordMapper.removeRecordById(recordMapper.findAllRecord().get(0).getId(),new Date());
         Assertions.assertEquals(1,recordMapper.findAllRecord().size());
 
-//        ActivityRecord activityRecord3=activityRecordMapper.findAllActivityRecord().get(0);
+//        Record activityRecord3=recordMapper.findAllRecord().get(0);
 //        activityRecord3.setEvent("test3");
-//        activityRecordMapper.updateActivityRecordById(activityRecord3);
-//        Assertions.assertEquals("test3",activityRecordMapper.findActivityRecordByUserId(BigInteger.valueOf(2)).get(0).getEvent());
+//        recordMapper.updateRecordById(activityRecord3);
+//        Assertions.assertEquals("test3",recordMapper.findRecordByTeamId(BigInteger.valueOf(2)).get(0).getEvent());
     }
 }

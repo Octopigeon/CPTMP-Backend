@@ -69,7 +69,7 @@ public class TrainAndProcessAndEventMapperTest extends BaseTest {
         train.setStartTime(new Date());
         train.setEndTime(new Date());
         train.setContent("啊这");
-        train.setAcceptStandard("啊这也");
+        train.setStandard("啊这也");
         train.setResourceLibrary("{}");
         train.setGpsInfo("{}");
         trainMapper.addTrain(train);
