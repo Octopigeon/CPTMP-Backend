@@ -32,7 +32,7 @@ import java.util.List;
  * @date 2020/7/11
  * 提供各种用户注册，学校注册，实训项目注册，实训注册的api（所有可以批量导入的）
  * @last-check-in 魏啸冲
- * @date 2020/7/13
+ * @date 2020/7/14
  */
 @RestController
 public class RegisterController {
@@ -58,26 +58,32 @@ public class RegisterController {
     }
 
     /**
-     * 企业管理员可以导入教师账号
+     * 企业管理员可以导入学校管理员账号
      * @param json 其中orgId是各个学校的id，因此必须先创建学校，
      *             才能导入其中的教师和学生
      * @return 注册失败列表
      */
-    @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
-    @PostMapping("/api/user/teacher")
-    public RespBeanWithFailedList registerTeacher(@RequestBody String json) throws JsonProcessingException {
-       return registerRole(json, CptmpRole.ROLE_SCHOOL_TEACHER);
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
+    @PostMapping("/api/user/teacher-admin")
+    public RespBeanWithFailedList registerSchoolAmdin(@RequestBody String json) throws JsonProcessingException {
+       return registerRole(json, CptmpRole.ROLE_SCHOOL_ADMIN);
     }
 
     /**
-     * 企业管理员可以导入学生账号
+     * 学校管理员可以导入学生账号
      * @param json 与教师一样
      * @return 注册失败列表
      */
-    @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN, CptmpRole.ROLE_SCHOOL_ADMIN})
     @PostMapping("/api/user/student")
     public RespBeanWithFailedList registerStudent(@RequestBody String json) throws JsonProcessingException {
         return registerRole(json, CptmpRole.ROLE_STUDENT_MEMBER);
+    }
+
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN, CptmpRole.ROLE_SCHOOL_ADMIN})
+    @PostMapping("api/user/teacher")
+    public RespBeanWithFailedList registerTeacher(@RequestBody String json) throws  JsonProcessingException {
+        return registerRole(json, CptmpRole.ROLE_SCHOOL_TEACHER);
     }
 
     /**
@@ -119,7 +125,7 @@ public class RegisterController {
      * @param json 包含学校代号，学校名字，官方网站，简介
      * @return 注册失败列表
      */
-    @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @PostMapping("/api/org")
     public RespBeanWithFailedList registerOrganization(@RequestBody String json) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -150,7 +156,7 @@ public class RegisterController {
      * @param json 包含上述三个字段的json
      * @return 返回一个包含导入失败条目列表的json
      */
-    @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @PostMapping("/api/train-project")
     public RespBeanWithFailedList registerTrainProject(@RequestBody String json) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
