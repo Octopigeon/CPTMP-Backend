@@ -21,12 +21,12 @@ import java.util.List;
 @Mapper
 public interface TrainMapper {
 
-    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, school_id, process_id, start_date, " +
-            "finish_date, content, accept_standard, resource_library";
-    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{schoolId}, #{processId}, #{startDate}, " +
-            "#{finishDate}, #{content}, #{acceptStandard}, #{resourceLibrary}";
-    String UPDATE_CONTENT = "school_id = #{schoolId}, process_id = #{processId}, gmt_modified = #{gmtModified}, start_date = #{startDate}, " +
-            "finish_date = #{finishDate}, content = #{content}, accept_standard = #{acceptStandard}";
+    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted,uk_name, organization_id, start_date, " +
+            "finish_date, content, standard, resource_library, gps_info";
+    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted},#{name}, #{organizationId}, #{startDate}, " +
+            "#{finishDate}, #{content}, #{standard}, #{resourceLibrary},#{gpsInfo}";
+    String UPDATE_CONTENT = "organization_id = #{organizationId}, gmt_modified = #{gmtModified},uk_name = #{name}, start_date = #{startDate}, " +
+            "finish_date = #{finishDate}, content = #{content}, standard = #{standard},gps_info = #{gpsInfo}";
 
     /**
      * 插入实训
@@ -38,11 +38,10 @@ public interface TrainMapper {
 
     /**
      * 测试用
-     * @param gmtDeleted 删除日期
      */
     @Deprecated
     @Delete("delete from train")
-    void removeAllTrainTest(Date gmtDeleted);
+    void removeAllTrainTest();
 
     /**
      * 测试用
@@ -88,13 +87,14 @@ public interface TrainMapper {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modify", property = "gmtModify", jdbcType = JdbcType.DATE),
-            @Result(column = "school_id", property = "schoolId", jdbcType = JdbcType.BIGINT),
-            @Result(column = "process_id", property = "processId", jdbcType = JdbcType.BIGINT),
+            @Result(column = "uk_name", property = "name", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "organization_id", property = "organizationId", jdbcType = JdbcType.BIGINT),
             @Result(column = "start_date", property = "startDate", jdbcType = JdbcType.DATE),
             @Result(column = "finish_date", property = "finishDate", jdbcType = JdbcType.DATE),
             @Result(column = "content", property = "content", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "accept_standard", property = "acceptStandard", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "resource_library", property = "resourceLibrary", jdbcType = JdbcType.VARCHAR)
+            @Result(column = "standard", property = "standard", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "resource_library", property = "resourceLibrary", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "gps_info", property = "gpsInfo", jdbcType = JdbcType.VARCHAR)
 
     })
     List<Train> findAllTrain();
@@ -108,12 +108,12 @@ public interface TrainMapper {
     @ResultMap("train")
     Train findTrainById(BigInteger id);
 
-    /**
-     * 根据项目名查找项目，模糊查找
-     * @param projectName：项目名称
-     * @return 项目
-     */
-    @Select("select id, " + COLUMNS + " from train where uk_project_name like concat('%', #{projectName}, '%') and gmt_deleted is null")
-    @ResultMap("train")
-    List<Train> findTrainProjectByProjectNameAmbiguously(String projectName);
+//    /**
+//     * 根据项目名查找项目，模糊查找
+//     * @param projectName：项目名称
+//     * @return 项目
+//     */
+//    @Select("select id, " + COLUMNS + " from train where uk_project_name like concat('%', #{projectName}, '%') and gmt_deleted is null")
+//    @ResultMap("train")
+//    List<Train> findTrainProjectByProjectNameAmbiguously(String projectName);
 }

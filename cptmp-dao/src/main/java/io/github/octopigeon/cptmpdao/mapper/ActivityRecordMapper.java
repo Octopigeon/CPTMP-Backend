@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2020/7/8
  *
  * @last-check-in 李国鹏
- * @date 2020/7/12
+ * @date 2020/7/13
  */
 @Repository
 @Mapper
@@ -24,7 +24,7 @@ public interface ActivityRecordMapper {
      */
     String COLUMNS="gmt_create, gmt_modified, gmt_deleted, idx_user_id, idx_team_id, state_record, event_record";
     String PROPS="#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{userId}, #{teamId}, #{state}, #{event}";
-    String UPDATE_CONTENT=" idx_user_id = #{userId}, idx_team_id = #{teamId},gmt_modified = #{gmtModified}, state_record = #{state}, event_record = #{event}";
+    String UPDATE_CONTENT=" gmt_create = #{gmtCreate},gmt_modified = #{gmtModified},gmt_deleted = #{gmtDeleted},idx_user_id = #{userId}, idx_team_id = #{teamId}, state_record = #{state}, event_record = #{event}";
 
     @Insert("insert into activity_record (" + COLUMNS + ") values ( " + PROPS +" )")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -33,11 +33,10 @@ public interface ActivityRecordMapper {
 
     /**
      *  删除活动信息
-     * @param gmtDeleted 删除日期
      */
     @Deprecated
-    @Update("delete from activity_record")
-    void removeAllActivityRecordTest(Date gmtDeleted);
+    @Delete("delete from activity_record")
+    void removeAllActivityRecordTest();
 
     /**
      *  删除活动信息
@@ -52,7 +51,7 @@ public interface ActivityRecordMapper {
      * @param gmtDeleted 删除日期
      */
     @Update("update activity_record set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
-    void removeActivityRecordById(BigInteger id,Date gmtDeleted);
+    void removeActivityRecordById(BigInteger id, Date gmtDeleted);
 
 
     /**

@@ -28,8 +28,10 @@ public interface AttachmentFileMapper {
      */
     String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, uk_file_name, uk_file_path, origin_name, file_size, idx_file_type";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{fileName}, #{filePath}, #{originName}, #{fileSize}, #{fileType}";
-    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, uk_file_name = #{fileName}, " +
+    String UPDATE_CONTENT = "gmt_create = #{gmtCreate}, gmt_modified = #{gmtModified}, gmt_deleted = #{gmtDeleted}, uk_file_name = #{fileName}, " +
             " uk_file_path = #{filePath}, origin_name = #{originName}, file_size = #{fileSize}, idx_file_type = #{fileType}";
+
+
     @Insert("insert into attachment_file (" + COLUMNS + ") values ( " + PROPS +" )")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addAttachmentFile(AttachmentFile file);

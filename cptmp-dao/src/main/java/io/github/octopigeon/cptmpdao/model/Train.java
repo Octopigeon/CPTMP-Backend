@@ -19,17 +19,18 @@ public class Train {
     private Date gmtCreate;
     private Date gmtModified;
     private Date gmtDeleted;
-    private BigInteger schoolId;
-    private BigInteger processId;
+    private String name;
+    private BigInteger organizationId;
     private Date startDate;
     private Date finishDate;
     private String content;
     /**
      * 验收标准
      */
-    private String acceptStandard;
+    private String standard;
     /**
      * 实训资源
      */
     private String resourceLibrary;
+    private String gpsInfo;
 }
