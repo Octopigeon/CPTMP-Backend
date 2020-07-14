@@ -1,6 +1,6 @@
 package io.github.octopigeon.cptmpservice.service.trainproject;
 
-import io.github.octopigeon.cptmpservice.dto.trainproject.TrainProjectDTO;
+import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
 import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileService;
 import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalService;
 import org.springframework.stereotype.Service;
@@ -17,14 +17,14 @@ import java.util.List;
  * @date 2020/7/11
  */
 @Service
-public interface TrainProjectService extends BaseNormalService<TrainProjectDTO>, BaseFileService {
+public interface ProjectService extends BaseNormalService<ProjectDTO>, BaseFileService {
 
     /**
      * 根据名字进行模糊查找
      * @param name 项目名
      * @return 列表
      */
-    List<TrainProjectDTO> findByLikeName(String name);
+    List<ProjectDTO> findByLikeName(String name);
 
     /**
      * 给资源库上传文件

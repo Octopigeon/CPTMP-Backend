@@ -46,5 +46,5 @@ public class BaseUserInfoDTO{
     private String introduction;
 
     /** 返回携带用户账号 */
-    private BigInteger userId;
+    private BigInteger id;
 }
