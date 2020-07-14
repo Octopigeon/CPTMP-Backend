@@ -51,7 +51,7 @@ public class TrainAndProcessAndEventMapperTest extends BaseTest {
 
     @Test
     public void test() throws Exception {
-        organizationMapper.removeAllOrganizationTest(new Date());
+        organizationMapper.removeAllOrganizationTest();
         OrganizationDTO organizationDTO = new OrganizationDTO();
         organizationDTO.setName("THU");
         organizationDTO.setRealName("清华大学");

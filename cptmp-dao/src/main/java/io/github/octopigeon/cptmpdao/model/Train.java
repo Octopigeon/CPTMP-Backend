@@ -20,7 +20,6 @@ public class Train {
     private Date gmtCreate;
     private Date gmtModified;
     private Date gmtDeleted;
-
     /** 实训名字 */
     private String name;
     private BigInteger organizationId;
