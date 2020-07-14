@@ -305,7 +305,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
-        user.setIntroduction("");
         return user;
     }
 }

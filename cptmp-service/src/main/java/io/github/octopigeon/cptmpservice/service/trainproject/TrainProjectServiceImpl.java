@@ -2,8 +2,8 @@ package io.github.octopigeon.cptmpservice.service.trainproject;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import io.github.octopigeon.cptmpdao.mapper.TrainProjectMapper;
-import io.github.octopigeon.cptmpdao.model.TrainProject;
+import io.github.octopigeon.cptmpdao.mapper.ProjectMapper;
+import io.github.octopigeon.cptmpdao.model.Project;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainProjectDTO;
@@ -33,7 +33,7 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
     private final String libJsonName = "resourceLib";
 
     @Autowired
-    private TrainProjectMapper trainProjectMapper;
+    private ProjectMapper projectMapper;
 
     @Autowired
     public TrainProjectServiceImpl(FileProperties fileProperties) throws Exception {
@@ -48,14 +48,14 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
     @Override
     public void add(TrainProjectDTO dto) throws Exception {
         try {
-            TrainProject project = new TrainProject();
+            Project project = new Project();
             BeanUtils.copyProperties(dto, project);
             project.setGmtCreate(new Date());
             JSONObject object = new JSONObject();
             List<FileDTO> fileDTOS = new ArrayList<>();
             object.put(this.libJsonName, fileDTOS);
             project.setResourceLibrary(object.toJSONString());
-            trainProjectMapper.addTrainProject(project);
+            projectMapper.addTrainProject(project);
         }catch (Exception e){
             e.printStackTrace();
             throw new Exception("Add train project failed");
@@ -70,9 +70,9 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
     @Override
     public void remove(TrainProjectDTO dto) throws Exception {
         try{
-            TrainProject trainProject = trainProjectMapper.findTrainProjectById(dto.getId());
-            if(trainProject != null){
-                trainProjectMapper.removeTrainProjectById(trainProject.getId(), new Date());
+            Project project = projectMapper.findTrainProjectById(dto.getId());
+            if(project != null){
+                projectMapper.removeTrainProjectById(project.getId(), new Date());
             }
             else {
                 throw new ValueException("trainproject is not existed!");
@@ -92,9 +92,9 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
     @Override
     public Boolean modify(TrainProjectDTO dto) throws Exception {
         try {
-            TrainProject trainProject = trainProjectMapper.findTrainProjectById(dto.getId());
-            BeanUtils.copyProperties(dto, trainProject, Utils.getNullPropertyNames(dto));
-            trainProjectMapper.updateTrainProjectById(trainProject.getId(), new Date(), trainProject.getName(), trainProject.getLevel(), trainProject.getContent());
+            Project project = projectMapper.findTrainProjectById(dto.getId());
+            BeanUtils.copyProperties(dto, project, Utils.getNullPropertyNames(dto));
+            projectMapper.updateTrainProjectById(project);
             return true;
         }catch (Exception e){
             e.printStackTrace();
@@ -111,12 +111,12 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
     @Override
     public void uploadResourceLib(MultipartFile file, BigInteger projectId) throws Exception {
         FileDTO fileInfo = storePrivateFile(file);
-        TrainProject trainProject = trainProjectMapper.findTrainProjectById(projectId);
-        JSONObject object = JSON.parseObject(trainProject.getResourceLibrary());
+        Project project = projectMapper.findTrainProjectById(projectId);
+        JSONObject object = JSON.parseObject(project.getResourceLibrary());
         List<FileDTO> resourceLib = JSON.parseArray(object.getJSONArray(this.libJsonName).toJSONString(), FileDTO.class);
         resourceLib.add(fileInfo);
         object.put(this.libJsonName, resourceLib);
-        trainProjectMapper.updateTrainProjectResourceById(projectId, new Date(), object.toJSONString());
+        projectMapper.updateTrainProjectResourceById(projectId, new Date(), object.toJSONString());
     }
 
     /**
@@ -127,12 +127,12 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
      */
     @Override
     public TrainProjectDTO findById(BigInteger id) throws Exception {
-        TrainProject trainProject = trainProjectMapper.findTrainProjectById(id);
-        if(trainProject == null){
+        Project project = projectMapper.findTrainProjectById(id);
+        if(project == null){
             throw new ValueException("project is not existed!");
         }
         TrainProjectDTO trainProjectDTO = new TrainProjectDTO();
-        BeanUtils.copyProperties(trainProject, trainProjectDTO);
+        BeanUtils.copyProperties(project, trainProjectDTO);
         return trainProjectDTO;
     }
 
@@ -144,11 +144,11 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
      */
     @Override
     public List<TrainProjectDTO> findByLikeName(String name) {
-        List<TrainProject> trainProjects = trainProjectMapper.findTrainProjectByProjectNameAmbiguously(name);
+        List<Project> projects = projectMapper.findTrainProjectByNameAmbiguously(name);
         List<TrainProjectDTO> trainProjectDTOS = new ArrayList<>();
-        for (TrainProject trainProject: trainProjects) {
+        for (Project project : projects) {
             TrainProjectDTO trainProjectDTO = new TrainProjectDTO();
-            BeanUtils.copyProperties(trainProject, trainProjectDTO);
+            BeanUtils.copyProperties(project, trainProjectDTO);
             trainProjectDTOS.add(trainProjectDTO);
         }
         return trainProjectDTOS;
