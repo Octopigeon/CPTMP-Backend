@@ -76,7 +76,7 @@ public class OrganizationServiceImpl implements OrganizationService{
     @Override
     public Boolean modify(OrganizationDTO dto) throws Exception {
         try{
-            Organization organization = organizationMapper.findOrganizationById(dto.getId());
+            Organization organization = organizationMapper.findOrganizationByName(dto.getName());
             BeanUtils.copyProperties(dto, organization, Utils.getNullPropertyNames(dto));
             organizationMapper.updateOrganizationById(organization);
             return true;

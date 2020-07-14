@@ -1,6 +1,7 @@
 package io.github.octopigeon.cptmpdao.model;
 
 import lombok.Data;
+import org.springframework.security.core.userdetails.cache.SpringCacheBasedUserCache;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -10,8 +11,8 @@ import java.util.Date;
  * @version 1.3
  * @date 2020/7/9
  * <p>
- * last-check-in 李国鹏
- * @date 2020/7/12
+ * last-check-in 魏啸冲
+ * @date 2020/7/14
  */
 @Data
 public class Train {
