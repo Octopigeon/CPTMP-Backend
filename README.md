@@ -211,6 +211,7 @@ College Practice Training Management Platform
 
 # RegisterController
 ## /api/user/enterprise-admin
+## /api/user/teacher-admin
 ## /api/user/teacher
 ## /api/user/student
 + HTTP方法：POST
