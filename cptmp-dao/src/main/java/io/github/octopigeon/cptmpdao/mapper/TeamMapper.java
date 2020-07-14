@@ -25,9 +25,9 @@ public interface TeamMapper {
      * 添加团队
      * @param team 团队
      */
-    String COLUMNS="gmt_create, gmt_modified, gmt_deleted, avatar,idx_project_id, idx_team_name, code_url, team_grade,evaluation";
+    String COLUMNS="gmt_create, gmt_modified, gmt_deleted, avatar,idx_project_id, idx_name, code_url, team_grade,evaluation";
     String PROPS="#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{avatar},#{projectId}, #{name}, #{codeUrl}, #{teamGrade},#{evaluation}";
-    String UPDATE_CONTENT="gmt_modified = #{gmtModified}, idx_project_id = #{projectId}, idx_team_name = #{name}, evaluation = #{evaluation}, " +
+    String UPDATE_CONTENT="gmt_modified = #{gmtModified}, idx_project_id = #{projectId}, idx_name = #{name}, evaluation = #{evaluation}, " +
             " code_url = #{codeUrl},team_grade = #{teamGrade},avatar = #{avatar}";
 
     @Insert("insert into team (" + COLUMNS + ") values (" + PROPS + ")")
@@ -58,7 +58,7 @@ public interface TeamMapper {
      * @param name 团队名称
      * @param gmtDeleted 删除日期
      */
-    @Update("update team set gmt_deleted = #{gmtDeleted} where idx_team_name = #{name} and gmt_deleted is null")
+    @Update("update team set gmt_deleted = #{gmtDeleted} where idx_name = #{name} and gmt_deleted is null")
     void removeTeamByName(String name,Date gmtDeleted);
 
     /**
@@ -78,7 +78,7 @@ public interface TeamMapper {
     /**
      * 根据团队名修改
      */
-    @Update("update team set "+ UPDATE_CONTENT+"  where idx_team_name = #{name} and gmt_deleted is null")
+    @Update("update team set "+ UPDATE_CONTENT+"  where idx_name = #{name} and gmt_deleted is null")
     void updateTeamByName(Team team);
 
     /**
@@ -87,7 +87,7 @@ public interface TeamMapper {
      * @param gmtModified 删除日期
      * @param codeUrl 代码库
      */
-    @Update("update team set gmt_deleted = #{gmtDeleted}, code_url = #{codeUrl} where idx_team_name = #{name} and gmt_deleted is null")
+    @Update("update team set gmt_deleted = #{gmtDeleted}, code_url = #{codeUrl} where idx_name = #{name} and gmt_deleted is null")
     void updateTeamCodeUrlByName(String name, Date gmtModified,String codeUrl);
 
 
