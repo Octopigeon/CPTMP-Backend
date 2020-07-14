@@ -28,8 +28,10 @@ public interface AttachmentFileMapper {
      */
     String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, uk_file_name, uk_file_path, origin_name, file_size, idx_file_type";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{fileName}, #{filePath}, #{originName}, #{fileSize}, #{fileType}";
-    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, uk_file_name = #{fileName}, " +
+    String UPDATE_CONTENT = "gmt_create = #{gmtCreate}, gmt_modified = #{gmtModified}, gmt_deleted = #{gmtDeleted}, uk_file_name = #{fileName}, " +
             " uk_file_path = #{filePath}, origin_name = #{originName}, file_size = #{fileSize}, idx_file_type = #{fileType}";
+
+
     @Insert("insert into attachment_file (" + COLUMNS + ") values ( " + PROPS +" )")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addAttachmentFile(AttachmentFile file);
@@ -65,28 +67,15 @@ public interface AttachmentFileMapper {
 
     /**
      * 根据id修改
-     * @param id id
-     * @param gmtModified 修改时间
-     * @param fileName 文件名称
-     * @param filePath 文件路径
-     * @param originName 初始名称
-     * @param fileSize 大小
-     * @param fileType 类型
      */
-    @Update("update attachment_file set "+ UPDATE_CONTENT +" where uk_file_name = #{fileName} and gmt_deleted is null ")
-    void updateAttachmentFileById(BigInteger id, Date gmtModified,String fileName,String filePath, String originName,BigInteger fileSize, String fileType);
+    @Update("update attachment_file set "+ UPDATE_CONTENT +" where id = #{attachmentFile.id} and gmt_deleted is null ")
+    void updateAttachmentFileById(AttachmentFile attachmentFile);
 
     /**
-     * 根据id修改
-     * @param gmtModified 修改时间
-     * @param fileName 文件名称
-     * @param filePath 文件路径
-     * @param originName 初始名称
-     * @param fileSize 大小
-     * @param fileType 类型
+     * 根据文件名修改
      */
-    @Update("update attachment_file set "+ UPDATE_CONTENT +" where uk_file_name = #{fileName} and gmt_deleted is null ")
-    void updateAttachmentFileByFileName(String fileName,Date gmtModified,String filePath, String originName,BigInteger fileSize, String fileType);
+    @Update("update attachment_file set "+ UPDATE_CONTENT +" where uk_file_name = #{fileName} and gmt_deleted is null")
+    void updateAttachmentFileByFileName(AttachmentFile attachmentFile);
 
     /**
      * 修改原始文件名称

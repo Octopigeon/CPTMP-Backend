@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2020/7/8
  *
  * @last-check-in 李国鹏
- * @date 2020/7/12
+ * @date 2020/7/13
  */
 @Repository
 @Mapper
@@ -24,7 +24,7 @@ public interface ActivityRecordMapper {
      */
     String COLUMNS="gmt_create, gmt_modified, gmt_deleted, idx_user_id, idx_team_id, state_record, event_record";
     String PROPS="#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{userId}, #{teamId}, #{state}, #{event}";
-    String UPDATE_CONTENT=" idx_user_id = #{userId}, idx_team_id = #{teamId},gmt_modified = #{gmtModified}, state_record = #{state}, event_record = #{event}";
+    String UPDATE_CONTENT=" gmt_create = #{gmtCreate},gmt_modified = #{gmtModified},gmt_deleted = #{gmtDeleted},idx_user_id = #{userId}, idx_team_id = #{teamId}, state_record = #{state}, event_record = #{event}";
 
     @Insert("insert into activity_record (" + COLUMNS + ") values ( " + PROPS +" )")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -33,32 +33,32 @@ public interface ActivityRecordMapper {
 
     /**
      *  删除活动信息
-     * @param gmtDeleted 删除日期
      */
     @Deprecated
+    @Delete("delete from activity_record")
+    void removeAllActivityRecordTest();
+
+    /**
+     *  删除活动信息
+     * @param gmtDeleted 删除日期
+     */
     @Update("update activity_record set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
     void removeActivityRecordByAll(Date gmtDeleted);
-//
-//    /**
-//     * 根据id删除对应的活动信息
-//     * @param id：活动记录id
-//     * @param gmtDeleted 删除日期
-//     */
-//    @Update("update activity_record set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
-//    void removeActivityRecordById(BigInteger id,Date gmtDeleted);
-//
-//
-//    /**
-//     * 根据id修改
-//     * @param id id
-//     * @param userId 活动人id
-//     * @param teamId 团队id
-//     * @param gmtModified 修改时间
-//     * @param state 活动状态
-//     * @param event 活动事件
-//     */
-//    @Update("update activity_record set "+UPDATE_CONTENT+" where id = #{id} and gmt_deleted is null")
-//    void updateActivityRecordByUserId( BigInteger id, Date gmtModified, BigInteger userId,BigInteger teamId,  BigInteger state, String event);
+
+    /**
+     * 根据id删除对应的活动信息
+     * @param id：活动记录id
+     * @param gmtDeleted 删除日期
+     */
+    @Update("update activity_record set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
+    void removeActivityRecordById(BigInteger id, Date gmtDeleted);
+
+
+    /**
+     * 根据id修改
+     */
+    @Update("update activity_record set "+UPDATE_CONTENT+" where id = #{id} and gmt_deleted is null")
+    void updateActivityRecordById(ActivityRecord activityRecord);
 
 
     /**
