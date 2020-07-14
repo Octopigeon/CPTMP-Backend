@@ -8,9 +8,9 @@ import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.organization.OrganizationDTO;
-import io.github.octopigeon.cptmpservice.dto.trainproject.TrainProjectDTO;
+import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
 import io.github.octopigeon.cptmpservice.service.organization.OrganizationService;
-import io.github.octopigeon.cptmpservice.service.trainproject.TrainProjectService;
+import io.github.octopigeon.cptmpservice.service.trainproject.ProjectService;
 import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
@@ -41,7 +41,7 @@ public class RegisterController {
     private UserInfoService userInfoService;
 
     @Autowired
-    private TrainProjectService trainProjectService;
+    private ProjectService projectService;
 
     @Autowired
     private OrganizationService organizationService;
@@ -161,11 +161,11 @@ public class RegisterController {
             ReqBeanWithTrainProjectRegisterInfo reqBeanWithTrainProjectRegisterInfo
                     = reqBeanWithTrainProjectRegisterInfos[i];
             try {
-                TrainProjectDTO trainProjectDTO = new TrainProjectDTO();
-                trainProjectDTO.setName(reqBeanWithTrainProjectRegisterInfo.getProjectName());
-                trainProjectDTO.setLevel(reqBeanWithTrainProjectRegisterInfo.getProjectLevel());
-                trainProjectDTO.setContent(reqBeanWithTrainProjectRegisterInfo.getProjectContent());
-                trainProjectService.add(trainProjectDTO);
+                ProjectDTO projectDTO = new ProjectDTO();
+                projectDTO.setName(reqBeanWithTrainProjectRegisterInfo.getProjectName());
+                projectDTO.setLevel(reqBeanWithTrainProjectRegisterInfo.getProjectLevel());
+                projectDTO.setContent(reqBeanWithTrainProjectRegisterInfo.getProjectContent());
+                projectService.add(projectDTO);
             } catch (Exception e) {
                 e.printStackTrace();
                 registerFailedList.add(i);

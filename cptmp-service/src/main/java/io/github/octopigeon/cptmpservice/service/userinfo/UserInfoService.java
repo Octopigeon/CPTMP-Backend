@@ -1,5 +1,6 @@
 package io.github.octopigeon.cptmpservice.service.userinfo;
 
+import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileService;
 import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalService;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
+import java.util.List;
 
 /**
  * @author 李国豪
@@ -26,22 +28,72 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
      */
     Boolean validateOriginPassword(String username, String originPassword);
 
-//    /**
-//     * 批量添加注册
-//     */
-//    void bulkAdd(List<BaseUserInfoDTO> dtos) throws Exception;
-
-//    /**
-//     * 邀请码注册
-//     */
-//    void addByInvitationCode(BaseUserInfoDTO dto, String invitationCode) throws Exception;
+    /**
+     * 分页查询所有用户
+     * @param page 页号
+     * @param offset 每页数量
+     * @return
+     */
+    PageInfo<BaseUserInfoDTO> findAllByPage(int page, int offset);
 
     /**
      * 根据用户名得到用户基本信息，以及角色类型
      * @param username 用户名
-     * @return 返回一个父抽象类型，然后controller根据roleName转换成相应的子类
+     * @return 返回一个userInfo
      */
-    BaseUserInfoDTO findBaseUserInfoByUsername(String username);
+    BaseUserInfoDTO findByUsername(String username);
+
+    /**
+     * 根据真实姓名进行模糊查询
+     * @param name 真实姓名
+     * @return userInfo
+     */
+    List<BaseUserInfoDTO> findByName(String name);
+
+    /**
+     * 根据email进行查询
+     * @param email 邮箱
+     * @return userInfo
+     */
+    BaseUserInfoDTO findByEmail(String email);
+
+    /**
+     * 汇总过滤查询
+     * @param id 用户id
+     * @param username 用户名
+     * @param email 邮箱
+     * @param name 真实姓名
+     * @return
+     */
+    List<BaseUserInfoDTO> findByPersonalFilter(BigInteger id, String username, String email, String name) throws Exception;
+
+    /**
+     * 根据组织id进行用户查询
+     * @param page 页号
+     * @param offset 偏移
+     * @param organizationId 组织号
+     * @return
+     */
+    PageInfo<BaseUserInfoDTO> findByOrganizationId(int page, int offset, BigInteger organizationId);
+
+    /**
+     * 根据权限进行用户查询
+     * @param page 页号
+     * @param offset 页内数量
+     * @param roleName 权限名
+     * @return
+     */
+    PageInfo<BaseUserInfoDTO> findByRoleName(int page, int offset, String roleName);
+
+    /**
+     * 根据组织id和权限名进行查询
+     * @param page 页号
+     * @param offset 页内数量
+     * @param organizationId 组织id
+     * @param roleName 权限名
+     * @return
+     */
+    PageInfo<BaseUserInfoDTO> findByGroupFilter(int page, int offset, BigInteger organizationId, String roleName);
 
     /**
      * 激活账号
@@ -76,5 +128,14 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
 //     * @param username 用户id
 //     */
 //    void uploadFace(MultipartFile file, String username) throws Exception;
-
+//
+//    /**
+//     * 批量添加注册
+//     */
+//    void bulkAdd(List<BaseUserInfoDTO> dtos) throws Exception;
+//
+//    /**
+//     * 邀请码注册
+//     */
+//    void addByInvitationCode(BaseUserInfoDTO dto, String invitationCode) throws Exception;
 }

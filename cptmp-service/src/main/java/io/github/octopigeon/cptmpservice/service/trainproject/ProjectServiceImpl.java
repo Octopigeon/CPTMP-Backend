@@ -6,7 +6,7 @@ import io.github.octopigeon.cptmpdao.mapper.TrainProjectMapper;
 import io.github.octopigeon.cptmpdao.model.TrainProject;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
-import io.github.octopigeon.cptmpservice.dto.trainproject.TrainProjectDTO;
+import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
 import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
@@ -28,7 +28,7 @@ import java.util.List;
  * @date 2020/7/11
  */
 @Service
-public class TrainProjectServiceImpl extends BaseFileServiceImpl implements TrainProjectService {
+public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectService {
 
     private final String libJsonName = "resourceLib";
 
@@ -36,7 +36,7 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
     private TrainProjectMapper trainProjectMapper;
 
     @Autowired
-    public TrainProjectServiceImpl(FileProperties fileProperties) throws Exception {
+    public ProjectServiceImpl(FileProperties fileProperties) throws Exception {
         super(fileProperties);
     }
 
@@ -46,7 +46,7 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
      * @param dto ：dto实体
      */
     @Override
-    public void add(TrainProjectDTO dto) throws Exception {
+    public void add(ProjectDTO dto) throws Exception {
         try {
             TrainProject project = new TrainProject();
             BeanUtils.copyProperties(dto, project);
@@ -68,7 +68,7 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
      * @param dto ：dto实体
      */
     @Override
-    public void remove(TrainProjectDTO dto) throws Exception {
+    public void remove(ProjectDTO dto) throws Exception {
         try{
             TrainProject trainProject = trainProjectMapper.findTrainProjectById(dto.getId());
             if(trainProject != null){
@@ -90,7 +90,7 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
      * @return 是否删除成功
      */
     @Override
-    public Boolean modify(TrainProjectDTO dto) throws Exception {
+    public Boolean modify(ProjectDTO dto) throws Exception {
         try {
             TrainProject trainProject = trainProjectMapper.findTrainProjectById(dto.getId());
             BeanUtils.copyProperties(dto, trainProject, Utils.getNullPropertyNames(dto));
@@ -126,14 +126,14 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
      * @return dto
      */
     @Override
-    public TrainProjectDTO findById(BigInteger id) throws Exception {
+    public ProjectDTO findById(BigInteger id) throws Exception {
         TrainProject trainProject = trainProjectMapper.findTrainProjectById(id);
         if(trainProject == null){
             throw new ValueException("project is not existed!");
         }
-        TrainProjectDTO trainProjectDTO = new TrainProjectDTO();
-        BeanUtils.copyProperties(trainProject, trainProjectDTO);
-        return trainProjectDTO;
+        ProjectDTO projectDTO = new ProjectDTO();
+        BeanUtils.copyProperties(trainProject, projectDTO);
+        return projectDTO;
     }
 
     /**
@@ -143,14 +143,14 @@ public class TrainProjectServiceImpl extends BaseFileServiceImpl implements Trai
      * @return 列表
      */
     @Override
-    public List<TrainProjectDTO> findByLikeName(String name) {
+    public List<ProjectDTO> findByLikeName(String name) {
         List<TrainProject> trainProjects = trainProjectMapper.findTrainProjectByProjectNameAmbiguously(name);
-        List<TrainProjectDTO> trainProjectDTOS = new ArrayList<>();
+        List<ProjectDTO> projectDTOS = new ArrayList<>();
         for (TrainProject trainProject: trainProjects) {
-            TrainProjectDTO trainProjectDTO = new TrainProjectDTO();
-            BeanUtils.copyProperties(trainProject, trainProjectDTO);
-            trainProjectDTOS.add(trainProjectDTO);
+            ProjectDTO projectDTO = new ProjectDTO();
+            BeanUtils.copyProperties(trainProject, projectDTO);
+            projectDTOS.add(projectDTO);
         }
-        return trainProjectDTOS;
+        return projectDTOS;
     }
 }

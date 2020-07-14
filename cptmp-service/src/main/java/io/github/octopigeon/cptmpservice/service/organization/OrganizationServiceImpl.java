@@ -1,17 +1,20 @@
 package io.github.octopigeon.cptmpservice.service.organization;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.OrganizationMapper;
 import io.github.octopigeon.cptmpdao.model.Organization;
 import io.github.octopigeon.cptmpservice.dto.organization.OrganizationDTO;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
-import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -102,6 +105,26 @@ public class OrganizationServiceImpl implements OrganizationService{
 
 
     /**
+     * 分页查询所有组织
+     *
+     * @param page   页号
+     * @param offset 页偏移
+     * @return
+     */
+    @Override
+    public PageInfo<OrganizationDTO> findAll(int page, int offset) {
+        PageHelper.startPage(page,offset);
+        List<Organization> organizationList = organizationMapper.findAllOrganization();
+        List<OrganizationDTO> results = new ArrayList<>();
+        for (Organization organization: organizationList) {
+            OrganizationDTO  result = new OrganizationDTO();
+            BeanUtils.copyProperties(organization, result);
+            results.add(result);
+        }
+        return new PageInfo<>(results);
+    }
+
+    /**
      * 使用组织名进行查询
      *
      * @param name 组织的名称
@@ -110,6 +133,20 @@ public class OrganizationServiceImpl implements OrganizationService{
     @Override
     public OrganizationDTO findByName(String name){
         Organization organization = organizationMapper.findOrganizationByName(name);
+        OrganizationDTO dto = new OrganizationDTO();
+        BeanUtils.copyProperties(organization, dto);
+        return dto;
+    }
+
+    /**
+     * 根据组织全名进行模糊查询
+     * TODO Dao层建立模糊查询
+     * @param realName 组织全名
+     * @return
+     */
+    @Override
+    public OrganizationDTO findByRealName(String realName) {
+        Organization organization = organizationMapper.findOrganizationByRealName(realName);
         OrganizationDTO dto = new OrganizationDTO();
         BeanUtils.copyProperties(organization, dto);
         return dto;
