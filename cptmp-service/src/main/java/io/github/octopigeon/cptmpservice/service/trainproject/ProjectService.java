@@ -1,13 +1,15 @@
 package io.github.octopigeon.cptmpservice.service.trainproject;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
+import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileService;
 import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
-import java.util.List;
 
 /**
  * @author 李国豪
@@ -21,10 +23,21 @@ public interface ProjectService extends BaseNormalService<ProjectDTO>, BaseFileS
 
     /**
      * 根据名字进行模糊查找
+     * @param page 页号
+     * @param offset 页内数量
      * @param name 项目名
-     * @return 列表
+     * @return
      */
-    List<ProjectDTO> findByLikeName(String name);
+    PageInfo<ProjectDTO> findByLikeName(int page, int offset, String name);
+
+    /**
+     * 根据项目id查实训
+     * @param page 页号
+     * @param offset 页内数量
+     * @param projectId 项目id
+     * @return
+     */
+    PageInfo<TrainDTO> findTrainsById(int page, int offset, BigInteger projectId);
 
     /**
      * 给资源库上传文件
