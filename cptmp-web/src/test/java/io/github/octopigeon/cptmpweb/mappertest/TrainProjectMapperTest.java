@@ -1,14 +1,8 @@
 package io.github.octopigeon.cptmpweb.mappertest;
 
-import org.junit.Test;
-import io.github.octopigeon.cptmpdao.mapper.TrainProjectMapper;
-import io.github.octopigeon.cptmpdao.model.TrainProject;
+import io.github.octopigeon.cptmpdao.mapper.ProjectMapper;
 import io.github.octopigeon.cptmpweb.BaseTest;
-import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.math.BigInteger;
-import java.util.Date;
 
 /**
  * @author 李国鹏
@@ -20,7 +14,7 @@ import java.util.Date;
  */
 public class TrainProjectMapperTest extends BaseTest {
     @Autowired
-    private TrainProjectMapper trainProjectMapper;
+    private ProjectMapper projectMapper;
 //    @Test
 //    public void test(){
 //        /**

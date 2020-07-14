@@ -1,10 +1,7 @@
 package io.github.octopigeon.cptmpweb.mappertest;
 
 import io.github.octopigeon.cptmpdao.mapper.TrainMapper;
-import io.github.octopigeon.cptmpdao.mapper.TrainProjectMapper;
-import io.github.octopigeon.cptmpdao.mapper.TrainTeamMapper;
 import io.github.octopigeon.cptmpdao.model.Train;
-import io.github.octopigeon.cptmpdao.model.TrainProject;
 import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
