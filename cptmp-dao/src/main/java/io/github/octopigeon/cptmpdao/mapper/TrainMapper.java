@@ -41,6 +41,13 @@ public interface TrainMapper {
      * @param gmtDeleted 删除日期
      */
     @Deprecated
+    @Delete("delete from train")
+    void removeAllTrainTest(Date gmtDeleted);
+
+    /**
+     * 测试用
+     * @param gmtDeleted 删除日期
+     */
     @Update("update train set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
     void removeAllTrain(Date gmtDeleted);
 
@@ -57,17 +64,9 @@ public interface TrainMapper {
 
     /**
      * 根据实训id改
-     * @param id 实训id
-     * @param gmtModified 修改时间
-     * @param schoolId 学校id
-     * @param processId 实训流程id
-     * @param startDate 开始日期
-     * @param finishDate 结束日期
-     * @param content 实训内容
-     * @param acceptStandard 验收标准
      */
     @Update("update train set "+ UPDATE_CONTENT +" where id = #{id} and gmt_deleted is null")
-    void updateTrainProjectById(BigInteger id, Date gmtModified, BigInteger schoolId, BigInteger processId, Date startDate, Date finishDate, String content, String acceptStandard);
+    void updateTrainProjectById(Train train);
 
 
     /**

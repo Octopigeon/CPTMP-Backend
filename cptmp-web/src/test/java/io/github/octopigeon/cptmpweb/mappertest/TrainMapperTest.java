@@ -70,17 +70,14 @@ public class TrainMapperTest extends BaseTest {
         /**
          * 更新
          */
-        trainMapper.updateTrainProjectById(trainMapper.findAllTrain().get(0).getId(),new Date(),BigInteger.valueOf(2),BigInteger.valueOf(22),new Date(),new Date(),"test3","test3");
+        Train train3=trainMapper.findAllTrain().get(0);
+        train3.setContent("test3");
+        trainMapper.updateTrainProjectById(train3);
         Assertions.assertEquals("test3",trainMapper.findAllTrain().get(0).getContent());
         Assertions.assertEquals(1,trainMapper.findAllTrain().size());
 
-
-//        实训项目
-//        Assertions.assertEquals(train2.getContent(), trainMapper.findTrainProjectByProjectNameAmbiguously("2").get(0).getContent());
-//
-//
-//        trainMapper.updateTrainProjectByProjectName(new Date(),"test2",new Date(), new Date(),"test3 content", "test3","www.hao123.com");
-//        Assertions.assertEquals("test3 content", trainMapper.findTrainProjectByProjectNameAmbiguously("2").get(0).getContent());
+        trainMapper.removeAllTrain(new Date());
+        Assertions.assertEquals(0,trainMapper.findAllTrain().size());
 
 
 

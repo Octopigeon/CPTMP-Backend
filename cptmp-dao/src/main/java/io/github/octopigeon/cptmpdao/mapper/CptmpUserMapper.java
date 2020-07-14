@@ -134,13 +134,13 @@ public interface CptmpUserMapper {
      *根据id更新
      */
     @Update(UPDATE_HEADER+UPDATE_CONTENT+" where (id = #{id}) and gmt_deleted is null")
-    void updateUserById(BigInteger id, Date gmtModified, CptmpUser user);
+    void updateUserById(CptmpUser cptmpUser);
 
     /**
      *根据用户名更新
      */
-    @Update(UPDATE_HEADER+UPDATE_CONTENT+UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
-    void updateUserByUserName(CptmpUser user);
+    @Update(UPDATE_HEADER+UPDATE_CONTENT+UPDATE_TAIL_USERNAME + " where (uk_username = #{username}) and gmt_deleted is null")
+    void updateUserByUserName(CptmpUser cptmpUser);
 
     /**
      *根据用户名更新是否注销

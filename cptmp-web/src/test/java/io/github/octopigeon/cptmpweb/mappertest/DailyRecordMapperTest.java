@@ -55,7 +55,7 @@ public class DailyRecordMapperTest extends BaseTest {
         /**
          * 添加
          */
-        dailyRecordMapper.removeAllDailyRecord(new Date());
+        dailyRecordMapper.removeAllDailyRecordTest();
         dailyRecordMapper.addDailyRecord(dailyRecord1);
         dailyRecordMapper.addDailyRecord(dailyRecord2);
         Assertions.assertEquals(2,dailyRecordMapper.findAllDailyRecord().size());
@@ -73,16 +73,16 @@ public class DailyRecordMapperTest extends BaseTest {
         /**
          * 更新
          */
-        dailyRecordMapper.updateDailyRecordByUserId(BigInteger.valueOf(2),new Date(),BigInteger.valueOf(2),"test3","test3",2);
-        Assertions.assertEquals("test3",dailyRecordMapper.findDailyRecordByTeamId(BigInteger.valueOf(2)).get(0).getContent());
+        DailyRecord dailyRecord3=dailyRecordMapper.findAllDailyRecord().get(0);
+        dailyRecord3.setContent("test3");
+        dailyRecordMapper.updateDailyRecordByUserId(dailyRecord3);
+        Assertions.assertEquals("test3",dailyRecordMapper.findDailyRecordByUserId(BigInteger.valueOf(2)).get(0).getContent());
 
-        dailyRecordMapper.updateDailyRecordByTeamId(BigInteger.valueOf(2),new Date(),BigInteger.valueOf(2),"test4","test4",2);
-        Assertions.assertEquals("test4",dailyRecordMapper.findDailyRecordByTeamId(BigInteger.valueOf(2)).get(0).getContent());
+        dailyRecordMapper.updateDailyRecordDocumentByUserId(BigInteger.valueOf(2),new Date(),"test4");
+        Assertions.assertEquals("test4",dailyRecordMapper.findDailyRecordByTeamId(BigInteger.valueOf(2)).get(0).getDocumentPath());
 
-
-
-
-
+        dailyRecordMapper.removeAllDailyRecord(new Date());
+        Assertions.assertEquals(0,dailyRecordMapper.findAllDailyRecord().size());
 
 
     }
