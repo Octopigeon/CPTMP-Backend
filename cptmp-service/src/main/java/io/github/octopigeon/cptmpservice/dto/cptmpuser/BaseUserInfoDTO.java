@@ -1,6 +1,7 @@
 package io.github.octopigeon.cptmpservice.dto.cptmpuser;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -46,5 +47,6 @@ public class BaseUserInfoDTO{
     private String introduction;
 
     /** 返回携带用户账号 */
+    @JsonProperty("user_id")
     private BigInteger id;
 }

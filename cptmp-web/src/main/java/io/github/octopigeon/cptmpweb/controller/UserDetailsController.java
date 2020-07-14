@@ -27,7 +27,7 @@ import java.util.List;
  * @date 2020/7/10
  * 用于提供各种与用户信息交互的接口
  * @last-check-in 魏啸冲
- * @date 2020/7/13
+ * @date 2020/7/14
  */
 @RestController
 public class UserDetailsController {
@@ -125,6 +125,8 @@ public class UserDetailsController {
         }
     }
 
+
+    // TODO 此处等service层的级联处理好了再来看一下
     /**
      * 企业管理员批量删除用户
      * @param json 传来包含批量删除用户的信息(userId)
@@ -148,9 +150,9 @@ public class UserDetailsController {
     }
 
     /**
-     * 企业管理员批量删除用户
-     * @param json 传来包含批量删除用户的信息(userId)
-     * @return 返回删除失败的信息
+     * 企业管理员批量恢复删除用户
+     * @param json 传来包含批量恢复删除用户的信息(userId)
+     * @return 返回恢复删除失败的信息
      */
     @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
     @PutMapping("/api/user")
