@@ -356,3 +356,32 @@ College Practice Training Management Platform
     "msg": "register failed"
 }
 ```
+
+# OrganizationDetailsController
+## /api/org/basic-info
++ HTTP方法：POST
++ 返回类型：json
++ 说明：学生注册
++ 调用实例：
+``` 
+{
+    "code": "WHU",
+    "real_name": "武汉大学",
+    "description": "中国最牛逼的大学",
+    "website_url": "www.whu.edu.cn"
+}
+```
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-14T02:18:20.590+00:00",
+    "msg": "update organization info success"
+}
+// 失败
+{
+    "status": 10,
+    "date": "2020-07-14T02:21:43.068+00:00",
+    "msg": "update organization info failed"
+}
+```
