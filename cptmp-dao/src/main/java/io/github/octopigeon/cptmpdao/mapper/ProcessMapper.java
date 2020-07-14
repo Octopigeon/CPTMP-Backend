@@ -28,7 +28,7 @@ public interface ProcessMapper {
     String BY_ID_TAIL = " where id = #{id} and gmt_deleted is null";
     String SOFT_DELETE_TAIL = " and gmt_deleted is null";
 
-    @Insert("insert into process (" + COLUMNS + ") values (" + PROPS + ")")
+    @Insert("insert into cptmp_process (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addProcess(Process process);
 
@@ -37,23 +37,23 @@ public interface ProcessMapper {
      * @param gmtDelete
      * @param trainId
      */
-    @Update("update process set gmt_deleted = #{gmtDeleted} where train_id = #{trainId} and gmt_deleted is null")
+    @Update("update cptmp_process set gmt_deleted = #{gmtDeleted} where train_id = #{trainId} and gmt_deleted is null")
     void removeProcessesByTrainId(Date gmtDelete, BigInteger trainId);
 
     /**
      * 测试用
      */
     @Deprecated
-    @Delete("delete from process")
+    @Delete("delete from cptmp_process")
     void removeAllProcesses();
 
-    @Update("update process set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_delete is null")
+    @Update("update cptmp_process set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_delete is null")
     void removeProcessById(Date gmtDelete, BigInteger id);
 
-    @Update("update process set " + UPDATE_CONTENT + BY_ID_TAIL)
+    @Update("update cptmp_process set " + UPDATE_CONTENT + BY_ID_TAIL)
     void updateProcessById(Process process);
 
-    @Select("select id, " + COLUMNS + " from process" + BY_ID_TAIL)
+    @Select("select id, " + COLUMNS + " from cptmp_process" + BY_ID_TAIL)
     @Results(id = "process", value = {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
@@ -65,11 +65,11 @@ public interface ProcessMapper {
     })
     Process findProcessById(BigInteger id);
 
-    @Select("select id, " + COLUMNS + " from process where train_id = #{trainId}" + SOFT_DELETE_TAIL)
+    @Select("select id, " + COLUMNS + " from cptmp_process where train_id = #{trainId}" + SOFT_DELETE_TAIL)
     @ResultMap("process")
     List<Process> findProcessesByTrainId(BigInteger trainId);
 
-    @Select("select id, " + COLUMNS + " from process where gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from cptmp_process where gmt_deleted is null")
     @ResultMap("process")
     List<Process> findAllProcesses();
 

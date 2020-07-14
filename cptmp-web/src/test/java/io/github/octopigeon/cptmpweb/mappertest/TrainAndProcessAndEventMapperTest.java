@@ -1,11 +1,15 @@
 package io.github.octopigeon.cptmpweb.mappertest;
 
+import io.github.octopigeon.cptmpdao.mapper.EventMapper;
 import io.github.octopigeon.cptmpdao.mapper.OrganizationMapper;
 import io.github.octopigeon.cptmpdao.mapper.ProcessMapper;
 import io.github.octopigeon.cptmpdao.mapper.TrainMapper;
+import io.github.octopigeon.cptmpdao.mapper.relation.ProcessEventMapper;
+import io.github.octopigeon.cptmpdao.model.Event;
 import io.github.octopigeon.cptmpdao.model.Organization;
 import io.github.octopigeon.cptmpdao.model.Process;
 import io.github.octopigeon.cptmpdao.model.Train;
+import io.github.octopigeon.cptmpdao.model.relation.ProcessEvent;
 import io.github.octopigeon.cptmpservice.dto.organization.OrganizationDTO;
 import io.github.octopigeon.cptmpservice.service.organization.OrganizationService;
 import io.github.octopigeon.cptmpservice.utils.Utils;
@@ -25,7 +29,7 @@ import java.util.List;
  * @last-check-in 魏啸冲
  * @date 2020/7/14
  */
-public class TrainAndProcessMapperTest extends BaseTest {
+public class TrainAndProcessAndEventMapperTest extends BaseTest {
 
     @Autowired
     private OrganizationMapper organizationMapper;
@@ -38,6 +42,12 @@ public class TrainAndProcessMapperTest extends BaseTest {
 
     @Autowired
     private ProcessMapper processMapper;
+
+    @Autowired
+    private ProcessEventMapper processEventMapper;
+
+    @Autowired
+    private EventMapper eventMapper;
 
     @Test
     public void test() throws Exception {
@@ -97,6 +107,45 @@ public class TrainAndProcessMapperTest extends BaseTest {
         processMapper.updateProcessById(process);
         process = processMapper.findProcessById(process1.getId());
         Assertions.assertEquals(1, Utils.getNullPropertyNames(process).length);
+
+        processEventMapper.removeAllProcessEvents();
+        eventMapper.removeAllEvents();
+        Event event = new Event();
+        event.setGmtCreate(new Date());
+        event.setStartTime(new Date());
+        event.setEndTime(new Date());
+        event.setContent("打卡");
+        event.setPersonOrTeam(true);
+        eventMapper.addEvent(event);
+        event.setContent("交代码");
+        eventMapper.addEvent(event);
+        List<Event> events = eventMapper.findAllEvents();
+        Assertions.assertEquals(2, events.size());
+        Assertions.assertEquals(2, Utils.getNullPropertyNames(events.get(0)).length);
+        ProcessEvent processEvent = new ProcessEvent();
+        processEvent.setEventId(events.get(0).getId());
+        processEvent.setGmtCreate(new Date());
+        processEvent.setProcessId(process1.getId());
+        processEventMapper.addProcessEvent(processEvent);
+        processEvent = processEventMapper.findProcessEventById(processEventMapper.findAllProcessEvents().get(0).getId());
+        Assertions.assertEquals(2, Utils.getNullPropertyNames(processEvent).length);
+        processEvent = processEventMapper.findProcessEventsByEventId(events.get(0).getId()).get(0);
+        Assertions.assertEquals(process1.getId(), processEvent.getProcessId());
+        processEvent = processEventMapper.findProcessEventsByProcessId(process1.getId()).get(0);
+        Assertions.assertEquals(events.get(0).getId(), processEvent.getEventId());
+        processEvent = processEventMapper.findProcessEventByProcessIdAndEventId(process1.getId(), events.get(0).getId());
+        Assertions.assertEquals(process1.getId(), processEvent.getProcessId());
+        Assertions.assertEquals(events.get(0).getId(), processEvent.getEventId());
+        processEvent.setEventId(events.get(1).getId());
+        processEventMapper.updateProcessEventById(processEvent);
+        processEvent = processEventMapper.findAllProcessEvents().get(0);
+        Assertions.assertEquals(events.get(1).getId(), processEvent.getEventId());
+
+        event = events.get(0);
+        event.setGmtModified(new Date());
+        eventMapper.updateEventById(event);
+        event = eventMapper.findEventById(event.getId());
+        Assertions.assertEquals(1, Utils.getNullPropertyNames(event).length);
     }
 
 }
