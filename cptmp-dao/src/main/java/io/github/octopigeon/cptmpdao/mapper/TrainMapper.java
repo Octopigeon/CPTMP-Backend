@@ -14,8 +14,8 @@ import java.util.List;
  * @version 2.0
  * @date 2020/7/9
  * <p>
- * last-check-in 李国鹏
- * @date 2020/7/12
+ * last-check-in 魏啸冲
+ * @date 2020/7/14
  */
 @Repository
 @Mapper
@@ -34,7 +34,7 @@ public interface TrainMapper {
      */
     @Insert("insert into train (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
-    void addTrainProject(Train train);
+    void addTrain(Train train);
 
     /**
      * 测试用
@@ -55,11 +55,8 @@ public interface TrainMapper {
      * @param id：实训id
      * @param gmtDeleted 删除日期
      */
-
     @Update("update train set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
-    void removeTrainProjectById(BigInteger id,Date gmtDeleted);
-
-
+    void removeTrainById(BigInteger id, Date gmtDeleted);
 
     /**
      * 根据实训id改
@@ -67,22 +64,18 @@ public interface TrainMapper {
     @Update("update train set "+ UPDATE_CONTENT +" where id = #{id} and gmt_deleted is null")
     void updateTrainProjectById(Train train);
 
-
     /**
-     * 根据id改资源
-     * @param id 实训id
-     * @param gmtModified 修改时间
-     * @param resourceLibrary 资源库
+     * 按id更新train的信息
+     * @param train
      */
-    @Update("update train set resource_library = #{resourceLibrary} where id = #{id} and gmt_deleted is null")
-    void updateTrainProjectResourceById(BigInteger id,Date gmtModified,String resourceLibrary);
-
+    @Update("update train set " + UPDATE_CONTENT + " where id = #{id} and " + SOFT_DELETE_TAIL)
+    void updateTrainById(Train train);
 
     /**
      * 查询所有项目
      * @return 项目列表
      */
-    @Select("select id, " + COLUMNS + " from train where gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from train where " + SOFT_DELETE_TAIL)
     @Results(id = "train", value = {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
@@ -104,7 +97,7 @@ public interface TrainMapper {
      * @param id：实训id
      * @return 实训
      */
-    @Select("select id, " + COLUMNS + " from train where id = #{id} and gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from train where id = #{id} and " + SOFT_DELETE_TAIL)
     @ResultMap("train")
     Train findTrainById(BigInteger id);
 
