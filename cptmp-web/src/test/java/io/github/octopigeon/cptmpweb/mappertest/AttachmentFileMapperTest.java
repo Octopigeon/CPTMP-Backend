@@ -1,9 +1,7 @@
 package io.github.octopigeon.cptmpweb.mappertest;
 
 import io.github.octopigeon.cptmpdao.mapper.AttachmentFileMapper;
-import io.github.octopigeon.cptmpdao.mapper.DailyRecordMapper;
 import io.github.octopigeon.cptmpdao.model.AttachmentFile;
-import io.github.octopigeon.cptmpdao.model.DailyRecord;
 import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
