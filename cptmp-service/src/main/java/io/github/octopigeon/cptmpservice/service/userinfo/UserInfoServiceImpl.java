@@ -273,7 +273,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         for (CptmpUser cptmpUser: cptmpUsers) {
             results.add(getFullUserInfo(cptmpUser));
         }
-        return new PageInfo<BaseUserInfoDTO>(results);
+        return new PageInfo<>(results);
     }
 
     /**
@@ -292,7 +292,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         for (CptmpUser cptmpUser: cptmpUsers) {
             results.add(getFullUserInfo(cptmpUser));
         }
-        return new PageInfo<BaseUserInfoDTO>(results);
+        return new PageInfo<>(results);
     }
 
     /**
