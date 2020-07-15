@@ -14,20 +14,15 @@ import java.util.Date;
  */
 @Data
 //活动记录
-public class ActivityRecord {
+public class Record {
     private BigInteger id;
     private Date gmtCreate;
     private Date gmtModified;
     private Date gmtDeleted;
     private BigInteger userId;
     private BigInteger teamId;
-    /**
-     * 0表示待完成
-     * 1表示已完成
-     * 其余表示进行中
-     *
-     */
-    private int state;
-    private String event;
+    private BigInteger trainId;
+    private BigInteger processEventId;
+    private BigInteger assignmentId;
 
 }

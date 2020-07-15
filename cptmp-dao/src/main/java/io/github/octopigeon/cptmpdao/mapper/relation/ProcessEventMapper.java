@@ -81,6 +81,13 @@ public interface ProcessEventMapper {
     @Deprecated
     @Select("select id, " + COLUMNS + " from process_event")
     @ResultMap("process_event")
+    List<ProcessEvent> findAllProcessEventsTest();
+
+    /**
+     * @return
+     */
+    @Select("select id, " + COLUMNS + " from process_event")
+    @ResultMap("process_event")
     List<ProcessEvent> findAllProcessEvents();
 
 }
