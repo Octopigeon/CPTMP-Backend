@@ -1,8 +1,6 @@
 package io.github.octopigeon.cptmpservice.service.trainproject;
 
 import com.github.pagehelper.PageInfo;
-import io.github.octopigeon.cptmpdao.model.Organization;
-import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileService;
 import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalService;
@@ -10,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
-import java.util.List;
 
 /**
  * @author Gh Li
@@ -40,13 +37,6 @@ public interface TrainService extends BaseNormalService<TrainDTO>, BaseFileServi
     PageInfo<TrainDTO> findByOrganizationId(int page, int offset, BigInteger organizationId);
 
     /**
-     * 根据实训名称进行查询
-     * @param name 实训名称
-     * @return
-     */
-    TrainDTO findByName(String name);
-
-    /**
      * 根据实训名称进行模糊查询
      * @param likeName 模糊名称
      * @return
@@ -58,9 +48,9 @@ public interface TrainService extends BaseNormalService<TrainDTO>, BaseFileServi
      * @param page 页号
      * @param offset 一页的数量
      * @param id 实训id
-     * @return
+     * @return 项目的id号
      */
-    PageInfo<ProjectDTO> findProjectsById(int page, int offset, BigInteger id);
+    PageInfo<BigInteger> findProjectIdsById(int page, int offset, BigInteger id);
 
     /**
      * 给资源库上传文件
