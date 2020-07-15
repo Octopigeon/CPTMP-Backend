@@ -14,8 +14,8 @@ import java.util.List;
  * @author 陈若琳
  * @version 1.0
  * @date 2020/07/12
- * @last-check-in 魏啸冲
- * @date 2020/07/14
+ * @last-check-in 李国鹏
+ * @date 2020/07/15
  */
 
 @Repository
@@ -32,7 +32,7 @@ public interface TeamPersonMapper {
 
     /**
      * 添加学生和团队的对应项
-     * @param teamPerson
+     * @param teamPerson 团队个人关系
      */
     @Insert("insert into team_person (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")

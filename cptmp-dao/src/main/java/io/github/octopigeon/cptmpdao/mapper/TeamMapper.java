@@ -49,9 +49,9 @@ public interface TeamMapper {
      * @param gmtDeleted 删除日期
      */
     @Update("update team set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
-    void removeTeamById(BigInteger id, Date gmtDeleted);
+    void hideTeamById(BigInteger id, Date gmtDeleted);
 
-    @Update("update team set gmt_deleted = null where id = #{id}")
+    @Update("update team set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
     void restoreTeamById(BigInteger id);
 
     /**

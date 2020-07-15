@@ -55,7 +55,7 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
         if(attachmentFileMapper.findAttachmentFileByfileName(fileName) != null)
         {
             // 删除索引
-            attachmentFileMapper.removeAttachmentFileByName(fileName, new Date());
+            attachmentFileMapper.hideAttachmentFileByName(fileName, new Date());
         }else {
             throw new Exception("File not found " + fileName);
         }
