@@ -16,7 +16,8 @@ public class FileDTO {
     private Date gmtCreate;
     private String fileName;
     private String filePath;
-    private String originalName;
+    private String fileUrl;
+    private String originName;
     private Long fileSize;
     private String fileType;
 }

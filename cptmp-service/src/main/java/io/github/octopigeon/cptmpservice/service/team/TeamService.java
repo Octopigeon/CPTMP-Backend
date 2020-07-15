@@ -2,7 +2,7 @@ package io.github.octopigeon.cptmpservice.service.team;
 
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.dto.team.TeamDTO;
-import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileService;
+import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileService;
 import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalService;
 
 import java.math.BigInteger;
