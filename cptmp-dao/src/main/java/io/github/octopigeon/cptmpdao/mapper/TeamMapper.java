@@ -26,9 +26,9 @@ public interface TeamMapper {
      *
      * @param team 团队
      */
-    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, avatar, idx_project_train_id, idx_team_name, repo_url, team_grade,evaluation";
+    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, avatar, uk_project_train_id, idx_team_name, repo_url, team_grade,evaluation";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{avatar},#{projectTrainId}, #{name}, #{repoUrl}, #{teamGrade},#{evaluation}";
-    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, idx_project_train_id = #{projectTrainId}, idx_team_name = #{name}, evaluation = #{evaluation}, " +
+    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, uk_project_train_id = #{projectTrainId}, idx_team_name = #{name}, evaluation = #{evaluation}, " +
             " repo_url = #{repoUrl},team_grade = #{teamGrade},avatar = #{avatar}";
 
     @Insert("insert into team (" + COLUMNS + ") values (" + PROPS + ")")
@@ -71,7 +71,7 @@ public interface TeamMapper {
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_deleted", property = "gmtDeleted", jdbcType = JdbcType.DATE),
-            @Result(column = "idx_project_train_id", property = "projectTrainId", jdbcType = JdbcType.BIGINT),
+            @Result(column = "uk_project_train_id", property = "projectTrainId", jdbcType = JdbcType.BIGINT),
             @Result(column = "idx_team_name", property = "name", jdbcType = JdbcType.VARCHAR),
             @Result(column = "avatar", property = "avatar", jdbcType = JdbcType.VARCHAR),
             @Result(column = "repo_url", property = "repoUrl", jdbcType = JdbcType.VARCHAR),

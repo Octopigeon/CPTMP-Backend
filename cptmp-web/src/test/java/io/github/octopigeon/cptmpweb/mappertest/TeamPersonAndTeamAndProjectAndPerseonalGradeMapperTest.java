@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.github.octopigeon.cptmpdao.mapper.*;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
-import io.github.octopigeon.cptmpdao.model.CptmpUser;
-import io.github.octopigeon.cptmpdao.model.Project;
-import io.github.octopigeon.cptmpdao.model.Team;
-import io.github.octopigeon.cptmpdao.model.Train;
+import io.github.octopigeon.cptmpdao.model.*;
 import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
 import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
@@ -21,6 +18,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.rmi.CORBA.Util;
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -32,7 +30,7 @@ import java.util.Date;
  * @last-check-in 魏啸冲
  * @date 2020/07/14
  */
-public class TeamPersonAndTeamAndProjectMapperTest extends BaseTest {
+public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends BaseTest {
 
     @Autowired
     private TeamPersonMapper teamPersonMapper;
@@ -61,6 +59,9 @@ public class TeamPersonAndTeamAndProjectMapperTest extends BaseTest {
     @Autowired
     private ProjectTrainMapper projectTrainMapper;
 
+    @Autowired
+    private PersonalGradeMapper personalGradeMapper;
+
     @Test
     public void test() throws Exception {
         projectMapper.removeAllTrainProjectsTest();
@@ -70,6 +71,8 @@ public class TeamPersonAndTeamAndProjectMapperTest extends BaseTest {
         trainMapper.removeAllTrain();
         teamMapper.removeAllTeamTest();
         teamPersonMapper.removeAllTeamPersonsTest();
+        personalGradeMapper.removeAllPersonalGrades();
+
         // 创建学校
         OrganizationDTO organizationDTO = new OrganizationDTO();
         organizationDTO.setName("WHU");
@@ -187,6 +190,30 @@ public class TeamPersonAndTeamAndProjectMapperTest extends BaseTest {
         teamPersonMapper.updateTeamPersonByTeamIdAndUserId(teamPerson);
         teamPerson = teamPersonMapper.findAllTeamPerson().get(0);
         Assertions.assertNotEquals(originTeamId, teamPerson.getTeamId());
+
+        PersonalGrade personalGrade = new PersonalGrade();
+        personalGrade.setGmtCreate(new Date());
+        personalGrade.setEvaluation("good");
+        personalGrade.setPersonalGrade(95);
+        personalGrade.setTeamPersonId(teamPerson.getId());
+        personalGradeMapper.addPersonalGrade(personalGrade);
+        personalGrade = personalGradeMapper.findAllPersonalGrades().get(0);
+        Assertions.assertEquals(2, Utils.getNullPropertyNames(personalGrade).length);
+        personalGradeMapper.removePersonalGradeById(personalGrade.getId(), new Date());
+        Assertions.assertEquals(0, personalGradeMapper.findAllPersonalGrades().size());
+        personalGradeMapper.restoreAllPersonalGrade();
+        personalGradeMapper.removePersonalGradeByTeamPersonId(personalGrade.getTeamPersonId(), new Date());
+        Assertions.assertEquals(0, personalGradeMapper.findAllPersonalGrades().size());
+        personalGradeMapper.restoreAllPersonalGrade();
+        personalGrade.setPersonalGrade(90);
+        BigInteger personalGradeId = personalGrade.getId();
+        personalGradeMapper.updatePersonalGradeById(personalGrade);
+        personalGrade = personalGradeMapper.findPersonalGradeById(personalGradeId);
+        Assertions.assertEquals(90, personalGrade.getPersonalGrade());
+        personalGrade.setPersonalGrade(50);
+        personalGradeMapper.updatePersonalGradeByTeamPersonId(personalGrade);
+        personalGrade = personalGradeMapper.findPersonalGradeByTeamPersonId(personalGrade.getTeamPersonId());
+        Assertions.assertEquals(50, personalGrade.getPersonalGrade());
     }
 
 }
