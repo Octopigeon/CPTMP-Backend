@@ -4,6 +4,8 @@ import io.github.octopigeon.cptmpservice.dto.processevent.EventDTO;
 import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * @author Gh Li
  * @version 1.0
@@ -13,4 +15,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface EventService extends BaseNormalService<EventDTO> {
+
+    /**
+     * 查询所有event
+     * @return
+     */
+    List<EventDTO> findAllEvents();
 }

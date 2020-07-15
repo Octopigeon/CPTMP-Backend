@@ -60,8 +60,7 @@ public interface EventMapper {
     /**
      * 测试用
      * @return
-     */
-    @Deprecated
+     */ 
     @Select("select id, " + COLUMNS + " from cptmp_event")
     @ResultMap("event")
     List<Event> findAllEvents();
