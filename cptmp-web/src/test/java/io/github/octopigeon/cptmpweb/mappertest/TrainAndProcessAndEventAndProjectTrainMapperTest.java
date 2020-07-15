@@ -24,7 +24,7 @@ import java.util.List;
  * @date 2020/7/14
  * 重要提示：此测试程序请勿删除，此测试文件测试覆盖率为100%
  * @last-check-in 魏啸冲
- * @date 2020/7/14
+ * @date 2020/7/15
  */
 public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
 
@@ -98,6 +98,24 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         projectMapper.addTrainProject(project);
         project = projectMapper.findAllTrainProject().get(0);
         Assertions.assertEquals(2, Utils.getNullPropertyNames(project).length);
+        projectMapper.removeTrainProjectById(project.getId(), new Date());
+        Assertions.assertEquals(0, projectMapper.findAllTrainProject().size());
+        projectMapper.restoreAllTrainProjects();
+        Assertions.assertEquals(1, projectMapper.findAllTrainProject().size());
+        projectMapper.removeTrainProjectByName(project.getName(), new Date());
+        Assertions.assertEquals(0, projectMapper.findAllTrainProject().size());
+        projectMapper.restoreAllTrainProjects();
+        Assertions.assertEquals(1, projectMapper.findAllTrainProject().size());
+        project.setName("aptmp");
+        projectMapper.updateTrainProjectById(project);
+        project = projectMapper.findAllTrainProject().get(0);
+        Assertions.assertEquals("aptmp", project.getName());
+        projectMapper.updateTrainProjectResourceById(project.getId(), new Date(), "233");
+        project = projectMapper.findAllTrainProject().get(0);
+        Assertions.assertEquals("233", project.getResourceLibrary());
+        project = projectMapper.findTrainProjectById(project.getId());
+        Assertions.assertEquals(1, Utils.getNullPropertyNames(project).length);
+        Assertions.assertEquals(1, projectMapper.findTrainProjectByNameAmbiguously("p").size());
 
         ProjectTrain projectTrain = new ProjectTrain();
         projectTrain.setGmtCreate(new Date());
