@@ -2,7 +2,6 @@ package io.github.octopigeon.cptmpservice.service.team;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.mapper.TeamMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
@@ -77,7 +76,7 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
             if(teamMapper.findTeamByTeamId(dto.getId()) == null){
                 throw new ValueException("Team is not exist");
             }
-            teamMapper.removeTeamById(dto.getId(), new Date());
+            teamMapper.hideTeamById(dto.getId(), new Date());
             teamPersonMapper.removeTeamPersonByTeamId(dto.getId());
         }catch (Exception e){
             e.printStackTrace();
