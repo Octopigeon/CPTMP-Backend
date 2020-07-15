@@ -68,11 +68,10 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     /**
      * 移除数据
-     *
+     * TODO 建立级联删除
      * @param dto ：dto实体
      */
     @Override
-    @Deprecated
     public void remove(BaseUserInfoDTO dto) throws Exception {
     }
 
