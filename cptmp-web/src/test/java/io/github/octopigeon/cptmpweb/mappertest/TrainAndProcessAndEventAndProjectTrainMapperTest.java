@@ -135,14 +135,15 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         Assertions.assertEquals(1, Utils.getNullPropertyNames(projectTrain).length);
 
         trainMapper.addTrain(train);
-        List<Train> trains = trainMapper.findTrainsByLikeName("清华");
+        List<Train> trains = trainMapper.findTrainByNameAmbiguously("清华");
         Assertions.assertEquals(2, trains.size());
         Assertions.assertEquals(2, Utils.getNullPropertyNames(trains.get(0)).length);
         train.setName("北京大学暑期实训");
         trainMapper.updateTrainById(train);
-        trains = trainMapper.findTrainsByLikeName("清华");
+        trains = trainMapper.findTrainByNameAmbiguously("清华");
         Assertions.assertEquals(1, trains.size());
-        Assertions.assertEquals(2, Utils.getNullPropertyNames(trainMapper.findTrainsByOrganizationId(trains.get(0).getOrganizationId())).length);
+        Train train2 = trainMapper.findTrainByOrganizationId(trains.get(0).getOrganizationId()).get(0);
+        Assertions.assertEquals(2, Utils.getNullPropertyNames(train2).length);
         trainMapper.removeTrainById(trains.get(0).getId(), new Date());
         Assertions.assertEquals(1,  trainMapper.findAllTrain().size());
         trainMapper.restoreAllTrain();

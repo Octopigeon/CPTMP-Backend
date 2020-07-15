@@ -186,7 +186,7 @@ public class AssignmentAndRecordMapperTest extends BaseTest {
         teamMapper.removeAllTeamTest();
         Team team = new Team();
         team.setGmtCreate(new Date());
-        team.setProjectId(project.getId());
+        team.setProjectTrainId(project.getId());
         team.setName("test1");
         team.setTeamGrade(1);
         teamMapper.addTeam(team);
