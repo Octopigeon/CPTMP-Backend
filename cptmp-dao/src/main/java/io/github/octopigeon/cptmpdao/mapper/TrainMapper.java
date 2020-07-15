@@ -14,7 +14,7 @@ import java.util.List;
  * @version 2.0
  * @date 2020/7/9
  * <p>
- * last-check-in 魏啸冲
+ * last-check-in 李国鹏
  * @date 2020/7/14
  */
 @Repository
@@ -51,13 +51,18 @@ public interface TrainMapper {
      * @param id：实训id
      * @param gmtDeleted 删除日期
      */
-    @Update("update train set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
+    @Update("update train set gmt_deleted = #{gmtDeleted} where id = #{id} and "+SOFT_DELETE_TAIL)
     void removeTrainById(BigInteger id, Date gmtDeleted);
 
     /**
+     * 根据实训id改
+     */
+    @Update("update train set "+ UPDATE_CONTENT +" where id = #{id} and "+SOFT_DELETE_TAIL)
+    void updateTrainProjectById(Train train);
+    /**
      * 删除一个学校的所有实训项目
-     * @param organizationId
-     * @param gmtDeleted
+     * @param organizationId 组织id
+     * @param gmtDeleted 删除日期
      */
     @Update("update train set gmt_deleted = #{gmtDeleted} where organization_id = #{organizationId} and " + SOFT_DELETE_TAIL)
     void removeTrainsByOrganizationId(BigInteger organizationId, Date gmtDeleted);

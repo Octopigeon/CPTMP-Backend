@@ -1,9 +1,7 @@
 package io.github.octopigeon.cptmpweb.mappertest;
 
 import io.github.octopigeon.cptmpdao.mapper.AttachmentFileMapper;
-import io.github.octopigeon.cptmpdao.mapper.DailyRecordMapper;
 import io.github.octopigeon.cptmpdao.model.AttachmentFile;
-import io.github.octopigeon.cptmpdao.model.DailyRecord;
 import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -66,7 +64,9 @@ public class AttachmentFileMapperTest extends BaseTest {
         attachmentFileMapper.updateOriginNameByFileName("test2", new Date(), "test3");
         Assertions.assertEquals("test3", attachmentFileMapper.findAllAttachmentFile().get(0).getOriginName());
 
-        attachmentFileMapper.updateAttachmentFileByFileName("test2", new Date(), "test4", "test4", BigInteger.valueOf(4), "test4");
+        AttachmentFile attachmentFile3=attachmentFileMapper.findAllAttachmentFile().get(0);
+        attachmentFile3.setFilePath("test4");
+        attachmentFileMapper.updateAttachmentFileByFileName(attachmentFile3);
         Assertions.assertEquals("test4", attachmentFileMapper.findAllAttachmentFile().get(0).getFilePath());
 
         attachmentFileMapper.removeAllAttachmentFile(new Date());
