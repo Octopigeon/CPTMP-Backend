@@ -1,6 +1,9 @@
 package io.github.octopigeon.cptmpservice.service.team;
 
+import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
+import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.dto.team.PersonalGradeDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigInteger;
 
@@ -12,6 +15,10 @@ import java.math.BigInteger;
  * @date 2020/7/15
  */
 public class PersonalGradeServiceImpl implements PersonalGradeService{
+
+    @Autowired
+    private TeamPersonMapper teamPersonMapper;
+
     /**
      * 添加数据
      *
@@ -52,5 +59,29 @@ public class PersonalGradeServiceImpl implements PersonalGradeService{
     @Override
     public PersonalGradeDTO findById(BigInteger id) throws Exception {
         return null;
+    }
+
+    /**
+     * 将teamId和userId转成teamUserId
+     * @param teamId
+     * @param userId
+     * @return teamUserId
+     */
+    private BigInteger getTeamUserId(BigInteger teamId, BigInteger userId){
+        TeamPerson teamUser = teamPersonMapper.findTeamPersonByTeamIdAndUserId(teamId, userId);
+        return teamUser.getId();
+    }
+
+    /**
+     * 将teamUserId转成teamId和userId
+     * @param teamUserId
+     * @return
+     */
+    private BigInteger[] getTeamIdAndUserId(BigInteger teamUserId){
+        BigInteger[] ids = new BigInteger[2];
+        TeamPerson teamUser = teamPersonMapper.findTeamPersonById(teamUserId);
+        ids[0] = teamUser.getTeamId();
+        ids[1] = teamUser.getUserId();
+        return ids;
     }
 }

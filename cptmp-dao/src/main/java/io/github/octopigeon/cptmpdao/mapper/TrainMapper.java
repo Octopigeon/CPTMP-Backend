@@ -80,6 +80,9 @@ public interface TrainMapper {
     @Update("update train set " + UPDATE_CONTENT + " where id = #{id} and " + SOFT_DELETE_TAIL)
     void updateTrainById(Train train);
 
+    @Update("update train set gmt_modified = #{date}, resource_library = #{resourceLib} where id = #{trainId}")
+    void updateTrainProjectResourceById(BigInteger trainId, Date date, String resourceLib);
+
     /**
      * 查询所有项目
      *
@@ -120,15 +123,9 @@ public interface TrainMapper {
      */
     @Select("select id, " + COLUMNS + " from train where idx_name like concat('%', #{name}, '%') and " + SOFT_DELETE_TAIL)
     @ResultMap("train")
-    List<Train> findTrainsByLikeName(String name);
+    List<Train> findTrainByNameAmbiguously(String name);
 
-    /**
-     * 根据组织id查找shixun
-     *
-     * @param organizationId
-     * @return
-     */
     @Select("select id, " + COLUMNS + " from train where organization_id = #{organizationId} and " + SOFT_DELETE_TAIL)
     @ResultMap("train")
-    List<Train> findTrainsByOrganizationId(BigInteger organizationId);
+    List<Train> findTrainByOrganizationId(BigInteger organizationId);
 }
