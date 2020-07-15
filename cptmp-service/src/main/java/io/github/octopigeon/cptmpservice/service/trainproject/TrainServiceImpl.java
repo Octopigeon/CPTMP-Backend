@@ -47,6 +47,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
     @Autowired
     private ProjectMapper projectMapper;
 
+    @Autowired
     public TrainServiceImpl(FileProperties fileProperties) throws Exception {
         super(fileProperties);
     }
