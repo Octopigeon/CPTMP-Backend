@@ -2,6 +2,9 @@ package io.github.octopigeon.cptmpservice.dto.assignment;
 
 import lombok.Data;
 
+import java.math.BigInteger;
+import java.util.Date;
+
 /**
  * @author Gh Li
  * @version 1.0
@@ -11,4 +14,10 @@ import lombok.Data;
  */
 @Data
 public class AssignmentDTO {
+    private BigInteger id;
+    private Date gmtCreate;
+    private Boolean isFile;
+    private String title;
+    private String content;
+    private String documentPath;
 }

@@ -8,18 +8,15 @@ import java.math.BigInteger;
 /**
  * @author Gh Li
  * @version 1.0
- * @date 2020/7/14
+ * @date 2020/7/15
  * @last-check-in Gh Li
- * @date 2020/7/14
+ * @date 2020/7/15
  */
 @Data
-public class TeamDTO {
+public class PersonalGradeDTO {
     private BigInteger id;
-    private BigInteger trainId;
-    private BigInteger projectId;
-    private BigInteger name;
-    private String avatar;
-    private String codeUrl;
-    private BigDecimal teamGrade;
+    private BigInteger teamId;
+    private BigInteger userId;
+    private BigDecimal personalGrade;
     private String evaluation;
 }

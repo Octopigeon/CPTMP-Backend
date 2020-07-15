@@ -2,6 +2,9 @@ package io.github.octopigeon.cptmpservice.dto.processevent;
 
 import lombok.Data;
 
+import java.math.BigInteger;
+import java.util.Date;
+
 /**
  * @author Gh Li
  * @version 1.0
@@ -11,4 +14,8 @@ import lombok.Data;
  */
 @Data
 public class ProcessDTO {
+    private BigInteger id;
+    private BigInteger trainId;
+    private Date startTime;
+    private Date endTime;
 }
