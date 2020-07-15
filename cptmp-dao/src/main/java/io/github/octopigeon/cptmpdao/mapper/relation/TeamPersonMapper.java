@@ -22,12 +22,11 @@ import java.util.List;
 @Mapper
 public interface TeamPersonMapper {
 
-    String COLUMNS="gmt_create, gmt_modified, gmt_deleted, user_id, team_id, personal_grade, evaluation";
-    String PROPS="#{gmtCreate}, #{gmtModified}, #{gmtDeleted},#{userId}, #{teamId}, #{personalGrade}, #{evaluation}";
+    String COLUMNS="gmt_create, gmt_modified, gmt_deleted, user_id, team_id";
+    String PROPS="#{gmtCreate}, #{gmtModified}, #{gmtDeleted},#{userId}, #{teamId}";
 
     String UPDATE_CONTENT="gmt_create = #{gmtCreate}, gmt_modified = #{gmtModified} , gmt_deleted = #{gmtDeleted}, " +
-            "user_id = #{userId}, team_id = #{teamId}, personal_grade = #{personalGrade}, " +
-            "evaluation = #{evaluation}";
+            "user_id = #{userId}, team_id = #{teamId}";
 
     // 关系表中均使用硬删除
 
@@ -67,15 +66,11 @@ public interface TeamPersonMapper {
     @Delete("delete from team_person where user_id = #{userId}")
     void removeTeamPersonByUserId(BigInteger userId);
 
-    /**
-     * 根据id修改信息，一般用于修改分数和评价
-     * @param teamPerson
-     */
     @Update("update team_person set " + UPDATE_CONTENT + " where id = #{id}")
     void updateTeamPersonById(TeamPerson teamPerson);
 
     /**
-     * 根据用户id定位用户，一般用于评分和修改用户所属队伍
+     * 根据用户id定位用户，一般修改用户所属队伍
      * @param teamPerson
      */
     @Update("update team_person set " + UPDATE_CONTENT + " where user_id = #{userId}")
@@ -91,8 +86,7 @@ public interface TeamPersonMapper {
             @Result(column = "user_id", property = "userId", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
-            @Result(column = "gmt_deleted", property = "gmtDeleted", jdbcType = JdbcType.DATE),
-            @Result(column = "personal_grade", property = "personalGrade", jdbcType = JdbcType.DECIMAL)
+            @Result(column = "gmt_deleted", property = "gmtDeleted", jdbcType = JdbcType.DATE)
 
     })
     List<TeamPerson> findAllTeamPerson();

@@ -11,8 +11,8 @@ import java.util.Date;
  * @version 1.0
  * @date 2020/7/9
  * <p>
- * last-check-in 李国鹏
- * @date 2020/7/9
+ * last-check-in 魏啸冲
+ * @date 2020/7/14
  */
 @Data
 public class Team {
@@ -23,7 +23,8 @@ public class Team {
 
     private String name;
     private String avatar;
-    private BigInteger projectId;
+    /** 实训-项目表中的关系id */
+    private BigInteger projectTrainId;
     private String repoUrl;
     private String evaluation;
     private Integer teamGrade;
