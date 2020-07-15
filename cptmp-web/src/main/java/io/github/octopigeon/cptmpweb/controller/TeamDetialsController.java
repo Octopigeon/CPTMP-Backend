@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.pagehelper.PageInfo;
 import com.sun.xml.internal.bind.v2.TODO;
+import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.team.TeamDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.team.TeamService;
@@ -53,6 +54,24 @@ public class TeamDetialsController {
         }
     }
 
+    /**
+     * 删除团队
+     * @param id
+     * @return
+     */
+    @DeleteMapping("api/team/{id}")
+    public RespBean deleteTeam(@PathVariable("id") BigInteger id)
+    {
+        try{
+            teamService.remove(teamService.findById(id));
+            return RespBean.ok("delete team successfully");
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return RespBean.error(1,"error");
+        }
+    }
+
 
     /**
      * 根据属性分页查询
@@ -60,11 +79,10 @@ public class TeamDetialsController {
      * @return
      * @throws JsonProcessingException
      */
-    @GetMapping("api/team/search")
-    public RespBeanWithTeamList searchTeam(@RequestBody String json) throws JsonProcessingException
+    @GetMapping("api/team/search/{property}")
+    public RespBeanWithTeamList searchTeam(@RequestBody String json,@PathVariable("property") String property) throws JsonProcessingException
     {
         ObjectMapper objectMapper = new ObjectMapper();
-        String property = objectMapper.readValue(json, ObjectNode.class).get("property").asText();
         int offset = objectMapper.readValue(json, ObjectNode.class).get("offset").asInt();
         int page = objectMapper.readValue(json, ObjectNode.class).get("page").asInt();
         try{
@@ -79,12 +97,12 @@ public class TeamDetialsController {
                             pageInfoByName.getPages()
                     );
                 default:
-                    return new RespBeanWithTeamList(1,"property wrong");
+                    return new RespBeanWithTeamList(CptmpStatusCode.INFO_ACCESS_FAILED,"property is wrong");
             }
         }catch(Exception e)
         {
             e.printStackTrace();
-            return new RespBeanWithTeamList(1,"something wrong");
+            return new RespBeanWithTeamList(CptmpStatusCode.INFO_ACCESS_FAILED,"something wrong");
         }
 
     }
