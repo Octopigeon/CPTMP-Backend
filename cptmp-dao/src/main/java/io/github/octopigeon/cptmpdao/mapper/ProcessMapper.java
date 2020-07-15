@@ -34,11 +34,11 @@ public interface ProcessMapper {
 
     /**
      * 删除一个实训下的所有流程（当实训结束的时候）
-     * @param gmtDelete
+     * @param gmtDeleted
      * @param trainId
      */
     @Update("update cptmp_process set gmt_deleted = #{gmtDeleted} where train_id = #{trainId} and gmt_deleted is null")
-    void hideProcessesByTrainId(Date gmtDelete, BigInteger trainId);
+    void hideProcessesByTrainId(Date gmtDeleted, BigInteger trainId);
 
     /**
      * 删除一个实训下的所有流程（当实训结束的时候）
@@ -54,10 +54,10 @@ public interface ProcessMapper {
     @Delete("delete from cptmp_process")
     void removeAllProcesses();
 
-    @Update("update cptmp_process set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_delete is null")
-    void hideProcessById(Date gmtDelete, BigInteger id);
+    @Update("update cptmp_process set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
+    void hideProcessById(Date gmtDeleted, BigInteger id);
 
-    @Update("update cptmp_process set gmt_deleted = null where id = #{id} and gmt_delete is not null")
+    @Update("update cptmp_process set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
     void restoreProcessById(BigInteger id);
 
     @Update("update cptmp_process set " + UPDATE_CONTENT + BY_ID_TAIL)
