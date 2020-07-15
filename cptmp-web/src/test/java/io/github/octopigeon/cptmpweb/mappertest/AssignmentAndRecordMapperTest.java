@@ -105,6 +105,9 @@ public class AssignmentAndRecordMapperTest extends BaseTest {
         assignmentMapper.updateAssignmentById(assignment3);
         Assertions.assertEquals("test3", assignmentMapper.findAllAssignment().get(0).getContent());
 
+        assignmentMapper.updateAssignmentDocumentById(assignmentMapper.findAllAssignment().get(0).getId(),new Date(),"test3");
+        Assertions.assertEquals("test3", assignmentMapper.findAllAssignment().get(0).getDocumentPath());
+
         assignmentMapper.removeAllAssignment(new Date());
         Assertions.assertEquals(0, assignmentMapper.findAllAssignment().size());
 
@@ -255,6 +258,8 @@ public class AssignmentAndRecordMapperTest extends BaseTest {
 
         recordMapper.removeRecordById(recordMapper.findAllRecord().get(0).getId(),new Date());
         Assertions.assertEquals(1, recordMapper.findAllRecord().size());
+
+        Assertions.assertEquals(1, recordMapper.findRecordByUserId(recordMapper.findAllRecord().get(0).getUserId()).size());
 
         recordMapper.removeRecordByAll(new Date());
         Assertions.assertEquals(0, recordMapper.findAllRecord().size());
