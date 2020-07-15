@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.pagehelper.PageInfo;
 import com.sun.xml.internal.bind.v2.TODO;
 import io.github.octopigeon.cptmpservice.dto.team.TeamDTO;
+import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.team.TeamService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
@@ -31,6 +32,26 @@ public class TeamDetialsController {
     @Autowired
     private TeamService teamService;
 
+    /**
+     * 创建团队
+     * @param json
+     * @return
+     * @throws JsonProcessingException
+     */
+    @PostMapping("api/team")
+    public RespBean createTeam(@RequestBody String json) throws JsonProcessingException
+    {
+        ObjectMapper objectMapper = new ObjectMapper();
+        TeamDTO team = objectMapper.readValue(json,TeamDTO.class);
+        try{
+            teamService.add(team);
+            return RespBean.ok("create team successfully");
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+            return RespBean.error(1,"error");
+        }
+    }
 
 
     /**
