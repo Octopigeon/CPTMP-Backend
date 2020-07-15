@@ -14,9 +14,8 @@ import java.util.List;
  * @author 魏啸冲
  * @version 2.0
  * @date 2020/7/7
- *
  * @last-check-in 魏啸冲
- * @date 2020/7/13
+ * @date 2020/7/15
  */
 @Repository
 @Mapper
@@ -35,10 +34,12 @@ public interface CptmpUserMapper {
             "idx_name = #{name}, uk_common_id = #{commonId}, idx_organization_id = #{organizationId},idx_role_name = #{roleName}, enabled = #{enabled}, account_non_expired = #{accountNonExpired}, " +
             "credentials_non_expired = #{credentialsNonExpired}, account_non_locked = #{accountNonLocked}";
 
-    String REMOVE_CONTENT=" gmt_modified = null, gmt_deleted = null, uk_email = null, phone_number = null, " +
+    String REMOVE_CONTENT = " gmt_modified = null, gmt_deleted = null, uk_email = null, phone_number = null, " +
             "gender = null, avatar = null";
+
     /**
      * 插入实训
+     *
      * @param cptmpUser 用户
      */
     @Insert("insert into cptmp_user (" + COLUMNS + ") values (" + PROPS + ")")
@@ -55,6 +56,7 @@ public interface CptmpUserMapper {
 
     /**
      * 删除用户(隐藏)
+     *
      * @param gmtDeleted 删除日期
      */
     @Update("update cptmp_user set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
@@ -62,9 +64,10 @@ public interface CptmpUserMapper {
 
     /**
      * 删除用户
+     *
      * @param gmtDeleted 删除日期
      */
-    @Update("update cptmp_user set "+ REMOVE_CONTENT +" where gmt_deleted is null")
+    @Update("update cptmp_user set " + REMOVE_CONTENT + " where gmt_deleted is null")
     void removeAllUsers(Date gmtDeleted);
 
 
@@ -76,7 +79,8 @@ public interface CptmpUserMapper {
 
     /**
      * 通过id删除（隐藏）
-     * @param id 用户id
+     *
+     * @param id         用户id
      * @param gmtDeleted 删除日期
      */
     @Update("update cptmp_user set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
@@ -84,6 +88,7 @@ public interface CptmpUserMapper {
 
     /**
      * 通过id删除
+     *
      * @param id 用户id
      */
     @Update("update cptmp_user set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
@@ -91,14 +96,16 @@ public interface CptmpUserMapper {
 
     /**
      * 通过id恢复
-     * @param id 用户id
+     *
+     * @param id         用户id
      * @param gmtDeleted 删除日期
      */
-    @Update("update cptmp_user set "+REMOVE_CONTENT+" where id = #{id}")
+    @Update("update cptmp_user set " + REMOVE_CONTENT + " where id = #{id}")
     void restoreUserById(BigInteger id, Date gmtDeleted);
 
     /**
      * 通过用户名获取用户，可以用来进行登录验证
+     *
      * @param username 用户名，唯一
      * @return 用户
      */
@@ -128,6 +135,7 @@ public interface CptmpUserMapper {
 
     /**
      * 根据id查询
+     *
      * @param userId id
      * @return 用户
      */
@@ -137,6 +145,7 @@ public interface CptmpUserMapper {
 
     /**
      * 根据email查询
+     *
      * @param email email
      * @return 用户
      */
@@ -146,6 +155,7 @@ public interface CptmpUserMapper {
 
     /**
      * 根据用户名查询
+     *
      * @param username 用户名
      * @return 用户
      */
@@ -154,6 +164,7 @@ public interface CptmpUserMapper {
 
     /**
      * 得到所有用户（调试性方法）
+     *
      * @return 所有用户的列表
      */
     @Select("select id, " + COLUMNS + " from cptmp_user where gmt_deleted is null")
@@ -161,25 +172,25 @@ public interface CptmpUserMapper {
     List<CptmpUser> findAllUsers();
 
     /**
-     *根据id更新
+     * 根据id更新
      */
-    @Update(UPDATE_HEADER+UPDATE_CONTENT+" where (id = #{id}) and gmt_deleted is null")
+    @Update(UPDATE_HEADER + UPDATE_CONTENT + " where (id = #{id}) and gmt_deleted is null")
     void updateUserById(CptmpUser cptmpUser);
 
     /**
-     *根据用户名更新
+     * 根据用户名更新
      */
-    @Update(UPDATE_HEADER+UPDATE_CONTENT+UPDATE_TAIL_USERNAME + " where (uk_username = #{username}) and gmt_deleted is null")
+    @Update(UPDATE_HEADER + UPDATE_CONTENT + " where (uk_username = #{username}) and gmt_deleted is null")
     void updateUserByUserName(CptmpUser cptmpUser);
 
     /**
-     *根据用户名更新是否注销
+     * 根据用户名更新是否注销
      */
     @Update(UPDATE_HEADER + "enabled = #{enabled}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
     void updateEnabledByUsername(String username, Boolean enabled);
 
     /**
-     *根据用户名更新账号
+     * 根据用户名更新账号
      */
     @Update(UPDATE_HEADER + "account_non_expired = #{accountNonExpired}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
     void updateAccountNonExpiredByUsername(String username, Boolean accountNonExpired);
@@ -191,11 +202,12 @@ public interface CptmpUserMapper {
     void updateAccountNonLockedByUsername(String username, Boolean accountNonLocked);
 
 
-
-    @Update(UPDATE_HEADER + "gmt_modified=#{gmtModified}, avatar=#{avatar}" + UPDATE_TAIL_USERNAME+ " and gmt_deleted is null")
+    @Update(UPDATE_HEADER + "gmt_modified=#{gmtModified}, avatar=#{avatar}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
     void updateAvatarByUsername(String username, Date gmtModified, String avatar);
+
     /**
      * 更新用户常规信息
+     *
      * @param username
      * @param gmtModified
      * @param gender

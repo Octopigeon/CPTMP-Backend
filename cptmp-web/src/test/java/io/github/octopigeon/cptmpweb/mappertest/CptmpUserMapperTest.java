@@ -1,7 +1,14 @@
 package io.github.octopigeon.cptmpweb.mappertest;
 
 import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
+import io.github.octopigeon.cptmpdao.mapper.OrganizationMapper;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
+import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
+import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
+import io.github.octopigeon.cptmpservice.dto.organization.OrganizationDTO;
+import io.github.octopigeon.cptmpservice.service.organization.OrganizationService;
+import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
+import io.github.octopigeon.cptmpservice.utils.Utils;
 import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -24,56 +31,41 @@ public class CptmpUserMapperTest extends BaseTest {
     @Autowired
     private CptmpUserMapper cptmpUserMapper;
 
+    @Autowired
+    private UserInfoService userInfoService;
+
+    @Autowired
+    private OrganizationService organizationService;
+
+    @Autowired
+    private OrganizationMapper organizationMapper;
+
     @Test
-    public void test() {
-        /**
-         * 设置数据
-         */
-        CptmpUser cptmpUser1 = new CptmpUser();
-        cptmpUser1.setGmtCreate(new Date());
-        cptmpUser1.setUsername("test1");
-        cptmpUser1.setName("test1");
-        cptmpUser1.setCommonId("test1");
-        cptmpUser1.setOrganizationId(BigInteger.valueOf(1));
-        cptmpUser1.updatePassword("123456");
-        cptmpUser1.setEmail("111@11.com");
-        cptmpUser1.setRoleName("ROLE_SCHOOL_TEACHER");
-        cptmpUser1.setEnabled(true);
-        cptmpUser1.setAccountNonExpired(true);
-        cptmpUser1.setCredentialsNonExpired(true);
-        cptmpUser1.setAccountNonLocked(true);
-
-        CptmpUser cptmpUser2 = new CptmpUser();
-        cptmpUser2.setGmtCreate(new Date());
-        cptmpUser2.setUsername("test2");
-        cptmpUser2.setName("test2");
-        cptmpUser2.setCommonId("test2");
-        cptmpUser2.setOrganizationId(BigInteger.valueOf(2));
-        cptmpUser2.updatePassword("123456");
-        cptmpUser2.setEmail("121@11.com");
-        cptmpUser2.setRoleName("ROLE_SCHOOL_ADMIN");
-        cptmpUser2.setEnabled(true);
-        cptmpUser2.setAccountNonExpired(true);
-        cptmpUser2.setCredentialsNonExpired(true);
-        cptmpUser2.setAccountNonLocked(true);
-
-        /**
-         * 添加
-         */
+    public void test() throws Exception {
         cptmpUserMapper.removeAllUsersTest();
-        cptmpUserMapper.addUser(cptmpUser1);
-        cptmpUserMapper.addUser(cptmpUser2);
-        Assertions.assertEquals(2, cptmpUserMapper.findAllUsers().size());
+        organizationMapper.removeAllOrganizationTest();
 
-        cptmpUserMapper.hideUserById(cptmpUserMapper.findAllUsers().get(0).getId(),new Date());
-        Assertions.assertEquals(1, cptmpUserMapper.findAllUsers().size());
+        // 创建学校
+        OrganizationDTO organizationDTO = new OrganizationDTO();
+        organizationDTO.setName("WHU");
+        organizationDTO.setRealName("武汉大学");
+        organizationDTO.setDescription("湖北省武汉市武汉大学");
+        organizationDTO.setWebsiteUrl("www.whu.edu.cn");
+        organizationService.add(organizationDTO);
+        organizationDTO = organizationService.findByName("WHU");
 
-        CptmpUser cptmpUser3=cptmpUserMapper.findAllUsers().get(0);
-        cptmpUser3.setPhoneNumber(BigDecimal.valueOf(3));
-        cptmpUserMapper.updateUserById(cptmpUser3);
-        Assertions.assertEquals(BigDecimal.valueOf(3),cptmpUserMapper.findAllUsers().get(0).getPhoneNumber());
+        // 创建用户
+        BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
+        baseUserInfoDTO.setUsername("WHU-2018302060342");
+        baseUserInfoDTO.setCommonId("2018302060342");
+        baseUserInfoDTO.setRoleName(CptmpRole.ROLE_SCHOOL_TEACHER);
+        baseUserInfoDTO.setName("魏啸冲");
+        baseUserInfoDTO.setPassword("123");
+        baseUserInfoDTO.setEmail("wxcnb@qq.com");
+        baseUserInfoDTO.setOrganizationId(organizationDTO.getId());
+        userInfoService.add(baseUserInfoDTO);
+        CptmpUser cptmpUser = cptmpUserMapper.findUserByUsername("WHU-2018302060342");
+        Assertions.assertEquals(5, Utils.getNullPropertyNames(cptmpUser).length);
 
-        cptmpUserMapper.hideAllUsers(new Date());
-        Assertions.assertEquals(0,cptmpUserMapper.findAllUsers().size());
     }
 }
