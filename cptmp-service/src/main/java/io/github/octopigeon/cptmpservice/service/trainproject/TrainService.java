@@ -1,6 +1,7 @@
 package io.github.octopigeon.cptmpservice.service.trainproject;
 
 import com.github.pagehelper.PageInfo;
+import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileService;
 import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalService;
@@ -58,6 +59,13 @@ public interface TrainService extends BaseNormalService<TrainDTO>, BaseFileServi
      * @param trainId 实训Id
      */
     void uploadResourceLib(MultipartFile file, BigInteger trainId) throws Exception;
+
+    /**
+     * 删除资源库中文件
+     * @param trainId 实训Id
+     * @param fileDTO 文件信息
+     */
+    void removeResourceLib(BigInteger trainId, FileDTO fileDTO) throws Exception;
 
     /**
      * 向实训中添加项目

@@ -12,6 +12,7 @@ import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
+import io.github.octopigeon.cptmpservice.service.attachmentfile.AttachmentFileService;
 import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileServiceImpl;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
@@ -46,6 +47,9 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
 
     @Autowired
     private ProjectMapper projectMapper;
+
+    @Autowired
+    private AttachmentFileService attachmentFileService;
 
     @Autowired
     public TrainServiceImpl(FileProperties fileProperties) throws Exception {
@@ -140,6 +144,24 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
         resourceLib.add(fileInfo);
         object.put(this.libJsonName, resourceLib);
         trainMapper.updateTrainProjectResourceById(trainId, new Date(), object.toJSONString());
+        attachmentFileService.add(fileInfo);
+    }
+
+    /**
+     * 删除资源库中文件
+     *
+     * @param fileDTO 文件信息
+     */
+    @Override
+    public void removeResourceLib(BigInteger trainId, FileDTO fileDTO) throws Exception {
+        Train train = trainMapper.findTrainById(trainId);
+        JSONObject object = JSON.parseObject(train.getResourceLibrary());
+        List<FileDTO> resourceLib = JSON.parseArray(object.getJSONArray(this.libJsonName).toJSONString(), FileDTO.class);
+        resourceLib.remove(fileDTO);
+        object.put(this.libJsonName, resourceLib);
+        trainMapper.updateTrainProjectResourceById(trainId, new Date(), object.toJSONString());
+        attachmentFileService.remove(fileDTO);
+        removeFile(fileDTO.getFilePath());
     }
 
     /**
@@ -167,7 +189,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
      * 从实训中移除项目
      *
      * @param trainId  实训id
-     * @param projecId 项目id
+     * @param projectId 项目id
      */
     @Override
     public void removeProject(BigInteger trainId, BigInteger projectId) throws Exception {

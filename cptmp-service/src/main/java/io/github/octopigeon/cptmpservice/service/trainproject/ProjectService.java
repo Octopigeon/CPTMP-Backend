@@ -1,6 +1,7 @@
 package io.github.octopigeon.cptmpservice.service.trainproject;
 
 import com.github.pagehelper.PageInfo;
+import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileService;
@@ -46,4 +47,11 @@ public interface ProjectService extends BaseNormalService<ProjectDTO>, BaseFileS
      * @param projectId 项目Id
      */
     void uploadResourceLib(MultipartFile file, BigInteger projectId) throws Exception;
+
+    /**
+     * 删除资源库中文件
+     * @param projectId 项目Id
+     * @param file fileDTO
+     */
+    void removeResourceLib(BigInteger projectId, FileDTO file) throws Exception;
 }

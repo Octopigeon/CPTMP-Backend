@@ -145,7 +145,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     public String uploadAvatar(MultipartFile file, String username) throws Exception {
         try{
             FileDTO fileInfo = storePublicFile(file);
-            cptmpUserMapper.updateAvatarByUsername(username, new Date(), fileInfo.getFilePath());
+            cptmpUserMapper.updateAvatarByUsername(username, new Date(), fileInfo.getFileUrl());
             return fileInfo.getFilePath();
         } catch (Exception e) {
             e.printStackTrace();
