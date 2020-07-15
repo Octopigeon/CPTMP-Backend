@@ -1,7 +1,6 @@
 package io.github.octopigeon.cptmpservice.service.team;
 
 import com.github.pagehelper.PageInfo;
-import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.team.TeamDTO;
 import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileService;
 import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalService;
