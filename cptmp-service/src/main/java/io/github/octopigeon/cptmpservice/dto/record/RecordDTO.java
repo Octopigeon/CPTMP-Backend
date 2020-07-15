@@ -1,5 +1,6 @@
 package io.github.octopigeon.cptmpservice.dto.record;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.math.BigInteger;
@@ -20,4 +21,6 @@ public class RecordDTO {
     private BigInteger processId;
     private BigInteger eventId;
     private BigInteger assignmentId;
+    @JsonIgnore
+    private BigInteger processEventId;
 }
