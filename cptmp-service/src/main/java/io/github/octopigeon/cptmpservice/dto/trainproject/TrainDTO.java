@@ -20,7 +20,7 @@ public class TrainDTO {
     private Date startTime;
     private Date endTime;
     private String content;
-    private String standard;
+    private String acceptStandard;
     private String resourceLibrary;
     private String gpsInfo;
 }

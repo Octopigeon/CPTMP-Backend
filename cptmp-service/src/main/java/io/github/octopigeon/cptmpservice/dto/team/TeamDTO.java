@@ -20,9 +20,9 @@ public class TeamDTO {
     private BigInteger projectId;
     private BigInteger name;
     private String avatar;
-    private String codeUrl;
+    private String repoUrl;
     private BigDecimal teamGrade;
     private String evaluation;
     @JsonIgnore
-    private BigInteger trainProjectId;
+    private BigInteger projectTrainId;
 }

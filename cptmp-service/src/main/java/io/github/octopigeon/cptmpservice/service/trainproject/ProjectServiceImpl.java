@@ -6,8 +6,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.ProjectMapper;
 import io.github.octopigeon.cptmpdao.mapper.TrainMapper;
+import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
+import io.github.octopigeon.cptmpdao.model.Project;
 import io.github.octopigeon.cptmpdao.model.Train;
-import io.github.octopigeon.cptmpdao.model.TrainProject;
+import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
@@ -41,7 +43,7 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
     private ProjectMapper projectMapper;
 
     @Autowired
-    private TrainProjectMapper trainProjectMapper;
+    private ProjectTrainMapper projectTrainMapper;
 
     @Autowired
     private TrainMapper trainMapper;
@@ -66,7 +68,7 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
             List<FileDTO> fileDTOS = new ArrayList<>();
             object.put(this.libJsonName, fileDTOS);
             project.setResourceLibrary(object.toJSONString());
-            projectMapper.addProject(project);
+            projectMapper.addTrainProject(project);
         }catch (Exception e){
             e.printStackTrace();
             throw new Exception("Add train project failed");
@@ -81,10 +83,10 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
     @Override
     public void remove(ProjectDTO dto) throws Exception {
         try{
-            Project project = projectMapper.findpProjectById(dto.getId());
+            Project project = projectMapper.findTrainProjectById(dto.getId());
             if(project != null){
-                projectMapper.removeProjectById(project.getId(), new Date());
-                trainProjectMapper.removeByProjectId(dto.getId());
+                projectMapper.removeTrainProjectById(project.getId(), new Date());
+                projectTrainMapper.removeProjectTrainsByProjectId(dto.getId());
             }
             else {
                 throw new ValueException("trainproject is not existed!");
@@ -104,10 +106,10 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
     @Override
     public Boolean modify(ProjectDTO dto) throws Exception {
         try {
-            Project project = projectMapper.findProjectByName(dto.getName());
+            Project project = projectMapper.findTrainProjectById(dto.getId());
             BeanUtils.copyProperties(dto, project, Utils.getNullPropertyNames(dto));
             project.setGmtModified(new Date());
-            projectMapper.updateProject(project);
+            projectMapper.updateTrainProjectById(project);
             return true;
         }catch (Exception e){
             e.printStackTrace();
@@ -126,7 +128,7 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
     @Override
     public PageInfo<ProjectDTO> findByLikeName(int page, int offset, String name) {
         PageHelper.startPage(page, offset);
-        List<Project> projects = projectMapper.findProjectByNameAmbiguously(name);
+        List<Project> projects = projectMapper.findTrainProjectByNameAmbiguously(name);
         List<ProjectDTO> results = new ArrayList<>();
         for (Project project: projects) {
             ProjectDTO result = new ProjectDTO();
@@ -147,10 +149,10 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
     @Override
     public PageInfo<TrainDTO> findTrainsById(int page, int offset, BigInteger projectId) {
         PageHelper.startPage(page, offset);
-        List<BigInteger> trainIds = trainProjectMapper.findTrainsByProjectId(projectId);
+        List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByProjectId(projectId);
         List<TrainDTO> results = new ArrayList<>();
-        for (BigInteger trainId: trainIds) {
-            Train train = trainMapper.findTrainById(trainId);
+        for (ProjectTrain projectTrain: projectTrains) {
+            Train train = trainMapper.findTrainById(projectTrain.getTrainId());
             TrainDTO result = new TrainDTO();
             BeanUtils.copyProperties(train, result);
             results.add(result);
@@ -167,12 +169,12 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
     @Override
     public void uploadResourceLib(MultipartFile file, BigInteger projectId) throws Exception {
         FileDTO fileInfo = storePrivateFile(file);
-        Project project = projectMapper.findProjectById(projectId);
+        Project project = projectMapper.findTrainProjectById(projectId);
         JSONObject object = JSON.parseObject(project.getResourceLibrary());
         List<FileDTO> resourceLib = JSON.parseArray(object.getJSONArray(this.libJsonName).toJSONString(), FileDTO.class);
         resourceLib.add(fileInfo);
         object.put(this.libJsonName, resourceLib);
-        projectMapper.updateProjectResourceById(projectId, new Date(), object.toJSONString());
+        projectMapper.updateTrainProjectResourceById(projectId, new Date(), object.toJSONString());
     }
 
     /**
@@ -183,7 +185,7 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
      */
     @Override
     public ProjectDTO findById(BigInteger id) throws Exception {
-        Project project = projectMapper.findProjectById(id);
+        Project project = projectMapper.findTrainProjectById(id);
         if(project == null){
             throw new ValueException("project is not existed!");
         }

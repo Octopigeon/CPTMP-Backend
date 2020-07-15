@@ -7,7 +7,6 @@ import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
-import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileService;
 import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
@@ -207,7 +206,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     @Override
     public List<BaseUserInfoDTO> findByName(String name) {
-        List<CptmpUser> cptmpUsers = cptmpUserMapper.findUserByName(name);
+        List<CptmpUser> cptmpUsers = cptmpUserMapper.findUsersByName(name);
         List<BaseUserInfoDTO> baseUserInfoDTOS = new ArrayList<>();
         for (CptmpUser cptmpUser: cptmpUsers) {
             baseUserInfoDTOS.add(getFullUserInfo(cptmpUser));
@@ -313,7 +312,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         for (CptmpUser cptmpUser: cptmpUsers) {
             results.add(getFullUserInfo(cptmpUser));
         }
-        return new PageInfo<BaseUserInfoDTO>(results);
+        return new PageInfo<>(results);
     }
 
 
