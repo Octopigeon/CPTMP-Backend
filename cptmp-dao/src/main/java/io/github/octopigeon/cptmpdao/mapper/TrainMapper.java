@@ -33,6 +33,7 @@ public interface TrainMapper {
 
     /**
      * 插入实训
+     *
      * @param train：实训
      */
     @Insert("insert into train (" + COLUMNS + ") values (" + PROPS + ")")
@@ -47,28 +48,33 @@ public interface TrainMapper {
     void removeAllTrain();
 
     /**
+     * 测试用
+     */
+    @Deprecated
+    @Update("update train set gmt_deleted = null")
+    void restoreAllTrain();
+
+    /**
      * 根据实训id删除
+     *
      * @param id：实训id
      * @param gmtDeleted 删除日期
      */
-    @Update("update train set gmt_deleted = #{gmtDeleted} where id = #{id} and "+SOFT_DELETE_TAIL)
+    @Update("update train set gmt_deleted = #{gmtDeleted} where id = #{id} and " + SOFT_DELETE_TAIL)
     void removeTrainById(BigInteger id, Date gmtDeleted);
 
     /**
-     * 根据实训id改
-     */
-    @Update("update train set "+ UPDATE_CONTENT +" where id = #{id} and "+SOFT_DELETE_TAIL)
-    void updateTrainProjectById(Train train);
-    /**
      * 删除一个学校的所有实训项目
+     *
      * @param organizationId 组织id
-     * @param gmtDeleted 删除日期
+     * @param gmtDeleted     删除日期
      */
     @Update("update train set gmt_deleted = #{gmtDeleted} where organization_id = #{organizationId} and " + SOFT_DELETE_TAIL)
     void removeTrainsByOrganizationId(BigInteger organizationId, Date gmtDeleted);
 
     /**
      * 按id更新train的信息
+     *
      * @param train
      */
     @Update("update train set " + UPDATE_CONTENT + " where id = #{id} and " + SOFT_DELETE_TAIL)
@@ -76,6 +82,7 @@ public interface TrainMapper {
 
     /**
      * 查询所有项目
+     *
      * @return 项目列表
      */
     @Select("select id, " + COLUMNS + " from train where " + SOFT_DELETE_TAIL)
@@ -97,6 +104,7 @@ public interface TrainMapper {
 
     /**
      * 根据实训id查找
+     *
      * @param id：实训id
      * @return 实训
      */
@@ -106,10 +114,21 @@ public interface TrainMapper {
 
     /**
      * 根据项目名查找项目，模糊查找
+     *
      * @param name：项目名称
      * @return 项目
      */
     @Select("select id, " + COLUMNS + " from train where idx_name like concat('%', #{name}, '%') and " + SOFT_DELETE_TAIL)
     @ResultMap("train")
-    List<Train> findTrainByNameAmbiguously(String name);
+    List<Train> findTrainsByLikeName(String name);
+
+    /**
+     * 根据组织id查找shixun
+     *
+     * @param organizationId
+     * @return
+     */
+    @Select("select id, " + COLUMNS + " from train where organization_id = #{organizationId} and " + SOFT_DELETE_TAIL)
+    @ResultMap("train")
+    List<Train> findTrainsByOrganizationId(BigInteger organizationId);
 }
