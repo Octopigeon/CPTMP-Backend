@@ -119,5 +119,7 @@ public interface OrganizationMapper {
     @ResultMap("cptmpOrganization")
     Organization findOrganizationByInvitationCode(String invitationCode);
 
-
+    @Select("select id, " + COLUMNS + " from cptmp_organization where uk_real_name = #{realName} and gmt_deleted is null")
+    @ResultMap("cptmpOrganization")
+    Organization findOrganizationByRealName(String realName);
 }
