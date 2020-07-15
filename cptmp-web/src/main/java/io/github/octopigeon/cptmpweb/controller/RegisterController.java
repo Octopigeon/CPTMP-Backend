@@ -150,7 +150,6 @@ public class RegisterController {
         return RespBeanWithFailedList.report(registerFailedList);
     }
 
-    // TODO 等实训项目的表设计好了，再重新看一下这个api
     /**
      * 企业管理员创建实训项目获取json中的name，project_level，project_content三个字段
      * @param json 包含上述三个字段的json
@@ -286,9 +285,12 @@ class  ReqBeanWithOrganizationRegisterInfo {
 @Data
 class  ReqBeanWithTrainProjectRegisterInfo {
 
+    @JsonProperty("project_name")
     private String projectName;
+    @JsonProperty("project_level")
     private Integer projectLevel;
     /** 实训简介 */
+    @JsonProperty("project_content")
     private String projectContent;
 
 }
