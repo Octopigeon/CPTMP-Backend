@@ -15,7 +15,7 @@ import java.util.List;
  * @author 魏啸冲
  * @version 2.0
  * @date 2020/7/7
- * @last-check-in 魏啸冲
+ * @last-check-in 李国鹏
  * @date 2020/7/15
  */
 @Repository
@@ -35,7 +35,7 @@ public interface CptmpUserMapper {
             "idx_name = #{name}, uk_common_id = #{commonId}, idx_organization_id = #{organizationId},idx_role_name = #{roleName}, enabled = #{enabled}, account_non_expired = #{accountNonExpired}, " +
             "credentials_non_expired = #{credentialsNonExpired}, account_non_locked = #{accountNonLocked}";
 
-    String REMOVE_CONTENT = " gmt_modified = null, gmt_deleted = #{gmtDeleted}, uk_email = null, phone_number = null, " +
+    String REMOVE_CONTENT = " gmt_deleted = #{gmtDeleted}, gmt_modified = null, uk_email = null, phone_number = null, " +
             "gender = null, avatar = null";
 
     /**
@@ -60,7 +60,7 @@ public interface CptmpUserMapper {
      *
      * @param gmtDeleted 删除日期
      */
-    @Update("update cptmp_user set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
+    @Update("update cptmp_user set gmt_deleted = #{gmtDeleted}  where gmt_deleted is null")
     void hideAllUsers(Date gmtDeleted);
 
     /**
@@ -75,7 +75,7 @@ public interface CptmpUserMapper {
     /**
      * 恢复用户
      */
-    @Update("update cptmp_user set gmt_deleted = null")
+    @Update("update cptmp_user set gmt_deleted = null where gmt_deleted is not null")
     void restoreAllUsers();
 
     /**
@@ -87,6 +87,8 @@ public interface CptmpUserMapper {
     @Update("update cptmp_user set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
     void hideUserById(BigInteger id, Date gmtDeleted);
 
+
+
     /**
      * 通过id恢复
      * @param id 用户id
@@ -96,14 +98,14 @@ public interface CptmpUserMapper {
 
     @Update("update cptmp_user set gmt_deleted = null where uk_username = #{username}")
     void restoreUserByUsername(String username);
-
-    /**
+    
+    /** 
      * 通过id删除
      *
      * @param id         用户id
      * @param gmtDeleted 删除日期
      */
-    @Update("update cptmp_user set " + REMOVE_CONTENT + " where id = #{id}")
+    @Update("update cptmp_user set " + REMOVE_CONTENT + " where id = #{id} and gmt_deleted is null")
     void removeUserById(BigInteger id, Date gmtDeleted);
 
     /**
