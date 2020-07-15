@@ -26,9 +26,9 @@ public interface TeamMapper {
      *
      * @param team 团队
      */
-    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, avatar, idx_train_project_id, idx_team_name, repo_url, team_grade,evaluation";
-    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{avatar},#{projectId}, #{name}, #{repoUrl}, #{teamGrade},#{evaluation}";
-    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, idx_train_project_id = #{projectId}, idx_team_name = #{name}, evaluation = #{evaluation}, " +
+    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, avatar, uk_project_train_id, idx_team_name, repo_url, team_grade,evaluation";
+    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{avatar},#{projectTrainId}, #{name}, #{repoUrl}, #{teamGrade},#{evaluation}";
+    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, uk_project_train_id = #{projectTrainId}, idx_team_name = #{name}, evaluation = #{evaluation}, " +
             " repo_url = #{repoUrl},team_grade = #{teamGrade},avatar = #{avatar}";
 
     @Insert("insert into team (" + COLUMNS + ") values (" + PROPS + ")")
@@ -43,13 +43,6 @@ public interface TeamMapper {
     void removeAllTeamTest();
 
     /**
-     * 测试用
-     * @param gmtDeleted 删除时间
-     */
-    @Update("update team set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
-    void removeAllTeam(Date gmtDeleted);
-
-    /**
      * 根据id删除对应的团队
      *
      * @param id：团队id
@@ -58,47 +51,14 @@ public interface TeamMapper {
     @Update("update team set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
     void removeTeamById(BigInteger id, Date gmtDeleted);
 
-    /**
-     * 根据团队名称删除团队
-     *
-     * @param name       团队名称
-     * @param gmtDeleted 删除日期
-     */
-    @Update("update team set gmt_deleted = #{gmtDeleted} where idx_team_name = #{name} and gmt_deleted is null")
-    void removeTeamByName(String name, Date gmtDeleted);
+    @Update("update team set gmt_deleted = null where id = #{id}")
+    void restoreTeamById(BigInteger id);
 
     /**
      * 根据团队id修改
      */
     @Update("update team set " + UPDATE_CONTENT + "  where id = #{id} and gmt_deleted is null")
     void updateTeamById(Team team);
-
-    /**
-     * 修改代码库
-     *
-     * @param id          团队id
-     * @param gmtModified 删除日期
-     * @param repoUrl     代码库
-     */
-    @Update("update team set gmt_deleted = #{gmtDeleted}, repo_url = #{repoUrl} where id = #{id} and gmt_deleted is null")
-    void updateTeamRepoUrlById(BigInteger id, Date gmtModified, String repoUrl);
-
-    /**
-     * 根据团队名修改
-     */
-    @Update("update team set " + UPDATE_CONTENT + "  where idx_team_name = #{name} and gmt_deleted is null")
-    void updateTeamByName(Team team);
-
-    /**
-     * 修改代码库
-     *
-     * @param name        团队名称
-     * @param gmtModified 删除日期
-     * @param repoUrl     代码库
-     */
-    @Update("update team set gmt_deleted = #{gmtDeleted}, repo_url = #{repoUrl} where idx_team_name = #{name} and gmt_deleted is null")
-    void updateTeamRepoUrlByName(String name, Date gmtModified, String repoUrl);
-
 
     /**
      * 查询所有团队
@@ -111,7 +71,7 @@ public interface TeamMapper {
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_deleted", property = "gmtDeleted", jdbcType = JdbcType.DATE),
-            @Result(column = "idx_train_project_id", property = "projectId", jdbcType = JdbcType.BIGINT),
+            @Result(column = "uk_project_train_id", property = "projectTrainId", jdbcType = JdbcType.BIGINT),
             @Result(column = "idx_team_name", property = "name", jdbcType = JdbcType.VARCHAR),
             @Result(column = "avatar", property = "avatar", jdbcType = JdbcType.VARCHAR),
             @Result(column = "repo_url", property = "repoUrl", jdbcType = JdbcType.VARCHAR),
@@ -130,15 +90,14 @@ public interface TeamMapper {
     @Select("select id, " + COLUMNS + " from team where id = #{id} and gmt_deleted is null")
     @ResultMap("team")
     Team findTeamByTeamId(BigInteger id);
-    Team findTrainTeamByTeamId(BigInteger teamId);
 
     /**
-     * 根据团队名查找项目
+     * 根据团队名查找团队
      *
      * @param name：团队名称
      * @return 团队列表
      */
-    @Select("select id, " + COLUMNS + " from team where team_name = #{name} and gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from team where idx_team_name = #{name} and gmt_deleted is null")
     @ResultMap("team")
-    Team findTeamByName(String name);
+    List<Team> findTeamByName(String name);
 }
