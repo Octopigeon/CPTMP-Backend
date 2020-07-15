@@ -54,6 +54,14 @@ public interface RecordMapper {
     @Update("update record set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
     void removeRecordById(BigInteger id, Date gmtDeleted);
 
+    /**
+     * 根据userId删除对应记录，当用户注销时调用此方法
+     * @param userId
+     * @param gmtDeleted
+     */
+    @Update("update record set gmt_deleted = #{gmtDeleted} where idx_user_id = #{userId} and gmt_deleted is null")
+    void removeRecordByUserId(BigInteger userId, Date gmtDeleted);
+
 
     /**
      * 根据id修改
