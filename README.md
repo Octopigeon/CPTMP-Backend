@@ -425,3 +425,109 @@ College Practice Training Management Platform
     "msg": "update organization info failed"
 }
 ```
+
+# ProjectDetailsController
+## /api/train-project/{id}/basic-info
++ HTTP方法：GET
++ 返回类型：json
++ 说明：通过id得到具体某个project的信息
++ 调用实例：
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-15T06:55:20.353+00:00",
+    "msg": "success",
+    "data": {
+        "id": 10,
+        "name": "华中科技大学暑期实训",
+        "level": 0,
+        "content": "摸鱼滑水",
+        "resource_library": "{\"resourceLib\":[]}"
+    }
+}
+// 失败
+{
+    "status": 15,
+    "date": "2020-07-15T06:57:45.645+00:00",
+    "msg": "find project info failed",
+    "data": null
+}
+```
++ HTTP方法：PUT
++ 返回类型：json
++ 说明：通过id更新具体某个project的信息
++ 调用实例：
+``` 
+{
+    "name": "华中科技大学真正的实训",
+    "content": "一天爆肝24h",
+    "level": 5
+}
+```
++ 返回实例：
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-15T07:14:14.543+00:00",
+    "msg": "update success"
+}
+// 失败
+{
+    "status": 10,
+    "date": "2020-07-15T07:13:29.680+00:00",
+    "msg": "update project basic info failed"
+}
+```
+## "/api/train-project/{id}/resource-lib
++ HTTP方法：PUT
++ 返回类型：json
++ 说明：通过id更新具体某个project的信息
++ 返回实例
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-14T02:18:20.590+00:00",
+    "msg": "upload resource files success"
+}
+// 失败
+{
+    "status": 16,
+    "date": "2020-07-14T02:21:43.068+00:00",
+    "msg": "upload resource files failed"
+}
+```
+
+## /api/train-project
++ HTTP方法：DELETE
++ 返回类型：json
++ 说明：批量删除project
++ 调用实例：
+``` 
+[
+    9,
+    10,
+    11
+]
+```
++ 返回实例:
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-15T07:49:46.410+00:00",
+    "msg": "all set",
+    "data": null
+}
+// 失败
+{
+    "status": 11,
+    "date": "2020-07-15T07:51:08.223+00:00",
+    "msg": "operation failed",
+    "data": [
+        2
+    ]
+}
+```
