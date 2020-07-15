@@ -1,12 +1,10 @@
 package io.github.octopigeon.cptmpdao.mapper;
 
-import io.github.octopigeon.cptmpdao.model.ActivityRecord;
 import io.github.octopigeon.cptmpdao.model.AttachmentFile;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
