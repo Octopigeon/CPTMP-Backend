@@ -125,23 +125,30 @@ public class UserDetailsController {
         }
     }
 
-
+    // TODO 等teamPerson和record接口做好后可以联合测试
     /**
      * 企业管理员批量删除用户
      * @param json 传来包含批量删除用户的信息(userId)
      * @return 返回删除失败的信息
      */
-    @Secured(CptmpRole.ROLE_ENTERPRISE_ADMIN)
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @DeleteMapping("/api/user")
     public RespBeanWithFailedList deleteUsers(@RequestBody String json) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         BigInteger[] deleteList = objectMapper.readValue(json, BigInteger[].class);
         List<Integer> deleteFailedList = new ArrayList<>();
+        String principalRoleName = SecurityContextHolder.getContext().getAuthentication().getAuthorities().toString();
+        principalRoleName = principalRoleName.substring(1, principalRoleName.length() - 1);
         for (int i = 0; i < deleteList.length; i++) {
             try {
-                BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
-                baseUserInfoDTO.setId(deleteList[i]);
-                userInfoService.remove(baseUserInfoDTO);
+                BaseUserInfoDTO baseUserInfoDTO = userInfoService.findById(deleteList[i]);
+                // 企业管理员无权限删除企业管理员
+                if ((principalRoleName.equals(CptmpRole.ROLE_ENTERPRISE_ADMIN)
+                        && baseUserInfoDTO.getRoleName().equals(CptmpRole.ROLE_ENTERPRISE_ADMIN))) {
+                    deleteFailedList.add(i);
+                } else {
+                    userInfoService.remove(baseUserInfoDTO);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 deleteFailedList.add(i);
