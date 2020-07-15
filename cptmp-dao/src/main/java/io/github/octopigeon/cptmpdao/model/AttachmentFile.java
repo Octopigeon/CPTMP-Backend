@@ -7,10 +7,10 @@ import java.util.Date;
 
 /**
  * @author 李国豪
- * @version 1.0
+ * @version 2.0
  * @date 2020/7/10
- * @last-check-in 李国豪
- * @date 2020/7/10
+ * @last-check-in 李国鹏
+ * @date 2020/7/15
  */
 @Data
 public class AttachmentFile {
