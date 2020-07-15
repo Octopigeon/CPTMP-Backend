@@ -89,11 +89,11 @@ public interface CptmpUserMapper {
 
     /**
      * 通过id删除
-     *
+     * @param gmtDeleted
      * @param id 用户id
      */
-    @Update("update cptmp_user set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
-    void removeUserById(BigInteger id);
+    @Update("update cptmp_user set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is not null")
+    void removeUserById(BigInteger id, Date gmtDeleted);
 
     /**
      * 通过id恢复
