@@ -12,7 +12,7 @@ import java.math.BigInteger;
  * @date 2020/7/11
  */
 @Data
-public class TrainProjectDTO {
+public class ProjectDTO {
     private BigInteger id;
     private String name;
     private Integer level;

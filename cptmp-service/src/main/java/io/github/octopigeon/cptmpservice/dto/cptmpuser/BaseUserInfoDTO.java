@@ -48,5 +48,5 @@ public class BaseUserInfoDTO{
 
     /** 返回携带用户账号 */
     @JsonProperty("user_id")
-    private BigInteger userId;
+    private BigInteger id;
 }

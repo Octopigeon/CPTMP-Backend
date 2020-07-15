@@ -8,9 +8,9 @@ import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.organization.OrganizationDTO;
-import io.github.octopigeon.cptmpservice.dto.trainproject.TrainProjectDTO;
+import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
 import io.github.octopigeon.cptmpservice.service.organization.OrganizationService;
-import io.github.octopigeon.cptmpservice.service.trainproject.TrainProjectService;
+import io.github.octopigeon.cptmpservice.service.trainproject.ProjectService;
 import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
@@ -41,7 +41,7 @@ public class RegisterController {
     private UserInfoService userInfoService;
 
     @Autowired
-    private TrainProjectService trainProjectService;
+    private ProjectService projectService;
 
     @Autowired
     private OrganizationService organizationService;
@@ -150,7 +150,6 @@ public class RegisterController {
         return RespBeanWithFailedList.report(registerFailedList);
     }
 
-    // TODO 等实训项目的表设计好了，再重新看一下这个api
     /**
      * 企业管理员创建实训项目获取json中的name，project_level，project_content三个字段
      * @param json 包含上述三个字段的json
@@ -167,11 +166,11 @@ public class RegisterController {
             ReqBeanWithTrainProjectRegisterInfo reqBeanWithTrainProjectRegisterInfo
                     = reqBeanWithTrainProjectRegisterInfos[i];
             try {
-                TrainProjectDTO trainProjectDTO = new TrainProjectDTO();
-                trainProjectDTO.setName(reqBeanWithTrainProjectRegisterInfo.getProjectName());
-                trainProjectDTO.setLevel(reqBeanWithTrainProjectRegisterInfo.getProjectLevel());
-                trainProjectDTO.setContent(reqBeanWithTrainProjectRegisterInfo.getProjectContent());
-                trainProjectService.add(trainProjectDTO);
+                ProjectDTO projectDTO = new ProjectDTO();
+                projectDTO.setName(reqBeanWithTrainProjectRegisterInfo.getProjectName());
+                projectDTO.setLevel(reqBeanWithTrainProjectRegisterInfo.getProjectLevel());
+                projectDTO.setContent(reqBeanWithTrainProjectRegisterInfo.getProjectContent());
+                projectService.add(projectDTO);
             } catch (Exception e) {
                 e.printStackTrace();
                 registerFailedList.add(i);
@@ -286,9 +285,12 @@ class  ReqBeanWithOrganizationRegisterInfo {
 @Data
 class  ReqBeanWithTrainProjectRegisterInfo {
 
+    @JsonProperty("project_name")
     private String projectName;
+    @JsonProperty("project_level")
     private Integer projectLevel;
     /** 实训简介 */
+    @JsonProperty("project_content")
     private String projectContent;
 
 }

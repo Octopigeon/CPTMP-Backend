@@ -358,6 +358,45 @@ College Practice Training Management Platform
 }
 ```
 
+## /api/train-project
++ HTTP方法：POST
++ 返回类型：json
++ 说明：项目注册，必须至少为企业管理员权限
++ 调用实例：
+``` 
+[
+    {
+        "project_name": "武汉大学暑期实训",
+        "project_level": 1,
+        "project_content": "东方瑞通中级项目实训"
+    },
+    {
+        "project_name": "华中科技大学暑期实训",
+        "project_level": 0,
+        "project_content": "摸鱼滑水"
+    }
+]
+```
++ 返回实例:
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-15T05:49:03.340+00:00",
+    "msg": "all set",
+    "data": null
+}
+// 失败
+{
+    "status": 11,
+    "date": "2020-07-13T12:21:12.932+00:00",
+    "msg": "register failed",
+    "data": [
+        0
+    ]
+}
+```
+
 # OrganizationDetailsController
 ## /api/org/basic-info
 + HTTP方法：POST

@@ -66,6 +66,9 @@ public interface TeamPersonMapper {
     @Delete("delete from team_person where user_id = #{userId}")
     void removeTeamPersonByUserId(BigInteger userId);
 
+    @Delete("delete from team_person where user_id = #{userId} and team_id = #{teamId}")
+    void removeTeamPersonByTeamIdAndUserId(BigInteger teamId, BigInteger userId);
+
     @Update("update team_person set " + UPDATE_CONTENT + " where id = #{id}")
     void updateTeamPersonById(TeamPerson teamPerson);
 
@@ -109,5 +112,11 @@ public interface TeamPersonMapper {
     @ResultMap("team_person")
     TeamPerson findTeamPersonByUserId(BigInteger userId);
 
+    @Select("select id, " + COLUMNS + " from team_person where id = #{teamUserId}")
+    @ResultMap("team_person")
+    TeamPerson findTeamPersonById(BigInteger teamUserId);
 
+    @Select("select id, " + COLUMNS + " from team_person where team_id = #{teamId} and user_id = #{userId}")
+    @ResultMap("team_person")
+    TeamPerson findTeamPersonByTeamIdAndUserId(BigInteger teamId, BigInteger userId);
 }

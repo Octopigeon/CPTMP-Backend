@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * @author 李国豪
@@ -16,6 +17,7 @@ import java.math.BigInteger;
 public class OrganizationDTO {
     @JsonIgnore
     private BigInteger id;
+    private Date gmtCreate;
     private String name;
     private String realName;
     private String description;
