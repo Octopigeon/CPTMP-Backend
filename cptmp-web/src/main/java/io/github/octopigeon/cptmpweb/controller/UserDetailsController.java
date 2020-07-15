@@ -44,7 +44,7 @@ public class UserDetailsController {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         RespBeanWithBaseUserInfoDTO respBean = new RespBeanWithBaseUserInfoDTO();
         // 通过用户名查找用户详细信息
-        respBean.setBaseUserInfoDTO(userInfoService.findBaseUserInfoByUsername(username));
+        respBean.setBaseUserInfoDTO(userInfoService.findByUsername(username));
         return respBean;
     }
 
@@ -117,7 +117,7 @@ public class UserDetailsController {
             respBeanWithBaseUserInfoDTO = new RespBeanWithBaseUserInfoDTO();
             // 调用service方法更新头像
             userInfoService.uploadAvatar(avatar, username);
-            respBeanWithBaseUserInfoDTO.setBaseUserInfoDTO(userInfoService.findBaseUserInfoByUsername(username));
+            respBeanWithBaseUserInfoDTO.setBaseUserInfoDTO(userInfoService.findByUsername(username));
             return respBeanWithBaseUserInfoDTO;
         } catch (Exception e) {
             respBeanWithBaseUserInfoDTO = new RespBeanWithBaseUserInfoDTO(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "update avatar failed");
