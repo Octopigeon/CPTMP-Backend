@@ -99,11 +99,11 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         projectMapper.addTrainProject(project);
         project = projectMapper.findAllTrainProject().get(0);
         Assertions.assertEquals(2, Utils.getNullPropertyNames(project).length);
-        projectMapper.removeTrainProjectById(project.getId(), new Date());
+        projectMapper.hideTrainProjectById(project.getId(), new Date());
         Assertions.assertEquals(0, projectMapper.findAllTrainProject().size());
         projectMapper.restoreAllTrainProjects();
         Assertions.assertEquals(1, projectMapper.findAllTrainProject().size());
-        projectMapper.removeTrainProjectByName(project.getName(), new Date());
+        projectMapper.hideTrainProjectByName(project.getName(), new Date());
         Assertions.assertEquals(0, projectMapper.findAllTrainProject().size());
         projectMapper.restoreAllTrainProjects();
         Assertions.assertEquals(1, projectMapper.findAllTrainProject().size());
