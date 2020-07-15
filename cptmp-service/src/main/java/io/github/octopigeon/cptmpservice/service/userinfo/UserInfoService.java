@@ -2,7 +2,7 @@ package io.github.octopigeon.cptmpservice.service.userinfo;
 
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
-import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileService;
+import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileService;
 import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
