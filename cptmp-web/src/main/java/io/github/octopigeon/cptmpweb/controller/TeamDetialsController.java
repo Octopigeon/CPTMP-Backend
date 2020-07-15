@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.pagehelper.PageInfo;
+import com.sun.xml.internal.bind.v2.TODO;
 import io.github.octopigeon.cptmpservice.dto.team.TeamDTO;
 import io.github.octopigeon.cptmpservice.service.team.TeamService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
@@ -22,12 +23,15 @@ import java.util.List;
  * @last-check-in 陈若琳
  * @date 2020/07/15
  */
+//TODO：团队增删
 
 @RestController
 public class TeamDetialsController {
 
     @Autowired
     private TeamService teamService;
+
+
 
     /**
      * 根据属性分页查询
@@ -117,6 +121,11 @@ public class TeamDetialsController {
         BigInteger teamId = BigInteger.valueOf(objectMapper.readValue(json,ObjectNode.class).get("team_id").asInt());
         BigInteger userId = BigInteger.valueOf(objectMapper.readValue(json,ObjectNode.class).get("user_id").asInt());
         try{
+            List<BigInteger> userIds = teamService.findUsersByTeamId(teamId);
+            if(userIds.contains(userId))
+            {
+                return new RespBean(1,"The user already exists");
+            }
             teamService.addUser(teamId,userId);
             return RespBean.ok("add member successfully");
         }catch (Exception e)
@@ -148,7 +157,9 @@ public class TeamDetialsController {
         }
     }
 
+
     /**
+     * TODO:问一下前端要不要用户信息
      * 获取团队成员id
      * @param teamId
      * @return
@@ -170,63 +181,62 @@ public class TeamDetialsController {
 
     }
 
-    @Data
-    class RespBeanWithTeamList extends RespBean
+
+}
+@Data
+class RespBeanWithTeamList extends RespBean
+{
+    public RespBeanWithTeamList(List<TeamDTO> teams, int pageSize, int totalPages)
     {
-        public RespBeanWithTeamList(List<TeamDTO> teams, int pageSize, int totalPages)
-        {
-            super();
-            this.teams = teams;
-            this.pageSize = pageSize;
-            this.totalPages = totalPages;
-        }
-
-        public  RespBeanWithTeamList(Integer status, String msg)
-        {
-            super(status,msg);
-        }
-
-        @JsonProperty("page_size")
-        private int pageSize;
-        @JsonProperty("total_pages")
-        private int totalPages;
-        @JsonProperty("data")
-        private List<TeamDTO> teams;
+        super();
+        this.teams = teams;
+        this.pageSize = pageSize;
+        this.totalPages = totalPages;
     }
 
-    @Data
-    class RespBeanWithTeam extends RespBean
+    public  RespBeanWithTeamList(Integer status, String msg)
     {
-        public RespBeanWithTeam(Integer status, String msg)
-        {
-            super(status,msg);
-        }
-
-        public RespBeanWithTeam(TeamDTO team)
-        {
-            this.team = team;
-        }
-
-        @JsonProperty("data")
-        private TeamDTO team;
+        super(status,msg);
     }
 
-    @Data
-    class RespBeanWithUserId extends RespBean
+    @JsonProperty("page_size")
+    private int pageSize;
+    @JsonProperty("total_pages")
+    private int totalPages;
+    @JsonProperty("data")
+    private List<TeamDTO> teams;
+}
+
+@Data
+class RespBeanWithTeam extends RespBean
+{
+    public RespBeanWithTeam(Integer status, String msg)
     {
-        public RespBeanWithUserId(Integer status, String msg)
-        {
-            super(status,msg);
-        }
-
-        public RespBeanWithUserId(List<BigInteger> userId)
-        {
-            this.userId = userId;
-        }
-
-        @JsonProperty("data")
-        List<BigInteger> userId;
+        super(status,msg);
     }
 
+    public RespBeanWithTeam(TeamDTO team)
+    {
+        this.team = team;
+    }
 
+    @JsonProperty("data")
+    private TeamDTO team;
+}
+
+@Data
+class RespBeanWithUserId extends RespBean
+{
+    public RespBeanWithUserId(Integer status, String msg)
+    {
+        super(status,msg);
+    }
+
+    public RespBeanWithUserId(List<BigInteger> userId)
+    {
+        this.userId = userId;
+    }
+
+    @JsonProperty("data")
+    List<BigInteger> userId;
 }
