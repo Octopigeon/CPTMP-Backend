@@ -1,5 +1,7 @@
+
 package io.github.octopigeon.cptmpweb.mappertest;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.github.octopigeon.cptmpdao.mapper.*;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
@@ -17,6 +19,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.rmi.CORBA.Util;
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -102,6 +105,8 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         projectMapper.addTrainProject(project);
         project = projectMapper.findAllTrainProject().get(0);
         Assertions.assertEquals(2, Utils.getNullPropertyNames(project).length);
+        projectMapper.addTrainProject(project);
+        projectMapper.addTrainProject(project);
 
         // 创建实训
         Train train = new Train();
@@ -125,6 +130,18 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         projectTrainMapper.addProjectTrain(projectTrain);
         projectTrain = projectTrainMapper.findAllProjectTrains().get(0);
         Assertions.assertEquals(2, Utils.getNullPropertyNames(projectTrain).length);
+        ProjectTrain projectTrain1 = new ProjectTrain();
+        projectTrain1.setGmtCreate(new Date());
+        projectTrain1.setTrainId(train1.getId());
+        projectTrain1.setProjectId(projectMapper.findAllTrainProject().get(1).getId());
+        projectTrainMapper.addProjectTrain(projectTrain1);
+        projectTrain1 = projectTrainMapper.findAllProjectTrains().get(1);
+        ProjectTrain projectTrain2 = new ProjectTrain();
+        projectTrain2.setGmtCreate(new Date());
+        projectTrain2.setTrainId(train1.getId());
+        projectTrain2.setProjectId(projectMapper.findAllTrainProject().get(2).getId());
+        projectTrainMapper.addProjectTrain(projectTrain2);
+        projectTrain2 = projectTrainMapper.findAllProjectTrains().get(2);
 
         // 创建队伍
         Team team = new Team();
@@ -175,7 +192,9 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         Assertions.assertEquals(2, Utils.getNullPropertyNames(teamPerson).length);
 
         BigInteger originTeamId = teamPerson.getTeamId();
+        team.setProjectTrainId(projectTrain1.getId());
         teamMapper.addTeam(team);
+        team.setProjectTrainId(projectTrain2.getId());
         teamMapper.addTeam(team);
         Team team1 = teamMapper.findAllTeam().get(1);
         Team team2 = teamMapper.findAllTeam().get(2);
@@ -197,18 +216,11 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         personalGradeMapper.addPersonalGrade(personalGrade);
         personalGrade = personalGradeMapper.findAllPersonalGrades().get(0);
         Assertions.assertEquals(2, Utils.getNullPropertyNames(personalGrade).length);
-
-        BigInteger restoreTestId = personalGrade.getId();
         personalGradeMapper.hidePersonalGradeById(personalGrade.getId(), new Date());
         Assertions.assertEquals(0, personalGradeMapper.findAllPersonalGrades().size());
-        personalGradeMapper.restorePersonalGradeById(restoreTestId);
-        Assertions.assertEquals(2,personalGradeMapper.findAllPersonalGrades().size());
         personalGradeMapper.restoreAllPersonalGrade();
-        BigInteger restorePersonTestId = personalGrade.getTeamPersonId();
         personalGradeMapper.hidePersonalGradeByTeamPersonId(personalGrade.getTeamPersonId(), new Date());
         Assertions.assertEquals(0, personalGradeMapper.findAllPersonalGrades().size());
-        personalGradeMapper.restorePersonalGradeByTeamPersonId(restorePersonTestId);
-        Assertions.assertEquals(2, personalGradeMapper.findAllPersonalGrades().size());
         personalGradeMapper.restoreAllPersonalGrade();
         personalGrade.setPersonalGrade(90);
         BigInteger personalGradeId = personalGrade.getId();
@@ -222,3 +234,4 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
     }
 
 }
+

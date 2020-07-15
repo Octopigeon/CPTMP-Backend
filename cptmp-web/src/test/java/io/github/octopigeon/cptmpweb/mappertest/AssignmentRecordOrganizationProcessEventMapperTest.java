@@ -302,13 +302,17 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         recordMapper.updateRecordById(record3);
         Assertions.assertEquals(teamMapper.findAllTeam().get(1).getId(), recordMapper.findRecordByTeamId(teamMapper.findAllTeam().get(1).getId()).get(0).getTeamId());
 
+        BigInteger restoreRecordTestId = recordMapper.findAllRecord().get(0).getId();
         recordMapper.hideRecordById(recordMapper.findAllRecord().get(0).getId(),new Date());
         Assertions.assertEquals(1, recordMapper.findAllRecord().size());
+        recordMapper.restoreRecordById(restoreRecordTestId);
+        Assertions.assertEquals(2, recordMapper.findAllRecord().size());
 
-        Assertions.assertEquals(1, recordMapper.findRecordByUserId(recordMapper.findAllRecord().get(0).getUserId()).size());
+        Assertions.assertEquals(2, recordMapper.findRecordByUserId(recordMapper.findAllRecord().get(0).getUserId()).size());
 
         recordMapper.hideRecordByAll(new Date());
         Assertions.assertEquals(0, recordMapper.findAllRecord().size());
-
+        recordMapper.restoreRecordByAll();
+        Assertions.assertEquals(2, recordMapper.findAllRecord().size());
     }
 }
