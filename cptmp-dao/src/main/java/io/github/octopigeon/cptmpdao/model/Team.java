@@ -15,16 +15,16 @@ import java.util.Date;
  * @date 2020/7/9
  */
 @Data
-public class TrainTeam {
+public class Team {
     private BigInteger id;
     private Date gmtCreate;
     private Date gmtModified;
     private Date gmtDeleted;
-    private BigInteger trainProjectId;
-    private String teamName;
-    private BigInteger masterUserId;
-    private BigInteger pmUserId;
-    private BigInteger poUserId;
-    private String codeBaseUrl;
-    private BigDecimal teamGrade;
+
+    private String name;
+    private String avatar;
+    private BigInteger projectId;
+    private String repoUrl;
+    private String evaluation;
+    private Integer teamGrade;
 }
