@@ -15,7 +15,7 @@ import java.util.List;
  * @author 魏啸冲
  * @version 2.0
  * @date 2020/7/7
- * @last-check-in 魏啸冲
+ * @last-check-in 李国鹏
  * @date 2020/7/15
  */
 @Repository
@@ -35,7 +35,7 @@ public interface CptmpUserMapper {
             "idx_name = #{name}, uk_common_id = #{commonId}, idx_organization_id = #{organizationId},idx_role_name = #{roleName}, enabled = #{enabled}, account_non_expired = #{accountNonExpired}, " +
             "credentials_non_expired = #{credentialsNonExpired}, account_non_locked = #{accountNonLocked}";
 
-    String REMOVE_CONTENT = " gmt_modified = null, gmt_deleted = null, uk_email = null, phone_number = null, " +
+    String REMOVE_CONTENT = " gmt_deleted = #{gmtDeleted}, gmt_modified = null, uk_email = null, phone_number = null, " +
             "gender = null, avatar = null";
 
     /**
@@ -60,7 +60,7 @@ public interface CptmpUserMapper {
      *
      * @param gmtDeleted 删除日期
      */
-    @Update("update cptmp_user set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
+    @Update("update cptmp_user set gmt_deleted = #{gmtDeleted}  where gmt_deleted is null")
     void hideAllUsers(Date gmtDeleted);
 
     /**
@@ -75,7 +75,7 @@ public interface CptmpUserMapper {
     /**
      * 恢复用户
      */
-    @Update("update cptmp_user set gmt_deleted = null")
+    @Update("update cptmp_user set gmt_deleted = null where gmt_deleted is not null")
     void restoreAllUsers();
 
     /**
@@ -87,22 +87,26 @@ public interface CptmpUserMapper {
     @Update("update cptmp_user set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
     void hideUserById(BigInteger id, Date gmtDeleted);
 
-    /**
-     * 通过id删除
-     *
-     * @param id 用户id
-     */
-    @Update("update cptmp_user set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
-    void removeUserById(BigInteger id);
+
 
     /**
      * 通过id恢复
+     * @param id 用户id
+     */
+    @Update("update cptmp_user set gmt_deleted = null where id = #{id}")
+    void restoreUserById(BigInteger id);
+
+    @Update("update cptmp_user set gmt_deleted = null where uk_username = #{username}")
+    void restoreUserByUsername(String username);
+    
+    /** 
+     * 通过id删除
      *
      * @param id         用户id
      * @param gmtDeleted 删除日期
      */
-    @Update("update cptmp_user set " + REMOVE_CONTENT + " where id = #{id}")
-    void restoreUserById(BigInteger id, Date gmtDeleted);
+    @Update("update cptmp_user set " + REMOVE_CONTENT + " where id = #{id} and gmt_deleted is null")
+    void removeUserById(BigInteger id, Date gmtDeleted);
 
     /**
      * 通过用户名获取用户，可以用来进行登录验证
@@ -207,38 +211,12 @@ public interface CptmpUserMapper {
     @Update(UPDATE_HEADER + "enabled = #{enabled}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
     void updateEnabledByUsername(String username, Boolean enabled);
 
-    /**
-     * 根据用户名更新账号
-     */
-    @Update(UPDATE_HEADER + "account_non_expired = #{accountNonExpired}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
-    void updateAccountNonExpiredByUsername(String username, Boolean accountNonExpired);
-
-    @Update(UPDATE_HEADER + "credentials_non_expired = #{credentialsNonExpired}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
-    void updateCredentialsNonExpiredByUsername(String username, Boolean credentialsNonExpired);
-
-    @Update(UPDATE_HEADER + "account_non_locked = #{accountNonLocked}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
-    void updateAccountNonLockedByUsername(String username, Boolean accountNonLocked);
-
 
     @Update(UPDATE_HEADER + "gmt_modified=#{gmtModified}, avatar=#{avatar}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
     void updateAvatarByUsername(String username, Date gmtModified, String avatar);
 
-    /**
-     * 更新用户常规信息
-     *
-     * @param username
-     * @param gmtModified
-     * @param gender
-     */
-    @Update(UPDATE_HEADER + "gmt_modified = #{gmtModified}, idx_name = #{name},gender = #{gender}" + UPDATE_TAIL_USERNAME)
-    void updateUserInfoByUsername(String username, Date gmtModified, String name, boolean gender);
 
     @Update(UPDATE_HEADER + "idx_password = #{password}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
     void updatePasswordByUsername(String username, Date gmtModified, String password);
 
-    @Update(UPDATE_HEADER + "gmt_modified = #{gmtModified}, avatar = #{avatar} where id = #{userId}")
-    void updateAvatarById(BigInteger userId, Date gmtModified, String avatar);
-
-    @Update(UPDATE_HEADER + "gmt_modified = #{gmtModified}, uk_face_info = #{faceInfo} where id = #{userId}")
-    void updateFaceInfoById(BigInteger userId, Date gmtModified, String faceInfo);
 }
