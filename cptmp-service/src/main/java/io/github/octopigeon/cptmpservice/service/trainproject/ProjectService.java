@@ -20,6 +20,8 @@ import java.math.BigInteger;
 @Service
 public interface ProjectService extends BaseNormalService<ProjectDTO>, BaseFileService {
 
+    //TODO 查询选该项目的团队
+
     /**
      * 根据名字进行模糊查找
      * @param page 页号
