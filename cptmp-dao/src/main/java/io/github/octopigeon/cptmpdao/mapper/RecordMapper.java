@@ -13,7 +13,7 @@ import java.util.List;
  * @date 2020/7/8
  *
  * @last-check-in 李国鹏
- * @date 2020/7/13
+ * @date 2020/7/15
  */
 @Repository
 @Mapper
@@ -44,7 +44,10 @@ public interface RecordMapper {
      * @param gmtDeleted 删除日期
      */
     @Update("update record set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
-    void removeRecordByAll(Date gmtDeleted);
+    void hideRecordByAll(Date gmtDeleted);
+
+    @Update("update record set gmt_deleted = null where gmt_deleted is not null")
+    void restoreRecordByAll();
 
     /**
      * 根据id删除对应的活动信息
@@ -52,16 +55,10 @@ public interface RecordMapper {
      * @param gmtDeleted 删除日期
      */
     @Update("update record set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
-    void removeRecordById(BigInteger id, Date gmtDeleted);
+    void hideRecordById(BigInteger id, Date gmtDeleted);
 
-    /**
-     * 根据userId删除对应记录，当用户注销时调用此方法
-     * @param userId
-     * @param gmtDeleted
-     */
-    @Update("update record set gmt_deleted = #{gmtDeleted} where idx_user_id = #{userId} and gmt_deleted is null")
-    void removeRecordByUserId(BigInteger userId, Date gmtDeleted);
-
+    @Update("update record set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
+    void restoreRecordById(BigInteger id);
 
     /**
      * 根据id修改

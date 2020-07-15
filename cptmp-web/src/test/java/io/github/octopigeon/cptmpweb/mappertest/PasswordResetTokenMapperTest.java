@@ -87,6 +87,13 @@ public class PasswordResetTokenMapperTest extends BaseTest {
         Assertions.assertNotNull(passwordResetTokens.get(0).getGmtCreate());
         Assertions.assertNull(passwordResetTokens.get(0).getGmtModified());
         Assertions.assertNotNull(passwordResetTokens.get(0).getToken());
+
+        Assertions.assertEquals(1,passwordResetTokenMapper.findAllPasswordResetTokens().size());
+        Assertions.assertEquals(userEmail,passwordResetTokenMapper.findPasswordResetTokenByToken(token).getEmail());
+        passwordResetTokenMapper.removePasswordResetTokensByEmail(userEmail);
+        Assertions.assertEquals(0,passwordResetTokenMapper.findAllPasswordResetTokens().size());
+
+
     }
 
 }

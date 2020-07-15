@@ -29,5 +29,7 @@ public class AttachmentFile {
     private BigInteger fileSize;
     /** 文件类型 */
     private String fileType;
+    /**Url**/
+    private String fileUrl;
 
 }

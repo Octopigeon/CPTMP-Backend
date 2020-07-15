@@ -61,16 +61,22 @@ public interface TrainMapper {
      * @param gmtDeleted 删除日期
      */
     @Update("update train set gmt_deleted = #{gmtDeleted} where id = #{id} and " + SOFT_DELETE_TAIL)
-    void removeTrainById(BigInteger id, Date gmtDeleted);
+    void hideTrainById(BigInteger id, Date gmtDeleted);
+
+    @Update("update train set gmt_deleted = null where id = #{id} and gmt_deleted is null")
+    void restoreTrainById(BigInteger id);
 
     /**
-     * 删除一个学校的所有实训项目
+     * 根据组织删除
      *
      * @param organizationId 组织id
      * @param gmtDeleted     删除日期
      */
     @Update("update train set gmt_deleted = #{gmtDeleted} where organization_id = #{organizationId} and " + SOFT_DELETE_TAIL)
-    void removeTrainsByOrganizationId(BigInteger organizationId, Date gmtDeleted);
+    void hideTrainsByOrganizationId(BigInteger organizationId, Date gmtDeleted);
+
+    @Update("update train set gmt_deleted = null where organization_id = #{organizationId} and gmt_deleted is null")
+    void restoreTrainsByOrganizationId(BigInteger organizationId);
 
     /**
      * 按id更新train的信息
