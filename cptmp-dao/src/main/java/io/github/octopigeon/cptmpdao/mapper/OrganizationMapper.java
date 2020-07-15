@@ -40,7 +40,7 @@ public interface OrganizationMapper {
     /**
      * 根据id修改组织信息
      */
-    @Update("update cptmp_organization set " + UPDATE_CONTENT + "where id = #{id} and gmt_deleted is null")
+    @Update("update cptmp_organization set " + UPDATE_CONTENT + " where id = #{id} and gmt_deleted is null")
     void updateOrganizationById(Organization organization);
 
     /**
@@ -112,7 +112,7 @@ public interface OrganizationMapper {
     /**
      * 根据组织邀请码进行查询
      *
-     * @param invitationCode
+     * @param invitationCode 邀请码
      * @return
      */
     @Select("select id, " + COLUMNS + " from cptmp_organization where invitation_code = #{invitationCode} and gmt_deleted is null")
