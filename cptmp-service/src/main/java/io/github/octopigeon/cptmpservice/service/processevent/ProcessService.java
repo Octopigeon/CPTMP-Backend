@@ -13,4 +13,5 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public interface ProcessService extends BaseNormalService<ProcessDTO> {
+
 }
