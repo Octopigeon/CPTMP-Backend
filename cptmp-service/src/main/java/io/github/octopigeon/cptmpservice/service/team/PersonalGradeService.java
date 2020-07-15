@@ -29,4 +29,11 @@ public interface PersonalGradeService extends BaseNormalService<PersonalGradeDTO
      * @return
      */
     List<PersonalGradeDTO> findByTeamId(BigInteger teamId);
+
+    /**
+     * 使用用户名查询个人成绩
+     * @param username 用户名
+     * @return
+     */
+    List<PersonalGradeDTO> findByUsername(String username);
 }

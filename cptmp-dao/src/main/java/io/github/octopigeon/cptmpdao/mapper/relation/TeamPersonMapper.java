@@ -110,7 +110,7 @@ public interface TeamPersonMapper {
      */
     @Select("select id, " + COLUMNS + " from team_person where user_id = #{userId}")
     @ResultMap("team_person")
-    TeamPerson findTeamPersonByUserId(BigInteger userId);
+    List<TeamPerson> findTeamPersonByUserId(BigInteger userId);
 
     @Select("select id, " + COLUMNS + " from team_person where id = #{teamUserId}")
     @ResultMap("team_person")

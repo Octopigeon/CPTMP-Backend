@@ -1,5 +1,6 @@
 package io.github.octopigeon.cptmpservice.service.team;
 
+import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.mapper.PersonalGradeMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
 import io.github.octopigeon.cptmpdao.model.PersonalGrade;
@@ -30,6 +31,9 @@ public class PersonalGradeServiceImpl implements PersonalGradeService{
     @Autowired
     private PersonalGradeMapper personalGradeMapper;
 
+    @Autowired
+    private CptmpUserMapper cptmpUserMapper;
+
     /**
      * 根据userId和TeamId查询个人成绩
      *
@@ -51,6 +55,23 @@ public class PersonalGradeServiceImpl implements PersonalGradeService{
     @Override
     public List<PersonalGradeDTO> findByTeamId(BigInteger teamId) {
         List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByTeamId(teamId);
+        List<PersonalGradeDTO> results = new ArrayList<>();
+        for (TeamPerson teamPerson : teamPeople) {
+            results.add(convertPersonalGrade(personalGradeMapper.findPersonalGradeById(teamPerson.getId())));
+        }
+        return results;
+    }
+
+    /**
+     * 使用用户名查询个人成绩
+     *
+     * @param username 用户名
+     * @return
+     */
+    @Override
+    public List<PersonalGradeDTO> findByUsername(String username) {
+        BigInteger userId = cptmpUserMapper.findUserByUsername(username).getId();
+        List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByUserId(userId);
         List<PersonalGradeDTO> results = new ArrayList<>();
         for (TeamPerson teamPerson : teamPeople) {
             results.add(convertPersonalGrade(personalGradeMapper.findPersonalGradeById(teamPerson.getId())));
