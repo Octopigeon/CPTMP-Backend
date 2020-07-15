@@ -172,6 +172,17 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         process = processMapper.findProcessById(process1.getId());
         Assertions.assertEquals(1, Utils.getNullPropertyNames(process).length);
 
+        BigInteger restoreTestId = processMapper.findAllProcesses().get(0).getId();
+        processMapper.hideProcessById(new Date(),processMapper.findAllProcesses().get(0).getId());
+        Assertions.assertEquals(1,processMapper.findAllProcesses().size());
+        BigInteger restoreTestTrainId = processMapper.findAllProcesses().get(0).getTrainId();
+        processMapper.hideProcessesByTrainId(new Date(),processMapper.findAllProcesses().get(0).getTrainId());
+        Assertions.assertEquals(0,processMapper.findAllProcesses().size());
+        processMapper.restoreProcessById(restoreTestId);
+        Assertions.assertEquals(1,processMapper.findAllProcesses().size());
+        processMapper.restoreProcessesByTrainId(restoreTestTrainId);
+        Assertions.assertEquals(2,processMapper.findAllProcesses().size());
+
         Event event = new Event();
         event.setGmtCreate(new Date());
         event.setStartTime(new Date());
@@ -231,10 +242,10 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         eventMapper.restoreAllEvent();
         Assertions.assertEquals(2, eventMapper.findAllEvents().size());
 
-        BigInteger restoreTestId = eventMapper.findAllEvents().get(0).getId();
+        BigInteger restoreTestId1 = eventMapper.findAllEvents().get(0).getId();
         eventMapper.hideEventById(eventMapper.findAllEvents().get(0).getId(),new Date());
         Assertions.assertEquals(1, eventMapper.findAllEvents().size());
-        eventMapper.restoreEventById(restoreTestId);
+        eventMapper.restoreEventById(restoreTestId1);
         Assertions.assertEquals(2, eventMapper.findAllEvents().size());
     }
 

@@ -197,11 +197,18 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         personalGradeMapper.addPersonalGrade(personalGrade);
         personalGrade = personalGradeMapper.findAllPersonalGrades().get(0);
         Assertions.assertEquals(2, Utils.getNullPropertyNames(personalGrade).length);
+
+        BigInteger restoreTestId = personalGrade.getId();
         personalGradeMapper.hidePersonalGradeById(personalGrade.getId(), new Date());
         Assertions.assertEquals(0, personalGradeMapper.findAllPersonalGrades().size());
+        personalGradeMapper.restorePersonalGradeById(restoreTestId);
+        Assertions.assertEquals(2,personalGradeMapper.findAllPersonalGrades().size());
         personalGradeMapper.restoreAllPersonalGrade();
+        BigInteger restorePersonTestId = personalGrade.getTeamPersonId();
         personalGradeMapper.hidePersonalGradeByTeamPersonId(personalGrade.getTeamPersonId(), new Date());
         Assertions.assertEquals(0, personalGradeMapper.findAllPersonalGrades().size());
+        personalGradeMapper.restorePersonalGradeByTeamPersonId(restorePersonTestId);
+        Assertions.assertEquals(2, personalGradeMapper.findAllPersonalGrades().size());
         personalGradeMapper.restoreAllPersonalGrade();
         personalGrade.setPersonalGrade(90);
         BigInteger personalGradeId = personalGrade.getId();
