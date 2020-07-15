@@ -66,6 +66,9 @@ public interface TeamPersonMapper {
     @Delete("delete from team_person where user_id = #{userId}")
     void removeTeamPersonByUserId(BigInteger userId);
 
+    @Delete("delete from team_person where user_id = #{userId} and team_id = #{teamId}")
+    void removeTeamPersonByTeamIdAndUserId(BigInteger teamId, BigInteger userId);
+
     @Update("update team_person set " + UPDATE_CONTENT + " where id = #{id}")
     void updateTeamPersonById(TeamPerson teamPerson);
 
