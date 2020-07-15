@@ -6,11 +6,11 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.TrainMapper;
 import io.github.octopigeon.cptmpdao.mapper.ProjectMapper;
+import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
 import io.github.octopigeon.cptmpdao.model.Train;
-import io.github.octopigeon.cptmpdao.model.TrainProject;
+import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
-import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
 import io.github.octopigeon.cptmpservice.utils.Utils;
@@ -42,7 +42,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
     private TrainMapper trainMapper;
 
     @Autowired
-    private TrainProjectMapper trainProjectMapper;
+    private ProjectTrainMapper projectTrainMapper;
 
     @Autowired
     private ProjectMapper projectMapper;
@@ -82,20 +82,6 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
     }
 
     /**
-     * 根据实训名称进行查询
-     *
-     * @param name 实训名称
-     * @return
-     */
-    @Override
-    public TrainDTO findByName(String name) {
-        Train train = trainMapper.findTrainByName(name);
-        TrainDTO result = new TrainDTO();
-        BeanUtils.copyProperties(train, result);
-        return result;
-    }
-
-    /**
      * 根据实训名称进行模糊查询
      *
      * @param page
@@ -106,7 +92,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
     @Override
     public PageInfo<TrainDTO> findByLikeName(int page, int offset, String likeName) {
         PageHelper.startPage(page, offset);
-        List<Train> trains = trainMapper.findTrainByLikeName(likeName);
+        List<Train> trains = trainMapper.findTrainByNameAmbiguously(likeName);
         return getTrainDTOPageInfo(trains);
     }
 
@@ -126,18 +112,15 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
      * @param page 页号
      * @param offset 一页的数量
      * @param id 实训id
-     * @return
+     * @return 项目id列表
      */
     @Override
-    public PageInfo<ProjectDTO> findProjectsById(int page, int offset, BigInteger id) {
+    public PageInfo<BigInteger> findProjectIdsById(int page, int offset, BigInteger id) {
         PageHelper.startPage(page, offset);
-        List<BigInteger> projectIds = trainProjectMapper.findProjectsByTrainId(id);
-        List<ProjectDTO> results = new ArrayList<>();
-        for (BigInteger projectId: projectIds) {
-            Project project = projectMapper.findProjectById(projectId);
-            ProjectDTO result = new ProjectDTO();
-            BeanUtils.copyProperties(project, result);
-            results.add(result);
+        List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByTrainId(id);
+        List<BigInteger> results = new ArrayList<>();
+        for (ProjectTrain projectTrain: projectTrains) {
+            results.add(projectTrain.getProjectId());
         }
         return new PageInfo<>(results);
     }
@@ -170,14 +153,14 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
         if(trainMapper.findTrainById(trainId) == null){
             throw new ValueException("Train is not existed!");
         }
-        if(projectMapper.findProjectById(projectId) == null){
+        if(projectMapper.findTrainProjectById(projectId) == null){
             throw new ValueException("Project is not existed!");
         }
-        TrainProject trainProject = new TrainProject();
+        ProjectTrain trainProject = new ProjectTrain();
         trainProject.setGmtCreate(new Date());
         trainProject.setTrainId(trainId);
         trainProject.setProjectId(projectId);
-        trainProjectMapper.addTrainProject(trainProject);
+        projectTrainMapper.addProjectTrain(trainProject);
     }
 
     /**
@@ -187,15 +170,15 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
      * @param projecId 项目id
      */
     @Override
-    public void removeProject(BigInteger trainId, BigInteger projecId) throws Exception {
+    public void removeProject(BigInteger trainId, BigInteger projectId) throws Exception {
         try{
             if(trainMapper.findTrainById(trainId) == null){
                 throw new ValueException("Train is not existed!");
             }
-            if(projectMapper.findProjectById(projectId) == null){
+            if(projectMapper.findTrainProjectById(projectId) == null){
                 throw new ValueException("Project is not existed!");
             }
-            trainProjectMapper.removeTrainProject(trainId, projecId);
+            projectTrainMapper.removeProjectTrainsByProjectIdAndTrainId(projectId, trainId);
         }catch (Exception e){
             e.printStackTrace();
             throw new Exception("Remove project from train failed！");
@@ -231,15 +214,10 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
      */
     @Override
     public void remove(TrainDTO dto) throws Exception {
-        Train train = trainMapper.findTrainByName(dto.getName());
+        Train train = trainMapper.findTrainById(dto.getId());
         if(trainMapper.findTrainById(dto.getId()) != null){
-            trainMapper.removeTrainById(dto.getId());
-            trainProjectMapper.removeByTrainId(dto.getId());
-
-        }else if(train != null){
-            trainMapper.removeTrainById(train.getId(), new Date());
-            trainProjectMapper.removeByTrainId(train.getId());
-
+            trainMapper.removeTrainById(dto.getId(), new Date());
+            projectTrainMapper.removeProjectTrainsByTrainId(dto.getId());
         }else{
             throw new ValueException("The train not exist！");
         }
@@ -254,10 +232,10 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
     @Override
     public Boolean modify(TrainDTO dto) throws Exception {
         try{
-            Train train = trainMapper.findTrainByName(dto.getName());
+            Train train = trainMapper.findTrainById(dto.getId());
             BeanUtils.copyProperties(dto, train, Utils.getNullPropertyNames(dto));
             train.setGmtModified(new Date());
-            trainMapper.updateTrain(train);
+            trainMapper.updateTrainById(train);
             return true;
         }catch (Exception e){
             e.printStackTrace();
