@@ -126,7 +126,6 @@ public class UserDetailsController {
     }
 
 
-    // TODO 此处等service层的级联处理好了再来看一下
     /**
      * 企业管理员批量删除用户
      * @param json 传来包含批量删除用户的信息(userId)
@@ -140,7 +139,9 @@ public class UserDetailsController {
         List<Integer> deleteFailedList = new ArrayList<>();
         for (int i = 0; i < deleteList.length; i++) {
             try {
-                userInfoService.disableAccount(deleteList[i]);
+                BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
+                baseUserInfoDTO.setId(deleteList[i]);
+                userInfoService.remove(baseUserInfoDTO);
             } catch (Exception e) {
                 e.printStackTrace();
                 deleteFailedList.add(i);
