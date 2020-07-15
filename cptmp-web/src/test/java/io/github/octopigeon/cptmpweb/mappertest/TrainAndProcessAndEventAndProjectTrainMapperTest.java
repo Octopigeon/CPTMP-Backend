@@ -13,7 +13,6 @@ import io.github.octopigeon.cptmpservice.utils.Utils;
 import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
@@ -87,8 +86,8 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         Assertions.assertEquals(2, Utils.getNullPropertyNames(train1).length);
         train = trainMapper.findTrainById(train1.getId());
         Assertions.assertEquals(2, Utils.getNullPropertyNames(train).length);
-        // 总共加了两个
 
+        // 总共加了两个
         // 创建工程
         Project project = new Project();
         project.setName("cptmp");
@@ -136,13 +135,20 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         Assertions.assertEquals(1, Utils.getNullPropertyNames(projectTrain).length);
 
         trainMapper.addTrain(train);
-        List<Train> trains = trainMapper.findTrainByNameAmbiguously("清华");
+        List<Train> trains = trainMapper.findTrainsByLikeName("清华");
         Assertions.assertEquals(2, trains.size());
         Assertions.assertEquals(2, Utils.getNullPropertyNames(trains.get(0)).length);
         train.setName("北京大学暑期实训");
         trainMapper.updateTrainById(train);
-        trains = trainMapper.findTrainByNameAmbiguously("清华");
+        trains = trainMapper.findTrainsByLikeName("清华");
         Assertions.assertEquals(1, trains.size());
+        Assertions.assertEquals(2, Utils.getNullPropertyNames(trainMapper.findTrainsByOrganizationId(trains.get(0).getOrganizationId())).length);
+        trainMapper.removeTrainById(trains.get(0).getId(), new Date());
+        Assertions.assertEquals(1,  trainMapper.findAllTrain().size());
+        trainMapper.restoreAllTrain();
+        trainMapper.removeTrainsByOrganizationId(trains.get(0).getOrganizationId(), new Date());
+        Assertions.assertEquals(0, trainMapper.findAllTrain().size());
+        trainMapper.restoreAllTrain();
 
         Process process = new Process();
         process.setGmtCreate(new Date());
