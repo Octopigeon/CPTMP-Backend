@@ -9,6 +9,7 @@ import io.github.octopigeon.cptmpdao.model.Team;
 import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
 import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
+import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.team.TeamDTO;
 import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileServiceImpl;
 import io.github.octopigeon.cptmpservice.utils.Utils;
@@ -16,6 +17,7 @@ import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -119,6 +121,25 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
         }catch (Exception e){
             e.printStackTrace();
             throw new Exception(e);
+        }
+    }
+
+    /**
+     * 上传用户头像
+     *
+     * @param file   文件
+     * @param teamId 用户名
+     * @return
+     */
+    @Override
+    public String uploadAvatar(MultipartFile file, BigInteger teamId) throws Exception {
+        try{
+            FileDTO fileInfo = storePublicFile(file);
+            teamMapper.updateAvatarById(teamId, new Date(), fileInfo.getFileUrl());
+            return fileInfo.getFilePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Avatar upload failed!");
         }
     }
 
