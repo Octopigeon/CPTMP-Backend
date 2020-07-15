@@ -4,6 +4,7 @@ import io.github.octopigeon.cptmpdao.mapper.*;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProcessEventMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
 import io.github.octopigeon.cptmpdao.model.*;
+import io.github.octopigeon.cptmpdao.model.Process;
 import io.github.octopigeon.cptmpdao.model.relation.ProcessEvent;
 import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
@@ -16,9 +17,11 @@ import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author 李国鹏
@@ -31,16 +34,31 @@ import java.util.Date;
 public class AssignmentAndRecordMapperTest extends BaseTest {
 
     @Autowired
+    private OrganizationMapper organizationMapper;
+
+    @Autowired
+    private OrganizationService organizationService;
+
+    @Autowired
     private TrainMapper trainMapper;
 
     @Autowired
+    private ProcessMapper processMapper;
+
+    @Autowired
+    private ProcessEventMapper processEventMapper;
+
+    @Autowired
+    private EventMapper eventMapper;
+
+    @Autowired
     private TeamMapper teamMapper;
+    @Autowired
+    private ProjectMapper projectMapper;
 
     @Autowired
     private CptmpUserMapper cptmpUserMapper;
 
-    @Autowired
-    private ProcessEventMapper processEventMapper;
 
     @Autowired
     private AssignmentMapper assignmentMapper;
@@ -52,14 +70,12 @@ public class AssignmentAndRecordMapperTest extends BaseTest {
     @Autowired
     private UserInfoService userInfoService;
 
-    @Autowired
-    private OrganizationMapper organizationMapper;
-
-    @Autowired
-    private OrganizationService organizationService;
 
     @Test
     public void test() throws Exception {
+
+
+
         // 创建作业表
         Assignment assignment = new Assignment();
         assignment.setGmtCreate(new Date());
@@ -92,6 +108,60 @@ public class AssignmentAndRecordMapperTest extends BaseTest {
         assignmentMapper.removeAllAssignment(new Date());
         Assertions.assertEquals(0, assignmentMapper.findAllAssignment().size());
 
+        assignmentMapper.addAssignment(assignment);
+        assignmentMapper.addAssignment(assignment);
+        Assertions.assertEquals(2, assignmentMapper.findAllAssignment().size());
+
+        //组织
+        organizationMapper.removeAllOrganizationTest();
+        Organization organization = new Organization();
+        organization.setGmtCreate(new Date());
+        organization.setRealName("test1");
+        organization.setName("test1");
+        organizationMapper.addOrganization(organization);
+        organization.setRealName("test2");
+        organization.setName("test2");
+        organizationMapper.addOrganization(organization);
+        Assertions.assertEquals(2,organizationMapper.findAllOrganization().size());
+        Assertions.assertEquals(5,Utils.getNullPropertyNames(organizationMapper.findAllOrganization().get(0)).length);
+
+        //用户
+        // 创建学校
+
+        cptmpUserMapper.removeAllUsersTest();
+        OrganizationDTO organizationDTO = new OrganizationDTO();
+        organizationDTO.setName("WHU");
+        organizationDTO.setRealName("武汉大学");
+        organizationDTO.setDescription("湖北省武汉市武汉大学");
+        organizationDTO.setWebsiteUrl("www.whu.edu.cn");
+        organizationService.add(organizationDTO);
+        organizationDTO = organizationService.findByName("WHU");
+
+
+        BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
+        baseUserInfoDTO.setUsername("WHU-2018302060342");
+        baseUserInfoDTO.setCommonId("2018302060342");
+        baseUserInfoDTO.setRoleName(CptmpRole.ROLE_SCHOOL_TEACHER);
+        baseUserInfoDTO.setName("魏啸冲");
+        baseUserInfoDTO.setPassword("123");
+        baseUserInfoDTO.setEmail("wxcnb@qq.com");
+        baseUserInfoDTO.setOrganizationId(organizationDTO.getId());
+        userInfoService.add(baseUserInfoDTO);
+        CptmpUser cptmpUser = cptmpUserMapper.findUserByUsername("WHU-2018302060342");
+
+        //项目
+        projectMapper.removeAllTrainProjectsTest();
+        Project project = new Project();
+        project.setGmtCreate(new Date());
+        project.setLevel(2);
+        project.setContent("test1");
+        project.setResourceLibrary("test1");
+        project.setName("test1");
+        projectMapper.addTrainProject(project);
+        projectMapper.addTrainProject(project);
+        Assertions.assertEquals(2,projectMapper.findAllTrainProject().size());
+        Assertions.assertEquals(2,Utils.getNullPropertyNames(projectMapper.findAllTrainProject().get(0)).length);
+
         //实训
         trainMapper.removeAllTrain();
         Train train =new Train();
@@ -99,7 +169,7 @@ public class AssignmentAndRecordMapperTest extends BaseTest {
         train.setStartTime(new Date());
         train.setEndTime(new Date());
         train.setName("test1");
-        train.setOrganizationId(BigInteger.valueOf(1));
+        train.setOrganizationId(organization.getId());
         train.setGpsInfo("test1");
         train.setContent("test1");
         train.setAcceptStandard("test1");
@@ -113,7 +183,7 @@ public class AssignmentAndRecordMapperTest extends BaseTest {
         teamMapper.removeAllTeamTest();
         Team team = new Team();
         team.setGmtCreate(new Date());
-        team.setProjectId(BigInteger.valueOf(1));
+        team.setProjectId(project.getId());
         team.setName("test1");
         team.setTeamGrade(1);
         teamMapper.addTeam(team);
@@ -121,35 +191,33 @@ public class AssignmentAndRecordMapperTest extends BaseTest {
         Assertions.assertEquals(2,teamMapper.findAllTeam().size());
         Assertions.assertEquals(5,Utils.getNullPropertyNames(teamMapper.findAllTeam().get(0)).length);
 
-        //用户
-        // 创建学校
-        organizationMapper.removeAllOrganizationTest();
-        OrganizationDTO organizationDTO = new OrganizationDTO();
-        organizationDTO.setName("WHU");
-        organizationDTO.setRealName("武汉大学");
-        organizationDTO.setDescription("湖北省武汉市武汉大学");
-        organizationDTO.setWebsiteUrl("www.whu.edu.cn");
-        organizationService.add(organizationDTO);
-        organizationDTO = organizationService.findByName("WHU");
-
-        cptmpUserMapper.removeAllUsersTest();
-        BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
-        baseUserInfoDTO.setUsername("WHU-2018302060342");
-        baseUserInfoDTO.setCommonId("2018302060342");
-        baseUserInfoDTO.setRoleName(CptmpRole.ROLE_SCHOOL_TEACHER);
-        baseUserInfoDTO.setName("魏啸冲");
-        baseUserInfoDTO.setPassword("123");
-        baseUserInfoDTO.setEmail("wxcnb@qq.com");
-        baseUserInfoDTO.setOrganizationId(organizationDTO.getId());
-        userInfoService.add(baseUserInfoDTO);
-        CptmpUser cptmpUser = cptmpUserMapper.findUserByUsername("WHU-2018302060342");
+        //流程
+        processMapper.removeAllProcesses();
+        Process process = new Process();
+        process.setGmtCreate(new Date());
+        process.setTrainId(train.getId());
+        process.setStartTime(new Date());
+        process.setEndTime(new Date());
+        processMapper.addProcess(process);
+        processMapper.addProcess(process);
+        List<Process> processes = processMapper.findAllProcesses();
+        //事件
+        eventMapper.removeAllEvents();
+        Event event = new Event();
+        event.setGmtCreate(new Date());
+        event.setStartTime(new Date());
+        event.setEndTime(new Date());
+        event.setContent("test1");
+        event.setPersonOrTeam(true);
+        eventMapper.addEvent(event);
+        eventMapper.addEvent(event);
 
         //流程事件
         processEventMapper.removeAllProcessEvents();
         ProcessEvent processEvent =new ProcessEvent();
         processEvent.setGmtCreate(new Date());
-        processEvent.setProcessId(BigInteger.valueOf(1));
-        processEvent.setEventId(BigInteger.valueOf(1));
+        processEvent.setProcessId(process.getId());
+        processEvent.setEventId(event.getId());
         processEventMapper.addProcessEvent(processEvent);
         processEventMapper.addProcessEvent(processEvent);
         Assertions.assertEquals(2,processEventMapper.findAllProcessEvents().size());
@@ -158,37 +226,38 @@ public class AssignmentAndRecordMapperTest extends BaseTest {
 
 
         //活动记录
+        recordMapper.removeAllRecordTest();
         Record record1 =new Record();
         record1.setGmtCreate(new Date());
-        record1.setUserId(BigInteger.valueOf(1));
-        record1.setTeamId(BigInteger.valueOf(1));
-        record1.setProcessEventId(BigInteger.valueOf(1));
-        record1.setTrainId(BigInteger.valueOf(1));
-        record1.setAssignmentId(BigInteger.valueOf(1));
+        record1.setUserId(cptmpUserMapper.findAllUsers().get(0).getId());
+        record1.setTeamId(teamMapper.findAllTeam().get(0).getId());
+        record1.setProcessEventId(processEventMapper.findAllProcessEvents().get(0).getId());
+        record1.setTrainId(trainMapper.findAllTrain().get(0).getId());
+        record1.setAssignmentId(assignmentMapper.findAllAssignment().get(0).getId());
 
 
 
         /**
          * 添加
          */
-        recordMapper.removeAllRecordTest();
+
         recordMapper.addRecord(record1);
         recordMapper.addRecord(record1);
         Assertions.assertEquals(2, recordMapper.findAllRecord().size());
-//
-//        /**
-//         * 查询
-//         */
-//        Record record3=record1;
-//        record3.setTrainId(BigInteger.valueOf(1));
-//        recordMapper.updateRecordById(record3);
-//        Assertions.assertEquals(BigInteger.valueOf(1), recordMapper.findRecordByTeamId(BigInteger.valueOf(2)).get(0).getTrainId());
-//
-//        recordMapper.removeRecordById(recordMapper.findAllRecord().get(0).getId(),new Date());
-//        Assertions.assertEquals(1, recordMapper.findAllRecord().size());
-//
-//        recordMapper.removeRecordByAll(new Date());
-//        Assertions.assertEquals(0, recordMapper.findAllRecord().size());
+
+        /**
+         * 查询
+         */
+        Record record3=record1;
+        record3.setTeamId(teamMapper.findAllTeam().get(1).getId());
+        recordMapper.updateRecordById(record3);
+        Assertions.assertEquals(teamMapper.findAllTeam().get(1).getId(), recordMapper.findRecordByTeamId(teamMapper.findAllTeam().get(1).getId()).get(0).getTeamId());
+
+        recordMapper.removeRecordById(recordMapper.findAllRecord().get(0).getId(),new Date());
+        Assertions.assertEquals(1, recordMapper.findAllRecord().size());
+
+        recordMapper.removeRecordByAll(new Date());
+        Assertions.assertEquals(0, recordMapper.findAllRecord().size());
 
     }
 }
