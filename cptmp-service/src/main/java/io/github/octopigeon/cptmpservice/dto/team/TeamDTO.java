@@ -3,7 +3,6 @@ package io.github.octopigeon.cptmpservice.dto.team;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 
 /**
@@ -18,10 +17,10 @@ public class TeamDTO {
     private BigInteger id;
     private BigInteger trainId;
     private BigInteger projectId;
-    private BigInteger name;
+    private String name;
     private String avatar;
     private String repoUrl;
-    private BigDecimal teamGrade;
+    private Integer teamGrade;
     private String evaluation;
     @JsonIgnore
     private BigInteger projectTrainId;
