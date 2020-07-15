@@ -91,10 +91,10 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         BigInteger userId = dto.getId();
         TeamPerson teamPerson = teamPersonMapper.findTeamPersonByUserId(userId);
         if (teamPerson == null) {
-            recordMapper.removeRecordByUserId(userId, new Date());
+            recordMapper.hideRecordById(userId, new Date());
         } else {
             BigInteger teamPersonId = teamPerson.getId();
-            personalGradeMapper.removePersonalGradeByTeamPersonId(teamPersonId, new Date());
+            personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPersonId, new Date());
             teamPersonMapper.removeTeamPersonByUserId(userId);
         }
         cptmpUserMapper.removeUserById(userId, new Date());

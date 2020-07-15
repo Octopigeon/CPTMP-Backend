@@ -85,7 +85,7 @@ public class PersonalGradeServiceImpl implements PersonalGradeService{
     @Override
     public void remove(PersonalGradeDTO dto) throws Exception {
         if(personalGradeMapper.findPersonalGradeById(dto.getId()) != null){
-            personalGradeMapper.removePersonalGradeById(dto.getId(), new Date());
+            personalGradeMapper.hidePersonalGradeById(dto.getId(), new Date());
         }else {
             throw new ValueException("personalGrade is not existed!");
         }
