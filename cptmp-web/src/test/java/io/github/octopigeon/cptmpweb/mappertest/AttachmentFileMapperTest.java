@@ -33,6 +33,7 @@ public class AttachmentFileMapperTest extends BaseTest {
         attachmentFile1.setFilePath("test1");
         attachmentFile1.setFileType("test1");
         attachmentFile1.setOriginName("test1");
+        attachmentFile1.setFileUrl("test1");
         attachmentFile1.setFileSize(BigInteger.valueOf(1));
 
 
@@ -42,6 +43,7 @@ public class AttachmentFileMapperTest extends BaseTest {
         attachmentFile2.setFilePath("test2");
         attachmentFile2.setFileType("test2");
         attachmentFile2.setOriginName("test2");
+        attachmentFile2.setFileUrl("test2");
         attachmentFile2.setFileSize(BigInteger.valueOf(2));
 
         /**
@@ -55,7 +57,7 @@ public class AttachmentFileMapperTest extends BaseTest {
         /**
          * 删除
          */
-        attachmentFileMapper.removeAttachmentFileByName("test1", new Date());
+        attachmentFileMapper.hideAttachmentFileByName("test1", new Date());
         Assertions.assertEquals(1, attachmentFileMapper.findAllAttachmentFile().size());
 
         /**
@@ -68,9 +70,27 @@ public class AttachmentFileMapperTest extends BaseTest {
         attachmentFile3.setFilePath("test4");
         attachmentFileMapper.updateAttachmentFileByFileName(attachmentFile3);
         Assertions.assertEquals("test4", attachmentFileMapper.findAllAttachmentFile().get(0).getFilePath());
-
-        attachmentFileMapper.removeAllAttachmentFile(new Date());
+        //删除所有文件
+        attachmentFileMapper.hideAllAttachmentFile(new Date());
+        Assertions.assertEquals(0, attachmentFileMapper.findAllAttachmentFile().size());
+        attachmentFileMapper.restoreAllAttachmentFile();
+        Assertions.assertEquals(2, attachmentFileMapper.findAllAttachmentFile().size());
+        //根据文件名或id删除
+        BigInteger restoreTestId = attachmentFileMapper.findAllAttachmentFile().get(0).getId();
+        attachmentFileMapper.hideAttachmentFileById(attachmentFileMapper.findAllAttachmentFile().get(0).getId(),new Date());
+        Assertions.assertEquals(1, attachmentFileMapper.findAllAttachmentFile().size());
+        String restoreTestName = attachmentFileMapper.findAllAttachmentFile().get(0).getFileName();
+        attachmentFileMapper.hideAttachmentFileByName(attachmentFileMapper.findAllAttachmentFile().get(0).getFileName(),new Date());
         Assertions.assertEquals(0, attachmentFileMapper.findAllAttachmentFile().size());
 
+        //根据文件名或id恢复
+        attachmentFileMapper.restoreAttachmentFileById(restoreTestId);
+        Assertions.assertEquals(1, attachmentFileMapper.findAllAttachmentFile().size());
+        attachmentFileMapper.restoreAttachmentFileByName(restoreTestName);
+        Assertions.assertEquals(2, attachmentFileMapper.findAllAttachmentFile().size());
+
+
+
+
     }
-    }
+}

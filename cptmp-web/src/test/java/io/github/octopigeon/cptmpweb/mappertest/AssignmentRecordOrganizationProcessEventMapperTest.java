@@ -3,12 +3,10 @@ package io.github.octopigeon.cptmpweb.mappertest;
 import io.github.octopigeon.cptmpdao.mapper.*;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProcessEventMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
-import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
 import io.github.octopigeon.cptmpdao.model.*;
 import io.github.octopigeon.cptmpdao.model.Process;
 import io.github.octopigeon.cptmpdao.model.relation.ProcessEvent;
 import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
-import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.organization.OrganizationDTO;
@@ -19,7 +17,6 @@ import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -120,24 +117,34 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         organization.setGmtCreate(new Date());
         organization.setRealName("test1");
         organization.setName("test1");
+        organization.setInvitationCode("test1");
         //添加组织
         organizationMapper.addOrganization(organization);
         organization.setRealName("test2");
         organization.setName("test2");
+        organization.setInvitationCode("test2");
         organizationMapper.addOrganization(organization);
         Assertions.assertEquals(2,organizationMapper.findAllOrganization().size());
-        Assertions.assertEquals(5,Utils.getNullPropertyNames(organizationMapper.findAllOrganization().get(0)).length);
+        Assertions.assertEquals(4,Utils.getNullPropertyNames(organizationMapper.findAllOrganization().get(0)).length);
         //根据id修改组织
         Organization organization3 = organizationMapper.findAllOrganization().get(1);
         organization3.setName("test3");
         organizationMapper.updateOrganizationById(organization3);
         Assertions.assertEquals("test3",organizationMapper.findAllOrganization().get(1).getName());
-        //根据id删除组织
-        organizationMapper.removeOrganizationById(organizationMapper.findAllOrganization().get(1).getId(),new Date());
+        //删除组织
+        organizationMapper.hideAllOrganization(new Date());
+        Assertions.assertEquals(0,organizationMapper.findAllOrganization().size());
+        organizationMapper.restoreAllOrganization();
+        Assertions.assertEquals(2,organizationMapper.findAllOrganization().size());
+        BigInteger restoreTestId = organizationMapper.findAllOrganization().get(1).getId();
+        organizationMapper.hideOrganizationById(organizationMapper.findAllOrganization().get(1).getId(),new Date());
         Assertions.assertEquals(1,organizationMapper.findAllOrganization().size());
-        //查询
-        Assertions.assertEquals("test1",organizationMapper.findOrganizationByName("test1").getName());
-        Assertions.assertEquals("test1",organizationMapper.findOrganizationByRealName("test1").getRealName());
+        organizationMapper.restoreOrganizationById(restoreTestId);
+        Assertions.assertEquals(2,organizationMapper.findAllOrganization().size());
+        //查询(find 与 get 操作对象不同，为了测试)
+        Assertions.assertEquals("test1",organizationMapper.findOrganizationByRealName("test1").getInvitationCode());
+        Assertions.assertEquals("test1",organizationMapper.findOrganizationByInvitationCode("test1").getName());
+        Assertions.assertEquals("test1",organizationMapper.findOrganizationByName("test1").getRealName());
 
         //用户
         // 创建学校
@@ -211,6 +218,7 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         team.setName("test1");
         team.setTeamGrade(1);
         teamMapper.addTeam(team);
+        team.setProjectTrainId(projectTrainMapper.findAllProjectTrains().get(0).getId());
         teamMapper.addTeam(team);
         Assertions.assertEquals(2,teamMapper.findAllTeam().size());
         Assertions.assertEquals(5,Utils.getNullPropertyNames(teamMapper.findAllTeam().get(0)).length);
@@ -294,12 +302,12 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         recordMapper.updateRecordById(record3);
         Assertions.assertEquals(teamMapper.findAllTeam().get(1).getId(), recordMapper.findRecordByTeamId(teamMapper.findAllTeam().get(1).getId()).get(0).getTeamId());
 
-        recordMapper.removeRecordById(recordMapper.findAllRecord().get(0).getId(),new Date());
+        recordMapper.hideRecordById(recordMapper.findAllRecord().get(0).getId(),new Date());
         Assertions.assertEquals(1, recordMapper.findAllRecord().size());
 
         Assertions.assertEquals(1, recordMapper.findRecordByUserId(recordMapper.findAllRecord().get(0).getUserId()).size());
 
-        recordMapper.removeRecordByAll(new Date());
+        recordMapper.hideRecordByAll(new Date());
         Assertions.assertEquals(0, recordMapper.findAllRecord().size());
 
     }

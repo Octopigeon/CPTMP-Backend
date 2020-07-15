@@ -15,7 +15,7 @@ import java.util.List;
  * @date 2020/7/8
  * <p>
  * last-check-in 李国鹏
- * @date 2020/7/12
+ * @date 2020/7/15
  */
 @Repository
 @Mapper
@@ -27,6 +27,11 @@ public interface AssignmentMapper {
     String COLUMNS = "gmt_create, gmt_modified, gmt_deleted,  title, content, is_file, document_path";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted},  #{title}, #{content}, #{isFile}, #{documentPath}";
     String UPDATE_CONTENT = " gmt_create = #{gmtCreate}, gmt_modified = #{gmtModified}, gmt_deleted = #{gmtDeleted},title = #{title}, content = #{content},  is_file = #{isFile}";
+
+    /**
+     *
+     * @param assignment
+     */
     @Insert("insert into assignment (" +COLUMNS+ ") values (" +PROPS+ ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addAssignment(Assignment assignment);
@@ -57,7 +62,14 @@ public interface AssignmentMapper {
 //     * @param gmtDeleted 删除日期
 //     */
 //    @Update("update assignment set gmt_deleted = #{gmtDeleted} where idx_user_id = #{userId} and gmt_deleted is null")
-//    void removeAssignmentByUserId(BigInteger userId,Date gmtDeleted);
+//    void hideAssignmentByUserId(BigInteger userId, Date gmtDeleted);
+//
+//    /**
+//     * 根据用户id恢复日志
+//     * @param userId 用户id
+//     */
+//    @Update("update assignment set gmt_deleted = null where idx_user_id = #{userId} and gmt_deleted is not null")
+//    void restoreAssignmentByUserId(BigInteger userId);
 //
 //    /**
 //     * 根据团队id删除
@@ -65,7 +77,13 @@ public interface AssignmentMapper {
 //     * @param gmtDeleted 删除日期
 //     */
 //    @Update("update assignment set gmt_deleted = #{gmtDeleted} where idx_team_id = #{teamId} and gmt_deleted is null")
-//    void removeAssignmentByTeamId(BigInteger teamId,Date gmtDeleted);
+//    void hideAssignmentByTeamId(BigInteger teamId, Date gmtDeleted);
+//    /**
+//     * 根据团队id恢复
+//     * @param teamId 团队id
+//     */
+//    @Update("update assignment set gmt_deleted = null where idx_team_id = #{teamId} and gmt_deleted is not null")
+//    void restoreAssignmentByTeamId(BigInteger teamId);
 
     /**
      * 根据日志id修改日志
