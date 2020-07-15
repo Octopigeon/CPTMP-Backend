@@ -81,7 +81,7 @@ public interface AssignmentMapper {
      * @return
      */
     @Update("update assignment set gmt_modified = #{gmtModified}, document_path = #{documentPath} where id = #{id} and gmt_deleted is null")
-    Void updateAssignmentDocumentById(BigInteger id,Date gmtModified,String documentPath);
+    void updateAssignmentDocumentById(BigInteger id,Date gmtModified,String documentPath);
 
 //
 //    /**
