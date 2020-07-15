@@ -97,7 +97,7 @@ public interface TeamMapper {
      * @param name：团队名称
      * @return 团队列表
      */
-    @Select("select id, " + COLUMNS + " from team where idx_team_name = #{name} and gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from team where idx_team_name like concat('%', #{name}, '%') and gmt_deleted is null")
     @ResultMap("team")
     List<Team> findTeamByName(String name);
 }

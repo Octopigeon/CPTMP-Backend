@@ -13,11 +13,8 @@ import java.util.Date;
  * last-check-in 李国鹏
  * @date 2020/7/12
  */
-@Data
 
-/**
- * 日志
- */
+@Data
 public class Assignment {
     private BigInteger id;
     private Date gmtCreate;
