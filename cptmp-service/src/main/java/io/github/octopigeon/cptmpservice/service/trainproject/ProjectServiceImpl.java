@@ -85,7 +85,7 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
         try{
             Project project = projectMapper.findTrainProjectById(dto.getId());
             if(project != null){
-                projectMapper.removeTrainProjectById(project.getId(), new Date());
+                projectMapper.hideTrainProjectById(project.getId(), new Date());
                 projectTrainMapper.removeProjectTrainsByProjectId(dto.getId());
             }
             else {

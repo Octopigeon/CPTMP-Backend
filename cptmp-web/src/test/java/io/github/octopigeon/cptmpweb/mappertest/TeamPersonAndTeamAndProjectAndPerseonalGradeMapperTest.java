@@ -1,6 +1,5 @@
 package io.github.octopigeon.cptmpweb.mappertest;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import io.github.octopigeon.cptmpdao.mapper.*;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
@@ -18,7 +17,6 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.rmi.CORBA.Util;
 import java.math.BigInteger;
 import java.util.Date;
 
@@ -140,7 +138,7 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         teamMapper.addTeam(team);
         team = teamMapper.findAllTeam().get(0);
         Assertions.assertEquals(2, Utils.getNullPropertyNames(team).length);
-        teamMapper.removeTeamById(team.getId(), new Date());
+        teamMapper.hideTeamById(team.getId(), new Date());
         Assertions.assertEquals(0, teamMapper.findAllTeam().size());
         teamMapper.restoreTeamById(team.getId());
         team.setName("111");
@@ -199,10 +197,10 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         personalGradeMapper.addPersonalGrade(personalGrade);
         personalGrade = personalGradeMapper.findAllPersonalGrades().get(0);
         Assertions.assertEquals(2, Utils.getNullPropertyNames(personalGrade).length);
-        personalGradeMapper.removePersonalGradeById(personalGrade.getId(), new Date());
+        personalGradeMapper.hidePersonalGradeById(personalGrade.getId(), new Date());
         Assertions.assertEquals(0, personalGradeMapper.findAllPersonalGrades().size());
         personalGradeMapper.restoreAllPersonalGrade();
-        personalGradeMapper.removePersonalGradeByTeamPersonId(personalGrade.getTeamPersonId(), new Date());
+        personalGradeMapper.hidePersonalGradeByTeamPersonId(personalGrade.getTeamPersonId(), new Date());
         Assertions.assertEquals(0, personalGradeMapper.findAllPersonalGrades().size());
         personalGradeMapper.restoreAllPersonalGrade();
         personalGrade.setPersonalGrade(90);

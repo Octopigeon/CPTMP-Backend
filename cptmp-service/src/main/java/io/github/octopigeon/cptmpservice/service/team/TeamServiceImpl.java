@@ -76,7 +76,7 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
             if(teamMapper.findTeamByTeamId(dto.getId()) == null){
                 throw new ValueException("Team is not exist");
             }
-            teamMapper.removeTeamById(dto.getId(), new Date());
+            teamMapper.hideTeamById(dto.getId(), new Date());
             teamPersonMapper.removeTeamPersonByTeamId(dto.getId());
         }catch (Exception e){
             e.printStackTrace();

@@ -59,7 +59,7 @@ public class OrganizationServiceImpl implements OrganizationService{
         try {
             Organization organization = organizationMapper.findOrganizationByName(dto.getName());
             if(organization != null){
-                organizationMapper.removeOrganizationById(organization.getId(), new Date());
+                organizationMapper.hideOrganizationById(organization.getId(), new Date());
             }
             else {
                 throw new ValueException("organization is not existed!");
