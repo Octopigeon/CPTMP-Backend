@@ -1,9 +1,10 @@
 package io.github.octopigeon.cptmpservice.service.userinfo;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.*;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
-import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author 李国豪
@@ -43,56 +46,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     public Boolean validateOriginPassword(String username, String originPassword) {
         return passwordEncoder.matches(originPassword, cptmpUserMapper.findPasswordByUsername(username));
     }
-
-    // 添加注册用户
-
-//    /**
-//     * 批量添加
-//     * 批量注册用户
-//     *
-//     * @param dtos
-//     */
-//    @Override
-//    public void bulkAdd(List<BaseUserInfoDTO> dtos) throws Exception {
-//        try {
-//            for (BaseUserInfoDTO userInfo : dtos) {
-//                add(userInfo);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new Exception(e);
-//        }
-//    }
-//
-//    /**
-//     * 验证码注册
-//     * @param dto 用户信息类
-//     * @param invitationCode 邀请码
-//     * @throws Exception
-//     */
-//    @Override
-//    public void addByInvitationCode(BaseUserInfoDTO dto, String invitationCode) throws Exception {
-//        try{
-//            List<Organization> organizations = organizationMapper.findAllOrganization();
-//            BigInteger organizationId = null;
-//            for (Organization organization: organizations) {
-//                if(organization.getInvitationCode().equals(invitationCode)){
-//                    organizationId = organization.getId();
-//                    break;
-//                }
-//            }
-//            if(organizationId == null){
-//                throw new ValueException("invatitation code is not existed!");
-//            }
-//            BaseUserInfoDTO parsedUserInfo = parseUserInfo(dto);
-//            parsedUserInfo.setOrganizationId(organizationId);
-//            CptmpUser user = userInfoToUser(parsedUserInfo);
-//            cptmpUserMapper.addUser(user);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            throw new Exception(e.getMessage());
-//        }
-//    }
 
     /**
      * 添加数据
@@ -133,7 +86,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     @Override
     public Boolean modify(BaseUserInfoDTO userInfo) throws Exception {
-        if (userInfo.getUserId() == null && "".equals(userInfo.getUsername())) {
+        if (userInfo.getId() == null && "".equals(userInfo.getUsername())) {
             throw new ValueException("userId or username is illegal!");
         }
         try {
@@ -201,26 +154,25 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         }
     }
 
-//    /**
-//     * 上传人脸数据
-//     *
-//     * @param file   人脸图片
-//     * @param username 用户名
-//     */
-//    @Override
-//    public void uploadFace(MultipartFile file, String username) throws Exception {
-//        try{
-//            FileDTO fileInfo = storePublicFile(file);
-//            CptmpUser user = cptmpUserMapper.findUserByUsername(username);
-//            if (RoleEnum.ROLE_STUDENT_MEMBER.name().equals(user.getRoleName())) {
-//                cptmpUserMapper.updateFaceInfoById(user.getId(), new Date(), fileInfo.getFilePath());
-//            }
-//        } catch (Exception e) {
-//            throw new Exception("Face info upload failed!");
-//        }
-//    }
-
     // 查询服务
+
+    /**
+     * 分页查询所有用户
+     *
+     * @param page   页号
+     * @param offset 每页数量
+     * @return
+     */
+    @Override
+    public PageInfo<BaseUserInfoDTO> findAllByPage(int page, int offset) {
+        PageHelper.startPage(page, offset);
+        List<BaseUserInfoDTO> results = new ArrayList<>();
+        List<CptmpUser> cptmpUsers = cptmpUserMapper.findAllUsers();
+        for (CptmpUser cptmpUser: cptmpUsers) {
+            results.add(getFullUserInfo(cptmpUser));
+        }
+        return new PageInfo<BaseUserInfoDTO>(results);
+    }
 
     /**
      * 基础查询服务，每个表都需要支持通过id查询
@@ -238,13 +190,133 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      * 根据用户名得到用户基本信息，以及角色类型
      *
      * @param username 用户名
-     * @return 返回一个父抽象类型，然后controller根据roleName转换成相应的子类
+     * @return 返回一个userInfo
      */
     @Override
-    public BaseUserInfoDTO findBaseUserInfoByUsername(String username) {
+    public BaseUserInfoDTO findByUsername(String username) {
         CptmpUser cptmpUser = cptmpUserMapper.findUserByUsername(username);
         return getFullUserInfo(cptmpUser);
     }
+
+    /**
+     * 根据真实姓名进行模糊查询
+     *
+     * @param name 真实姓名
+     * @return userInfo
+     */
+    @Override
+    public List<BaseUserInfoDTO> findByName(String name) {
+        List<CptmpUser> cptmpUsers = cptmpUserMapper.findUsersByName(name);
+        List<BaseUserInfoDTO> baseUserInfoDTOS = new ArrayList<>();
+        for (CptmpUser cptmpUser: cptmpUsers) {
+            baseUserInfoDTOS.add(getFullUserInfo(cptmpUser));
+        }
+        return baseUserInfoDTOS;
+    }
+
+    /**
+     * 根据email进行查询
+     *
+     * @param email 邮箱
+     * @return userInfo
+     */
+    @Override
+    public BaseUserInfoDTO findByEmail(String email) {
+        CptmpUser cptmpUser = cptmpUserMapper.findUserByEmail(email);
+        return getFullUserInfo(cptmpUser);
+    }
+
+    /**
+     * 汇总过滤查询
+     *
+     * @param id       用户id
+     * @param username 用户名
+     * @param email    邮箱
+     * @param name     真实姓名
+     * @return
+     */
+    @Override
+    public List<BaseUserInfoDTO> findByPersonalFilter(BigInteger id, String username, String email, String name) throws Exception {
+        List<BaseUserInfoDTO> results = new ArrayList<>();
+        if (id != null){
+            results.add(findById(id));
+            return results;
+        }
+        if (username != null){
+            results.add(findByUsername(username));
+            return results;
+        }
+        if(email != null){
+            results.add(findByEmail(email));
+            return results;
+        }
+        if (name != null){
+            results = findByName(name);
+            return results;
+        }
+        return null;
+    }
+
+    /**
+     * 根据组织id进行用户查询
+     *
+     * @param page           页号
+     * @param offset         偏移
+     * @param organizationId 组织号
+     * @return
+     */
+    @Override
+    public PageInfo<BaseUserInfoDTO> findByOrganizationId(int page, int offset, BigInteger organizationId) {
+        PageHelper.startPage(page, offset);
+        List<BaseUserInfoDTO> results = new ArrayList<>();
+        List<CptmpUser> cptmpUsers = cptmpUserMapper.findUsersByOrganizationId(organizationId);
+        for (CptmpUser cptmpUser: cptmpUsers) {
+            results.add(getFullUserInfo(cptmpUser));
+        }
+        return new PageInfo<>(results);
+    }
+
+    /**
+     * 根据权限进行用户查询
+     *
+     * @param page     页号
+     * @param offset   页内数量
+     * @param roleName 权限名
+     * @return
+     */
+    @Override
+    public PageInfo<BaseUserInfoDTO> findByRoleName(int page, int offset, String roleName) {
+        PageHelper.startPage(page, offset);
+        List<BaseUserInfoDTO> results = new ArrayList<>();
+        List<CptmpUser> cptmpUsers = cptmpUserMapper.findUsersByRoleName(roleName);
+        for (CptmpUser cptmpUser: cptmpUsers) {
+            results.add(getFullUserInfo(cptmpUser));
+        }
+        return new PageInfo<>(results);
+    }
+
+    /**
+     * 根据组织id和权限名进行查询
+     *
+     * @param page           页号
+     * @param offset         页内数量
+     * @param organizationId 组织id
+     * @param roleName       权限名
+     * @return
+     */
+    @Override
+    public PageInfo<BaseUserInfoDTO> findByGroupFilter(int page, int offset, BigInteger organizationId, String roleName) {
+        PageHelper.startPage(page, offset);
+        List<BaseUserInfoDTO> results = new ArrayList<>();
+        List<CptmpUser> cptmpUsers = cptmpUserMapper.findUsersByGroupFilter(organizationId, roleName);
+        for (CptmpUser cptmpUser: cptmpUsers) {
+            results.add(getFullUserInfo(cptmpUser));
+        }
+        return new PageInfo<>(results);
+    }
+
+
+    // 以下为私有方法
 
     private BaseUserInfoDTO getFullUserInfo(CptmpUser cptmpUser) {
         BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
@@ -307,4 +379,72 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         user.setCredentialsNonExpired(true);
         return user;
     }
+
+    // 添加注册用户
+
+//    /**
+//     * 批量添加
+//     * 批量注册用户
+//     *
+//     * @param dtos
+//     */
+//    @Override
+//    public void bulkAdd(List<BaseUserInfoDTO> dtos) throws Exception {
+//        try {
+//            for (BaseUserInfoDTO userInfo : dtos) {
+//                add(userInfo);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            throw new Exception(e);
+//        }
+//    }
+//
+//    /**
+//     * 验证码注册
+//     * @param dto 用户信息类
+//     * @param invitationCode 邀请码
+//     * @throws Exception
+//     */
+//    @Override
+//    public void addByInvitationCode(BaseUserInfoDTO dto, String invitationCode) throws Exception {
+//        try{
+//            List<Organization> organizations = organizationMapper.findAllOrganization();
+//            BigInteger organizationId = null;
+//            for (Organization organization: organizations) {
+//                if(organization.getInvitationCode().equals(invitationCode)){
+//                    organizationId = organization.getId();
+//                    break;
+//                }
+//            }
+//            if(organizationId == null){
+//                throw new ValueException("invatitation code is not existed!");
+//            }
+//            BaseUserInfoDTO parsedUserInfo = parseUserInfo(dto);
+//            parsedUserInfo.setOrganizationId(organizationId);
+//            CptmpUser user = userInfoToUser(parsedUserInfo);
+//            cptmpUserMapper.addUser(user);
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            throw new Exception(e.getMessage());
+//        }
+//    }
+    //    /**
+//     * 上传人脸数据
+//     *
+//     * @param file   人脸图片
+//     * @param username 用户名
+//     */
+//    @Override
+//    public void uploadFace(MultipartFile file, String username) throws Exception {
+//        try{
+//            FileDTO fileInfo = storePublicFile(file);
+//            CptmpUser user = cptmpUserMapper.findUserByUsername(username);
+//            if (RoleEnum.ROLE_STUDENT_MEMBER.name().equals(user.getRoleName())) {
+//                cptmpUserMapper.updateFaceInfoById(user.getId(), new Date(), fileInfo.getFilePath());
+//            }
+//        } catch (Exception e) {
+//            throw new Exception("Face info upload failed!");
+//        }
+//    }
 }

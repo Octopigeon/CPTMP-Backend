@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -153,6 +154,22 @@ public interface CptmpUserMapper {
     @ResultMap("user")
     CptmpUser findUserByEmail(String email);
 
+    @Select("select id, " + COLUMNS + " from cptmp_user where idx_name like concat('%', #{name}, '%')and gmt_deleted is null")
+    @ResultMap("user")
+    List<CptmpUser> findUsersByName(String name);
+
+    @Select("select id, " + COLUMNS + " from cptmp_user where idx_organization_id = #{organizationId} and gmt_deleted is null")
+    @ResultMap("user")
+    List<CptmpUser> findUsersByOrganizationId(BigInteger organizationId);
+
+    @Select("select id, " + COLUMNS + " from cptmp_user where idx_role_name = #{roleName} and gmt_deleted is null")
+    @ResultMap("user")
+    List<CptmpUser> findUsersByRoleName(String roleName);
+
+    @Select("select id, " + COLUMNS + " from cptmp_user where idx_organization_id = #{organizationId} and idx_role_name = #{roleName} and gmt_deleted is null")
+    @ResultMap("user")
+    List<CptmpUser> findUsersByGroupFilter(BigInteger organizationId, String roleName);
+
     /**
      * 根据用户名查询
      *
@@ -160,6 +177,7 @@ public interface CptmpUserMapper {
      * @return 用户
      */
     @Select("select idx_password from cptmp_user where uk_username = #{username} and gmt_deleted is null")
+    @Result(column = "idx_password", property = "password", jdbcType = JdbcType.VARCHAR)
     String findPasswordByUsername(String username);
 
     /**

@@ -13,7 +13,6 @@ import io.github.octopigeon.cptmpservice.utils.Utils;
 import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
@@ -87,8 +86,8 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         Assertions.assertEquals(2, Utils.getNullPropertyNames(train1).length);
         train = trainMapper.findTrainById(train1.getId());
         Assertions.assertEquals(2, Utils.getNullPropertyNames(train).length);
-        // 总共加了两个
 
+        // 总共加了两个
         // 创建工程
         Project project = new Project();
         project.setName("cptmp");
@@ -143,6 +142,14 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         trainMapper.updateTrainById(train);
         trains = trainMapper.findTrainByNameAmbiguously("清华");
         Assertions.assertEquals(1, trains.size());
+        Train train2 = trainMapper.findTrainByOrganizationId(trains.get(0).getOrganizationId()).get(0);
+        Assertions.assertEquals(2, Utils.getNullPropertyNames(train2).length);
+        trainMapper.removeTrainById(trains.get(0).getId(), new Date());
+        Assertions.assertEquals(1,  trainMapper.findAllTrain().size());
+        trainMapper.restoreAllTrain();
+        trainMapper.removeTrainsByOrganizationId(trains.get(0).getOrganizationId(), new Date());
+        Assertions.assertEquals(0, trainMapper.findAllTrain().size());
+        trainMapper.restoreAllTrain();
 
         Process process = new Process();
         process.setGmtCreate(new Date());
