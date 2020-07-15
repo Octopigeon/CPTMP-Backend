@@ -1,5 +1,7 @@
 package io.github.octopigeon.cptmpservice.constantclass;
 
+import org.omg.CORBA.PUBLIC_MEMBER;
+
 /**
  * @author 魏啸冲
  * @version 1.0
@@ -40,5 +42,12 @@ public class CptmpStatusCode {
     public static int SEND_TOKEN_EMAIL_FAILED = 13;
     /** 邀请码无效 */
     public static int FAKE_INVITATION_CODE = 14;
+
+    /** 信息访问失败 */
+    public static int INFO_ACCESS_FAILED = 15;
+    /** 文件上传失败 */
+    public static int FILE_UPLOAD_FAILED = 16;
+    /** 删除对象失败 */
+    public static int REMOVE_FAILED = 17;
 
 }
