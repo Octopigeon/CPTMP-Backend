@@ -2,7 +2,6 @@ package io.github.octopigeon.cptmpservice.service.team;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.mapper.TeamMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
@@ -10,13 +9,15 @@ import io.github.octopigeon.cptmpdao.model.Team;
 import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
 import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
+import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.team.TeamDTO;
-import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
+import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileServiceImpl;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -24,10 +25,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Gh Li
+ * @author 李国豪
  * @version 1.0
  * @date 2020/7/14
- * @last-check-in Gh Li
+ * @last-check-in 李国豪
  * @date 2020/7/14
  */
 @Service
@@ -77,7 +78,7 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
             if(teamMapper.findTeamByTeamId(dto.getId()) == null){
                 throw new ValueException("Team is not exist");
             }
-            teamMapper.removeTeamById(dto.getId(), new Date());
+            teamMapper.hideTeamById(dto.getId(), new Date());
             teamPersonMapper.removeTeamPersonByTeamId(dto.getId());
         }catch (Exception e){
             e.printStackTrace();
@@ -120,6 +121,25 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
         }catch (Exception e){
             e.printStackTrace();
             throw new Exception(e);
+        }
+    }
+
+    /**
+     * 上传用户头像
+     *
+     * @param file   文件
+     * @param teamId 用户名
+     * @return
+     */
+    @Override
+    public String uploadAvatar(MultipartFile file, BigInteger teamId) throws Exception {
+        try{
+            FileDTO fileInfo = storePublicFile(file);
+            teamMapper.updateAvatarById(teamId, new Date(), fileInfo.getFileUrl());
+            return fileInfo.getFilePath();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception("Avatar upload failed!");
         }
     }
 

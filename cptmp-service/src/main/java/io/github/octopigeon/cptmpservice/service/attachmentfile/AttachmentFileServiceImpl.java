@@ -3,11 +3,11 @@ package io.github.octopigeon.cptmpservice.service.attachmentfile;
 import io.github.octopigeon.cptmpdao.mapper.AttachmentFileMapper;
 import io.github.octopigeon.cptmpdao.model.AttachmentFile;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
-import java.util.Date;
 
 /**
  * @author 李国豪
@@ -31,12 +31,7 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
     public void add(FileDTO fileInfo) throws Exception {
         try{
             AttachmentFile attachmentFile = new AttachmentFile();
-            attachmentFile.setFileName(fileInfo.getFileName());
-            attachmentFile.setFilePath(fileInfo.getFilePath());
-            attachmentFile.setFileSize(BigInteger.valueOf(fileInfo.getFileSize()));
-            attachmentFile.setFileType(fileInfo.getFileType());
-            attachmentFile.setGmtCreate(fileInfo.getGmtCreate());
-            attachmentFile.setOriginName(fileInfo.getOriginalName());
+            BeanUtils.copyProperties(fileInfo, attachmentFile);
             attachmentFileMapper.addAttachmentFile(attachmentFile);
         }catch (Exception e){
             e.printStackTrace();
@@ -54,8 +49,7 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
         String fileName = dto.getFileName();
         if(attachmentFileMapper.findAttachmentFileByfileName(fileName) != null)
         {
-            // 删除索引
-            attachmentFileMapper.removeAttachmentFileByName(fileName, new Date());
+            attachmentFileMapper.restoreAttachmentFileByName(fileName);
         }else {
             throw new Exception("File not found " + fileName);
         }
@@ -65,7 +59,7 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
      * 更新的文件实体
      *
      * @param dto
-     * @return 是否删除成功
+     * @return 是否修改成功
      */
     @Override
     @Deprecated

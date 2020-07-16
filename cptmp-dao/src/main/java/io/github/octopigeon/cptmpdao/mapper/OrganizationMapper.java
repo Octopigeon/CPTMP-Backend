@@ -40,7 +40,7 @@ public interface OrganizationMapper {
     /**
      * 根据id修改组织信息
      */
-    @Update("update cptmp_organization set " + UPDATE_CONTENT + "where id = #{id} and gmt_deleted is null")
+    @Update("update cptmp_organization set " + UPDATE_CONTENT + " where id = #{id} and gmt_deleted is null")
     void updateOrganizationById(Organization organization);
 
     /**
@@ -57,7 +57,13 @@ public interface OrganizationMapper {
      * @param gmtDeleted 删除日期
      */
     @Update("update cptmp_organization set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
-    void removeAllOrganization(Date gmtDeleted);
+    void hideAllOrganization(Date gmtDeleted);
+
+    /**
+     * 恢复所有组织
+     */
+    @Update("update cptmp_organization set gmt_deleted = null where gmt_deleted is not null")
+    void restoreAllOrganization();
 
     /**
      * 根据id删除组织(软删除）
@@ -66,7 +72,15 @@ public interface OrganizationMapper {
      * @param gmtDeleted 删除时间
      */
     @Update("update cptmp_organization set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
-    void removeOrganizationById(BigInteger id, Date gmtDeleted);
+    void hideOrganizationById(BigInteger id, Date gmtDeleted);
+
+    /**
+     * 根据id恢复组织(软删除）
+     *
+     * @param id         组织id
+     */
+    @Update("update cptmp_organization set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
+    void restoreOrganizationById(BigInteger id);
 
 
     /**
@@ -112,7 +126,7 @@ public interface OrganizationMapper {
     /**
      * 根据组织邀请码进行查询
      *
-     * @param invitationCode
+     * @param invitationCode 邀请码
      * @return
      */
     @Select("select id, " + COLUMNS + " from cptmp_organization where invitation_code = #{invitationCode} and gmt_deleted is null")

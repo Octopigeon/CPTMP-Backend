@@ -14,8 +14,8 @@ import java.util.List;
  * @version 2.1
  * @date 2020/7/9
  * 对应train_project表
- * last-check-in 魏啸冲
- * @date 2020/7/14
+ * last-check-in 李国鹏
+ * @date 2020/7/15
  */
 @Repository
 @Mapper
@@ -55,17 +55,21 @@ public interface ProjectMapper {
      * @param gmtDeleted 删除日期
      */
     @Update("update train_project set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
-    void removeTrainProjectById(BigInteger id,Date gmtDeleted);
+    void hideTrainProjectById(BigInteger id, Date gmtDeleted);
 
+    @Update("update train_project set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
+    void restoreTrainProjectById(BigInteger id);
     /**
      * 根据项目名称删除对应的项目
      * @param name：项目名称
      * @param gmtDeleted 删除日期
      */
     @Update("update train_project set gmt_deleted = #{gmtDeleted} where idx_name = #{name} and gmt_deleted is null")
-    void removeTrainProjectByName(String name,Date gmtDeleted);
+    void hideTrainProjectByName(String name, Date gmtDeleted);
 
 
+    @Update("update train_project set gmt_deleted = null where idx_name = #{name} and gmt_deleted is not null")
+    void restoreTrainProjectByName(String name);
 
     /**
      * 根据id修改实训项目

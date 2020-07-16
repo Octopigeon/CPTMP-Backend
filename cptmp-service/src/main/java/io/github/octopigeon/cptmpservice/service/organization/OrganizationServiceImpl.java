@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * @author Gh Li
+ * @author 李国豪
  * @version 1.0
  * @date 2020/7/13
- * @last-check-in Gh Li
+ * @last-check-in 李国豪
  * @date 2020/7/13
  */
 @Service
@@ -59,7 +59,7 @@ public class OrganizationServiceImpl implements OrganizationService{
         try {
             Organization organization = organizationMapper.findOrganizationByName(dto.getName());
             if(organization != null){
-                organizationMapper.removeOrganizationById(organization.getId(), new Date());
+                organizationMapper.hideOrganizationById(organization.getId(), new Date());
             }
             else {
                 throw new ValueException("organization is not existed!");

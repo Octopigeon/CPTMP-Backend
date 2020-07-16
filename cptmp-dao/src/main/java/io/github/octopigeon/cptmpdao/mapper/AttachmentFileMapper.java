@@ -14,7 +14,7 @@ import java.util.List;
  * @version 2.0
  * @date 2020/7/10
  * @last-check-in 李国鹏
- * @date 2020/7/12
+ * @date 2020/7/15
  */
 @Repository
 @Mapper
@@ -24,10 +24,10 @@ public interface AttachmentFileMapper {
      * 新增文件
      * @param file:attachment类
      */
-    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, uk_file_name, uk_file_path, origin_name, file_size, idx_file_type";
-    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{fileName}, #{filePath}, #{originName}, #{fileSize}, #{fileType}";
+    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, uk_file_name, uk_file_path,uk_file_url, origin_name, file_size, idx_file_type";
+    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{fileName}, #{filePath}, #{fileUrl}, #{originName}, #{fileSize}, #{fileType}";
     String UPDATE_CONTENT = "gmt_create = #{gmtCreate}, gmt_modified = #{gmtModified}, gmt_deleted = #{gmtDeleted}, uk_file_name = #{fileName}, " +
-            " uk_file_path = #{filePath}, origin_name = #{originName}, file_size = #{fileSize}, idx_file_type = #{fileType}";
+            " uk_file_path = #{filePath}, uk_file_url = #{fileUrl}, origin_name = #{originName}, file_size = #{fileSize}, idx_file_type = #{fileType}";
 
 
     @Insert("insert into attachment_file (" + COLUMNS + ") values ( " + PROPS +" )")
@@ -47,26 +47,46 @@ public interface AttachmentFileMapper {
      * @param gmtDeleted 删除日期
      */
     @Update("update attachment_file set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
-    void removeAllAttachmentFile(Date gmtDeleted);
+    void hideAllAttachmentFile(Date gmtDeleted);
+
+    /**
+     * 恢复所有文件
+     */
+    @Update("update attachment_file set gmt_deleted = null where gmt_deleted is not null")
+    void restoreAllAttachmentFile();
 
     /**
      * 根据文件id进行文件删除
      * @param id：文件id
      */
     @Update("update attachment_file set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
-    void removeAttachmentFileById(BigInteger id, Date gmtDeleted);
+    void hideAttachmentFileById(BigInteger id, Date gmtDeleted);
+
+    /**
+     * 根据文件id进行文件恢复
+     * @param id：文件id
+     */
+    @Update("update attachment_file set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
+    void restoreAttachmentFileById(BigInteger id);
 
     /**
      * 根据文件名进行文件删除
      * @param fileName：文件名
      */
     @Update("update attachment_file set gmt_deleted = #{gmtDeleted} where uk_file_name = #{fileName} and gmt_deleted is null")
-    void removeAttachmentFileByName(String fileName,Date gmtDeleted);
+    void hideAttachmentFileByName(String fileName, Date gmtDeleted);
+
+    /**
+     * 根据文件名进行文件恢复
+     * @param fileName：文件名
+     */
+    @Update("update attachment_file set gmt_deleted = null where uk_file_name = #{fileName} and gmt_deleted is not null")
+    void restoreAttachmentFileByName(String fileName);
 
     /**
      * 根据id修改
      */
-    @Update("update attachment_file set "+ UPDATE_CONTENT +" where id = #{attachmentFile.id} and gmt_deleted is null ")
+    @Update("update attachment_file set "+ UPDATE_CONTENT +" where id = #{id} and gmt_deleted is null ")
     void updateAttachmentFileById(AttachmentFile attachmentFile);
 
     /**
@@ -97,6 +117,7 @@ public interface AttachmentFileMapper {
             @Result(column = "gmt_deleted", property = "gmtDeleted", jdbcType = JdbcType.DATE),
             @Result(column = "uk_file_name", property = "fileName", jdbcType = JdbcType.VARCHAR),
             @Result(column = "uk_file_path", property = "filePath", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "uk_file_url", property = "fileUrl", jdbcType = JdbcType.VARCHAR),
             @Result(column = "origin_name", property = "originName", jdbcType = JdbcType.VARCHAR),
             @Result(column = "idx_file_type", property = "fileType", jdbcType = JdbcType.VARCHAR),
             @Result(column = "file_size", property = "fileSize", jdbcType = JdbcType.BIGINT)

@@ -1,4 +1,4 @@
-package io.github.octopigeon.cptmpservice.service.basefileService;
+package io.github.octopigeon.cptmpservice.service.basefileservice;
 
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import org.springframework.core.io.Resource;
@@ -50,4 +50,10 @@ public interface BaseFileService {
      * @throws Exception
      */
     Resource loadPrivateFile(String fileName, String year, String month, String day) throws Exception;
+
+    /**
+     * 移除路径中的文件
+     * @param path 路径
+     */
+    Boolean removeFile(String path) throws Exception;
 }

@@ -1,9 +1,12 @@
 package io.github.octopigeon.cptmpweb.mappertest;
 
 import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
+import io.github.octopigeon.cptmpdao.mapper.OrganizationMapper;
 import io.github.octopigeon.cptmpdao.mapper.PasswordResetTokenMapper;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
+import io.github.octopigeon.cptmpdao.model.Organization;
 import io.github.octopigeon.cptmpdao.model.PasswordResetToken;
+import io.github.octopigeon.cptmpservice.utils.Utils;
 import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
@@ -18,8 +21,8 @@ import java.util.UUID;
  * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/9
- * @last-check-in 魏啸冲
- * @date 2020/7/9
+ * @last-check-in 李国鹏
+ * @date 2020/7/15
  */
 public class PasswordResetTokenMapperTest extends BaseTest {
 
@@ -28,6 +31,9 @@ public class PasswordResetTokenMapperTest extends BaseTest {
 
     @Autowired
     private CptmpUserMapper cptmpUserMapper;
+
+    @Autowired
+    private OrganizationMapper organizationMapper;
 
     @Test
     public void test() {
@@ -40,6 +46,19 @@ public class PasswordResetTokenMapperTest extends BaseTest {
         passwordResetToken.setToken(token);
         passwordResetToken.setEmail(userEmail);
 
+        //组织
+        organizationMapper.removeAllOrganizationTest();
+        Organization organization = new Organization();
+        organization.setGmtCreate(new Date());
+        organization.setRealName("test1");
+        organization.setName("test1");
+        organizationMapper.addOrganization(organization);
+        organization.setRealName("test2");
+        organization.setName("test2");
+        organizationMapper.addOrganization(organization);
+        Assertions.assertEquals(2,organizationMapper.findAllOrganization().size());
+        Assertions.assertEquals(5, Utils.getNullPropertyNames(organizationMapper.findAllOrganization().get(0)).length);
+
         // 创建用户
         CptmpUser cptmpUser = new CptmpUser();
         cptmpUser.setGmtCreate(new Date());
@@ -49,7 +68,7 @@ public class PasswordResetTokenMapperTest extends BaseTest {
         cptmpUser.setRoleName("ROLE_SCHOOL_TEACHER");
         cptmpUser.setCommonId("124124");
         cptmpUser.setName("wxc");
-        cptmpUser.setOrganizationId(BigInteger.valueOf(1L));
+        cptmpUser.setOrganizationId(organization.getId());
         cptmpUser.setEnabled(true);
         cptmpUser.setAccountNonExpired(true);
         cptmpUser.setCredentialsNonExpired(true);

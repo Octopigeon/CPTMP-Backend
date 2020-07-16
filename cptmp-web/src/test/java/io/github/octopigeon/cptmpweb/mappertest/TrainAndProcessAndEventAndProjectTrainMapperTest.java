@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -23,8 +24,8 @@ import java.util.List;
  * @version 1.0
  * @date 2020/7/14
  * 重要提示：此测试程序请勿删除，此测试文件测试覆盖率为100%
- * @last-check-in 魏啸冲
- * @date 2020/7/14
+ * @last-check-in 李国鹏
+ * @date 2020/7/15
  */
 public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
 
@@ -144,10 +145,10 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         Assertions.assertEquals(1, trains.size());
         Train train2 = trainMapper.findTrainByOrganizationId(trains.get(0).getOrganizationId()).get(0);
         Assertions.assertEquals(2, Utils.getNullPropertyNames(train2).length);
-        trainMapper.removeTrainById(trains.get(0).getId(), new Date());
+        trainMapper.hideTrainById(trains.get(0).getId(), new Date());
         Assertions.assertEquals(1,  trainMapper.findAllTrain().size());
         trainMapper.restoreAllTrain();
-        trainMapper.removeTrainsByOrganizationId(trains.get(0).getOrganizationId(), new Date());
+        trainMapper.hideTrainsByOrganizationId(trains.get(0).getOrganizationId(), new Date());
         Assertions.assertEquals(0, trainMapper.findAllTrain().size());
         trainMapper.restoreAllTrain();
 
@@ -222,6 +223,19 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         eventMapper.updateEventById(event);
         event = eventMapper.findEventById(event.getId());
         Assertions.assertEquals(1, Utils.getNullPropertyNames(event).length);
+
+        //删除与恢复
+        Assertions.assertEquals(2, eventMapper.findAllEvents().size());
+        eventMapper.hideAllEvent(new Date());
+        Assertions.assertEquals(0, eventMapper.findAllEvents().size());
+        eventMapper.restoreAllEvent();
+        Assertions.assertEquals(2, eventMapper.findAllEvents().size());
+
+        BigInteger restoreTestId = eventMapper.findAllEvents().get(0).getId();
+        eventMapper.hideEventById(eventMapper.findAllEvents().get(0).getId(),new Date());
+        Assertions.assertEquals(1, eventMapper.findAllEvents().size());
+        eventMapper.restoreEventById(restoreTestId);
+        Assertions.assertEquals(2, eventMapper.findAllEvents().size());
     }
 
 }

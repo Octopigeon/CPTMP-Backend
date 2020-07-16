@@ -7,7 +7,7 @@ import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
-import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
+import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileServiceImpl;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.springframework.beans.BeanUtils;
@@ -145,7 +145,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     public String uploadAvatar(MultipartFile file, String username) throws Exception {
         try{
             FileDTO fileInfo = storePublicFile(file);
-            cptmpUserMapper.updateAvatarByUsername(username, new Date(), fileInfo.getFilePath());
+            cptmpUserMapper.updateAvatarByUsername(username, new Date(), fileInfo.getFileUrl());
             return fileInfo.getFilePath();
         } catch (Exception e) {
             e.printStackTrace();

@@ -14,7 +14,8 @@ import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
-import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
+import io.github.octopigeon.cptmpservice.service.attachmentfile.AttachmentFileService;
+import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileServiceImpl;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.springframework.beans.BeanUtils;
@@ -47,6 +48,9 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
 
     @Autowired
     private TrainMapper trainMapper;
+
+    @Autowired
+    private AttachmentFileService attachmentFileService;
 
     @Autowired
     public ProjectServiceImpl(FileProperties fileProperties) throws Exception {
@@ -85,7 +89,7 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
         try{
             Project project = projectMapper.findTrainProjectById(dto.getId());
             if(project != null){
-                projectMapper.removeTrainProjectById(project.getId(), new Date());
+                projectMapper.hideTrainProjectById(project.getId(), new Date());
                 projectTrainMapper.removeProjectTrainsByProjectId(dto.getId());
             }
             else {
@@ -175,6 +179,24 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
         resourceLib.add(fileInfo);
         object.put(this.libJsonName, resourceLib);
         projectMapper.updateTrainProjectResourceById(projectId, new Date(), object.toJSONString());
+    }
+
+    /**
+     * 删除资源库中文件
+     *
+     * @param projectId 项目Id
+     * @param file      fileDTO
+     */
+    @Override
+    public void removeResourceLib(BigInteger projectId, FileDTO file) throws Exception {
+        Project project = projectMapper.findTrainProjectById(projectId);
+        JSONObject object = JSON.parseObject(project.getResourceLibrary());
+        List<FileDTO> resourceLib = JSON.parseArray(object.getJSONArray(this.libJsonName).toJSONString(), FileDTO.class);
+        resourceLib.remove(file);
+        object.put(this.libJsonName, resourceLib);
+        projectMapper.updateTrainProjectResourceById(projectId, new Date(), object.toJSONString());
+        attachmentFileService.remove(file);
+        removeFile(file.getFilePath());
     }
 
     /**

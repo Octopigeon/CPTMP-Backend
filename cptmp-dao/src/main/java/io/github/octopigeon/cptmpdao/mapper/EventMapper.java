@@ -13,8 +13,8 @@ import java.util.List;
  * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/14
- * @last-check-in 魏啸冲
- * @date 2020/7/14
+ * @last-check-in 李国鹏
+ * @date 2020/7/15
  */
 @Repository
 @Mapper
@@ -31,8 +31,7 @@ public interface EventMapper {
     @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
     void addEvent(Event event);
 
-    @Update("update cptmp_event set gmt_deleted = #{gmtDeleted} where id = #{id} and " + SOFT_DELETE_TAIL)
-    void removeEventById(BigInteger id, Date gmtDeleted);
+
 
     /**
      * 测试用
@@ -40,6 +39,19 @@ public interface EventMapper {
     @Deprecated
     @Delete("delete from cptmp_event")
     void removeAllEvents();
+
+    @Update("update cptmp_event set gmt_deleted = #{gmtDeleted} where "  + SOFT_DELETE_TAIL)
+    void hideAllEvent(Date gmtDeleted);
+
+    @Update("update cptmp_event set gmt_deleted = null where gmt_deleted is not null")
+    void restoreAllEvent();
+
+
+    @Update("update cptmp_event set gmt_deleted = #{gmtDeleted} where id = #{id} and " + SOFT_DELETE_TAIL)
+    void hideEventById(BigInteger id, Date gmtDeleted);
+
+    @Update("update cptmp_event set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
+    void restoreEventById(BigInteger id);
 
     @Update("update cptmp_event set " + UPDATE_CONTENT + " where id = #{id} and " + SOFT_DELETE_TAIL)
     void updateEventById(Event event);
@@ -58,11 +70,10 @@ public interface EventMapper {
     Event findEventById(BigInteger id);
 
     /**
-     * 测试用
-     * @return
+     * 查询所有事件
+     * @return 事件列表
      */
-    @Deprecated
-    @Select("select id, " + COLUMNS + " from cptmp_event")
+    @Select("select id, " + COLUMNS + " from cptmp_event where " + SOFT_DELETE_TAIL)
     @ResultMap("event")
     List<Event> findAllEvents();
 
