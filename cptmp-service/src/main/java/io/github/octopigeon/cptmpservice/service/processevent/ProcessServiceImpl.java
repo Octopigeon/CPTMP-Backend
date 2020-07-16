@@ -57,7 +57,7 @@ public class ProcessServiceImpl implements ProcessService{
     @Override
     public void remove(ProcessDTO dto) throws Exception {
         if(processMapper.findProcessById(dto.getId()) != null){
-            processMapper.removeProcessById(new Date(), dto.getId());
+            processMapper.hideProcessById(new Date(), dto.getId());
         }
     }
 
@@ -147,7 +147,7 @@ public class ProcessServiceImpl implements ProcessService{
     @Override
     public void removeByTrainId(BigInteger trainId) {
         List<Process> processes = processMapper.findProcessesByTrainId(trainId);
-        processMapper.removeProcessesByTrainId(new Date(), trainId);
+        processMapper.hideProcessesByTrainId(new Date(), trainId);
         for (Process process: processes) {
             processEventMapper.removeProcessEventsByProcessId(process.getId());
         }
