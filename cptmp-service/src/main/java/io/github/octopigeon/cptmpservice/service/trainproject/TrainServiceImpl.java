@@ -178,11 +178,13 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
         if(projectMapper.findTrainProjectById(projectId) == null){
             throw new ValueException("Project is not existed!");
         }
-        ProjectTrain trainProject = new ProjectTrain();
-        trainProject.setGmtCreate(new Date());
-        trainProject.setTrainId(trainId);
-        trainProject.setProjectId(projectId);
-        projectTrainMapper.addProjectTrain(trainProject);
+        if(projectTrainMapper.findProjectTrainByProjectIdAndTrainId(projectId, trainId) == null){
+            ProjectTrain trainProject = new ProjectTrain();
+            trainProject.setGmtCreate(new Date());
+            trainProject.setTrainId(trainId);
+            trainProject.setProjectId(projectId);
+            projectTrainMapper.addProjectTrain(trainProject);
+        }
     }
 
     /**
