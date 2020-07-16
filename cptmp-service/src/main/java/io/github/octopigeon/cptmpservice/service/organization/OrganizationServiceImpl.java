@@ -2,8 +2,11 @@ package io.github.octopigeon.cptmpservice.service.organization;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.mapper.OrganizationMapper;
+import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpdao.model.Organization;
+import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.organization.OrganizationDTO;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
@@ -29,6 +32,9 @@ public class OrganizationServiceImpl implements OrganizationService{
 
     @Autowired
     private OrganizationMapper organizationMapper;
+
+    @Autowired
+    private CptmpUserMapper cptmpUserMapper;
 
     /**
      * 添加数据
@@ -164,6 +170,29 @@ public class OrganizationServiceImpl implements OrganizationService{
         OrganizationDTO dto = new OrganizationDTO();
         BeanUtils.copyProperties(organization, dto);
         return dto;
+    }
+
+    /**
+     * 判断用户权限能否修改
+     *
+     * @param operatorId     操作者的Id
+     * @param operatedObject 被操作对象
+     * @return 是否有权限进行操作
+     */
+    @Override
+    public Boolean verifyPermissions(BigInteger operatorId, OrganizationDTO operatedObject) {
+        CptmpUser operator = cptmpUserMapper.findUserById(operatorId);
+        RoleEnum role = RoleEnum.valueOf(RoleEnum.class, operator.getRoleName());
+        if(RoleEnum.ROLE_ENTERPRISE_ADMIN.compareTo(role) >= 0){
+            return true;
+        }else {
+            if(operator.getOrganizationId().equals(operatedObject.getId())){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
     }
 
 
