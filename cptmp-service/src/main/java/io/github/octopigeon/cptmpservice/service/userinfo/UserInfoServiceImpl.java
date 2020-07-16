@@ -9,7 +9,7 @@ import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
-import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
+import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileServiceImpl;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.springframework.beans.BeanUtils;
@@ -89,15 +89,17 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         // 删除record中的记录
         // 最后删除user表中的记录
         BigInteger userId = dto.getId();
-        TeamPerson teamPerson = teamPersonMapper.findTeamPersonByUserId(userId);
-        if (teamPerson == null) {
-            recordMapper.hideRecordById(userId, new Date());
-        } else {
-            BigInteger teamPersonId = teamPerson.getId();
-            personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPersonId, new Date());
-            teamPersonMapper.removeTeamPersonByUserId(userId);
+        List<TeamPerson> teamPersons = teamPersonMapper.findTeamPersonByUserId(userId);
+        for (TeamPerson teamPerson : teamPersons) {
+            if (teamPerson == null) {
+                recordMapper.hideRecordById(userId, new Date());
+            } else {
+                BigInteger teamPersonId = teamPerson.getId();
+                personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPersonId, new Date());
+                teamPersonMapper.removeTeamPersonByUserId(userId);
+            }
+            cptmpUserMapper.removeUserById(userId, new Date());
         }
-        cptmpUserMapper.removeUserById(userId, new Date());
     }
 
     // 修改用户信息
@@ -170,7 +172,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     public String uploadAvatar(MultipartFile file, String username) throws Exception {
         try{
             FileDTO fileInfo = storePublicFile(file);
-            cptmpUserMapper.updateAvatarByUsername(username, new Date(), fileInfo.getFilePath());
+            cptmpUserMapper.updateAvatarByUsername(username, new Date(), fileInfo.getFileUrl());
             return fileInfo.getFilePath();
         } catch (Exception e) {
             e.printStackTrace();

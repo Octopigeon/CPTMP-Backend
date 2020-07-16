@@ -1,4 +1,4 @@
-package io.github.octopigeon.cptmpservice.service.basefileService;
+package io.github.octopigeon.cptmpservice.service.basefileservice;
 
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.*;
@@ -95,6 +96,26 @@ public class BaseFileServiceImpl implements BaseFileService {
         return loadFile(fileName, year, month, day, this.privateFileStorageLocation.toString());
     }
 
+    /**
+     * 移除路径中的文件
+     *
+     * @param path 路径
+     */
+    @Override
+    public Boolean removeFile(String path) throws Exception {
+        try{
+            File file= new File(path);
+            if(file.delete()){
+                return true;
+            }else {
+                throw new Exception("Delete file failed!");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new Exception(e);
+        }
+    }
+
     private Resource loadFile(String fileName, String year, String month, String day, String storagePath) throws Exception{
         try {
             Path path = Paths.get(storagePath, year, month, day);
@@ -135,8 +156,9 @@ public class BaseFileServiceImpl implements BaseFileService {
             FileDTO fileResp = new FileDTO();
             fileResp.setGmtCreate(new Date());
             fileResp.setFileName(fileName);
-            fileResp.setFilePath(String.format("%s/%s/%d/%d/%d/%s", this.domain, url, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DATE), fileName));
-            fileResp.setOriginalName(originName);
+            fileResp.setFilePath(filePath.toString());
+            fileResp.setFileUrl(String.format("%s/%s/%d/%d/%d/%s", this.domain, url, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DATE), fileName));
+            fileResp.setOriginName(originName);
             fileResp.setFileSize(file.getSize());
             fileResp.setFileType(file.getContentType());
             return fileResp;

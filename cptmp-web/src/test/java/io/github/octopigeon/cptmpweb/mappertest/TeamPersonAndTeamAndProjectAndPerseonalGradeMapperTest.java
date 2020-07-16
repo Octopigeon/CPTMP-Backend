@@ -186,7 +186,7 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         Assertions.assertEquals(0, teamPersonMapper.findAllTeamPerson().size());
         teamPersonMapper.addTeamPerson(teamPerson);
 
-        teamPerson = teamPersonMapper.findTeamPersonByUserId(cptmpUser.getId());
+        teamPerson = teamPersonMapper.findTeamPersonByUserId(cptmpUser.getId()).get(0);
         Assertions.assertEquals(2, Utils.getNullPropertyNames(teamPerson).length);
         teamPerson = teamPersonMapper.findTeamPersonByTeamId(team.getId()).get(0);
         Assertions.assertEquals(2, Utils.getNullPropertyNames(teamPerson).length);
