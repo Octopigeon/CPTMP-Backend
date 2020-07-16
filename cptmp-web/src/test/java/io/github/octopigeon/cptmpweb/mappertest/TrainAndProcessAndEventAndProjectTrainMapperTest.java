@@ -15,6 +15,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import java.util.List;
  * @date 2020/7/14
  * 重要提示：此测试程序请勿删除，此测试文件测试覆盖率为100%
  * @last-check-in 魏啸冲
- * @date 2020/7/14
+ * @date 2020/7/15
  */
 public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
 
@@ -98,6 +99,24 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         projectMapper.addTrainProject(project);
         project = projectMapper.findAllTrainProject().get(0);
         Assertions.assertEquals(2, Utils.getNullPropertyNames(project).length);
+        projectMapper.hideTrainProjectById(project.getId(), new Date());
+        Assertions.assertEquals(0, projectMapper.findAllTrainProject().size());
+        projectMapper.restoreAllTrainProjects();
+        Assertions.assertEquals(1, projectMapper.findAllTrainProject().size());
+        projectMapper.hideTrainProjectByName(project.getName(), new Date());
+        Assertions.assertEquals(0, projectMapper.findAllTrainProject().size());
+        projectMapper.restoreAllTrainProjects();
+        Assertions.assertEquals(1, projectMapper.findAllTrainProject().size());
+        project.setName("aptmp");
+        projectMapper.updateTrainProjectById(project);
+        project = projectMapper.findAllTrainProject().get(0);
+        Assertions.assertEquals("aptmp", project.getName());
+        projectMapper.updateTrainProjectResourceById(project.getId(), new Date(), "233");
+        project = projectMapper.findAllTrainProject().get(0);
+        Assertions.assertEquals("233", project.getResourceLibrary());
+        project = projectMapper.findTrainProjectById(project.getId());
+        Assertions.assertEquals(1, Utils.getNullPropertyNames(project).length);
+        Assertions.assertEquals(1, projectMapper.findTrainProjectByNameAmbiguously("p").size());
 
         ProjectTrain projectTrain = new ProjectTrain();
         projectTrain.setGmtCreate(new Date());
@@ -144,10 +163,10 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         Assertions.assertEquals(1, trains.size());
         Train train2 = trainMapper.findTrainByOrganizationId(trains.get(0).getOrganizationId()).get(0);
         Assertions.assertEquals(2, Utils.getNullPropertyNames(train2).length);
-        trainMapper.removeTrainById(trains.get(0).getId(), new Date());
+        trainMapper.hideTrainById(trains.get(0).getId(), new Date());
         Assertions.assertEquals(1,  trainMapper.findAllTrain().size());
         trainMapper.restoreAllTrain();
-        trainMapper.removeTrainsByOrganizationId(trains.get(0).getOrganizationId(), new Date());
+        trainMapper.hideTrainsByOrganizationId(trains.get(0).getOrganizationId(), new Date());
         Assertions.assertEquals(0, trainMapper.findAllTrain().size());
         trainMapper.restoreAllTrain();
 
@@ -170,6 +189,17 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         processMapper.updateProcessById(process);
         process = processMapper.findProcessById(process1.getId());
         Assertions.assertEquals(1, Utils.getNullPropertyNames(process).length);
+
+        BigInteger restoreTestId = processMapper.findAllProcesses().get(0).getId();
+        processMapper.hideProcessById(new Date(),processMapper.findAllProcesses().get(0).getId());
+        Assertions.assertEquals(1,processMapper.findAllProcesses().size());
+        BigInteger restoreTestTrainId = processMapper.findAllProcesses().get(0).getTrainId();
+        processMapper.hideProcessesByTrainId(new Date(),processMapper.findAllProcesses().get(0).getTrainId());
+        Assertions.assertEquals(0,processMapper.findAllProcesses().size());
+        processMapper.restoreProcessById(restoreTestId);
+        Assertions.assertEquals(1,processMapper.findAllProcesses().size());
+        processMapper.restoreProcessesByTrainId(restoreTestTrainId);
+        Assertions.assertEquals(2,processMapper.findAllProcesses().size());
 
         Event event = new Event();
         event.setGmtCreate(new Date());
@@ -222,6 +252,19 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         eventMapper.updateEventById(event);
         event = eventMapper.findEventById(event.getId());
         Assertions.assertEquals(1, Utils.getNullPropertyNames(event).length);
+
+        //删除与恢复
+        Assertions.assertEquals(2, eventMapper.findAllEvents().size());
+        eventMapper.hideAllEvent(new Date());
+        Assertions.assertEquals(0, eventMapper.findAllEvents().size());
+        eventMapper.restoreAllEvent();
+        Assertions.assertEquals(2, eventMapper.findAllEvents().size());
+
+        BigInteger restoreTestId1 = eventMapper.findAllEvents().get(0).getId();
+        eventMapper.hideEventById(eventMapper.findAllEvents().get(0).getId(),new Date());
+        Assertions.assertEquals(1, eventMapper.findAllEvents().size());
+        eventMapper.restoreEventById(restoreTestId1);
+        Assertions.assertEquals(2, eventMapper.findAllEvents().size());
     }
 
 }

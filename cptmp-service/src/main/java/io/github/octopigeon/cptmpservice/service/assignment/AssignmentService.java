@@ -1,4 +1,4 @@
-package io.github.octopigeon.cptmpservice.service.Assignment;
+package io.github.octopigeon.cptmpservice.service.assignment;
 
 import io.github.octopigeon.cptmpservice.dto.assignment.AssignmentDTO;
 import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalService;
