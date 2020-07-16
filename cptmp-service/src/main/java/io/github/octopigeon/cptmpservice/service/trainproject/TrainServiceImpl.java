@@ -13,7 +13,7 @@ import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.attachmentfile.AttachmentFileService;
-import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileServiceImpl;
+import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileServiceImpl;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.jetbrains.annotations.NotNull;

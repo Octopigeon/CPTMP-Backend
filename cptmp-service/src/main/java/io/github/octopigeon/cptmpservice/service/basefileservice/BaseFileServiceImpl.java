@@ -1,4 +1,4 @@
-package io.github.octopigeon.cptmpservice.service.basefileservice;
+package io.github.octopigeon.cptmpservice.service.basefileService;
 
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
@@ -24,7 +24,7 @@ import java.util.*;
  * @date 2020/7/11
  */
 @Service
-public class BaseFileServiceImpl implements BaseFileService {
+public class BaseFileServiceImpl implements io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileService {
     // 公开文件在本地存储的地址
     private final Path publicFileStorageLocation;
     // 隐私文件在本地存储的地址
