@@ -1,6 +1,6 @@
 package io.github.octopigeon.cptmpweb.controller;
 
-import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileService;
+import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

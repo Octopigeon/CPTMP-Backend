@@ -2,20 +2,29 @@ package io.github.octopigeon.cptmpservice.service.team;
 
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.dto.team.TeamDTO;
-import io.github.octopigeon.cptmpservice.service.basefileService.BaseFileService;
+import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileService;
 import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalService;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 import java.util.List;
 
 /**
- * @author Gh Li
+ * @author 李国豪
  * @version 1.0
  * @date 2020/7/14
- * @last-check-in Gh Li
+ * @last-check-in 李国豪
  * @date 2020/7/14
  */
 public interface TeamService extends BaseNormalService<TeamDTO>, BaseFileService {
+
+    /**
+     * 上传用户头像
+     * @param file 文件
+     * @param teamId 用户名
+     * @return
+     */
+    String uploadAvatar(MultipartFile file, BigInteger teamId) throws Exception;
 
     /**
      * 查找团队中的所有成员

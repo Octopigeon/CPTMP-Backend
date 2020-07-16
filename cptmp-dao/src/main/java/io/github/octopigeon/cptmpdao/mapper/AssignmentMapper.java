@@ -156,6 +156,10 @@ public interface AssignmentMapper {
     })
     List<Assignment> findAllAssignment();
 
+    @Select("select id, " + COLUMNS + " from assignment where id = #{id} and gmt_deleted is null")
+    @ResultMap("assignment")
+    Assignment findAssignmentById(BigInteger id);
+
 //    /**
 //     * 根据用户id查找日志
 //     * @param userId：用户id
