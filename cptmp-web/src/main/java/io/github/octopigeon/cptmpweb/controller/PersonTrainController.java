@@ -44,7 +44,7 @@ public class PersonTrainController {
      * @return 返回分数DTO
      */
     @Secured(CptmpRole.ROLE_STUDENT_MEMBER)
-    @GetMapping("/api/student/me/{teamId}/remark")
+    @GetMapping("/api/student/me/team/{teamId}/remark")
     public RespBeanWithPersonalGradeDTO getMyGrade(
             @PathVariable(value = "teamId") BigInteger teamId
     ) {
@@ -66,7 +66,7 @@ public class PersonTrainController {
      */
     @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN, CptmpRole.ROLE_SCHOOL_ADMIN,
     CptmpRole.ROLE_SCHOOL_TEACHER})
-    @GetMapping("/api/student/{userId}/{teamId}/remark")
+    @GetMapping("/api/student/{userId}/team/{teamId}/remark")
     public RespBeanWithPersonalGradeDTO getStudentGrade(
             @PathVariable(value = "userId") BigInteger userId,
             @PathVariable(value = "teamId") BigInteger teamId
@@ -95,7 +95,7 @@ public class PersonTrainController {
      */
     @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN, CptmpRole.ROLE_SCHOOL_ADMIN,
             CptmpRole.ROLE_SCHOOL_TEACHER})
-    @PutMapping("/api/student/{userId}/{teamId}/remark")
+    @PutMapping("/api/student/{userId}/team/{teamId}/remark")
     public RespBean updateStudentGrade(
             @PathVariable(value = "userId") BigInteger userId,
             @PathVariable(value = "teamId") BigInteger teamId,
@@ -108,6 +108,7 @@ public class PersonTrainController {
         String evaluation = objectMapper.readValue(json, ObjectNode.class).get("evaluation").asText();
         try {
             PersonalGradeDTO personalGradeDTO = new PersonalGradeDTO();
+            personalGradeDTO.setId(personalGradeService.findByUserIdAndTeamId(userId, teamId).getId());
             personalGradeDTO.setUserId(userId);
             personalGradeDTO.setTeamId(teamId);
             personalGradeDTO.setEvaluation(evaluation);
@@ -123,38 +124,6 @@ public class PersonTrainController {
             return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "modify student grade failed");
         }
     }
-
-    /**
-     * 老师权限以上的人可以给学生创建评分
-     * @param userId 用户id
-     * @param teamId 队伍id
-     * @return 返回创建结果
-     */
-    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN, CptmpRole.ROLE_SCHOOL_ADMIN,
-            CptmpRole.ROLE_SCHOOL_TEACHER})
-    @PostMapping("/api/student/{userId}/{teamId}/remark")
-    public RespBean addStudentGrade(
-            @PathVariable(value = "userId") BigInteger userId,
-            @PathVariable(value = "teamId") BigInteger teamId
-    ) {
-        String operatorUsername = SecurityContextHolder.getContext().getAuthentication().getName();
-        BigInteger operatorId = userInfoService.findByUsername(operatorUsername).getId();
-        try {
-            PersonalGradeDTO personalGradeDTO = new PersonalGradeDTO();
-            personalGradeDTO.setUserId(userId);
-            personalGradeDTO.setTeamId(teamId);
-            if (personalGradeService.verifyPermission(operatorId, personalGradeDTO)) {
-                personalGradeService.add(personalGradeDTO);
-                return RespBean.ok("add student grade success");
-            } else {
-                return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "add student grade failed");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "add student grade failed");
-        }
-    }
-
 
 }
 
