@@ -14,8 +14,8 @@ import java.util.List;
  * @version 2.1
  * @date 2020/7/9
  * 对应train_project表
- * last-check-in 魏啸冲
- * @date 2020/7/14
+ * last-check-in 李国鹏
+ * @date 2020/7/15
  */
 @Repository
 @Mapper
@@ -30,6 +30,7 @@ public interface ProjectMapper {
 
     /**
      * 插入实训项目
+     *
      * @param project：实训项目
      */
     @Insert("insert into train_project (" + COLUMNS + ") values (" + PROPS + ")")
@@ -47,61 +48,53 @@ public interface ProjectMapper {
     /**
      * 测试用
      */
-    @Update("update train_project set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
-    void removeAllTrainProjects(Date gmtDeleted);
+    @Update("update train_project set gmt_deleted = null")
+    void restoreAllTrainProjects();
+
     /**
      * 根据项目id删除对应的项目
+     *
      * @param id：项目id
      * @param gmtDeleted 删除日期
      */
     @Update("update train_project set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
-    void removeTrainProjectById(BigInteger id,Date gmtDeleted);
+    void hideTrainProjectById(BigInteger id, Date gmtDeleted);
 
+    @Update("update train_project set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
+    void restoreTrainProjectById(BigInteger id);
     /**
      * 根据项目名称删除对应的项目
+     *
      * @param name：项目名称
      * @param gmtDeleted 删除日期
      */
     @Update("update train_project set gmt_deleted = #{gmtDeleted} where idx_name = #{name} and gmt_deleted is null")
-    void removeTrainProjectByName(String name,Date gmtDeleted);
+    void hideTrainProjectByName(String name, Date gmtDeleted);
 
 
+    @Update("update train_project set gmt_deleted = null where idx_name = #{name} and gmt_deleted is not null")
+    void restoreTrainProjectByName(String name);
 
     /**
      * 根据id修改实训项目
      */
-    @Update("update train_project set "+ UPDATE_CONTENT +" where id = #{id} and gmt_deleted is null")
+    @Update("update train_project set " + UPDATE_CONTENT + " where id = #{id} and gmt_deleted is null")
     void updateTrainProjectById(Project project);
 
 
     /**
      * 更改资源
-     * @param id 项目id
-     * @param gmtModified 修改时间
+     *
+     * @param id              项目id
+     * @param gmtModified     修改时间
      * @param resourceLibrary 资源地址
      */
     @Update("update train_project set resource_library = #{resourceLibrary}, gmt_modified = #{gmtModified} where id = #{id} and gmt_deleted is null")
-    void updateTrainProjectResourceById(BigInteger id,Date gmtModified,String resourceLibrary);
-
-    /**
-     * 根据名称修改实训项目
-     */
-    @Update("update train_project set "+ UPDATE_CONTENT +" where idx_name = #{name} and gmt_deleted is null")
-    void updateTrainProjectByName(Project project);
-
-
-    /**
-     * 更改资源
-     * @param Name 项目名称
-     * @param gmtModified 修改时间
-     * @param resourceLibrary 资源地址
-     */
-    @Update("update train_project set resource_library = #{resourceLibrary}, gmt_modified = #{gmtModified} where idx_name = #{Name} and gmt_deleted is null")
-    void updateTrainProjectResourceByName(String Name,Date gmtModified,String resourceLibrary);
-
+    void updateTrainProjectResourceById(BigInteger id, Date gmtModified, String resourceLibrary);
 
     /**
      * 查询所有项目
+     *
      * @return 项目列表
      */
     @Select("select id, " + COLUMNS + " from train_project where gmt_deleted is null")
@@ -120,6 +113,7 @@ public interface ProjectMapper {
 
     /**
      * 根据项目id查找项目
+     *
      * @param id：项目id
      * @return 项目
      */
@@ -129,10 +123,11 @@ public interface ProjectMapper {
 
     /**
      * 根据项目名查找项目，模糊查找
-     * @param Name：项目名称
+     *
+     * @param name：项目名称
      * @return 项目
      */
-    @Select("select id, " + COLUMNS + " from train_project where idx_name like concat('%', #{Name}, '%') and gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from train_project where idx_name like concat('%', #{name}, '%') and gmt_deleted is null")
     @ResultMap("project")
-    List<Project> findTrainProjectByNameAmbiguously(String Name);
+    List<Project> findTrainProjectByNameAmbiguously(String name);
 }

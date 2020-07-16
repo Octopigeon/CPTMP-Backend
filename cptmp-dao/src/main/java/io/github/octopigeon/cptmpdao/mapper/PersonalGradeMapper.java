@@ -40,10 +40,16 @@ public interface PersonalGradeMapper {
     void removeAllPersonalGrades();
 
     @Update("update personal_grade set gmt_deleted = #{gmtDeleted} where id = #{id} and " + SOFT_DELETE_TAIL)
-    void removePersonalGradeById(BigInteger id, Date gmtDeleted);
+    void hidePersonalGradeById(BigInteger id, Date gmtDeleted);
+
+    @Update("update personal_grade set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
+    void restorePersonalGradeById(BigInteger id);
 
     @Update("update personal_grade set gmt_deleted = #{gmtDeleted} where uk_team_person_id = #{teamPersonId} and " + SOFT_DELETE_TAIL)
-    void removePersonalGradeByTeamPersonId(BigInteger teamPersonId, Date gmtDeleted);
+    void hidePersonalGradeByTeamPersonId(BigInteger teamPersonId, Date gmtDeleted);
+
+    @Update("update personal_grade set gmt_deleted = null where uk_team_person_id = #{teamPersonId} and and gmt_deleted is not null")
+    void restorePersonalGradeByTeamPersonId(BigInteger teamPersonId);
 
     /**
      * 测试用

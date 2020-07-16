@@ -13,8 +13,8 @@ import java.util.List;
  * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/14
- * @last-check-in 魏啸冲
- * @date 2020/7/14
+ * @last-check-in 李国鹏
+ * @date 2020/7/15
  */
 @Repository
 @Mapper
@@ -73,15 +73,15 @@ public interface ProcessEventMapper {
     @Select("select id, " + COLUMNS + " from process_event where process_id = #{processId} and event_id = #{eventId}")
     @ResultMap("process_event")
     ProcessEvent findProcessEventByProcessIdAndEventId(BigInteger processId, BigInteger eventId);
-
-    /**
-     * 测试用
-     * @return
-     */
-    @Deprecated
-    @Select("select id, " + COLUMNS + " from process_event")
-    @ResultMap("process_event")
-    List<ProcessEvent> findAllProcessEventsTest();
+//
+//    /**
+//     * 测试用
+//     * @return
+//     */
+//    @Deprecated
+//    @Select("select id, " + COLUMNS + " from process_event")
+//    @ResultMap("process_event")
+//    List<ProcessEvent> findAllProcessEventsTest();
 
     /**
      * @return
