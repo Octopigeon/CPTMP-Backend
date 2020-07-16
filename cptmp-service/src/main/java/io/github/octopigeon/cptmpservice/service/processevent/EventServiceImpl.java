@@ -52,7 +52,7 @@ public class EventServiceImpl implements EventService{
     @Override
     public void remove(EventDTO dto) throws Exception {
         if(eventMapper.findEventById(dto.getId()) != null){
-            eventMapper.removeEventById(dto.getId(), new Date());
+            eventMapper.hideEventById(dto.getId(), new Date());
             processEventMapper.removeProcessEventsByEventId(dto.getId());
         }else {
             throw new ValueException("Event is not Exist!");

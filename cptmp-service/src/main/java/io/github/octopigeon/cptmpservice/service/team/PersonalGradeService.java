@@ -36,4 +36,12 @@ public interface PersonalGradeService extends BaseNormalService<PersonalGradeDTO
      * @return
      */
     List<PersonalGradeDTO> findByUsername(String username);
+
+    /**
+     * 比较操作权限，判断调用用户是否有权限
+     * @param operatorId 操作者的userId
+     * @param operatedObject 被操作的对象
+     * @return 是是否有权限
+     */
+    Boolean verifyPermission(BigInteger operatorId, PersonalGradeDTO operatedObject);
 }

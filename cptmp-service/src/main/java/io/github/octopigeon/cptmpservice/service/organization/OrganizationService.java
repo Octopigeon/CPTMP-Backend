@@ -5,6 +5,8 @@ import io.github.octopigeon.cptmpservice.dto.organization.OrganizationDTO;
 import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
+
 /**
  * @author 李国豪
  * @version 1.0
@@ -43,4 +45,12 @@ public interface OrganizationService extends BaseNormalService<OrganizationDTO> 
      * @return
      */
     OrganizationDTO findByInvitationCode(String code);
+
+    /**
+     * 判断用户权限能否修改
+     * @param operatorId 操作者的Id
+     * @param operatedObject 被操作对象
+     * @return 是否有权限进行操作
+     */
+    Boolean verifyPermissions(BigInteger operatorId, OrganizationDTO operatedObject);
 }
