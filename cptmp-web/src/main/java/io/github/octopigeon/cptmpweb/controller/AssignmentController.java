@@ -7,8 +7,10 @@ import io.github.octopigeon.cptmpservice.dto.assignment.AssignmentDTO;
 import io.github.octopigeon.cptmpservice.dto.record.RecordDTO;
 import io.github.octopigeon.cptmpservice.dto.team.PersonalGradeDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
+import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.assignment.AssignmentService;
 import io.github.octopigeon.cptmpservice.service.record.RecordService;
+import io.github.octopigeon.cptmpservice.service.trainproject.TrainService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,9 +18,8 @@ import org.omg.CORBA.PUBLIC_MEMBER;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -39,8 +40,12 @@ public class AssignmentController {
     @Autowired
     private RecordService recordService;
 
+    @Autowired
+    private TrainService trainService;
+
     /**
      * 老师权限以上的人可以查找提交文件记录详细信息
+     *
      * @param id 提交文件的编号
      * @return 查找结果
      */
@@ -65,8 +70,18 @@ public class AssignmentController {
 //        String username = SecurityContextHolder.getContext().getAuthentication().getName();
 //
 //        try {
-//            RecordDTO = recordService.
+//            TrainDTO trainDTO = trainService.find
+//            RecordDTO recordDTO = recordService.find()
+//            AssignmentDTO assignmentDTO = assignmentService.
 //        }
+//    }
+
+//    @Secured(CptmpRole.ROLE_STUDENT_MEMBER)
+//    @PostMapping("/api/train/{trainId}/team/{teamId}/assignment")
+//    public RespBean uploadTeamMaterial(
+//            @RequestParam(value = "file") MultipartFile teamMaterial
+//    ) {
+//        assignmentService.uploadResourceLib();
 //    }
 
 }
