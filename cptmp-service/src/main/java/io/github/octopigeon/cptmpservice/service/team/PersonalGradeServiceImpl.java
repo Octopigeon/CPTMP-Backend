@@ -1,9 +1,12 @@
 package io.github.octopigeon.cptmpservice.service.team;
 
+import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.mapper.PersonalGradeMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
+import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpdao.model.PersonalGrade;
 import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
+import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.team.PersonalGradeDTO;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
@@ -16,10 +19,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Gh Li
+ * @author 李国豪
  * @version 1.0
  * @date 2020/7/15
- * @last-check-in Gh Li
+ * @last-check-in 李国豪
  * @date 2020/7/15
  */
 public class PersonalGradeServiceImpl implements PersonalGradeService{
@@ -29,6 +32,9 @@ public class PersonalGradeServiceImpl implements PersonalGradeService{
 
     @Autowired
     private PersonalGradeMapper personalGradeMapper;
+
+    @Autowired
+    private CptmpUserMapper cptmpUserMapper;
 
     /**
      * 根据userId和TeamId查询个人成绩
@@ -56,6 +62,47 @@ public class PersonalGradeServiceImpl implements PersonalGradeService{
             results.add(convertPersonalGrade(personalGradeMapper.findPersonalGradeById(teamPerson.getId())));
         }
         return results;
+    }
+
+    /**
+     * 使用用户名查询个人成绩
+     *
+     * @param username 用户名
+     * @return
+     */
+    @Override
+    public List<PersonalGradeDTO> findByUsername(String username) {
+        BigInteger userId = cptmpUserMapper.findUserByUsername(username).getId();
+        List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByUserId(userId);
+        List<PersonalGradeDTO> results = new ArrayList<>();
+        for (TeamPerson teamPerson : teamPeople) {
+            results.add(convertPersonalGrade(personalGradeMapper.findPersonalGradeById(teamPerson.getId())));
+        }
+        return results;
+    }
+
+    /**
+     * 比较操作权限，判断调用用户是否有权限
+     *
+     * @param operatorId     操作者的userId
+     * @param operatedObject 被操作的对象
+     * @return 是是否有权限
+     */
+    @Override
+    public Boolean verifyPermission(BigInteger operatorId, PersonalGradeDTO operatedObject) {
+        CptmpUser operator = cptmpUserMapper.findUserById(operatorId);
+        RoleEnum role = RoleEnum.valueOf(RoleEnum.class, operator.getRoleName());
+        if(RoleEnum.ROLE_ENTERPRISE_ADMIN.compareTo(role) >= 0){
+            return true;
+        }else {
+            CptmpUser operated = cptmpUserMapper.findUserById(operatedObject.getUserId());
+            if(operator.getOrganizationId().equals(operated.getOrganizationId())){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
     }
 
     /**
