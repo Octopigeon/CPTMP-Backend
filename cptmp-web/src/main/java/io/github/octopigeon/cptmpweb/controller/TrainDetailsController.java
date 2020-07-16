@@ -6,9 +6,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.pagehelper.PageInfo;
+import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.trainproject.TrainService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -46,7 +49,7 @@ public class TrainDetailsController {
         }catch(Exception e)
         {
             e.printStackTrace();
-            return RespBean.error(1,"something wrong");
+            return RespBean.error(CptmpStatusCode.REGISTER_FAILED,"Train create failed");
         }
     }
 
@@ -73,7 +76,7 @@ public class TrainDetailsController {
         }catch (Exception e)
         {
             e.printStackTrace();
-            return new RespBeanWithTrainList(1,"something wrong");
+            return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED,"something wrong");
         }
     }
 
@@ -111,13 +114,13 @@ public class TrainDetailsController {
                             searchByName.getPages()
                     );
                 default:
-                    return new RespBeanWithTrainList(1,"something wrong");
+                    return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED,"wrong property");
             }
 
         }catch (Exception e)
         {
             e.printStackTrace();
-            return new RespBeanWithTrainList(1,"something wrong");
+            return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED,"get train failed");
         }
     }
 
@@ -135,7 +138,7 @@ public class TrainDetailsController {
         }catch (Exception e)
         {
             e.printStackTrace();
-            return new RespBeanWithTrainInfo(1,"something wrong");
+            return new RespBeanWithTrainInfo(CptmpStatusCode.INFO_ACCESS_FAILED,"get train failed");
         }
     }
 
@@ -149,15 +152,17 @@ public class TrainDetailsController {
     {
         try{
             trainService.remove(trainService.findById(trainId));
-            return RespBean.ok("delete train successfully");
+            return RespBean.ok("train remove successfully");
         } catch (Exception e) {
             e.printStackTrace();
-            return new RespBean(1,"something wrong");
+            return new RespBean(CptmpStatusCode.REMOVE_FAILED,"train remove failed");
         }
 
     }
 }
 
+@Data
+@EqualsAndHashCode(callSuper = true)
 class RespBeanWithTrainInfo extends RespBean
 {
     public RespBeanWithTrainInfo(TrainDTO train)
@@ -175,6 +180,8 @@ class RespBeanWithTrainInfo extends RespBean
     private TrainDTO train;
 }
 
+@Data
+@EqualsAndHashCode(callSuper = true)
 class RespBeanWithTrainList extends RespBean
 {
     public RespBeanWithTrainList(List<TrainDTO> trains,int pageSize,int totalPages)
