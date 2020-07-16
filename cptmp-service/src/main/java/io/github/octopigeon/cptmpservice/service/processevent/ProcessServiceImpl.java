@@ -1,11 +1,13 @@
 package io.github.octopigeon.cptmpservice.service.processevent;
 
+import io.github.octopigeon.cptmpdao.mapper.EventMapper;
 import io.github.octopigeon.cptmpdao.mapper.ProcessMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProcessEventMapper;
 import io.github.octopigeon.cptmpdao.model.Process;
 import io.github.octopigeon.cptmpdao.model.relation.ProcessEvent;
 import io.github.octopigeon.cptmpservice.dto.processevent.ProcessDTO;
 import io.github.octopigeon.cptmpservice.utils.Utils;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,9 @@ public class ProcessServiceImpl implements ProcessService{
 
     @Autowired
     private ProcessEventMapper processEventMapper;
+
+    @Autowired
+    private EventMapper eventMapper;
 
     /**
      * 添加数据
@@ -103,11 +108,19 @@ public class ProcessServiceImpl implements ProcessService{
      */
     @Override
     public void addEvent(BigInteger processId, BigInteger eventId) {
-        ProcessEvent processEvent = new ProcessEvent();
-        processEvent.setGmtCreate(new Date());
-        processEvent.setEventId(eventId);
-        processEvent.setProcessId(processId);
-        processEventMapper.addProcessEvent(processEvent);
+        if(processMapper.findProcessById(processId) == null){
+            throw new ValueException("process is not exist!");
+        }
+        if(eventMapper.findEventById(eventId) == null){
+            throw new ValueException("event is not exist!");
+        }
+        if(processEventMapper.findProcessEventByProcessIdAndEventId(processId, eventId) == null){
+            ProcessEvent processEvent = new ProcessEvent();
+            processEvent.setGmtCreate(new Date());
+            processEvent.setEventId(eventId);
+            processEvent.setProcessId(processId);
+            processEventMapper.addProcessEvent(processEvent);
+        }
     }
 
     /**
