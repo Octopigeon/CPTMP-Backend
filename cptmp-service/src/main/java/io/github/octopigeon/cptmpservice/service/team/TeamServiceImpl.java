@@ -2,6 +2,7 @@ package io.github.octopigeon.cptmpservice.service.team;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.mapper.TeamMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
@@ -42,6 +43,9 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
 
     @Autowired
     private ProjectTrainMapper projectTrainMapper;
+
+    @Autowired
+    private CptmpUserMapper cptmpUserMapper;
 
     @Autowired
     public TeamServiceImpl(FileProperties fileProperties) throws Exception {
@@ -186,11 +190,21 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
      */
     @Override
     public void addUser(BigInteger teamId, BigInteger userId) {
-        TeamPerson teamPerson = new TeamPerson();
-        teamPerson.setGmtCreate(new Date());
-        teamPerson.setTeamId(teamId);
-        teamPerson.setUserId(userId);
-        teamPersonMapper.addTeamPerson(teamPerson);
+        if(teamMapper.findTeamByTeamId(teamId) == null){
+            throw new ValueException("Team is not exist!");
+        }
+        if(cptmpUserMapper.findUserById(userId) == null){
+            throw new ValueException("User is not exist!");
+        }
+        //检查成员是不是已经被加入
+        if(teamPersonMapper.findTeamPersonByTeamIdAndUserId(teamId, userId) == null){
+            //添加成员
+            TeamPerson teamPerson = new TeamPerson();
+            teamPerson.setGmtCreate(new Date());
+            teamPerson.setTeamId(teamId);
+            teamPerson.setUserId(userId);
+            teamPersonMapper.addTeamPerson(teamPerson);
+        }
     }
 
     /**
