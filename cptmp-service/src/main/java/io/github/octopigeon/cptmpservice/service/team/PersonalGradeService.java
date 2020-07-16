@@ -2,6 +2,7 @@ package io.github.octopigeon.cptmpservice.service.team;
 
 import io.github.octopigeon.cptmpservice.dto.team.PersonalGradeDTO;
 import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalService;
+import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.List;
  * @last-check-in Gh Li
  * @date 2020/7/15
  */
+@Service
 public interface PersonalGradeService extends BaseNormalService<PersonalGradeDTO> {
 
     /**
