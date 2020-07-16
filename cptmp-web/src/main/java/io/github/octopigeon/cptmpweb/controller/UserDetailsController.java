@@ -49,6 +49,31 @@ public class UserDetailsController {
     }
 
     /**
+     * 根据id批量获取用户信息
+     * @param json
+     * @return
+     * @throws JsonProcessingException
+     */
+    @GetMapping("/api/user")
+    public RespBeanWithBaseUserInfoList getBasicInfo(@RequestBody String json) throws JsonProcessingException
+    {
+        ObjectMapper objectMapper = new ObjectMapper();
+        BigInteger[] userIdList = objectMapper.readValue(json,BigInteger[].class);
+        List<BaseUserInfoDTO> userList = new ArrayList<>();
+        try{
+            for (BigInteger userId:userIdList)
+            {
+                userList.add(userInfoService.findById(userId));
+            }
+            return new RespBeanWithBaseUserInfoList(userList);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new RespBeanWithBaseUserInfoList(CptmpStatusCode.INFO_ACCESS_FAILED,"get user info failed");
+        }
+    }
+
+    /**
      * 修改用户信息，如姓名，性别，简介信息等
      * @param json 包含姓名、性别和简介的json
      * @return ok-成功 error-失败
@@ -195,6 +220,26 @@ class RespBeanWithBaseUserInfoDTO extends RespBean {
 
     @JsonProperty("data")
     private BaseUserInfoDTO baseUserInfoDTO;
+
+}
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+class RespBeanWithBaseUserInfoList extends RespBean {
+
+    public RespBeanWithBaseUserInfoList(List<BaseUserInfoDTO> baseUserInfoList)
+    {
+        super();
+        this.baseUserInfoList = baseUserInfoList;
+    }
+
+    public RespBeanWithBaseUserInfoList(Integer status, String msg)
+    {
+        super(status, msg);
+    }
+
+    @JsonProperty("data")
+    private List<BaseUserInfoDTO> baseUserInfoList;
 
 }
 

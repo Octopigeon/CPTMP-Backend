@@ -11,7 +11,7 @@ import java.util.Date;
  * @version 1.0
  * @date 2020/7/14
  * @last-check-in 陈若琳
- * @date 2020/7/14
+ * @date 2020/7/16
  */
 @Data
 public class TrainDTO {
