@@ -27,8 +27,8 @@ import java.util.List;
  * @version 1.0
  * @date 2020/7/10
  * 用于提供各种与用户信息交互的接口
- * @last-check-in 魏啸冲
- * @date 2020/7/14
+ * @last-check-in 陈若琳
+ * @date 2020/7/16
  */
 @RestController
 public class UserDetailsController {
@@ -240,6 +240,6 @@ class RespBeanWithBaseUserInfoList extends RespBean {
     private long totalRows;
     @JsonProperty("data")
     private List<BaseUserInfoDTO> baseUserInfoList;
-    
+
 }
 
