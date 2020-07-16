@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
@@ -49,29 +50,25 @@ public class UserDetailsController {
     }
 
     /**
-     * 根据id批量获取用户信息
-     * @param json
+     *获取所有用户信息
      * @return
-     * @throws JsonProcessingException
      */
     @GetMapping("/api/user")
-    public RespBeanWithBaseUserInfoList getBasicInfo(@RequestBody String json) throws JsonProcessingException
+    public RespBeanWithBaseUserInfoList getAllUser(@RequestBody String json) throws JsonProcessingException
     {
         ObjectMapper objectMapper = new ObjectMapper();
-        BigInteger[] userIdList = objectMapper.readValue(json,BigInteger[].class);
-        List<BaseUserInfoDTO> userList = new ArrayList<>();
+        int offset = objectMapper.readValue(json,ObjectNode.class).get("offset").asInt();
+        int page = objectMapper.readValue(json,ObjectNode.class).get("page").asInt();
         try{
-            for (BigInteger userId:userIdList)
-            {
-                userList.add(userInfoService.findById(userId));
-            }
-            return new RespBeanWithBaseUserInfoList(userList);
+            PageInfo<BaseUserInfoDTO> pageInfo = userInfoService.findAllByPage(page,offset);
+            List<BaseUserInfoDTO> userList = pageInfo.getList();
+            return new RespBeanWithBaseUserInfoList(userList,pageInfo.getTotal());
         }catch (Exception e)
         {
-            e.printStackTrace();
-            return new RespBeanWithBaseUserInfoList(CptmpStatusCode.INFO_ACCESS_FAILED,"get user info failed");
+            return  new RespBeanWithBaseUserInfoList(CptmpStatusCode.INFO_ACCESS_FAILED,"get user info failed");
         }
     }
+
 
     /**
      * 修改用户信息，如姓名，性别，简介信息等
@@ -227,10 +224,11 @@ class RespBeanWithBaseUserInfoDTO extends RespBean {
 @EqualsAndHashCode(callSuper = true)
 class RespBeanWithBaseUserInfoList extends RespBean {
 
-    public RespBeanWithBaseUserInfoList(List<BaseUserInfoDTO> baseUserInfoList)
+    public RespBeanWithBaseUserInfoList(List<BaseUserInfoDTO> baseUserInfoList,long totalRows)
     {
         super();
         this.baseUserInfoList = baseUserInfoList;
+        this.totalRows = totalRows;
     }
 
     public RespBeanWithBaseUserInfoList(Integer status, String msg)
@@ -238,8 +236,10 @@ class RespBeanWithBaseUserInfoList extends RespBean {
         super(status, msg);
     }
 
+    @JsonProperty("total_rows")
+    private long totalRows;
     @JsonProperty("data")
     private List<BaseUserInfoDTO> baseUserInfoList;
-
+    
 }
 
