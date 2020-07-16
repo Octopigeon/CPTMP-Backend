@@ -23,6 +23,6 @@ public class Record {
     private BigInteger teamId;
     private BigInteger trainId;
     private BigInteger processEventId;
-    private String assignmentsLib;
+    private BigInteger assignmentId;
 
 }
