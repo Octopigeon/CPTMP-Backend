@@ -16,6 +16,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
@@ -36,6 +37,8 @@ public class PersonTrainController {
 
     @Autowired
     private UserInfoService userInfoService;
+
+    // TODO 加上分数的访问的权限判断
 
     /**
      * 学生查询自己在某个队伍里的成绩
@@ -70,9 +73,15 @@ public class PersonTrainController {
             @PathVariable(value = "userId") BigInteger userId,
             @PathVariable(value = "teamId") BigInteger teamId
     ) {
+        String operatorUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        BigInteger operatorId = userInfoService.findByUsername(operatorUsername).getId();
         try {
             PersonalGradeDTO personalGradeDTO = personalGradeService.findByUserIdAndTeamId(userId, teamId);
-            return new RespBeanWithPersonalGradeDTO(personalGradeDTO);
+            if (personalGradeService.verifyPermission(operatorId, personalGradeDTO)) {
+                return new RespBeanWithPersonalGradeDTO(personalGradeDTO);
+            } else {
+                return new RespBeanWithPersonalGradeDTO(CptmpStatusCode.INFO_ACCESS_FAILED, "get student grade failed");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return new RespBeanWithPersonalGradeDTO(CptmpStatusCode.INFO_ACCESS_FAILED, "get student grade failed");
@@ -94,6 +103,8 @@ public class PersonTrainController {
             @PathVariable(value = "teamId") BigInteger teamId,
             @RequestBody String json
     ) throws JsonProcessingException {
+        String operatorUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        BigInteger operatorId = userInfoService.findByUsername(operatorUsername).getId();
         ObjectMapper objectMapper = new ObjectMapper();
         Integer personalGrade = objectMapper.readValue(json, ObjectNode.class).get("personal_grade").asInt();
         String evaluation = objectMapper.readValue(json, ObjectNode.class).get("evaluation").asText();
@@ -103,8 +114,12 @@ public class PersonTrainController {
             personalGradeDTO.setTeamId(teamId);
             personalGradeDTO.setEvaluation(evaluation);
             personalGradeDTO.setPersonalGrade(personalGrade);
-            personalGradeService.modify(personalGradeDTO);
-            return RespBean.ok("modify student grade success");
+            if (personalGradeService.verifyPermission(operatorId, personalGradeDTO)) {
+                personalGradeService.modify(personalGradeDTO);
+                return RespBean.ok("modify student grade success");
+            } else {
+                return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "modify student grade failed");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "modify student grade failed");
@@ -124,12 +139,18 @@ public class PersonTrainController {
             @PathVariable(value = "userId") BigInteger userId,
             @PathVariable(value = "teamId") BigInteger teamId
     ) {
+        String operatorUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        BigInteger operatorId = userInfoService.findByUsername(operatorUsername).getId();
         try {
             PersonalGradeDTO personalGradeDTO = new PersonalGradeDTO();
             personalGradeDTO.setUserId(userId);
             personalGradeDTO.setTeamId(teamId);
-            personalGradeService.add(personalGradeDTO);
-            return RespBean.ok("add student grade success");
+            if (personalGradeService.verifyPermission(operatorId, personalGradeDTO)) {
+                personalGradeService.add(personalGradeDTO);
+                return RespBean.ok("add student grade success");
+            } else {
+                return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "add student grade failed");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "add student grade failed");
