@@ -1,7 +1,11 @@
 package io.github.octopigeon.cptmpweb.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
+import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.organization.OrganizationDTO;
 import io.github.octopigeon.cptmpservice.dto.team.PersonalGradeDTO;
 import io.github.octopigeon.cptmpservice.service.team.PersonalGradeService;
@@ -12,9 +16,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 
@@ -35,24 +37,105 @@ public class PersonTrainController {
     @Autowired
     private UserInfoService userInfoService;
 
-    // TODO 本controller由于service层尚未完成，不能测试
-
     /**
-     * 学生查询自己的成绩
+     * 学生查询自己在某个队伍里的成绩
      *
      * @return 返回分数DTO
      */
     @Secured(CptmpRole.ROLE_STUDENT_MEMBER)
-    @GetMapping("/api/student/me/grade")
-    public RespBeanWithPersonalGradeDTO getMyGrade() {
+    @GetMapping("/api/student/me/{teamId}/remark")
+    public RespBeanWithPersonalGradeDTO getMyGrade(
+            @PathVariable(value = "teamId") BigInteger teamId
+    ) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         BigInteger userId = userInfoService.findByUsername(username).getId();
         try {
-            // TODO 需要service层提供通过用户名和userId查找功能
-            //PersonalGradeDTO personalGradeDTO = personalGradeService
-            return new RespBeanWithPersonalGradeDTO()
+            PersonalGradeDTO personalGradeDTO = personalGradeService.findByUserIdAndTeamId(userId, teamId);
+            return new RespBeanWithPersonalGradeDTO(personalGradeDTO);
+        } catch (Exception e) {
+            return new RespBeanWithPersonalGradeDTO(CptmpStatusCode.INFO_ACCESS_FAILED, "get grade failed");
         }
     }
+
+    /**
+     * 老师查询学生的成绩
+     * @param userId 用户id
+     * @param teamId 队伍id
+     * @return 返回查询到的结果
+     */
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN, CptmpRole.ROLE_SCHOOL_ADMIN,
+    CptmpRole.ROLE_SCHOOL_TEACHER})
+    @GetMapping("/api/student/{userId}/{teamId}/remark")
+    public RespBeanWithPersonalGradeDTO getStudentGrade(
+            @PathVariable(value = "userId") BigInteger userId,
+            @PathVariable(value = "teamId") BigInteger teamId
+    ) {
+        try {
+            PersonalGradeDTO personalGradeDTO = personalGradeService.findByUserIdAndTeamId(userId, teamId);
+            return new RespBeanWithPersonalGradeDTO(personalGradeDTO);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new RespBeanWithPersonalGradeDTO(CptmpStatusCode.INFO_ACCESS_FAILED, "get student grade failed");
+        }
+    }
+
+    /**
+     * 老师权限及以上的人可以修改学生的分数
+     * @param userId 待修改学生的id
+     * @param teamId 待修改学生所在队伍id
+     * @param json 一个json，包含修改的分数以及评价
+     * @return 修改是否成功
+     */
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN, CptmpRole.ROLE_SCHOOL_ADMIN,
+            CptmpRole.ROLE_SCHOOL_TEACHER})
+    @PutMapping("/api/student/{userId}/{teamId}/remark")
+    public RespBean updateStudentGrade(
+            @PathVariable(value = "userId") BigInteger userId,
+            @PathVariable(value = "teamId") BigInteger teamId,
+            @RequestBody String json
+    ) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Integer personalGrade = objectMapper.readValue(json, ObjectNode.class).get("personal_grade").asInt();
+        String evaluation = objectMapper.readValue(json, ObjectNode.class).get("evaluation").asText();
+        try {
+            PersonalGradeDTO personalGradeDTO = new PersonalGradeDTO();
+            personalGradeDTO.setUserId(userId);
+            personalGradeDTO.setTeamId(teamId);
+            personalGradeDTO.setEvaluation(evaluation);
+            personalGradeDTO.setPersonalGrade(personalGrade);
+            personalGradeService.modify(personalGradeDTO);
+            return RespBean.ok("modify student grade success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "modify student grade failed");
+        }
+    }
+
+    /**
+     * 老师权限以上的人可以给学生创建评分
+     * @param userId 用户id
+     * @param teamId 队伍id
+     * @return 返回创建结果
+     */
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN, CptmpRole.ROLE_SCHOOL_ADMIN,
+            CptmpRole.ROLE_SCHOOL_TEACHER})
+    @PostMapping("/api/student/{userId}/{teamId}/remark")
+    public RespBean addStudentGrade(
+            @PathVariable(value = "userId") BigInteger userId,
+            @PathVariable(value = "teamId") BigInteger teamId
+    ) {
+        try {
+            PersonalGradeDTO personalGradeDTO = new PersonalGradeDTO();
+            personalGradeDTO.setUserId(userId);
+            personalGradeDTO.setTeamId(teamId);
+            personalGradeService.add(personalGradeDTO);
+            return RespBean.ok("add student grade success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "add student grade failed");
+        }
+    }
+
 
 }
 

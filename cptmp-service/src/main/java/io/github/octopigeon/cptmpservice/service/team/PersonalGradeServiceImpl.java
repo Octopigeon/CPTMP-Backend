@@ -9,6 +9,7 @@ import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import java.util.List;
  * @last-check-in Gh Li
  * @date 2020/7/15
  */
+@Service
 public class PersonalGradeServiceImpl implements PersonalGradeService{
 
     @Autowired
