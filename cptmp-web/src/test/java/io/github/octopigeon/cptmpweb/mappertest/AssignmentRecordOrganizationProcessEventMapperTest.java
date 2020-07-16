@@ -77,7 +77,6 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
     public void test() throws Exception {
 
 
-
         // 创建作业表
         Assignment assignment = new Assignment();
         assignment.setGmtCreate(new Date());
@@ -90,9 +89,9 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         assignmentMapper.addAssignment(assignment);
         assignmentMapper.addAssignment(assignment);
         Assertions.assertEquals(2, assignmentMapper.findAllAssignment().size());
-        Assertions.assertEquals(2,Utils.getNullPropertyNames(assignmentMapper.findAllAssignment().get(0)).length);
+        Assertions.assertEquals(2, Utils.getNullPropertyNames(assignmentMapper.findAllAssignment().get(0)).length);
         //删除作业
-        assignmentMapper.removeAssignmentById(assignmentMapper.findAllAssignment().get(0).getId(),new Date());
+        assignmentMapper.removeAssignmentById(assignmentMapper.findAllAssignment().get(0).getId(), new Date());
         Assertions.assertEquals(1, assignmentMapper.findAllAssignment().size());
 
         //更新作业
@@ -100,7 +99,7 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         assignment3.setContent("test3");
         assignmentMapper.updateAssignmentById(assignment3);
         Assertions.assertEquals("test3", assignmentMapper.findAllAssignment().get(0).getContent());
-        assignmentMapper.updateAssignmentDocumentById(assignmentMapper.findAllAssignment().get(0).getId(),new Date(),"test3");
+        assignmentMapper.updateAssignmentDocumentById(assignmentMapper.findAllAssignment().get(0).getId(), new Date(), "test3");
         Assertions.assertEquals("test3", assignmentMapper.findAllAssignment().get(0).getDocumentPath());
         //移除所有作业
         assignmentMapper.removeAllAssignment(new Date());
@@ -124,27 +123,27 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         organization.setName("test2");
         organization.setInvitationCode("test2");
         organizationMapper.addOrganization(organization);
-        Assertions.assertEquals(2,organizationMapper.findAllOrganization().size());
-        Assertions.assertEquals(4,Utils.getNullPropertyNames(organizationMapper.findAllOrganization().get(0)).length);
+        Assertions.assertEquals(2, organizationMapper.findAllOrganization().size());
+        Assertions.assertEquals(4, Utils.getNullPropertyNames(organizationMapper.findAllOrganization().get(0)).length);
         //根据id修改组织
         Organization organization3 = organizationMapper.findAllOrganization().get(1);
         organization3.setName("test3");
         organizationMapper.updateOrganizationById(organization3);
-        Assertions.assertEquals("test3",organizationMapper.findAllOrganization().get(1).getName());
+        Assertions.assertEquals("test3", organizationMapper.findAllOrganization().get(1).getName());
         //删除组织
         organizationMapper.hideAllOrganization(new Date());
-        Assertions.assertEquals(0,organizationMapper.findAllOrganization().size());
+        Assertions.assertEquals(0, organizationMapper.findAllOrganization().size());
         organizationMapper.restoreAllOrganization();
-        Assertions.assertEquals(2,organizationMapper.findAllOrganization().size());
+        Assertions.assertEquals(2, organizationMapper.findAllOrganization().size());
         BigInteger restoreTestId = organizationMapper.findAllOrganization().get(1).getId();
-        organizationMapper.hideOrganizationById(organizationMapper.findAllOrganization().get(1).getId(),new Date());
-        Assertions.assertEquals(1,organizationMapper.findAllOrganization().size());
+        organizationMapper.hideOrganizationById(organizationMapper.findAllOrganization().get(1).getId(), new Date());
+        Assertions.assertEquals(1, organizationMapper.findAllOrganization().size());
         organizationMapper.restoreOrganizationById(restoreTestId);
-        Assertions.assertEquals(2,organizationMapper.findAllOrganization().size());
+        Assertions.assertEquals(2, organizationMapper.findAllOrganization().size());
         //查询(find 与 get 操作对象不同，为了测试)
-        Assertions.assertEquals("test1",organizationMapper.findOrganizationByRealName("test1").getInvitationCode());
-        Assertions.assertEquals("test1",organizationMapper.findOrganizationByInvitationCode("test1").getName());
-        Assertions.assertEquals("test1",organizationMapper.findOrganizationByName("test1").getRealName());
+        Assertions.assertEquals("test1", organizationMapper.findOrganizationByRealName("test1").getInvitationCode());
+        Assertions.assertEquals("test1", organizationMapper.findOrganizationByInvitationCode("test1").getName());
+        Assertions.assertEquals("test1", organizationMapper.findOrganizationByName("test1").getRealName());
 
         //用户
         // 创建学校
@@ -178,12 +177,12 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         project.setName("test1");
         projectMapper.addTrainProject(project);
         projectMapper.addTrainProject(project);
-        Assertions.assertEquals(2,projectMapper.findAllTrainProject().size());
-        Assertions.assertEquals(2,Utils.getNullPropertyNames(projectMapper.findAllTrainProject().get(0)).length);
+        Assertions.assertEquals(2, projectMapper.findAllTrainProject().size());
+        Assertions.assertEquals(2, Utils.getNullPropertyNames(projectMapper.findAllTrainProject().get(0)).length);
 
         //实训
         trainMapper.removeAllTrain();
-        Train train =new Train();
+        Train train = new Train();
         train.setGmtCreate(new Date());
         train.setStartTime(new Date());
         train.setEndTime(new Date());
@@ -195,8 +194,8 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         train.setResourceLibrary("test1");
         trainMapper.addTrain(train);
         trainMapper.addTrain(train);
-        Assertions.assertEquals(2,trainMapper.findAllTrain().size());
-        Assertions.assertEquals(2,Utils.getNullPropertyNames(trainMapper.findAllTrain().get(0)).length);
+        Assertions.assertEquals(2, trainMapper.findAllTrain().size());
+        Assertions.assertEquals(2, Utils.getNullPropertyNames(trainMapper.findAllTrain().get(0)).length);
 
         projectTrainMapper.removeAllProjectTrain();
         ProjectTrain projectTrain = new ProjectTrain();
@@ -205,9 +204,8 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         projectTrain.setTrainId(train.getId());
         projectTrainMapper.addProjectTrain(projectTrain);
         projectTrainMapper.addProjectTrain(projectTrain);
-        Assertions.assertEquals(2,projectTrainMapper.findAllProjectTrains().size());
-        Assertions.assertEquals(2,Utils.getNullPropertyNames(projectTrainMapper.findAllProjectTrains().get(0)).length);
-
+        Assertions.assertEquals(2, projectTrainMapper.findAllProjectTrains().size());
+        Assertions.assertEquals(2, Utils.getNullPropertyNames(projectTrainMapper.findAllProjectTrains().get(0)).length);
 
 
         //团队
@@ -220,8 +218,8 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         teamMapper.addTeam(team);
         team.setProjectTrainId(projectTrainMapper.findAllProjectTrains().get(0).getId());
         teamMapper.addTeam(team);
-        Assertions.assertEquals(2,teamMapper.findAllTeam().size());
-        Assertions.assertEquals(5,Utils.getNullPropertyNames(teamMapper.findAllTeam().get(0)).length);
+        Assertions.assertEquals(2, teamMapper.findAllTeam().size());
+        Assertions.assertEquals(5, Utils.getNullPropertyNames(teamMapper.findAllTeam().get(0)).length);
 
         //流程
         processMapper.removeAllProcesses();
@@ -246,44 +244,44 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
 
         //流程事件
         processEventMapper.removeAllProcessEvents();
-        ProcessEvent processEvent =new ProcessEvent();
+        ProcessEvent processEvent = new ProcessEvent();
         processEvent.setGmtCreate(new Date());
         processEvent.setProcessId(process.getId());
         processEvent.setEventId(event.getId());
         //增加流程事件
         processEventMapper.addProcessEvent(processEvent);
         processEventMapper.addProcessEvent(processEvent);
-        Assertions.assertEquals(2,processEventMapper.findAllProcessEvents().size());
-        Assertions.assertEquals(2,Utils.getNullPropertyNames(processEventMapper.findAllProcessEvents().get(0)).length);
+        Assertions.assertEquals(2, processEventMapper.findAllProcessEvents().size());
+        Assertions.assertEquals(2, Utils.getNullPropertyNames(processEventMapper.findAllProcessEvents().get(0)).length);
 
         //删除
         processEventMapper.removeProcessEventById(processEventMapper.findAllProcessEvents().get(1).getId());
-        Assertions.assertEquals(1,processEventMapper.findAllProcessEvents().size());
+        Assertions.assertEquals(1, processEventMapper.findAllProcessEvents().size());
         processEventMapper.addProcessEvent(processEvent);
-        Assertions.assertEquals(2,processEventMapper.findAllProcessEvents().size());
+        Assertions.assertEquals(2, processEventMapper.findAllProcessEvents().size());
         processEventMapper.removeProcessEventsByProcessId(process.getId());
-        Assertions.assertEquals(0,processEventMapper.findAllProcessEvents().size());
+        Assertions.assertEquals(0, processEventMapper.findAllProcessEvents().size());
         processEventMapper.addProcessEvent(processEvent);
-        Assertions.assertEquals(1,processEventMapper.findAllProcessEvents().size());
+        Assertions.assertEquals(1, processEventMapper.findAllProcessEvents().size());
         processEventMapper.removeProcessEventsByEventId(event.getId());
-        Assertions.assertEquals(0,processEventMapper.findAllProcessEvents().size());
+        Assertions.assertEquals(0, processEventMapper.findAllProcessEvents().size());
         processEventMapper.addProcessEvent(processEvent);
-        Assertions.assertEquals(1,processEventMapper.findAllProcessEvents().size());
-        processEventMapper.removeProcessEventByProcessIdAndEventId(process.getId(),event.getId());
-        Assertions.assertEquals(0,processEventMapper.findAllProcessEvents().size());
+        Assertions.assertEquals(1, processEventMapper.findAllProcessEvents().size());
+        processEventMapper.removeProcessEventByProcessIdAndEventId(process.getId(), event.getId());
+        Assertions.assertEquals(0, processEventMapper.findAllProcessEvents().size());
         processEventMapper.addProcessEvent(processEvent);
         processEventMapper.addProcessEvent(processEvent);
-        Assertions.assertEquals(2,processEventMapper.findAllProcessEvents().size());
+        Assertions.assertEquals(2, processEventMapper.findAllProcessEvents().size());
 
         //修改流程事件
         processEvent.setProcessId(processMapper.findAllProcesses().get(1).getId());
         processEventMapper.updateProcessEventById(processEvent);
-        Assertions.assertEquals(processMapper.findAllProcesses().get(1).getId(),processEventMapper.findAllProcessEvents().get(0).getProcessId());
+        Assertions.assertEquals(processMapper.findAllProcesses().get(1).getId(), processEventMapper.findAllProcessEvents().get(0).getProcessId());
 
 
         //活动记录
         recordMapper.removeAllRecordTest();
-        Record record1 =new Record();
+        Record record1 = new Record();
         record1.setGmtCreate(new Date());
         record1.setUserId(cptmpUserMapper.findAllUsers().get(0).getId());
         record1.setTeamId(teamMapper.findAllTeam().get(0).getId());
@@ -297,18 +295,23 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         Assertions.assertEquals(2, recordMapper.findAllRecord().size());
 
         //查询
-        Record record3=record1;
+        Record record3 = record1;
         record3.setTeamId(teamMapper.findAllTeam().get(1).getId());
         recordMapper.updateRecordById(record3);
         Assertions.assertEquals(teamMapper.findAllTeam().get(1).getId(), recordMapper.findRecordByTeamId(teamMapper.findAllTeam().get(1).getId()).get(0).getTeamId());
 
-        recordMapper.hideRecordById(recordMapper.findAllRecord().get(0).getId(),new Date());
+        BigInteger restoreRecordTestId = recordMapper.findAllRecord().get(0).getId();
+        recordMapper.hideRecordById(recordMapper.findAllRecord().get(0).getId(), new Date());
         Assertions.assertEquals(1, recordMapper.findAllRecord().size());
+        recordMapper.restoreRecordById(restoreRecordTestId);
+        Assertions.assertEquals(2, recordMapper.findAllRecord().size());
 
-        Assertions.assertEquals(1, recordMapper.findRecordByUserId(recordMapper.findAllRecord().get(0).getUserId()).size());
+        Record record = recordMapper.findAllRecord().get(0);
+        Assertions.assertEquals(2, recordMapper.findRecordByUserId(record.getTrainId(), record.getUserId()).size());
 
         recordMapper.hideRecordByAll(new Date());
         Assertions.assertEquals(0, recordMapper.findAllRecord().size());
-
+        recordMapper.restoreRecordByAll();
+        Assertions.assertEquals(2, recordMapper.findAllRecord().size());
     }
 }
