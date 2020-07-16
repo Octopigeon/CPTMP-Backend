@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * @author 李国豪
@@ -32,6 +33,7 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
         try{
             AttachmentFile attachmentFile = new AttachmentFile();
             BeanUtils.copyProperties(fileInfo, attachmentFile);
+            attachmentFile.setGmtCreate(new Date());
             attachmentFileMapper.addAttachmentFile(attachmentFile);
         }catch (Exception e){
             e.printStackTrace();
