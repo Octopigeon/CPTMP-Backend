@@ -22,10 +22,10 @@ public interface RecordMapper {
      * 向activity record中插入一条数据
      * @param record：类
      */
-    String COLUMNS="gmt_create, gmt_modified, gmt_deleted, idx_train_id, idx_user_id, idx_team_id, idx_process_event_id, idx_assignment_id";
-    String PROPS="#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{trainId}, #{userId}, #{teamId}, #{processEventId}, #{assignmentId}";
+    String COLUMNS="gmt_create, gmt_modified, gmt_deleted, idx_train_id, idx_user_id, idx_team_id, idx_process_event_id, assignments_lib";
+    String PROPS="#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{trainId}, #{userId}, #{teamId}, #{processEventId}, #{assignmentsLib}";
     String UPDATE_CONTENT=" gmt_create = #{gmtCreate},gmt_modified = #{gmtModified},gmt_deleted = #{gmtDeleted},idx_user_id = #{userId}, " +
-            "idx_train_id = #{trainId}, idx_team_id = #{teamId}, idx_process_event_id = #{processEventId}, idx_assignment_id = #{assignmentId}";
+            "idx_train_id = #{trainId}, idx_team_id = #{teamId}, idx_process_event_id = #{processEventId}, assignments_lib = #{assignmentsLib}";
 
     @Insert("insert into record (" + COLUMNS + ") values ( " + PROPS +" )")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -81,7 +81,7 @@ public interface RecordMapper {
             @Result(column = "idx_team_id", property = "teamId", jdbcType = JdbcType.BIGINT),
             @Result(column = "idx_train_id", property = "trainId", jdbcType = JdbcType.BIGINT),
             @Result(column = "idx_process_event_id", property = "processEventId", jdbcType = JdbcType.BIGINT),
-            @Result(column = "idx_assignment_id", property = "assignmentId", jdbcType = JdbcType.BIGINT),
+            @Result(column = "assignments_lib", property = "assignmentsLib", jdbcType = JdbcType.BIGINT),
 
 
     })

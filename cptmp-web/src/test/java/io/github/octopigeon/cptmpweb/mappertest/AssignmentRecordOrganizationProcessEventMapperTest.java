@@ -289,7 +289,7 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         record1.setTeamId(teamMapper.findAllTeam().get(0).getId());
         record1.setProcessEventId(processEventMapper.findAllProcessEvents().get(0).getId());
         record1.setTrainId(trainMapper.findAllTrain().get(0).getId());
-        record1.setAssignmentId(assignmentMapper.findAllAssignment().get(0).getId());
+        record1.setAssignmentsLib("test1");
 
         //添加活动记录
         recordMapper.addRecord(record1);
