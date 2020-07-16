@@ -35,11 +35,7 @@ public class PunchServiceImpl implements PunchService{
         GlobalCoordinates source = new GlobalCoordinates(latitudeFrom, longitudeFrom);
         GlobalCoordinates target = new GlobalCoordinates(latitude, longitude);
         double distance = new GeodeticCalculator().calculateGeodeticCurve(Ellipsoid.Sphere, source, target).getEllipsoidalDistance();
-        if(distance <= this.limits){
-            return true;
-        }else {
-            return false;
-        }
+        return distance <= this.limits;
     }
 
     /**
