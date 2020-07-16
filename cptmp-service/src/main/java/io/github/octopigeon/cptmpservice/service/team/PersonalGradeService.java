@@ -8,10 +8,10 @@ import java.math.BigInteger;
 import java.util.List;
 
 /**
- * @author Gh Li
+ * @author 李国豪
  * @version 1.0
  * @date 2020/7/15
- * @last-check-in Gh Li
+ * @last-check-in 李国豪
  * @date 2020/7/15
  */
 @Service
@@ -31,4 +31,19 @@ public interface PersonalGradeService extends BaseNormalService<PersonalGradeDTO
      * @return
      */
     List<PersonalGradeDTO> findByTeamId(BigInteger teamId);
+
+    /**
+     * 使用用户名查询个人成绩
+     * @param username 用户名
+     * @return
+     */
+    List<PersonalGradeDTO> findByUsername(String username);
+
+    /**
+     * 比较操作权限，判断调用用户是否有权限
+     * @param operatorId 操作者的userId
+     * @param operatedObject 被操作的对象
+     * @return 是是否有权限
+     */
+    Boolean verifyPermission(BigInteger operatorId, PersonalGradeDTO operatedObject);
 }
