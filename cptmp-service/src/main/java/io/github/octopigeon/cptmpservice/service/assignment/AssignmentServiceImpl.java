@@ -13,7 +13,7 @@ import java.math.BigInteger;
  * @date 2020/7/14
  */
 @Service
-public class AssignmentServiceImpl implements AssignmentService{
+public class AssignmentServiceImpl implements AssignmentService {
     /**
      * 添加数据
      *
