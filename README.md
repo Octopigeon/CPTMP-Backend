@@ -563,7 +563,7 @@ College Practice Training Management Platform
     "data": null
 }
 ```
-## /api/student/me/team/{teamId}/remark
+## /api/student/{userId}/team/{teamId}/remark
 + HTTP方法：GET
 + 返回类型：json
 + 说明：学校老师查询自己学校学生的成绩
