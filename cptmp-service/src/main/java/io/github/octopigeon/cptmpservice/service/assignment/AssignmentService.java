@@ -15,7 +15,6 @@ import java.math.BigInteger;
  * @last-check-in 李国豪
  * @date 2020/7/14
  */
-@Deprecated
 public interface AssignmentService extends BaseNormalService<AssignmentDTO>, BaseFileService {
     /**
      * 给资源库上传文件
