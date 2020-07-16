@@ -3,9 +3,11 @@ package io.github.octopigeon.cptmpservice.service.team;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
+import io.github.octopigeon.cptmpdao.mapper.PersonalGradeMapper;
 import io.github.octopigeon.cptmpdao.mapper.TeamMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
+import io.github.octopigeon.cptmpdao.model.PersonalGrade;
 import io.github.octopigeon.cptmpdao.model.Team;
 import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
 import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
@@ -48,6 +50,9 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
     private CptmpUserMapper cptmpUserMapper;
 
     @Autowired
+    private PersonalGradeMapper personalGradeMapper;
+
+    @Autowired
     public TeamServiceImpl(FileProperties fileProperties) throws Exception {
         super(fileProperties);
     }
@@ -64,6 +69,7 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
             Team team = new Team();
             dto.setProjectTrainId(getTrainProjectId(dto.getTrainId(), dto.getProjectId()));
             BeanUtils.copyProperties(dto, team);
+            team.setGmtCreate(new Date());
             teamMapper.addTeam(team);
         }catch (Exception e){
             e.printStackTrace();
@@ -204,6 +210,12 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
             teamPerson.setTeamId(teamId);
             teamPerson.setUserId(userId);
             teamPersonMapper.addTeamPerson(teamPerson);
+            //在personalgrade表中插入一条数据
+            TeamPerson re = teamPersonMapper.findTeamPersonByTeamIdAndUserId(teamId, userId);
+            PersonalGrade personalGrade = new PersonalGrade();
+            personalGrade.setGmtCreate(new Date());
+            personalGrade.setTeamPersonId(re.getId());
+            personalGradeMapper.addPersonalGrade(personalGrade);
         }
     }
 
