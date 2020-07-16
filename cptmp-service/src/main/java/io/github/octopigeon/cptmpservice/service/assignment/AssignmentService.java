@@ -21,12 +21,12 @@ public interface AssignmentService extends BaseNormalService<AssignmentDTO>, Bas
      * @param file 文件
      * @param assignmentId 作业Id
      */
-    void uploadResourceLib(MultipartFile file, BigInteger assignmentId) throws Exception;
+    void uploadDocument(MultipartFile file, BigInteger assignmentId) throws Exception;
 
     /**
      * 删除资源库中文件
      * @param assignmentId 作业Id
      * @param file fileDTO
      */
-    void removeResourceLib(BigInteger assignmentId, FileDTO file) throws Exception;
+    void removeDocument(BigInteger assignmentId, FileDTO file) throws Exception;
 }
