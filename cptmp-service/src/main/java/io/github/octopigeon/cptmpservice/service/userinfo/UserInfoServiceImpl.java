@@ -89,15 +89,17 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         // 删除record中的记录
         // 最后删除user表中的记录
         BigInteger userId = dto.getId();
-        TeamPerson teamPerson = teamPersonMapper.findTeamPersonByUserId(userId);
-        if (teamPerson == null) {
-            recordMapper.hideRecordById(userId, new Date());
-        } else {
-            BigInteger teamPersonId = teamPerson.getId();
-            personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPersonId, new Date());
-            teamPersonMapper.removeTeamPersonByUserId(userId);
+        List<TeamPerson> teamPersons = teamPersonMapper.findTeamPersonByUserId(userId);
+        for (TeamPerson teamPerson : teamPersons) {
+            if (teamPerson == null) {
+                recordMapper.hideRecordById(userId, new Date());
+            } else {
+                BigInteger teamPersonId = teamPerson.getId();
+                personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPersonId, new Date());
+                teamPersonMapper.removeTeamPersonByUserId(userId);
+            }
+            cptmpUserMapper.removeUserById(userId, new Date());
         }
-        cptmpUserMapper.removeUserById(userId, new Date());
     }
 
     // 修改用户信息

@@ -399,11 +399,11 @@ College Practice Training Management Platform
 
 # OrganizationDetailsController
 ## /api/org/basic-info
-+ HTTP方法：POST
++ HTTP方法：PUT
 + 返回类型：json
-+ 说明：学生注册
++ 说明：更新信息
 + 调用实例：
-``` 
+``` json
 {
     "code": "WHU",
     "real_name": "武汉大学",
@@ -426,7 +426,10 @@ College Practice Training Management Platform
 }
 ```
 
+
+
 # ProjectDetailsController
+
 ## /api/train-project/{id}/basic-info
 + HTTP方法：GET
 + 返回类型：json
