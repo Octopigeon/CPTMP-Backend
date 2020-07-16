@@ -216,6 +216,7 @@ public class TeamDetialsController {
             return new RespBeanWithUserId(userId);
         }catch (Exception e)
         {
+            e.printStackTrace();
             return new RespBeanWithUserId(CptmpStatusCode.INFO_ACCESS_FAILED,"get member failed");
         }
 
