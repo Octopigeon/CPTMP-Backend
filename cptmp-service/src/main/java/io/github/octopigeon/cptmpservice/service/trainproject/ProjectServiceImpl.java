@@ -178,6 +178,7 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
         List<FileDTO> resourceLib = JSON.parseArray(object.getJSONArray(this.libJsonName).toJSONString(), FileDTO.class);
         resourceLib.add(fileInfo);
         object.put(this.libJsonName, resourceLib);
+        attachmentFileService.add(fileInfo);
         projectMapper.updateTrainProjectResourceById(projectId, new Date(), object.toJSONString());
     }
 
