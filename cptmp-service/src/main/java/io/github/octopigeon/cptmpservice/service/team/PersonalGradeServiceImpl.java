@@ -3,8 +3,10 @@ package io.github.octopigeon.cptmpservice.service.team;
 import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
 import io.github.octopigeon.cptmpdao.mapper.PersonalGradeMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
+import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpdao.model.PersonalGrade;
 import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
+import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.team.PersonalGradeDTO;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
@@ -80,6 +82,30 @@ public class PersonalGradeServiceImpl implements PersonalGradeService{
     }
 
     /**
+     * 比较操作权限，判断调用用户是否有权限
+     *
+     * @param operatorId     操作者的userId
+     * @param operatedObject 被操作的对象
+     * @return 是是否有权限
+     */
+    @Override
+    public Boolean verifyPermission(BigInteger operatorId, PersonalGradeDTO operatedObject) {
+        CptmpUser operator = cptmpUserMapper.findUserById(operatorId);
+        RoleEnum role = RoleEnum.valueOf(RoleEnum.class, operator.getRoleName());
+        if(RoleEnum.ROLE_ENTERPRISE_ADMIN.compareTo(role) >= 0){
+            return true;
+        }else {
+            CptmpUser operated = cptmpUserMapper.findUserById(operatedObject.getUserId());
+            if(operator.getOrganizationId().equals(operated.getOrganizationId())){
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+    }
+
+    /**
      * 添加数据
      *
      * @param dto ：dto实体
@@ -106,7 +132,7 @@ public class PersonalGradeServiceImpl implements PersonalGradeService{
     @Override
     public void remove(PersonalGradeDTO dto) throws Exception {
         if(personalGradeMapper.findPersonalGradeById(dto.getId()) != null){
-            personalGradeMapper.removePersonalGradeById(dto.getId(), new Date());
+            personalGradeMapper.hidePersonalGradeById(dto.getId(), new Date());
         }else {
             throw new ValueException("personalGrade is not existed!");
         }
