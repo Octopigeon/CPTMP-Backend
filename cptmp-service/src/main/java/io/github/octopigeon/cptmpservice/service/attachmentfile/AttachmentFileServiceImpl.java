@@ -47,7 +47,7 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
     @Override
     public void remove(FileDTO dto) throws Exception {
         String fileName = dto.getFileName();
-        if(attachmentFileMapper.findAttachmentFileByfileName(fileName) != null)
+        if(attachmentFileMapper.findPathAndOriginNameByfileName(fileName) != null)
         {
             attachmentFileMapper.restoreAttachmentFileByName(fileName);
         }else {

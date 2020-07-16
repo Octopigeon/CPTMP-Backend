@@ -3,7 +3,9 @@ package io.github.octopigeon.cptmpservice.service.userinfo;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.*;
+import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
+import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
@@ -36,6 +38,15 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private TeamPersonMapper teamPersonMapper;
+
+    @Autowired
+    private PersonalGradeMapper personalGradeMapper;
+
+    @Autowired
+    private RecordMapper recordMapper;
 
     @Autowired
     public UserInfoServiceImpl(FileProperties fileProperties) throws Exception {
@@ -73,6 +84,22 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     @Override
     public void remove(BaseUserInfoDTO dto) throws Exception {
+        // 删除personal_grade中的记录
+        // 删除team_person中的记录
+        // 删除record中的记录
+        // 最后删除user表中的记录
+        BigInteger userId = dto.getId();
+        List<TeamPerson> teamPersons = teamPersonMapper.findTeamPersonByUserId(userId);
+        for (TeamPerson teamPerson : teamPersons) {
+            if (teamPerson == null) {
+                recordMapper.hideRecordById(userId, new Date());
+            } else {
+                BigInteger teamPersonId = teamPerson.getId();
+                personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPersonId, new Date());
+                teamPersonMapper.removeTeamPersonByUserId(userId);
+            }
+            cptmpUserMapper.removeUserById(userId, new Date());
+        }
     }
 
     // 修改用户信息

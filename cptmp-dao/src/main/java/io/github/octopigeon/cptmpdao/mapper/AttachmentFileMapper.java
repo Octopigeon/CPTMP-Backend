@@ -129,16 +129,16 @@ public interface AttachmentFileMapper {
      */
     @Select("select id, " + COLUMNS + " from attachment_file where id = #{id} and gmt_deleted is null")
     @ResultMap("attachmentFile")
-    List<AttachmentFile> findAttachmentFileById(BigInteger id);
+    AttachmentFile findAttachmentFileById(BigInteger id);
     /**
      * 查找文件名所有记录
      * @return 根据文件名记录列表
      */
-    @Select("select id, " + COLUMNS + " from attachment_file where file_name = #{fileName} and gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from attachment_file where uk_file_name = #{fileName} and gmt_deleted is null")
     @ResultMap("attachmentFile")
-    List<AttachmentFile> findAttachmentFileByFileName(String fileName);
+    AttachmentFile findAttachmentFileByFileName(String fileName);
     /**
-     * 根据用户名查找文件路径与原始文件名
+     * 根据文件名查找文件路径与原始文件名
      * @param fileName 唯一文件名
      */
     @Select("select uk_file_path, origin_name from attachment_file where uk_file_name = {fileName}")
@@ -146,7 +146,7 @@ public interface AttachmentFileMapper {
             @Result(column = "uk_file_path", property = "filePath", jdbcType =JdbcType.VARCHAR),
             @Result(column = "origin_name", property = "originName", jdbcType = JdbcType.VARCHAR),
     })
-    AttachmentFile findAttachmentFileByfileName(String fileName);
+    AttachmentFile findPathAndOriginNameByfileName(String fileName);
 
 
 
