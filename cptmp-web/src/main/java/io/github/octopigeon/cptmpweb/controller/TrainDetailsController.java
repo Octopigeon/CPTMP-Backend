@@ -221,6 +221,13 @@ public class TrainDetailsController {
         return RespBeanWithFailedList.report(failedList);
     }
 
+    /**
+     * 获取实训的所有项目
+     * @param json
+     * @param trainId
+     * @return
+     * @throws JsonProcessingException
+     */
     @GetMapping("api/train/{train_id}/project")
     public RespBeanWithProjectList getProject(@RequestBody String json,@PathVariable("train_id") BigInteger trainId) throws JsonProcessingException
     {
