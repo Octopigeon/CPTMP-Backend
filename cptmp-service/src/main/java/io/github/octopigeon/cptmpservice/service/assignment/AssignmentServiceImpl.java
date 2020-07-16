@@ -28,6 +28,7 @@ import java.util.List;
  * @last-check-in 李国豪
  * @date 2020/7/14
  */
+@Deprecated
 @Service
 public class AssignmentServiceImpl extends BaseFileServiceImpl implements AssignmentService{
 
