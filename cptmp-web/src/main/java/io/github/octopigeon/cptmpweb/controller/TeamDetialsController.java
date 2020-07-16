@@ -12,10 +12,12 @@ import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.team.TeamService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -25,7 +27,6 @@ import java.util.List;
  * @last-check-in 陈若琳
  * @date 2020/07/15
  */
-//TODO：团队增删
 
 @RestController
 public class TeamDetialsController {
@@ -50,7 +51,7 @@ public class TeamDetialsController {
         }catch(Exception e)
         {
             e.printStackTrace();
-            return RespBean.error(1,"error");
+            return RespBean.error(CptmpStatusCode.REGISTER_FAILED,"Team create failed");
         }
     }
 
@@ -63,12 +64,14 @@ public class TeamDetialsController {
     public RespBean deleteTeam(@PathVariable("id") BigInteger id)
     {
         try{
-            teamService.remove(teamService.findById(id));
-            return RespBean.ok("delete team successfully");
+            TeamDTO team = new TeamDTO();
+            team.setId(id);
+            teamService.remove(team);
+            return RespBean.ok("team remove successfully");
         }catch (Exception e)
         {
             e.printStackTrace();
-            return RespBean.error(1,"error");
+            return RespBean.error(CptmpStatusCode.REMOVE_FAILED,"team remove failed");
         }
     }
 
@@ -102,7 +105,7 @@ public class TeamDetialsController {
         }catch(Exception e)
         {
             e.printStackTrace();
-            return new RespBeanWithTeamList(CptmpStatusCode.INFO_ACCESS_FAILED,"something wrong");
+            return new RespBeanWithTeamList(CptmpStatusCode.INFO_ACCESS_FAILED,"find team failed");
         }
 
     }
@@ -122,7 +125,7 @@ public class TeamDetialsController {
         }catch(Exception e)
         {
             e.printStackTrace();
-            return new RespBeanWithTeam(1,"something wrong");
+            return new RespBeanWithTeam(CptmpStatusCode.INFO_ACCESS_FAILED,"find team failed");
         }
     }
 
@@ -143,7 +146,7 @@ public class TeamDetialsController {
         }catch(Exception e)
         {
             e.printStackTrace();
-            return new RespBean(1,"something wrong");
+            return new RespBean(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED,"update team info failed");
         }
     }
 
@@ -153,25 +156,22 @@ public class TeamDetialsController {
      * @return
      * @throws JsonProcessingException
      */
-    @PostMapping("api/team/member")
-    public RespBean addMemberToTheTeam(@RequestBody String json) throws JsonProcessingException
+    @PostMapping("api/team/member/{team_id}")
+    public RespBeanWithFailedList addMemberToTheTeam(@RequestBody String json,@PathVariable("team_id") BigInteger teamId) throws JsonProcessingException
     {
         ObjectMapper objectMapper = new ObjectMapper();
-        BigInteger teamId = BigInteger.valueOf(objectMapper.readValue(json,ObjectNode.class).get("team_id").asInt());
-        BigInteger userId = BigInteger.valueOf(objectMapper.readValue(json,ObjectNode.class).get("user_id").asInt());
-        try{
-            List<BigInteger> userIds = teamService.findUsersByTeamId(teamId);
-            if(userIds.contains(userId))
+        BigInteger[] userId = objectMapper.readValue(json,BigInteger[].class);
+        List<Integer> failedList = new ArrayList<>();
+        for (int i=0;i<userId.length;i++) {
+            try{
+                teamService.addUser(teamId,userId[i]);
+            }catch (Exception e)
             {
-                return new RespBean(1,"The user already exists");
+                failedList.add(i);
+                e.printStackTrace();
             }
-            teamService.addUser(teamId,userId);
-            return RespBean.ok("add member successfully");
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-            return new RespBean(1,"something wrong");
         }
+        return RespBeanWithFailedList.report(failedList);
     }
 
     /**
@@ -180,20 +180,25 @@ public class TeamDetialsController {
      * @return
      * @throws JsonProcessingException
      */
-    @DeleteMapping("api/team/member")
-    public RespBean deleteMember(@RequestBody String json) throws JsonProcessingException
+    @DeleteMapping("api/team/member/{team_id}")
+    public RespBeanWithFailedList deleteMember(@RequestBody String json,@PathVariable("team_id") BigInteger teamId) throws JsonProcessingException
     {
         ObjectMapper objectMapper = new ObjectMapper();
-        BigInteger teamId = BigInteger.valueOf(objectMapper.readValue(json,ObjectNode.class).get("team_id").asInt());
-        BigInteger userId = BigInteger.valueOf(objectMapper.readValue(json,ObjectNode.class).get("user_id").asInt());
-        try{
-            teamService.removeUser(teamId,userId);
-            return RespBean.ok("delete member successfully");
-        }catch (Exception e)
+        BigInteger[] userId = objectMapper.readValue(json,BigInteger[].class);
+        List<Integer> failedList = new ArrayList<>();
+        for(int i=0;i<userId.length;i++)
         {
-            e.printStackTrace();
-            return new RespBean(1,"something wrong");
+            try{
+                teamService.removeUser(teamId,userId[i]);
+
+            }catch (Exception e)
+            {
+                failedList.add(i);
+                e.printStackTrace();
+            }
         }
+        return RespBeanWithFailedList.report(failedList);
+
     }
 
 
@@ -208,21 +213,17 @@ public class TeamDetialsController {
     {
         try{
             List<BigInteger> userId = teamService.findUsersByTeamId(teamId);
-            if(userId.size()==0)
-            {
-                return new RespBeanWithUserId(0,"something wrong");
-            }
             return new RespBeanWithUserId(userId);
         }catch (Exception e)
         {
-            return new RespBeanWithUserId(1,"something wrong");
+            return new RespBeanWithUserId(CptmpStatusCode.INFO_ACCESS_FAILED,"get member failed");
         }
 
     }
-
-
 }
+
 @Data
+@EqualsAndHashCode(callSuper = true)
 class RespBeanWithTeamList extends RespBean
 {
     public RespBeanWithTeamList(List<TeamDTO> teams, int pageSize, int totalPages)
@@ -247,6 +248,7 @@ class RespBeanWithTeamList extends RespBean
 }
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 class RespBeanWithTeam extends RespBean
 {
     public RespBeanWithTeam(Integer status, String msg)
@@ -264,6 +266,7 @@ class RespBeanWithTeam extends RespBean
 }
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 class RespBeanWithUserId extends RespBean
 {
     public RespBeanWithUserId(Integer status, String msg)
