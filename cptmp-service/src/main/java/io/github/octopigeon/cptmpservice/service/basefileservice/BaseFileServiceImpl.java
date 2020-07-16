@@ -158,7 +158,7 @@ public class BaseFileServiceImpl implements BaseFileService {
             fileResp.setFileName(fileName);
             fileResp.setFilePath(filePath.toString());
             fileResp.setFileUrl(String.format("%s/%s/%d/%d/%d/%s", this.domain, url, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DATE), fileName));
-            fileResp.setOriginalName(originName);
+            fileResp.setOriginName(originName);
             fileResp.setFileSize(file.getSize());
             fileResp.setFileType(file.getContentType());
             return fileResp;

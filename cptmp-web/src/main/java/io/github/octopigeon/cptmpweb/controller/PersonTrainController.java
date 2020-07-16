@@ -38,8 +38,6 @@ public class PersonTrainController {
     @Autowired
     private UserInfoService userInfoService;
 
-    // TODO 加上分数的访问的权限判断
-
     /**
      * 学生查询自己在某个队伍里的成绩
      *
