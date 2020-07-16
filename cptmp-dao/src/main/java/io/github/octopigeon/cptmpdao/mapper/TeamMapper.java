@@ -60,6 +60,9 @@ public interface TeamMapper {
     @Update("update team set " + UPDATE_CONTENT + "  where id = #{id} and gmt_deleted is null")
     void updateTeamById(Team team);
 
+    @Update("update team set avatar = #{avatar}, gmt_modified = #{gmtModified} where id = #{teamId} and gmt_deleted is null")
+    void updateAvatarById(BigInteger teamId, Date gmtModified, String avatar);
+
     /**
      * 查询所有团队
      *

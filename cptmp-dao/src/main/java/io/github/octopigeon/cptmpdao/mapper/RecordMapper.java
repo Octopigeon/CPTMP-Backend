@@ -92,9 +92,9 @@ public interface RecordMapper {
      * @param userId:活动人id
      * @return 活动记录列表
      */
-    @Select("select id, " + COLUMNS + " from record where idx_user_id = #{userId} and gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from record where idx_train_id = #{trainId} and idx_user_id = #{userId} and gmt_deleted is null")
     @ResultMap("record")
-    List<Record> findRecordByUserId(BigInteger userId);
+    List<Record> findRecordByUserId(BigInteger trainId, BigInteger userId);
 
     /**
      * 按照团队id查找活动记录
@@ -105,5 +105,8 @@ public interface RecordMapper {
     @ResultMap("record")
     List<Record> findRecordByTeamId(BigInteger teamId);
 
+    @Select("select id, " + COLUMNS + " from record where id = #{id} and gmt_deleted is null")
+    @ResultMap("record")
+    Record findRecordById(BigInteger id);
 }
 
