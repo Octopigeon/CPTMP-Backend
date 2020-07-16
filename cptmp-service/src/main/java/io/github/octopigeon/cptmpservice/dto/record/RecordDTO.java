@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * @author Gh Li
@@ -15,6 +16,7 @@ import java.math.BigInteger;
 @Data
 public class RecordDTO {
     private BigInteger id;
+    private Date gmtCreate;
     private BigInteger trainId;
     private BigInteger teamId;
     private BigInteger userId;
