@@ -58,7 +58,7 @@ public class TrainDetailsController {
         }catch(Exception e)
         {
             e.printStackTrace();
-            return RespBean.error(CptmpStatusCode.REGISTER_FAILED,"Train create failed");
+            return RespBean.error(CptmpStatusCode.CREATE_FAILED,"Train create failed");
         }
     }
 
@@ -78,8 +78,7 @@ public class TrainDetailsController {
             PageInfo<TrainDTO> pageInfo = trainService.findAll(page,offset);
             return new RespBeanWithTrainList(
                     pageInfo.getList(),
-                    pageInfo.getPageSize(),
-                    pageInfo.getPages()
+                    pageInfo.getTotal()
             );
 
         }catch (Exception e)
@@ -111,16 +110,14 @@ public class TrainDetailsController {
                     PageInfo<TrainDTO> searchById = trainService.findByOrganizationId(page,offset,organizationId);
                     return new RespBeanWithTrainList(
                             searchById.getList(),
-                            searchById.getPageSize(),
-                            searchById.getPages()
+                            searchById.getTotal()
                     );
                 case "name":
                     String trainName = objectMapper.readValue(json, ObjectNode.class).get("key_word").asText();
                     PageInfo<TrainDTO> searchByName = trainService.findByLikeName(page,offset,trainName);
                     return new RespBeanWithTrainList(
                             searchByName.getList(),
-                            searchByName.getPageSize(),
-                            searchByName.getPages()
+                            searchByName.getTotal()
                     );
                 default:
                     return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED,"wrong property");
@@ -156,8 +153,8 @@ public class TrainDetailsController {
      * @param trainId
      * @return
      */
-    @DeleteMapping("api/train/{id}")
-    public RespBean deleteTrain(@PathVariable("id") BigInteger trainId)
+    @DeleteMapping("api/train/{train_id}")
+    public RespBean deleteTrain(@PathVariable("train_id") BigInteger trainId)
     {
         try{
             trainService.remove(trainService.findById(trainId));
@@ -189,7 +186,7 @@ public class TrainDetailsController {
             }catch (Exception e)
             {
                 e.printStackTrace();;
-                failedList.add(i);
+                failedList.add(i+1);
             }
         }
         return RespBeanWithFailedList.report(failedList);
@@ -242,7 +239,7 @@ public class TrainDetailsController {
             {
                 projectList.add(projectService.findById(projectId));
             }
-            return new RespBeanWithProjectList(projectList,pageInfo.getPageSize(),pageInfo.getPages());
+            return new RespBeanWithProjectList(projectList,pageInfo.getTotal());
         } catch (Exception e) {
             e.printStackTrace();
             return new RespBeanWithProjectList(CptmpStatusCode.INFO_ACCESS_FAILED,"get project failed");
@@ -293,12 +290,11 @@ class RespBeanWithTrainInfo extends RespBean
 @EqualsAndHashCode(callSuper = true)
 class RespBeanWithTrainList extends RespBean
 {
-    public RespBeanWithTrainList(List<TrainDTO> trains,int pageSize,int totalPages)
+    public RespBeanWithTrainList(List<TrainDTO> trains,long totalRows)
     {
         super();
         this.trains = trains;
-        this.pageSize = pageSize;
-        this.totalPages = totalPages;
+        this.totalRows = totalRows;
     }
 
     public RespBeanWithTrainList(Integer status, String msg)
@@ -306,10 +302,8 @@ class RespBeanWithTrainList extends RespBean
         super(status,msg);
     }
 
-    @JsonProperty("page_size")
-    private int pageSize;
-    @JsonProperty("total_pages")
-    private int totalPages;
+    @JsonProperty("total_rows")
+    private long totalRows;
     @JsonProperty("data")
     private List<TrainDTO> trains;
 }
@@ -318,12 +312,11 @@ class RespBeanWithTrainList extends RespBean
 @EqualsAndHashCode(callSuper = true)
 class RespBeanWithProjectList extends RespBean
 {
-    public RespBeanWithProjectList(List<ProjectDTO> projects,int pageSize,int totalPages)
+    public RespBeanWithProjectList(List<ProjectDTO> projects,long totalRows)
     {
         super();
         this.projects = projects;
-        this.pageSize = pageSize;
-        this.totalPages = totalPages;
+        this.totalRows = totalRows;
     }
 
     public RespBeanWithProjectList(Integer status, String msg)
@@ -331,10 +324,8 @@ class RespBeanWithProjectList extends RespBean
         super(status,msg);
     }
 
-    @JsonProperty("page_size")
-    private int pageSize;
-    @JsonProperty("total_pages")
-    private int totalPages;
+    @JsonProperty("total_rows")
+    private long totalRows;
     @JsonProperty("data")
     private List<ProjectDTO> projects;
 }

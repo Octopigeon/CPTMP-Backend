@@ -14,8 +14,8 @@ import java.util.List;
  * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/14
- * @last-check-in 魏啸冲
- * @date 2020/7/14
+ * @last-check-in 陈若琳
+ * @date 2020/7/16
  */
 @Repository
 @Mapper
@@ -23,7 +23,7 @@ public interface ProcessMapper {
 
     String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, train_id, start_time, end_time";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{trainId}, #{startTime}, #{endTime}";
-    String UPDATE_CONTENT = "gmt_create = #{gmtCreate}, gmt_modified = #{gmtModified}, gmt_deleted = #{gmtDeleted}, train_id = #{trainId}" +
+    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, gmt_deleted = #{gmtDeleted}, train_id = #{trainId}" +
             ", start_time = #{startTime}, end_time = #{endTime}";
     String BY_ID_TAIL = " where id = #{id} and gmt_deleted is null";
     String SOFT_DELETE_TAIL = " and gmt_deleted is null";
