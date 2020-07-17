@@ -64,6 +64,7 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
             Team team = new Team();
             dto.setProjectTrainId(getTrainProjectId(dto.getTrainId(), dto.getProjectId()));
             BeanUtils.copyProperties(dto, team);
+            team.setGmtCreate(new Date());
             teamMapper.addTeam(team);
         }catch (Exception e){
             e.printStackTrace();
