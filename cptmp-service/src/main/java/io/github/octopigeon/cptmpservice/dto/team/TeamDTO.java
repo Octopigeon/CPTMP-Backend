@@ -7,7 +7,7 @@ import lombok.Data;
 import java.math.BigInteger;
 
 /**
- * @author Gh Li
+ * @author 李国豪
  * @version 1.0
  * @date 2020/7/14
  * @last-check-in 陈若琳

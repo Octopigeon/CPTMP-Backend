@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.nio.file.*;
 import java.util.*;
@@ -159,7 +160,7 @@ public class BaseFileServiceImpl implements BaseFileService {
             fileResp.setFilePath(filePath.toString());
             fileResp.setFileUrl(String.format("%s/%s/%d/%d/%d/%s", this.domain, url, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DATE), fileName));
             fileResp.setOriginName(originName);
-            fileResp.setFileSize(file.getSize());
+            fileResp.setFileSize(BigInteger.valueOf(file.getSize()));
             fileResp.setFileType(file.getContentType());
             return fileResp;
         } catch (Exception ex) {

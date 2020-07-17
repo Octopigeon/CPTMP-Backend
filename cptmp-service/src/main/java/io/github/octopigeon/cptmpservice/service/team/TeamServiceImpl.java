@@ -169,7 +169,7 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
         List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByTeamId(teamId);
         List<BigInteger> results = new ArrayList<>();
         for (TeamPerson teamPerson: teamPeople) {
-            results.add(teamPerson.getId());
+            results.add(teamPerson.getUserId());
         }
         return results;
     }
