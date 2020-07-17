@@ -99,6 +99,15 @@ public interface CptmpUserMapper {
     void removeUserById(BigInteger id, Date gmtDeleted);
 
     /**
+     * 通过organizationId删除
+     *
+     * @param organizationId   组织id
+     * @param gmtDeleted 删除日期
+     */
+    @Update("update cptmp_user set " + REMOVE_CONTENT + " where idx_organization_id = #{organizationId} and gmt_deleted is null")
+    void removeUsersByOrganizationId(BigInteger organizationId, Date gmtDeleted);
+
+    /**
      * 通过id恢复
      *
      * @param id 用户id

@@ -4,11 +4,16 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import io.github.octopigeon.cptmpdao.mapper.PersonalGradeMapper;
+import io.github.octopigeon.cptmpdao.mapper.TeamMapper;
 import io.github.octopigeon.cptmpdao.mapper.TrainMapper;
 import io.github.octopigeon.cptmpdao.mapper.ProjectMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
+import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
+import io.github.octopigeon.cptmpdao.model.Team;
 import io.github.octopigeon.cptmpdao.model.Train;
 import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
+import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
@@ -47,6 +52,15 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
 
     @Autowired
     private ProjectMapper projectMapper;
+
+    @Autowired
+    private TeamPersonMapper teamPersonMapper;
+
+    @Autowired
+    private TeamMapper teamMapper;
+
+    @Autowired
+    private PersonalGradeMapper personalGradeMapper;
 
     @Autowired
     private AttachmentFileService attachmentFileService;
@@ -202,11 +216,29 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
             if(projectMapper.findTrainProjectById(projectId) == null){
                 throw new ValueException("Project is not existed!");
             }
-            projectTrainMapper.removeProjectTrainsByProjectIdAndTrainId(projectId, trainId);
+            ProjectTrain projectTrain = projectTrainMapper.findProjectTrainByProjectIdAndTrainId(projectId, trainId);
+            removeTeams(projectTrain);
         }catch (Exception e){
             e.printStackTrace();
             throw new Exception("Remove project from train failed！");
         }
+    }
+
+    /**
+     * 移除实训项目下的队伍
+     * @param projectTrain
+     */
+    private void removeTeams(ProjectTrain projectTrain) {
+        List<Team> teams = teamMapper.findTeamsByProjectTrainId(projectTrain.getId());
+        for (Team team: teams) {
+            List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByTeamId(team.getId());
+            for (TeamPerson teamPerson: teamPeople) {
+                personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPerson.getId(), new Date());
+                teamPersonMapper.removeTeamPersonById(teamPerson.getId());
+            }
+            teamMapper.hideTeamById(team.getId(), new Date());
+        }
+        projectTrainMapper.removeProjectTrainsById(projectTrain.getId());
     }
 
     /**
@@ -239,9 +271,12 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
     @Override
     public void remove(TrainDTO dto) throws Exception {
         Train train = trainMapper.findTrainById(dto.getId());
-        if(trainMapper.findTrainById(dto.getId()) != null){
-            trainMapper.hideTrainById(dto.getId(), new Date());
-            projectTrainMapper.removeProjectTrainsByTrainId(dto.getId());
+        if(train != null){
+            trainMapper.hideTrainById(train.getId(), new Date());
+            List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByTrainId(train.getId());
+            for (ProjectTrain projectTrain: projectTrains) {
+                removeTeams(projectTrain);
+            }
         }else{
             throw new ValueException("The train not exist！");
         }
