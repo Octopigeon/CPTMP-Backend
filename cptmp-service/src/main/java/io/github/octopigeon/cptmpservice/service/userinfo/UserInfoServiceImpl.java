@@ -83,12 +83,12 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     @Override
     public void remove(BaseUserInfoDTO dto) throws Exception {
-        cptmpUserMapper.removeUserById(dto.getId(), new Date());
         List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByUserId(dto.getId());
         for (TeamPerson teamPerson: teamPeople) {
             personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPerson.getId(), new Date());
             teamPersonMapper.removeTeamPersonById(teamPerson.getId());
         }
+        cptmpUserMapper.removeUserById(dto.getId(), new Date());
     }
 
     // 修改用户信息
