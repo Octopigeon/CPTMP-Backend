@@ -18,6 +18,7 @@ import io.github.octopigeon.cptmpweb.BaseTest;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 
 import javax.rmi.CORBA.Util;
 import java.math.BigInteger;
@@ -63,6 +64,7 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
     @Autowired
     private PersonalGradeMapper personalGradeMapper;
 
+    //@Rollback(false)
     @Test
     public void test() throws Exception {
         projectMapper.removeAllTrainProjectsTest();

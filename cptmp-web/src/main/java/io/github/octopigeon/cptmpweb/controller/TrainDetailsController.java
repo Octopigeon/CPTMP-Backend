@@ -6,16 +6,23 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.pagehelper.PageInfo;
+import io.github.octopigeon.cptmpdao.model.Project;
+import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
+import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
+import io.github.octopigeon.cptmpservice.service.trainproject.ProjectService;
 import io.github.octopigeon.cptmpservice.service.trainproject.TrainService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,6 +38,8 @@ public class TrainDetailsController {
 
     @Autowired
     TrainService trainService;
+    @Autowired
+    ProjectService projectService;
 
     /**
      * 创建实训
@@ -49,7 +58,7 @@ public class TrainDetailsController {
         }catch(Exception e)
         {
             e.printStackTrace();
-            return RespBean.error(CptmpStatusCode.REGISTER_FAILED,"Train create failed");
+            return RespBean.error(CptmpStatusCode.CREATE_FAILED,"Train create failed");
         }
     }
 
@@ -69,8 +78,7 @@ public class TrainDetailsController {
             PageInfo<TrainDTO> pageInfo = trainService.findAll(page,offset);
             return new RespBeanWithTrainList(
                     pageInfo.getList(),
-                    pageInfo.getPageSize(),
-                    pageInfo.getPages()
+                    pageInfo.getTotal()
             );
 
         }catch (Exception e)
@@ -102,16 +110,14 @@ public class TrainDetailsController {
                     PageInfo<TrainDTO> searchById = trainService.findByOrganizationId(page,offset,organizationId);
                     return new RespBeanWithTrainList(
                             searchById.getList(),
-                            searchById.getPageSize(),
-                            searchById.getPages()
+                            searchById.getTotal()
                     );
                 case "name":
                     String trainName = objectMapper.readValue(json, ObjectNode.class).get("key_word").asText();
                     PageInfo<TrainDTO> searchByName = trainService.findByLikeName(page,offset,trainName);
                     return new RespBeanWithTrainList(
                             searchByName.getList(),
-                            searchByName.getPageSize(),
-                            searchByName.getPages()
+                            searchByName.getTotal()
                     );
                 default:
                     return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED,"wrong property");
@@ -147,8 +153,8 @@ public class TrainDetailsController {
      * @param trainId
      * @return
      */
-    @DeleteMapping("api/train/{id}")
-    public RespBean deleteTrain(@PathVariable("id") BigInteger trainId)
+    @DeleteMapping("api/train/{train_id}")
+    public RespBean deleteTrain(@PathVariable("train_id") BigInteger trainId)
     {
         try{
             trainService.remove(trainService.findById(trainId));
@@ -158,6 +164,106 @@ public class TrainDetailsController {
             return new RespBean(CptmpStatusCode.REMOVE_FAILED,"train remove failed");
         }
 
+    }
+
+    /**
+     * 在实训中批量添加项目
+     * @param json
+     * @param trainId
+     * @return
+     * @throws JsonProcessingException
+     */
+    @PutMapping("api/train/{train_id}/project")
+    public RespBeanWithFailedList addProject(@RequestBody String json,@PathVariable("train_id") BigInteger trainId) throws JsonProcessingException
+    {
+        ObjectMapper objectMapper = new ObjectMapper();
+        BigInteger[] projectId = objectMapper.readValue(json,BigInteger[].class);
+        List<Integer> failedList = new ArrayList<>();
+        for(int i=0;i<projectId.length;i++)
+        {
+            try{
+                trainService.addProject(trainId,projectId[i]);
+            }catch (Exception e)
+            {
+                e.printStackTrace();;
+                failedList.add(i+1);
+            }
+        }
+        return RespBeanWithFailedList.report(failedList);
+    }
+
+    /**
+     * 根据id删除实训中的项目
+     * @param json
+     * @param trainId
+     * @return
+     * @throws JsonProcessingException
+     */
+    @DeleteMapping("api/train/{train_id}/project")
+    public RespBeanWithFailedList deleteProject(@RequestBody String json,@PathVariable("train_id") BigInteger trainId) throws JsonProcessingException
+    {
+        ObjectMapper objectMapper = new ObjectMapper();
+        BigInteger[] projectId = objectMapper.readValue(json,BigInteger[].class);
+        List<Integer> failedList = new ArrayList<>();
+        for(int i=0;i<projectId.length;i++)
+        {
+            try{
+                trainService.removeProject(trainId,projectId[i]);
+            }catch (Exception e)
+            {
+                e.printStackTrace();;
+                failedList.add(i);
+            }
+        }
+        return RespBeanWithFailedList.report(failedList);
+    }
+
+    /**
+     * 获取实训的所有项目
+     * @param json
+     * @param trainId
+     * @return
+     * @throws JsonProcessingException
+     */
+    @GetMapping("api/train/{train_id}/project")
+    public RespBeanWithProjectList getProject(@RequestBody String json,@PathVariable("train_id") BigInteger trainId) throws JsonProcessingException
+    {
+        ObjectMapper objectMapper = new ObjectMapper();
+        int page = objectMapper.readValue(json, ObjectNode.class).get("page").asInt();
+        int offset = objectMapper.readValue(json, ObjectNode.class).get("offset").asInt();
+        try{
+            PageInfo<BigInteger> pageInfo = trainService.findProjectIdsById(page,offset,trainId);
+            List<BigInteger> projectIds = pageInfo.getList();
+            List<ProjectDTO> projectList = new ArrayList<>();
+            for (BigInteger projectId:projectIds)
+            {
+                projectList.add(projectService.findById(projectId));
+            }
+            return new RespBeanWithProjectList(projectList,pageInfo.getTotal());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new RespBeanWithProjectList(CptmpStatusCode.INFO_ACCESS_FAILED,"get project failed");
+        }
+    }
+
+    /**
+     * TODO:测试！！！
+     * 处理实训有关文档的上传信息
+     * @param resource 上传的文件
+     * @param trainId
+     * @return 更新是否成功
+     */
+    @PostMapping("/api/train/{train_id}/resource-lib")
+    public RespBean updateTrainResourceLib(
+            @RequestParam("file") MultipartFile resource,
+            @PathVariable(value = "train_id") BigInteger trainId) {
+        try {
+            trainService.uploadResourceLib(resource, trainId);
+            return RespBean.ok("upload resource files success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.FILE_UPLOAD_FAILED, "upload resource files failed");
+        }
     }
 }
 
@@ -184,12 +290,11 @@ class RespBeanWithTrainInfo extends RespBean
 @EqualsAndHashCode(callSuper = true)
 class RespBeanWithTrainList extends RespBean
 {
-    public RespBeanWithTrainList(List<TrainDTO> trains,int pageSize,int totalPages)
+    public RespBeanWithTrainList(List<TrainDTO> trains,long totalRows)
     {
         super();
         this.trains = trains;
-        this.pageSize = pageSize;
-        this.totalPages = totalPages;
+        this.totalRows = totalRows;
     }
 
     public RespBeanWithTrainList(Integer status, String msg)
@@ -197,10 +302,30 @@ class RespBeanWithTrainList extends RespBean
         super(status,msg);
     }
 
-    @JsonProperty("page_size")
-    private int pageSize;
-    @JsonProperty("total_pages")
-    private int totalPages;
+    @JsonProperty("total_rows")
+    private long totalRows;
     @JsonProperty("data")
     private List<TrainDTO> trains;
+}
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+class RespBeanWithProjectList extends RespBean
+{
+    public RespBeanWithProjectList(List<ProjectDTO> projects,long totalRows)
+    {
+        super();
+        this.projects = projects;
+        this.totalRows = totalRows;
+    }
+
+    public RespBeanWithProjectList(Integer status, String msg)
+    {
+        super(status,msg);
+    }
+
+    @JsonProperty("total_rows")
+    private long totalRows;
+    @JsonProperty("data")
+    private List<ProjectDTO> projects;
 }

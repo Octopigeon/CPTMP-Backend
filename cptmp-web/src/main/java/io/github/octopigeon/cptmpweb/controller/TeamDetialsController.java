@@ -6,10 +6,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.pagehelper.PageInfo;
 import com.sun.xml.internal.bind.v2.TODO;
+import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
+import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.team.TeamDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.team.TeamService;
+import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,6 +36,8 @@ public class TeamDetialsController {
 
     @Autowired
     private TeamService teamService;
+    @Autowired
+    private UserInfoService userInfoService;
 
     /**
      * 创建团队
@@ -198,13 +203,11 @@ public class TeamDetialsController {
             }
         }
         return RespBeanWithFailedList.report(failedList);
-
     }
 
 
     /**
-     * TODO:问一下前端要不要用户信息
-     * 获取团队成员id
+     * 获取团队成员信息
      * @param teamId
      * @return
      */
@@ -212,8 +215,13 @@ public class TeamDetialsController {
     public  RespBeanWithUserId getTeamMember(@PathVariable(value = "team_id") BigInteger teamId)
     {
         try{
-            List<BigInteger> userId = teamService.findUsersByTeamId(teamId);
-            return new RespBeanWithUserId(userId);
+            List<BigInteger> userIds = teamService.findUsersByTeamId(teamId);
+            List<BaseUserInfoDTO> userInfoList = new ArrayList<>();
+            for (BigInteger userId:userIds)
+            {
+                userInfoList.add(userInfoService.findById(userId));
+            }
+            return new RespBeanWithUserId(userInfoList);
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -275,11 +283,11 @@ class RespBeanWithUserId extends RespBean
         super(status,msg);
     }
 
-    public RespBeanWithUserId(List<BigInteger> userId)
+    public RespBeanWithUserId(List<BaseUserInfoDTO> userInfoList)
     {
-        this.userId = userId;
+        this.userInfoList = userInfoList;
     }
 
     @JsonProperty("data")
-    List<BigInteger> userId;
+    List<BaseUserInfoDTO> userInfoList;
 }

@@ -37,7 +37,7 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
             attachmentFileMapper.addAttachmentFile(attachmentFile);
         }catch (Exception e){
             e.printStackTrace();
-            throw new Exception("文件添加失败");
+            throw new Exception("add attachment file failed!");
         }
     }
 

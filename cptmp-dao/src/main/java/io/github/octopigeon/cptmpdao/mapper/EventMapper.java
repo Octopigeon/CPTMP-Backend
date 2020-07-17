@@ -13,7 +13,7 @@ import java.util.List;
  * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/14
- * @last-check-in 李国鹏
+ * @last-check-in 陈若琳
  * @date 2020/7/15
  */
 @Repository
@@ -22,7 +22,7 @@ public interface EventMapper {
 
     String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, start_time, end_time, content, person_or_team";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{startTime}, #{endTime}, #{content}, #{personOrTeam}";
-    String UPDATE_CONTENT = "gmt_create = #{gmtCreate}, gmt_modified = #{gmtModified}, " +
+    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, " +
             "gmt_deleted = #{gmtDeleted}, start_time = #{startTime}, end_time = #{endTime}, " +
             "content = #{content}, person_or_team = #{personOrTeam}";
     String SOFT_DELETE_TAIL = "gmt_deleted is null";

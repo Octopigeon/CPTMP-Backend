@@ -4,9 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
+import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.trainproject.ProjectService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
@@ -25,8 +27,8 @@ import java.util.List;
  * @version 1.0
  * @date 2020/7/15
  * 实训项目的改、删、查
- * @last-check-in 魏啸冲
- * @date 2020/7/15
+ * @last-check-in 陈若琳
+ * @date 2020/7/17
  */
 @RestController
 public class ProjectDetailsController {
@@ -125,6 +127,60 @@ public class ProjectDetailsController {
         return RespBeanWithFailedList.report(deleteFailedList);
     }
 
+    @GetMapping("/api/train-project/{project_id}/train")
+    public RespBeanWithTrainList getTrainByProjectId(
+            @RequestBody String json,
+            @PathVariable("project_id") BigInteger projectId
+    ) throws JsonProcessingException
+    {
+        ObjectMapper objectMapper = new ObjectMapper();
+        int page = objectMapper.readValue(json, ObjectNode.class).get("page").asInt();
+        int offset = objectMapper.readValue(json, ObjectNode.class).get("offset").asInt();
+        try{
+            PageInfo<TrainDTO> pageInfo = projectService.findTrainsById(page,offset,projectId);
+            List<TrainDTO> trainDTOList = pageInfo.getList();
+            return new RespBeanWithTrainList(trainDTOList,pageInfo.getTotal());
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED,"get trains failed");
+        }
+    }
+
+    /**
+     * 根据关键词获取项目
+     * @param json
+     * @param property 关键词对应属性
+     * @return
+     * @throws JsonProcessingException
+     */
+    @GetMapping("api/project/search/{property}")
+    public RespBeanWithProjectList searchProject(@RequestBody String json, @PathVariable("property") String property) throws JsonProcessingException
+    {
+        ObjectMapper objectMapper = new ObjectMapper();
+        int page = objectMapper.readValue(json, ObjectNode.class).get("page").asInt();
+        int offset = objectMapper.readValue(json, ObjectNode.class).get("offset").asInt();
+
+        try{
+            switch (property)
+            {
+                case "name":
+                    String trainName = objectMapper.readValue(json, ObjectNode.class).get("key_word").asText();
+                    PageInfo<ProjectDTO> searchByName = projectService.findByLikeName(page,offset,trainName);
+                    return new RespBeanWithProjectList(
+                            searchByName.getList(),
+                            searchByName.getTotal()
+                    );
+                default:
+                    return new RespBeanWithProjectList(CptmpStatusCode.INFO_ACCESS_FAILED,"wrong property");
+            }
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new RespBeanWithProjectList(CptmpStatusCode.INFO_ACCESS_FAILED,"get project failed");
+        }
+    }
 }
 
 @EqualsAndHashCode(callSuper = true)
@@ -143,3 +199,6 @@ class RespBeanWithProjectDTO extends RespBean {
     private ProjectDTO projectDTO;
 
 }
+
+
+
