@@ -1,4 +1,4 @@
-package io.github.octopigeon.cptmpservice.service.basefileService;
+package io.github.octopigeon.cptmpservice.service.basefileservice;
 
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.nio.file.*;
 import java.util.*;
@@ -24,7 +25,7 @@ import java.util.*;
  * @date 2020/7/11
  */
 @Service
-public class BaseFileServiceImpl implements io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileService {
+public class BaseFileServiceImpl implements BaseFileService {
     // 公开文件在本地存储的地址
     private final Path publicFileStorageLocation;
     // 隐私文件在本地存储的地址
@@ -159,7 +160,7 @@ public class BaseFileServiceImpl implements io.github.octopigeon.cptmpservice.se
             fileResp.setFilePath(filePath.toString());
             fileResp.setFileUrl(String.format("%s/%s/%d/%d/%d/%s", this.domain, url, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, cal.get(Calendar.DATE), fileName));
             fileResp.setOriginName(originName);
-            fileResp.setFileSize(file.getSize());
+            fileResp.setFileSize(BigInteger.valueOf(file.getSize()));
             fileResp.setFileType(file.getContentType());
             return fileResp;
         } catch (Exception ex) {

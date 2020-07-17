@@ -2,6 +2,7 @@ package io.github.octopigeon.cptmpservice.dto.file;
 
 import lombok.Data;
 
+import java.math.BigInteger;
 import java.util.Date;
 
 /**
@@ -18,6 +19,6 @@ public class FileDTO {
     private String filePath;
     private String fileUrl;
     private String originName;
-    private Long fileSize;
+    private BigInteger fileSize;
     private String fileType;
 }
