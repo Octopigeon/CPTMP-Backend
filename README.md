@@ -534,3 +534,84 @@ College Practice Training Management Platform
     ]
 }
 ```
+
+# PersonTrainController
+## /api/student/me/team/{teamId}/remark
++ HTTP方法：GET
++ 返回类型：json
++ 说明：学生查询自己的成绩
++ 返回实例：
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-16T10:20:00.560+00:00",
+    "msg": "success",
+    "data": {
+        "id": 5,
+        "team_id": 5,
+        "user_id": 5,
+        "personal_grade": 50,
+        "evaluation": "真tm好啊"
+    }
+}
+// 失败
+{
+    "status": 15,
+    "date": "2020-07-16T10:20:31.764+00:00",
+    "msg": "get grade failed",
+    "data": null
+}
+```
+## /api/student/{userId}/team/{teamId}/remark
++ HTTP方法：GET
++ 返回类型：json
++ 说明：学校老师查询自己学校学生的成绩
++ 返回实例：
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-16T10:15:45.261+00:00",
+    "msg": "success",
+    "data": {
+        "id": 5,
+        "team_id": 5,
+        "user_id": 5,
+        "personal_grade": 50,
+        "evaluation": "真tm好啊"
+    }
+}
+// 失败
+{
+    "status": 15,
+    "date": "2020-07-16T10:17:23.745+00:00",
+    "msg": "get student grade failed",
+    "data": null
+}
+```
++ HTTP方法：PUT
++ 返回类型：json
++ 说明：学校老师修改学生成绩
++ 调用实例：
+```
+{
+    "personal_grade": 50,
+    "evaluation": "真tm好啊"
+}
+```
++ 返回实例：
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-16T10:21:15.155+00:00",
+    "msg": "modify student grade success"
+}
+// 失败
+{
+    "status": 10,
+    "date": "2020-07-16T10:22:46.603+00:00",
+    "msg": "modify student grade failed"
+}
+```
