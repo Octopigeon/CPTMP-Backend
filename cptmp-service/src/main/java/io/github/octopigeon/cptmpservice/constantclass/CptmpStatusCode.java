@@ -49,5 +49,7 @@ public class CptmpStatusCode {
     public static int FILE_UPLOAD_FAILED = 16;
     /** 删除对象失败 */
     public static int REMOVE_FAILED = 17;
+    /** 创建失败 */
+    public static int CREATE_FAILED = 18;
 
 }
