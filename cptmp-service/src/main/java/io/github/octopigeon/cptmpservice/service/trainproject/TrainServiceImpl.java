@@ -272,11 +272,11 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
     public void remove(TrainDTO dto) throws Exception {
         Train train = trainMapper.findTrainById(dto.getId());
         if(train != null){
-            trainMapper.hideTrainById(train.getId(), new Date());
             List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByTrainId(train.getId());
             for (ProjectTrain projectTrain: projectTrains) {
                 removeTeams(projectTrain);
             }
+            trainMapper.hideTrainById(train.getId(), new Date());
         }else{
             throw new ValueException("The train not exist！");
         }

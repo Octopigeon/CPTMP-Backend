@@ -83,9 +83,8 @@ public class OrganizationServiceImpl implements OrganizationService{
     @Override
     public void remove(OrganizationDTO dto) throws Exception {
         try {
-            Organization organization = organizationMapper.findOrganizationByName(dto.getName());
+            Organization organization = organizationMapper.findOrganizationById(dto.getId());
             if(organization != null){
-                organizationMapper.hideOrganizationById(organization.getId(), new Date());
                 //级联删除
                 List<CptmpUser> users = cptmpUserMapper.findUsersByOrganizationId(dto.getId());
                 for (CptmpUser user: users) {
@@ -95,6 +94,7 @@ public class OrganizationServiceImpl implements OrganizationService{
                 for (Train train: trains) {
                     removeTrain(train);
                 }
+                organizationMapper.hideOrganizationById(organization.getId(), new Date());
             }
             else {
                 throw new ValueException("organization is not existed!");
