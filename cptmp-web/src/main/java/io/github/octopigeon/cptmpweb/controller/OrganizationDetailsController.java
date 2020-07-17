@@ -1,5 +1,6 @@
 package io.github.octopigeon.cptmpweb.controller;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -8,12 +9,13 @@ import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.organization.OrganizationDTO;
 import io.github.octopigeon.cptmpservice.service.organization.OrganizationService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigInteger;
 
 /**
  * @author 魏啸冲
@@ -53,5 +55,40 @@ public class OrganizationDetailsController {
             return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "update organization info failed");
         }
     }
+
+    /**
+     * 根据id获取学校信息
+     * @param orgId
+     * @return
+     */
+    @GetMapping("api/org/{org_id}")
+    public RespBeanWithOrganization getOrganizationById(@PathVariable("org_id")BigInteger orgId)
+    {
+        try{
+            return new RespBeanWithOrganization(organizationService.findById(orgId));
+        }catch (Exception e)
+        {
+            return new RespBeanWithOrganization(CptmpStatusCode.INFO_ACCESS_FAILED,"get org info failed");
+        }
+    }
+}
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+class RespBeanWithOrganization extends RespBean
+{
+    public RespBeanWithOrganization(Integer status, String msg)
+    {
+        super(status,msg);
+    }
+
+    public RespBeanWithOrganization(OrganizationDTO organizationDTO)
+    {
+        super();
+        this.organizationDTO = organizationDTO;
+    }
+
+    @JsonProperty("data")
+    private OrganizationDTO organizationDTO;
 
 }
