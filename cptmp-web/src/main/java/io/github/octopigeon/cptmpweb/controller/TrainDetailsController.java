@@ -244,7 +244,6 @@ public class TrainDetailsController {
     }
 
     /**
-     * TODO:测试！！！
      * 处理实训有关文档的上传信息
      * @param resource 上传的文件
      * @param trainId
