@@ -139,7 +139,7 @@ public class ProjectDetailsController {
         try{
             PageInfo<TrainDTO> pageInfo = projectService.findTrainsById(page,offset,projectId);
             List<TrainDTO> trainDTOList = pageInfo.getList();
-            return new RespBeanWithTrainList(trainDTOList,pageInfo.getPageSize(),pageInfo.getPages());
+            return new RespBeanWithTrainList(trainDTOList,pageInfo.getTotal());
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -169,8 +169,7 @@ public class ProjectDetailsController {
                     PageInfo<ProjectDTO> searchByName = projectService.findByLikeName(page,offset,trainName);
                     return new RespBeanWithProjectList(
                             searchByName.getList(),
-                            searchByName.getPageSize(),
-                            searchByName.getPages()
+                            searchByName.getTotal()
                     );
                 default:
                     return new RespBeanWithProjectList(CptmpStatusCode.INFO_ACCESS_FAILED,"wrong property");
