@@ -2,10 +2,15 @@ package io.github.octopigeon.cptmpservice.service.organization;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
-import io.github.octopigeon.cptmpdao.mapper.OrganizationMapper;
+import io.github.octopigeon.cptmpdao.mapper.*;
+import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
+import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpdao.model.Organization;
+import io.github.octopigeon.cptmpdao.model.Team;
+import io.github.octopigeon.cptmpdao.model.Train;
+import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
+import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.organization.OrganizationDTO;
 import io.github.octopigeon.cptmpservice.utils.Utils;
@@ -35,6 +40,21 @@ public class OrganizationServiceImpl implements OrganizationService{
 
     @Autowired
     private CptmpUserMapper cptmpUserMapper;
+
+    @Autowired
+    private TrainMapper trainMapper;
+
+    @Autowired
+    private TeamPersonMapper teamPersonMapper;
+
+    @Autowired
+    private PersonalGradeMapper personalGradeMapper;
+
+    @Autowired
+    private TeamMapper teamMapper;
+
+    @Autowired
+    private ProjectTrainMapper projectTrainMapper;
 
     /**
      * 添加数据
@@ -66,6 +86,15 @@ public class OrganizationServiceImpl implements OrganizationService{
             Organization organization = organizationMapper.findOrganizationByName(dto.getName());
             if(organization != null){
                 organizationMapper.hideOrganizationById(organization.getId(), new Date());
+                //级联删除
+                List<CptmpUser> users = cptmpUserMapper.findUsersByOrganizationId(dto.getId());
+                for (CptmpUser user: users) {
+                    reomoveUser(user);
+                }
+                List<Train> trains = trainMapper.findTrainByOrganizationId(dto.getId());
+                for (Train train: trains) {
+                    removeTrain(train);
+                }
             }
             else {
                 throw new ValueException("organization is not existed!");
@@ -74,6 +103,38 @@ public class OrganizationServiceImpl implements OrganizationService{
             e.printStackTrace();
             throw new Exception(e);
         }
+    }
+
+    private void reomoveUser(CptmpUser user){
+        cptmpUserMapper.removeUserById(user.getId(), new Date());
+        List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByUserId(user.getId());
+        for (TeamPerson teamPerson: teamPeople) {
+            personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPerson.getId(), new Date());
+            teamPersonMapper.removeTeamPersonById(teamPerson.getId());
+        }
+    }
+
+    private void removeTrain(Train train){
+        if(train != null) {
+            trainMapper.hideTrainById(train.getId(), new Date());
+            List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByTrainId(train.getId());
+            for (ProjectTrain projectTrain : projectTrains) {
+                removeTeams(projectTrain);
+            }
+        }
+    }
+
+    private void removeTeams(ProjectTrain projectTrain) {
+        List<Team> teams = teamMapper.findTeamsByProjectTrainId(projectTrain.getId());
+        for (Team team: teams) {
+            List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByTeamId(team.getId());
+            for (TeamPerson teamPerson: teamPeople) {
+                personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPerson.getId(), new Date());
+                teamPersonMapper.removeTeamPersonById(teamPerson.getId());
+            }
+            teamMapper.hideTeamById(team.getId(), new Date());
+        }
+        projectTrainMapper.removeProjectTrainsById(projectTrain.getId());
     }
 
     /**

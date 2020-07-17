@@ -28,6 +28,7 @@ import java.util.List;
  * @last-check-in 李国豪
  * @date 2020/7/14
  */
+@Deprecated
 @Service
 public class AssignmentServiceImpl extends BaseFileServiceImpl implements AssignmentService{
 
@@ -106,7 +107,7 @@ public class AssignmentServiceImpl extends BaseFileServiceImpl implements Assign
      * @param assignmentId 作业Id
      */
     @Override
-    public void uploadResourceLib(MultipartFile file, BigInteger assignmentId) throws Exception {
+    public void uploadDocument(MultipartFile file, BigInteger assignmentId) throws Exception {
         FileDTO fileInfo = storePrivateFile(file);
         Assignment assignment = assignmentMapper.findAssignmentById(assignmentId);
         if(assignment == null){
@@ -131,7 +132,7 @@ public class AssignmentServiceImpl extends BaseFileServiceImpl implements Assign
      * @param file         fileDTO
      */
     @Override
-    public void removeResourceLib(BigInteger assignmentId, FileDTO file) throws Exception {
+    public void removeDocument(BigInteger assignmentId, FileDTO file) throws Exception {
         Assignment assignment = assignmentMapper.findAssignmentById(assignmentId);
         if(assignment == null){
             throw new ValueException("assignment is not existed");
