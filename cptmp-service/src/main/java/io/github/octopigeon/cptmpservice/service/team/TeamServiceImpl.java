@@ -3,13 +3,16 @@ package io.github.octopigeon.cptmpservice.service.team;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
+import io.github.octopigeon.cptmpdao.mapper.PersonalGradeMapper;
 import io.github.octopigeon.cptmpdao.mapper.TeamMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
+import io.github.octopigeon.cptmpdao.model.PersonalGrade;
 import io.github.octopigeon.cptmpdao.model.Team;
 import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
 import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
+import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.team.TeamDTO;
 import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileServiceImpl;
@@ -48,6 +51,9 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
     private CptmpUserMapper cptmpUserMapper;
 
     @Autowired
+    private PersonalGradeMapper personalGradeMapper;
+
+    @Autowired
     public TeamServiceImpl(FileProperties fileProperties) throws Exception {
         super(fileProperties);
     }
@@ -64,6 +70,7 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
             Team team = new Team();
             dto.setProjectTrainId(getTrainProjectId(dto.getTrainId(), dto.getProjectId()));
             BeanUtils.copyProperties(dto, team);
+            team.setGmtCreate(new Date());
             teamMapper.addTeam(team);
         }catch (Exception e){
             e.printStackTrace();
@@ -83,7 +90,11 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
                 throw new ValueException("Team is not exist");
             }
             teamMapper.hideTeamById(dto.getId(), new Date());
-            teamPersonMapper.removeTeamPersonByTeamId(dto.getId());
+            List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByTeamId(dto.getId());
+            for (TeamPerson teamPerson: teamPeople) {
+                personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPerson.getId(), new Date());
+                teamPersonMapper.removeTeamPersonById(teamPerson.getId());
+            }
         }catch (Exception e){
             e.printStackTrace();
             throw new Exception(e);
@@ -204,6 +215,14 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
             teamPerson.setTeamId(teamId);
             teamPerson.setUserId(userId);
             teamPersonMapper.addTeamPerson(teamPerson);
+            //如果是学生，在personalgrade表中插入一条数据
+            if(RoleEnum.ROLE_STUDENT_MEMBER.name().equals(cptmpUserMapper.findUserById(userId).getRoleName())){
+                TeamPerson re = teamPersonMapper.findTeamPersonByTeamIdAndUserId(teamId, userId);
+                PersonalGrade personalGrade = new PersonalGrade();
+                personalGrade.setGmtCreate(new Date());
+                personalGrade.setTeamPersonId(re.getId());
+                personalGradeMapper.addPersonalGrade(personalGrade);
+            }
         }
     }
 
@@ -215,7 +234,9 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
      */
     @Override
     public void removeUser(BigInteger teamId, BigInteger userId) {
-        teamPersonMapper.removeTeamPersonByTeamIdAndUserId(teamId, userId);
+        TeamPerson teamPerson = teamPersonMapper.findTeamPersonByTeamIdAndUserId(teamId, userId);
+        personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPerson.getId(), new Date());
+        teamPersonMapper.removeTeamPersonById(teamPerson.getId());
     }
 
     private TeamDTO convertTeam(Team team){

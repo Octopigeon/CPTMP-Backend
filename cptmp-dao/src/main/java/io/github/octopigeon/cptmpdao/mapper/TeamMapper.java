@@ -103,4 +103,8 @@ public interface TeamMapper {
     @Select("select id, " + COLUMNS + " from team where idx_team_name like concat('%', #{name}, '%') and gmt_deleted is null")
     @ResultMap("team")
     List<Team> findTeamByName(String name);
+
+    @Select("select id, " + COLUMNS + " from team where uk_project_train_id=#{id} and gmt_deleted is null")
+    @ResultMap("team")
+    List<Team> findTeamsByProjectTrainId(BigInteger id);
 }

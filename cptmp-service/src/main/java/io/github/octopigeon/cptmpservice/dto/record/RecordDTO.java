@@ -22,7 +22,7 @@ public class RecordDTO {
     private BigInteger userId;
     private BigInteger processId;
     private BigInteger eventId;
-    private BigInteger assignmentId;
+    private String assignmentsLib;
     @JsonIgnore
     private BigInteger processEventId;
 }
