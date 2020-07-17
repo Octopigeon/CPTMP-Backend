@@ -64,16 +64,13 @@ public class TrainDetailsController {
 
     /**
      * 获取所有实训
-     * @param json
-     * @return
-     * @throws JsonProcessingException
      */
     @GetMapping("api/train")
-    public RespBeanWithTrainList getAllTrains(@RequestBody String json) throws JsonProcessingException
+    public RespBeanWithTrainList getAllTrains(
+            @RequestParam(value = "offset") Integer offset,
+            @RequestParam(value = "page") Integer page
+    )
     {
-        ObjectMapper objectMapper = new ObjectMapper();
-        int offset = objectMapper.readValue(json, ObjectNode.class).get("offset").asInt();
-        int page = objectMapper.readValue(json, ObjectNode.class).get("page").asInt();
         try{
             PageInfo<TrainDTO> pageInfo = trainService.findAll(page,offset);
             return new RespBeanWithTrainList(
