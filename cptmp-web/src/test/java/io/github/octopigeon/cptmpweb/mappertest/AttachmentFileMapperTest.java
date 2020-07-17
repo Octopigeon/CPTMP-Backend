@@ -89,8 +89,8 @@ public class AttachmentFileMapperTest extends BaseTest {
         attachmentFileMapper.restoreAttachmentFileByName(restoreTestName);
         Assertions.assertEquals(2, attachmentFileMapper.findAllAttachmentFile().size());
 
-
-
+        //特殊查询
+        Assertions.assertEquals("test1",attachmentFileMapper.findAttachmentFileById(attachmentFileMapper.findAttachmentFileByFileName("test1").getId()).getOriginName());
 
     }
 }
