@@ -220,13 +220,14 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      * @return userInfo
      */
     @Override
-    public List<BaseUserInfoDTO> findByName(String name) {
+    public PageInfo<BaseUserInfoDTO> findByName(int page, int offset, String name) {
+        PageHelper.startPage(page, offset);
         List<CptmpUser> cptmpUsers = cptmpUserMapper.findUsersByName(name);
-        List<BaseUserInfoDTO> baseUserInfoDTOS = new ArrayList<>();
+        List<BaseUserInfoDTO> results = new ArrayList<>();
         for (CptmpUser cptmpUser: cptmpUsers) {
-            baseUserInfoDTOS.add(getFullUserInfo(cptmpUser));
+            results.add(getFullUserInfo(cptmpUser));
         }
-        return baseUserInfoDTOS;
+        return new PageInfo<>(results);
     }
 
     /**

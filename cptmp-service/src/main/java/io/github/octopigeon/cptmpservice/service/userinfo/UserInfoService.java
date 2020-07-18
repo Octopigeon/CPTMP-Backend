@@ -45,10 +45,12 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
 
     /**
      * 根据真实姓名进行模糊查询
+     * @param page 页号
+     * @param offset 一页容量
      * @param name 真实姓名
      * @return userInfo
      */
-    List<BaseUserInfoDTO> findByName(String name);
+    PageInfo<BaseUserInfoDTO> findByName(int page, int offset, String name);
 
     /**
      * 根据email进行查询
