@@ -135,5 +135,5 @@ public interface OrganizationMapper {
 
     @Select("select id, " + COLUMNS + " from cptmp_organization where uk_real_name like concat('%', #{realName}, '%') and gmt_deleted is null")
     @ResultMap("cptmpOrganization")
-    Organization findOrganizationByRealName(String realName);
+    List<Organization> findOrganizationByRealName(String realName);
 }

@@ -7,6 +7,7 @@ import io.github.octopigeon.cptmpdao.model.Organization;
 import io.github.octopigeon.cptmpservice.dto.organization.OrganizationDTO;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,7 +58,7 @@ public class OrganizationServiceImpl implements OrganizationService{
     @Override
     public void remove(OrganizationDTO dto) throws Exception {
         try {
-            Organization organization = organizationMapper.findOrganizationByName(dto.getName());
+            Organization organization = organizationMapper.findOrganizationById(dto.getId());
             if(organization != null){
                 organizationMapper.hideOrganizationById(organization.getId(), new Date());
             }
@@ -79,7 +80,7 @@ public class OrganizationServiceImpl implements OrganizationService{
     @Override
     public Boolean modify(OrganizationDTO dto) throws Exception {
         try{
-            Organization organization = organizationMapper.findOrganizationByName(dto.getName());
+            Organization organization = organizationMapper.findOrganizationById(dto.getId());
             BeanUtils.copyProperties(dto, organization, Utils.getNullPropertyNames(dto));
             organizationMapper.updateOrganizationById(organization);
             return true;
@@ -115,13 +116,7 @@ public class OrganizationServiceImpl implements OrganizationService{
     public PageInfo<OrganizationDTO> findAll(int page, int offset) {
         PageHelper.startPage(page,offset);
         List<Organization> organizationList = organizationMapper.findAllOrganization();
-        List<OrganizationDTO> results = new ArrayList<>();
-        for (Organization organization: organizationList) {
-            OrganizationDTO  result = new OrganizationDTO();
-            BeanUtils.copyProperties(organization, result);
-            results.add(result);
-        }
-        return new PageInfo<>(results);
+        return getOrganizationDTOPageInfo(organizationList);
     }
 
     /**
@@ -131,25 +126,33 @@ public class OrganizationServiceImpl implements OrganizationService{
      * @return 组织相关信息
      */
     @Override
-    public OrganizationDTO findByName(String name){
-        Organization organization = organizationMapper.findOrganizationByName(name);
-        OrganizationDTO dto = new OrganizationDTO();
-        BeanUtils.copyProperties(organization, dto);
-        return dto;
+    public PageInfo<OrganizationDTO> findByName(int page, int offset, String name){
+        PageHelper.startPage(page, offset);
+        List<Organization> organizations = organizationMapper.findOrganizationByName(name);
+        return getOrganizationDTOPageInfo(organizations);
+    }
+
+    @NotNull
+    private PageInfo<OrganizationDTO> getOrganizationDTOPageInfo(List<Organization> organizations) {
+        List<OrganizationDTO> results = new ArrayList<>();
+        for (Organization organization: organizations) {
+            OrganizationDTO result = new OrganizationDTO();
+            BeanUtils.copyProperties(organization, result);
+            results.add(result);
+        }
+        return new PageInfo<>(results);
     }
 
     /**
      * 根据组织全名进行模糊查询
-     * TODO Dao层建立模糊查询
      * @param realName 组织全名
      * @return
      */
     @Override
-    public OrganizationDTO findByRealName(String realName) {
-        Organization organization = organizationMapper.findOrganizationByRealName(realName);
-        OrganizationDTO dto = new OrganizationDTO();
-        BeanUtils.copyProperties(organization, dto);
-        return dto;
+    public PageInfo<OrganizationDTO> findByRealName(int page, int offset, String realName) {
+        PageHelper.startPage(page, offset);
+        List<Organization> organizations = organizationMapper.findOrganizationByRealName(realName);
+        return getOrganizationDTOPageInfo(organizations);
     }
 
     /**

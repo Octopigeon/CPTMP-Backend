@@ -25,17 +25,21 @@ public interface OrganizationService extends BaseNormalService<OrganizationDTO> 
 
     /**
      * 使用组织名进行模糊查询
+     * @param page 页号
+     * @param offset 页偏移
      * @param name 组织的名称
      * @return 组织相关信息
      */
-    OrganizationDTO findByName(String name);
+    PageInfo<OrganizationDTO> findByName(int page, int offset, String name);
 
     /**
      * 根据组织全名进行模糊查询
+     * @param page 页号
+     *      * @param offset 页偏移
      * @param realName 组织全名
      * @return
      */
-    OrganizationDTO findByRealName(String realName);
+    PageInfo<OrganizationDTO> findByRealName(int page, int offset, String realName);
 
     /**
      * 根据邀请码进行查询
