@@ -273,6 +273,15 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         return null;
     }
 
+    private List<BaseUserInfoDTO> findByName(String name){
+        List<CptmpUser> cptmpUsers = cptmpUserMapper.findUsersByName(name);
+        List<BaseUserInfoDTO> results = new ArrayList<>();
+        for (CptmpUser cptmpUser: cptmpUsers) {
+            results.add(getFullUserInfo(cptmpUser));
+        }
+        return results;
+    }
+
     /**
      * 根据组织id进行用户查询
      *
