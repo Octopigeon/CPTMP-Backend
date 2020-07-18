@@ -36,7 +36,12 @@ public class PunchServiceImpl implements PunchService{
     @Override
     public Boolean locationPunch(BigInteger trainId, double longitude, double latitude) {
         Train train = trainMapper.findTrainById(trainId);
-        Double limits = train.getLimits();
+        Double limits;
+        if(train.getLimits() == null){
+            limits = 100.;
+        }else {
+            limits = train.getLimits();
+        }
         JSONObject object = JSON.parseObject(train.getGpsInfo());
         double latitudeFrom = object.getDoubleValue("latitude");
         double longitudeFrom = object.getDoubleValue("longitude");
