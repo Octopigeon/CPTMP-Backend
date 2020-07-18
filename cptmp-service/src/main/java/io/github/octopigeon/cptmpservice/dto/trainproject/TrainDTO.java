@@ -10,8 +10,8 @@ import java.util.Date;
  * @author 李国豪
  * @version 1.0
  * @date 2020/7/14
- * @last-check-in 陈若琳
- * @date 2020/7/16
+ * @last-check-in 李国豪
+ * @date 2020/7/18
  */
 @Data
 public class TrainDTO {
@@ -36,4 +36,6 @@ public class TrainDTO {
 
     @JsonProperty("gps_info")
     private String gpsInfo;
+
+    private Double limits;
 }
