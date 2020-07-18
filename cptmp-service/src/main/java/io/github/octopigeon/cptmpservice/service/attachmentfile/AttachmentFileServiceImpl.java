@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * @author 李国豪
@@ -49,7 +50,7 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
         String fileName = dto.getFileName();
         if(attachmentFileMapper.findPathAndOriginNameByfileName(fileName) != null)
         {
-            attachmentFileMapper.restoreAttachmentFileByName(fileName);
+            attachmentFileMapper.hideAttachmentFileByName(fileName, new Date());
         }else {
             throw new Exception("File not found " + fileName);
         }
