@@ -14,8 +14,8 @@ import java.util.List;
  * @author 陈若琳
  * @version 2.1
  * @date 2020/07/12
- * @last-check-in 魏啸冲
- * @date 2020/07/14
+ * @last-check-in 李国鹏
+ * @date 2020/07/18
  */
 @Repository
 @Mapper
@@ -119,9 +119,9 @@ public interface OrganizationMapper {
      * @param name 组织名称
      * @return 组织列表
      */
-    @Select("select id, " + COLUMNS + " from cptmp_organization where uk_name = #{name} and gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from cptmp_organization where uk_name like concat('%', #{name}, '%') and gmt_deleted is null")
     @ResultMap("cptmpOrganization")
-    Organization findOrganizationByName(String name);
+    List<Organization> findOrganizationByName(String name);
 
     /**
      * 根据组织邀请码进行查询
@@ -133,7 +133,7 @@ public interface OrganizationMapper {
     @ResultMap("cptmpOrganization")
     Organization findOrganizationByInvitationCode(String invitationCode);
 
-    @Select("select id, " + COLUMNS + " from cptmp_organization where uk_real_name = #{realName} and gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from cptmp_organization where uk_real_name like concat('%', #{realName}, '%') and gmt_deleted is null")
     @ResultMap("cptmpOrganization")
-    Organization findOrganizationByRealName(String realName);
+    List<Organization> findOrganizationByRealName(String realName);
 }
