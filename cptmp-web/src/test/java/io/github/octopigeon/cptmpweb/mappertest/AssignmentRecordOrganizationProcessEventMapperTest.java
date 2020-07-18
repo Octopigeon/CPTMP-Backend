@@ -27,8 +27,8 @@ import java.util.List;
  * @version 1.0
  * @date 2020/7/14
  * <p>
- * last-check-in 李国鹏
- * @date 2020/7/15
+ * @last-check-in 李国鹏
+ * @date 2020/07/18
  */
 public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest {
 
@@ -142,7 +142,7 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         organizationMapper.restoreOrganizationById(restoreTestId);
         Assertions.assertEquals(2,organizationMapper.findAllOrganization().size());
         //查询(find 与 get 操作对象不同，为了测试)
-        Assertions.assertEquals("test1",organizationMapper.findOrganizationByRealName("test1").getInvitationCode());
+        Assertions.assertEquals("test1",organizationMapper.findOrganizationByRealName("test1").get(0).getInvitationCode());
         Assertions.assertEquals("test1",organizationMapper.findOrganizationByInvitationCode("test1").getName());
         Assertions.assertEquals("test1",organizationMapper.findOrganizationByName("test1").get(0).getRealName());
 
@@ -155,7 +155,7 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         organizationDTO.setDescription("湖北省武汉市武汉大学");
         organizationDTO.setWebsiteUrl("www.whu.edu.cn");
         organizationService.add(organizationDTO);
-        organizationDTO = organizationService.findByName("WHU");
+        organizationDTO = organizationService.findByName(1,1,"WHU").getList().get(0);
 
         BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
         baseUserInfoDTO.setUsername("WHU-2018302060342");
