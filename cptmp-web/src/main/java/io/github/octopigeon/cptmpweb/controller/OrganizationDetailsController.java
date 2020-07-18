@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.organization.OrganizationDTO;
@@ -16,13 +17,14 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
+import java.util.List;
 
 /**
  * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/14
- * @last-check-in 魏啸冲
- * @date 2020/7/14
+ * @last-check-in 陈若琳
+ * @date 2020/7/18
  */
 @RestController
 public class OrganizationDetailsController {
@@ -71,6 +73,27 @@ public class OrganizationDetailsController {
             return new RespBeanWithOrganization(CptmpStatusCode.INFO_ACCESS_FAILED,"get org info failed");
         }
     }
+
+    /**
+     * 分页获取所有组织
+     * @param page 页号
+     * @param offset 每页最大条目数
+     * @return 所有组织信息
+     */
+    @GetMapping("api/org")
+    public RespBeanWithOrganizationList getAllOrganization(
+            @RequestParam("page")int page,
+            @RequestParam("offset") int offset)
+    {
+        try{
+            PageInfo<OrganizationDTO>pageInfo = organizationService.findAll(page,offset);
+            return new RespBeanWithOrganizationList(pageInfo.getList(),pageInfo.getTotal());
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new RespBeanWithOrganizationList(CptmpStatusCode.INFO_ACCESS_FAILED,"get org failed");
+        }
+    }
 }
 
 @Data
@@ -90,5 +113,28 @@ class RespBeanWithOrganization extends RespBean
 
     @JsonProperty("data")
     private OrganizationDTO organizationDTO;
+
+}
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+class RespBeanWithOrganizationList extends RespBean
+{
+    public RespBeanWithOrganizationList(Integer status, String msg)
+    {
+        super(status,msg);
+    }
+
+    public RespBeanWithOrganizationList(List<OrganizationDTO> organizationDTOList,long totalRows)
+    {
+        super();
+        this.totalRows = totalRows;
+        this.organizationDTOList = organizationDTOList;
+    }
+
+    @JsonProperty("total_rows")
+    private long totalRows;
+    @JsonProperty("data")
+    private List<OrganizationDTO> organizationDTOList;
 
 }
