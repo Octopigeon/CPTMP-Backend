@@ -167,6 +167,28 @@ public class TrainDetailsController {
     }
 
     /**
+     * 修改实训信息
+     * @param json
+     * @return
+     * @throws JsonProcessingException
+     */
+    @PutMapping("api/train")
+    public RespBean updateTrainInfo(@RequestBody String json) throws JsonProcessingException
+    {
+        ObjectMapper objectMapper = new ObjectMapper();
+        TrainDTO train = objectMapper.readValue(json, TrainDTO.class);
+        try{
+            trainService.modify(train);
+            return RespBean.ok("update train successfully");
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.CREATE_FAILED,"Train update failed");
+        }
+
+    }
+
+    /**
      * 在实训中批量添加项目
      * @param json
      * @param trainId
