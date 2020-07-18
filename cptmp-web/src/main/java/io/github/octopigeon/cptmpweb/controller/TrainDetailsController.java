@@ -48,6 +48,7 @@ public class TrainDetailsController {
      * @return
      * @throws JsonProcessingException
      */
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @PostMapping("api/train")
     public RespBean createTrain(@RequestBody String json) throws JsonProcessingException
     {
@@ -66,6 +67,7 @@ public class TrainDetailsController {
     /**
      * 获取所有实训
      */
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @GetMapping("api/train")
     public RespBeanWithTrainList getAllTrains(
             @RequestParam(value = "offset") Integer offset,
@@ -129,7 +131,7 @@ public class TrainDetailsController {
     }
 
     /**
-     * 通过id获取实训
+     * 通过id获取实训，学生和老师只能获取自己学校的实训信息
      * @param trainId
      * @return
      */
@@ -151,6 +153,7 @@ public class TrainDetailsController {
      * @param trainId
      * @return
      */
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @DeleteMapping("api/train/{train_id}")
     public RespBean deleteTrain(@PathVariable("train_id") BigInteger trainId)
     {
@@ -171,6 +174,7 @@ public class TrainDetailsController {
      * @return
      * @throws JsonProcessingException
      */
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @PutMapping("api/train/{train_id}/project")
     public RespBeanWithFailedList addProject(@RequestBody String json,@PathVariable("train_id") BigInteger trainId) throws JsonProcessingException
     {
@@ -197,6 +201,7 @@ public class TrainDetailsController {
      * @return
      * @throws JsonProcessingException
      */
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @DeleteMapping("api/train/{train_id}/project")
     public RespBeanWithFailedList deleteProject(@RequestBody String json,@PathVariable("train_id") BigInteger trainId) throws JsonProcessingException
     {
@@ -250,6 +255,7 @@ public class TrainDetailsController {
      * @param trainId
      * @return 更新是否成功
      */
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @PostMapping("/api/train/{train_id}/resource-lib")
     public RespBean updateTrainResourceLib(
             @RequestParam("file") MultipartFile resource,
