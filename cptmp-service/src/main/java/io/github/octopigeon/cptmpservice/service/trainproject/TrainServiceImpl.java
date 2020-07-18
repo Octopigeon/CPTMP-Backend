@@ -4,14 +4,14 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.github.octopigeon.cptmpdao.mapper.PersonalGradeMapper;
-import io.github.octopigeon.cptmpdao.mapper.TeamMapper;
-import io.github.octopigeon.cptmpdao.mapper.TrainMapper;
-import io.github.octopigeon.cptmpdao.mapper.ProjectMapper;
+import io.github.octopigeon.cptmpdao.mapper.*;
+import io.github.octopigeon.cptmpdao.mapper.relation.ProcessEventMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
+import io.github.octopigeon.cptmpdao.model.Process;
 import io.github.octopigeon.cptmpdao.model.Team;
 import io.github.octopigeon.cptmpdao.model.Train;
+import io.github.octopigeon.cptmpdao.model.relation.ProcessEvent;
 import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
 import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
@@ -64,6 +64,15 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
 
     @Autowired
     private AttachmentFileService attachmentFileService;
+
+    @Autowired
+    private ProcessMapper processMapper;
+
+    @Autowired
+    private ProcessEventMapper processEventMapper;
+
+    @Autowired
+    private EventMapper eventMapper;
 
     @Autowired
     public TrainServiceImpl(FileProperties fileProperties) throws Exception {
@@ -273,9 +282,20 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
         Train train = trainMapper.findTrainById(dto.getId());
         if(train != null){
             List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByTrainId(train.getId());
+            List<Process> processes = processMapper.findProcessesByTrainId(dto.getId());
             for (ProjectTrain projectTrain: projectTrains) {
                 removeTeams(projectTrain);
             }
+            for (Process process: processes) {
+                List<ProcessEvent> processEvents = processEventMapper.findProcessEventsByProcessId(process.getId());
+                for (ProcessEvent processEvent: processEvents) {
+                    if(eventMapper.findEventById(processEvent.getEventId()) != null){
+                        eventMapper.hideEventById(processEvent.getEventId(), new Date());
+                    }
+                }
+                processEventMapper.removeProcessEventsByProcessId(process.getId());
+            }
+            processMapper.hideProcessesByTrainId(new Date(), dto.getId());
             trainMapper.hideTrainById(train.getId(), new Date());
         }else{
             throw new ValueException("The train not exist！");
