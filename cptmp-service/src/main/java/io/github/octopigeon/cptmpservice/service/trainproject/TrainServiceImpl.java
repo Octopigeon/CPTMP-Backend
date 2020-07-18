@@ -4,11 +4,16 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.github.octopigeon.cptmpdao.mapper.TrainMapper;
-import io.github.octopigeon.cptmpdao.mapper.ProjectMapper;
+import io.github.octopigeon.cptmpdao.mapper.*;
+import io.github.octopigeon.cptmpdao.mapper.relation.ProcessEventMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
+import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
+import io.github.octopigeon.cptmpdao.model.Process;
+import io.github.octopigeon.cptmpdao.model.Team;
 import io.github.octopigeon.cptmpdao.model.Train;
+import io.github.octopigeon.cptmpdao.model.relation.ProcessEvent;
 import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
+import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
@@ -49,7 +54,25 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
     private ProjectMapper projectMapper;
 
     @Autowired
+    private TeamPersonMapper teamPersonMapper;
+
+    @Autowired
+    private TeamMapper teamMapper;
+
+    @Autowired
+    private PersonalGradeMapper personalGradeMapper;
+
+    @Autowired
     private AttachmentFileService attachmentFileService;
+
+    @Autowired
+    private ProcessMapper processMapper;
+
+    @Autowired
+    private ProcessEventMapper processEventMapper;
+
+    @Autowired
+    private EventMapper eventMapper;
 
     @Autowired
     public TrainServiceImpl(FileProperties fileProperties) throws Exception {
@@ -202,11 +225,29 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
             if(projectMapper.findTrainProjectById(projectId) == null){
                 throw new ValueException("Project is not existed!");
             }
-            projectTrainMapper.removeProjectTrainsByProjectIdAndTrainId(projectId, trainId);
+            ProjectTrain projectTrain = projectTrainMapper.findProjectTrainByProjectIdAndTrainId(projectId, trainId);
+            removeTeams(projectTrain);
         }catch (Exception e){
             e.printStackTrace();
             throw new Exception("Remove project from train failed！");
         }
+    }
+
+    /**
+     * 移除实训项目下的队伍
+     * @param projectTrain
+     */
+    private void removeTeams(ProjectTrain projectTrain) {
+        List<Team> teams = teamMapper.findTeamsByProjectTrainId(projectTrain.getId());
+        for (Team team: teams) {
+            List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByTeamId(team.getId());
+            for (TeamPerson teamPerson: teamPeople) {
+                personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPerson.getId(), new Date());
+                teamPersonMapper.removeTeamPersonById(teamPerson.getId());
+            }
+            teamMapper.hideTeamById(team.getId(), new Date());
+        }
+        projectTrainMapper.removeProjectTrainsById(projectTrain.getId());
     }
 
     /**
@@ -239,9 +280,23 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
     @Override
     public void remove(TrainDTO dto) throws Exception {
         Train train = trainMapper.findTrainById(dto.getId());
-        if(trainMapper.findTrainById(dto.getId()) != null){
-            trainMapper.hideTrainById(dto.getId(), new Date());
-            projectTrainMapper.removeProjectTrainsByTrainId(dto.getId());
+        if(train != null){
+            List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByTrainId(train.getId());
+            List<Process> processes = processMapper.findProcessesByTrainId(dto.getId());
+            for (ProjectTrain projectTrain: projectTrains) {
+                removeTeams(projectTrain);
+            }
+            for (Process process: processes) {
+                List<ProcessEvent> processEvents = processEventMapper.findProcessEventsByProcessId(process.getId());
+                for (ProcessEvent processEvent: processEvents) {
+                    if(eventMapper.findEventById(processEvent.getEventId()) != null){
+                        eventMapper.hideEventById(processEvent.getEventId(), new Date());
+                    }
+                }
+                processEventMapper.removeProcessEventsByProcessId(process.getId());
+            }
+            processMapper.hideProcessesByTrainId(new Date(), dto.getId());
+            trainMapper.hideTrainById(train.getId(), new Date());
         }else{
             throw new ValueException("The train not exist！");
         }
