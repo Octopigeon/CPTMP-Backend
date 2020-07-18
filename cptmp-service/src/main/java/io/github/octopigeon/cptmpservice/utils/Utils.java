@@ -1,8 +1,11 @@
 package io.github.octopigeon.cptmpservice.utils;
 
+import okhttp3.OkHttpClient;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 
+import java.net.InetSocketAddress;
+import java.net.Proxy;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -35,6 +38,13 @@ public class Utils {
 
         String[] result = new String[emptyNames.size()];
         return emptyNames.toArray(result);
+    }
+
+    public static OkHttpClient getOkhttpClientWithProxy() {
+        Proxy proxy = new Proxy(Proxy.Type.SOCKS,
+                new InetSocketAddress("localhost", 10808));
+        return new OkHttpClient().newBuilder().proxy(proxy)
+                .build();
     }
 
 }

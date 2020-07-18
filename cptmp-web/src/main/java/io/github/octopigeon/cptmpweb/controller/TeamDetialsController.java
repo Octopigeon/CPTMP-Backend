@@ -5,12 +5,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.pagehelper.PageInfo;
-import com.sun.xml.internal.bind.v2.TODO;
-import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.team.TeamDTO;
-import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.team.TeamService;
 import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
@@ -65,8 +62,8 @@ public class TeamDetialsController {
      * @param id
      * @return
      */
-    @DeleteMapping("api/team/{id}")
-    public RespBean deleteTeam(@PathVariable("id") BigInteger id)
+    @DeleteMapping("api/team/{team_id}")
+    public RespBean deleteTeam(@PathVariable("team_id") BigInteger id)
     {
         try{
             TeamDTO team = new TeamDTO();
@@ -101,8 +98,7 @@ public class TeamDetialsController {
                     PageInfo<TeamDTO> pageInfoByName = teamService.findByLikeName(page,offset,name);
                     return new RespBeanWithTeamList(
                             pageInfoByName.getList(),
-                            pageInfoByName.getPageSize(),
-                            pageInfoByName.getPages()
+                            pageInfoByName.getTotal()
                     );
                 default:
                     return new RespBeanWithTeamList(CptmpStatusCode.INFO_ACCESS_FAILED,"property is wrong");
@@ -161,7 +157,7 @@ public class TeamDetialsController {
      * @return
      * @throws JsonProcessingException
      */
-    @PostMapping("api/team/member/{team_id}")
+    @PostMapping("api/team/{team_id}/member")
     public RespBeanWithFailedList addMemberToTheTeam(@RequestBody String json,@PathVariable("team_id") BigInteger teamId) throws JsonProcessingException
     {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -185,7 +181,7 @@ public class TeamDetialsController {
      * @return
      * @throws JsonProcessingException
      */
-    @DeleteMapping("api/team/member/{team_id}")
+    @DeleteMapping("api/team/{team_id}/member")
     public RespBeanWithFailedList deleteMember(@RequestBody String json,@PathVariable("team_id") BigInteger teamId) throws JsonProcessingException
     {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -211,8 +207,8 @@ public class TeamDetialsController {
      * @param teamId
      * @return
      */
-    @GetMapping("api/team/member/{team_id}")
-    public  RespBeanWithUserId getTeamMember(@PathVariable(value = "team_id") BigInteger teamId)
+    @GetMapping("api/team/{team_id}/member")
+    public RespBeanWithUsers getTeamMember(@PathVariable(value = "team_id") BigInteger teamId)
     {
         try{
             List<BigInteger> userIds = teamService.findUsersByTeamId(teamId);
@@ -221,11 +217,11 @@ public class TeamDetialsController {
             {
                 userInfoList.add(userInfoService.findById(userId));
             }
-            return new RespBeanWithUserId(userInfoList);
+            return new RespBeanWithUsers(userInfoList);
         }catch (Exception e)
         {
             e.printStackTrace();
-            return new RespBeanWithUserId(CptmpStatusCode.INFO_ACCESS_FAILED,"get member failed");
+            return new RespBeanWithUsers(CptmpStatusCode.INFO_ACCESS_FAILED,"get member failed");
         }
 
     }
@@ -235,12 +231,11 @@ public class TeamDetialsController {
 @EqualsAndHashCode(callSuper = true)
 class RespBeanWithTeamList extends RespBean
 {
-    public RespBeanWithTeamList(List<TeamDTO> teams, int pageSize, int totalPages)
+    public RespBeanWithTeamList(List<TeamDTO> teams, long totalRows)
     {
         super();
         this.teams = teams;
-        this.pageSize = pageSize;
-        this.totalPages = totalPages;
+        this.totalRows = totalRows;
     }
 
     public  RespBeanWithTeamList(Integer status, String msg)
@@ -248,10 +243,8 @@ class RespBeanWithTeamList extends RespBean
         super(status,msg);
     }
 
-    @JsonProperty("page_size")
-    private int pageSize;
-    @JsonProperty("total_pages")
-    private int totalPages;
+    @JsonProperty("total_rows")
+    private long totalRows;
     @JsonProperty("data")
     private List<TeamDTO> teams;
 }
@@ -276,14 +269,14 @@ class RespBeanWithTeam extends RespBean
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-class RespBeanWithUserId extends RespBean
+class RespBeanWithUsers extends RespBean
 {
-    public RespBeanWithUserId(Integer status, String msg)
+    public RespBeanWithUsers(Integer status, String msg)
     {
         super(status,msg);
     }
 
-    public RespBeanWithUserId(List<BaseUserInfoDTO> userInfoList)
+    public RespBeanWithUsers(List<BaseUserInfoDTO> userInfoList)
     {
         this.userInfoList = userInfoList;
     }
