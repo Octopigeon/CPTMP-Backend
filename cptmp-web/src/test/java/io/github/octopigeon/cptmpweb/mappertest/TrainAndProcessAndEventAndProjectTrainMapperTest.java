@@ -84,9 +84,9 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         train.setGpsInfo("{}");
         trainMapper.addTrain(train);
         Train train1 = trainMapper.findAllTrain().get(0);
-        Assertions.assertEquals(2, Utils.getNullPropertyNames(train1).length);
+        Assertions.assertEquals(3, Utils.getNullPropertyNames(train1).length);
         train = trainMapper.findTrainById(train1.getId());
-        Assertions.assertEquals(2, Utils.getNullPropertyNames(train).length);
+        Assertions.assertEquals(3, Utils.getNullPropertyNames(train).length);
 
         // 总共加了两个
         // 创建工程
@@ -153,16 +153,17 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         projectTrain = projectTrainMapper.findProjectTrainByProjectIdAndTrainId(projectTrain.getProjectId(), projectTrain.getTrainId());
         Assertions.assertEquals(1, Utils.getNullPropertyNames(projectTrain).length);
 
+
         trainMapper.addTrain(train);
         List<Train> trains = trainMapper.findTrainByNameAmbiguously("清华");
         Assertions.assertEquals(2, trains.size());
-        Assertions.assertEquals(2, Utils.getNullPropertyNames(trains.get(0)).length);
+        Assertions.assertEquals(3, Utils.getNullPropertyNames(trains.get(0)).length);
         train.setName("北京大学暑期实训");
         trainMapper.updateTrainById(train);
         trains = trainMapper.findTrainByNameAmbiguously("清华");
         Assertions.assertEquals(1, trains.size());
         Train train2 = trainMapper.findTrainByOrganizationId(trains.get(0).getOrganizationId()).get(0);
-        Assertions.assertEquals(2, Utils.getNullPropertyNames(train2).length);
+        Assertions.assertEquals(3, Utils.getNullPropertyNames(train2).length);
         trainMapper.hideTrainById(trains.get(0).getId(), new Date());
         Assertions.assertEquals(1,  trainMapper.findAllTrain().size());
         trainMapper.restoreAllTrain();

@@ -22,13 +22,13 @@ import java.util.List;
 public interface TrainMapper {
 
     String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, idx_name, organization_id, start_time, " +
-            "end_time, content, accept_standard, resource_library, gps_info";
+            "end_time, content, accept_standard, resource_library, gps_info, limits";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{name}, #{organizationId}, #{startTime}, " +
-            "#{endTime}, #{content}, #{acceptStandard}, #{resourceLibrary}, #{gpsInfo}";
+            "#{endTime}, #{content}, #{acceptStandard}, #{resourceLibrary}, #{gpsInfo}, #{limits}";
     String UPDATE_CONTENT = "gmt_create = #{gmtCreate}, gmt_modified = #{gmtModified}, gmt_deleted = #{gmtDeleted}, " +
             "idx_name = #{name}, organization_id = #{organizationId}, start_time = #{startTime}, end_time = #{endTime}, " +
             "content = #{content}, accept_standard = #{acceptStandard}, resource_library = #{resourceLibrary}, " +
-            "gps_info = #{gpsInfo}";
+            "gps_info = #{gpsInfo}, limits = #{limits}";
     String SOFT_DELETE_TAIL = "gmt_deleted is null";
 
     /**
@@ -107,7 +107,8 @@ public interface TrainMapper {
             @Result(column = "content", property = "content", jdbcType = JdbcType.VARCHAR),
             @Result(column = "accept_standard", property = "acceptStandard", jdbcType = JdbcType.VARCHAR),
             @Result(column = "resource_library", property = "resourceLibrary", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "gps_info", property = "gpsInfo", jdbcType = JdbcType.VARCHAR)
+            @Result(column = "gps_info", property = "gpsInfo", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "limits", property = "gpsInfo", jdbcType = JdbcType.VARCHAR)
     })
     List<Train> findAllTrain();
 
