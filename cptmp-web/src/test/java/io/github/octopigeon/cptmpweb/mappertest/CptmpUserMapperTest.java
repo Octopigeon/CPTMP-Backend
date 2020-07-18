@@ -24,8 +24,8 @@ import java.util.List;
  * @version 2.0
  * @date 2020/7/8
  *
- * @last-check-in 魏啸冲
- * @date 2020/7/15
+ * @last-check-in 李国鹏
+ * @date 2020/07/18
  */
 public class CptmpUserMapperTest extends BaseTest {
 
@@ -53,7 +53,7 @@ public class CptmpUserMapperTest extends BaseTest {
         organizationDTO.setDescription("湖北省武汉市武汉大学");
         organizationDTO.setWebsiteUrl("www.whu.edu.cn");
         organizationService.add(organizationDTO);
-        organizationDTO = organizationService.findByName("WHU");
+        organizationDTO = organizationService.findByName(1,1,"WHU").getList().get(0);
 
         // 创建用户
         BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
