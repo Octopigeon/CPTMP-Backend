@@ -1,4 +1,5 @@
-# CPTMP-Backend
+CPTMP-Backend
+
 College Practice Training Management Platform
 
 # 项目结构
@@ -482,6 +483,76 @@ College Practice Training Management Platform
     "status": 10,
     "date": "2020-07-14T02:21:43.068+00:00",
     "msg": "update organization info failed"
+}
+```
+
+## /api/org
+
++ HTTP方法：GET
++ 参数：page 、offset
++ 返回类型：json
++ 说明：获取所有组织
++ 调用实例：
+
+``` json
+//api/org?page=1&offset=4
+```
+
++ 返回实例
+
+``` json
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-18T03:28:06.695+00:00",
+    "msg": "success",
+    "total_rows": 1,
+    "data": [
+        {
+            "gmt_create": "2020-07-16T16:00:00.000+00:00",
+            "name": "WHU",
+            "real_name": "武汉大学",
+            "description": "湖北省武汉市武汉大学",
+            "website_url": "www.whu.edu.cn"
+        }
+    ]
+}
+// 失败
+```
+
+## /api/org/{org_id}
+
++ HTTP方法：GET
++ 返回类型：json
++ 说明：根据id获取组织
++ 调用实例：
+
+``` json
+//api/org/1
+```
+
++ 返回实例
+
+``` json
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-18T06:26:51.680+00:00",
+    "msg": "success",
+    "data": {
+        "gmt_create": "2020-07-16T16:00:00.000+00:00",
+        "name": "WHU",
+        "real_name": "武汉大学",
+        "description": "湖北省武汉市武汉大学",
+        "website_url": "www.whu.edu.cn"
+    }
+}
+// 失败
+{
+    "status": 15,
+    "date": "2020-07-18T06:27:47.060+00:00",
+    "msg": "get org info failed",
+    "data": null
 }
 ```
 
@@ -1060,6 +1131,87 @@ College Practice Training Management Platform
       "status": 16,
       "date": "2020-07-17T16:13:17.800+00:00",
       "msg": "upload resource files failed"
+  }
+  ```
+
+  
+
+## 10.删除实训相关文件
+
++ 接口：/api/train/{train_id}/resource-lib
+
++ 方法：DELETE
+
++ 调用实例：
+
+  ```json
+  //api/train/1/resource-lib
+  {
+     "fileName":"0b09aecb-f324-4f83-b453-e5b55203048a.md",
+     "filePath":"C:\\\\cptmp\\\\private\\\\2020\\\\7\\\\18\\\\0b09aecb-f324-4f83-b453-e5b55203048a.md",
+     "fileSize":31,
+     "fileType":"text/markdown",
+     "fileUrl":"/api/storage/2020/7/18/0b09aecb-f324-4f83-b453-e5b55203048a.md",
+     "gmtCreate":1595067876399,
+     "originName":"CPTMP-需求分析文档.md"
+  }
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-18T11:45:47.318+00:00",
+      "msg": "remove resource files success"
+  }
+  //失败
+  {
+      "status": 16,
+      "date": "2020-07-18T11:48:27.966+00:00",
+      "msg": "remove resource files failed"
+  }
+  ```
+
+  
+
+## 11.更新实训信息
+
++ 接口：/api/train
+
++ 方法：PUT
+
++ 调用实例：
+
+  ```json
+  {
+      "id":5,
+      "name": "2045武汉大学暑期实训",
+      "content": "啊这",
+      "organization_id": 1,
+      "start_time": "2020-07-14T16:00:00",
+      "end_time": "2020-07-14T16:00:00.000+00:00",
+      "accept_standard": "啊这",
+      "resource_library": "",
+      "gps_info": ""
+  }
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-18T06:18:27.818+00:00",
+      "msg": "update train successfully"
+  }
+  //失败
+  {
+      "status": 18,
+      "date": "2020-07-18T06:21:32.702+00:00",
+      "msg": "Train update failed"
   }
   ```
 

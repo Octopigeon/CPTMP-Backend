@@ -9,6 +9,7 @@ import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.model.Project;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
+import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.trainproject.ProjectService;
@@ -167,6 +168,28 @@ public class TrainDetailsController {
     }
 
     /**
+     * 修改实训信息
+     * @param json
+     * @return
+     * @throws JsonProcessingException
+     */
+    @PutMapping("api/train")
+    public RespBean updateTrainInfo(@RequestBody String json) throws JsonProcessingException
+    {
+        ObjectMapper objectMapper = new ObjectMapper();
+        TrainDTO train = objectMapper.readValue(json, TrainDTO.class);
+        try{
+            trainService.modify(train);
+            return RespBean.ok("update train successfully");
+        }catch(Exception e)
+        {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.CREATE_FAILED,"Train update failed");
+        }
+
+    }
+
+    /**
      * 在实训中批量添加项目
      * @param json
      * @param trainId
@@ -262,6 +285,27 @@ public class TrainDetailsController {
         } catch (Exception e) {
             e.printStackTrace();
             return RespBean.error(CptmpStatusCode.FILE_UPLOAD_FAILED, "upload resource files failed");
+        }
+    }
+
+    /**
+     * 删除实训有关文档
+     * @param json
+     * @return 更新是否成功
+     */
+    @DeleteMapping("/api/train/{train_id}/resource-lib")
+    public RespBean updateTrainResourceLib(
+            @RequestBody String json,
+            @PathVariable(value = "train_id") BigInteger trainId)
+    {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            FileDTO fileDTO = objectMapper.readValue(json,FileDTO.class);
+            trainService.removeResourceLib(trainId,fileDTO);
+            return RespBean.ok("remove resource files success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.FILE_UPLOAD_FAILED, "remove resource files failed");
         }
     }
 }

@@ -26,10 +26,10 @@ public interface TeamMapper {
      *
      * @param team 团队
      */
-    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, avatar, uk_project_train_id, idx_team_name, repo_url, team_grade,evaluation";
-    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{avatar},#{projectTrainId}, #{name}, #{repoUrl}, #{teamGrade},#{evaluation}";
-    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, uk_project_train_id = #{projectTrainId}, idx_team_name = #{name}, evaluation = #{evaluation}, " +
-            " repo_url = #{repoUrl},team_grade = #{teamGrade},avatar = #{avatar}";
+    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, avatar, idx_project_train_id, idx_team_name, repo_url, team_grade,evaluation, idx_team_master_id";
+    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{avatar},#{projectTrainId}, #{name}, #{repoUrl}, #{teamGrade},#{evaluation}, #{teamMasterId}";
+    String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, idx_project_train_id = #{projectTrainId}, idx_team_name = #{name}, evaluation = #{evaluation}, " +
+            " repo_url = #{repoUrl},team_grade = #{teamGrade},avatar = #{avatar}, idx_team_master_id = #{teamMasterId}";
 
     @Insert("insert into team (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -74,12 +74,13 @@ public interface TeamMapper {
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_deleted", property = "gmtDeleted", jdbcType = JdbcType.DATE),
-            @Result(column = "uk_project_train_id", property = "projectTrainId", jdbcType = JdbcType.BIGINT),
+            @Result(column = "idx_project_train_id", property = "projectTrainId", jdbcType = JdbcType.BIGINT),
             @Result(column = "idx_team_name", property = "name", jdbcType = JdbcType.VARCHAR),
             @Result(column = "avatar", property = "avatar", jdbcType = JdbcType.VARCHAR),
             @Result(column = "repo_url", property = "repoUrl", jdbcType = JdbcType.VARCHAR),
             @Result(column = "evaluation", property = "evaluation", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "team_grade", property = "teamGrade", jdbcType = JdbcType.SMALLINT)
+            @Result(column = "team_grade", property = "teamGrade", jdbcType = JdbcType.SMALLINT),
+            @Result(column = "idx_team_master_id", property = "teamMasterId", jdbcType = JdbcType.BIGINT)
 
     })
     List<Team> findAllTeam();
@@ -107,4 +108,13 @@ public interface TeamMapper {
     @Select("select id, " + COLUMNS + " from team where uk_project_train_id=#{id} and gmt_deleted is null")
     @ResultMap("team")
     List<Team> findTeamsByProjectTrainId(BigInteger id);
+    /**
+     * 根据团队队长查找团队
+     *
+     * @param name：团队名称
+     * @return 团队列表
+     */
+    @Select("select id, " + COLUMNS + " from team where idx_team_master_id = #{teamMasterId} and gmt_deleted is null")
+    @ResultMap("team")
+    List<Team> findTeamByMasterId(BigInteger teamMasterId);
 }
