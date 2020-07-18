@@ -144,7 +144,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
         List<FileDTO> resourceLib = JSON.parseArray(object.getJSONArray(this.libJsonName).toJSONString(), FileDTO.class);
         resourceLib.add(fileInfo);
         object.put(this.libJsonName, resourceLib);
-        trainMapper.updateTrainProjectResourceById(trainId, new Date(), JSONObject.toJSONString(object, SerializerFeature.UseSingleQuotes));
+        trainMapper.updateTrainProjectResourceById(trainId, new Date(), JSONObject.toJSON(object).toString());
         attachmentFileService.add(fileInfo);
     }
 
@@ -160,7 +160,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
         List<FileDTO> resourceLib = JSON.parseArray(object.getJSONArray(this.libJsonName).toJSONString(), FileDTO.class);
         resourceLib.remove(fileDTO);
         object.put(this.libJsonName, resourceLib);
-        trainMapper.updateTrainProjectResourceById(trainId, new Date(), JSONObject.toJSONString(object, SerializerFeature.UseSingleQuotes));
+        trainMapper.updateTrainProjectResourceById(trainId, new Date(), JSONObject.toJSON(object).toString());
         attachmentFileService.remove(fileDTO);
         removeFile(fileDTO.getFilePath());
     }
