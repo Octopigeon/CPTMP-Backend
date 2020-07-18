@@ -265,6 +265,10 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
             List<FileDTO> fileDTOS = new ArrayList<>();
             object.put(this.libJsonName, fileDTOS);
             train.setResourceLibrary(object.toJSONString());
+            JSONObject gps = new JSONObject();
+            gps.put("altitude", 0);
+            gps.put("longitude", 0);
+            train.setGpsInfo(gps.toJSONString());
             trainMapper.addTrain(train);
         }catch (Exception e){
             e.printStackTrace();
