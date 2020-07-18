@@ -1,6 +1,7 @@
 package io.github.octopigeon.cptmpservice.service.trainproject;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.pagehelper.PageHelper;
@@ -140,11 +141,12 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
     public void uploadResourceLib(MultipartFile file, BigInteger trainId) throws Exception {
         FileDTO fileInfo = storePrivateFile(file);
         Train train = trainMapper.findTrainById(trainId);
-        JSONObject object = JSON.parseObject(train.getResourceLibrary());
-        List<FileDTO> resourceLib = JSON.parseArray(object.getJSONArray(this.libJsonName).toJSONString(), FileDTO.class);
+        // JSONObject object = JSON.parseObject(train.getResourceLibrary());
+        List<FileDTO> resourceLib = JSONArray.parseArray(train.getResourceLibrary(), FileDTO.class);
         resourceLib.add(fileInfo);
-        object.put(this.libJsonName, resourceLib);
-        trainMapper.updateTrainProjectResourceById(trainId, new Date(), JSONObject.toJSON(object).toString());
+        Object o = JSONObject.toJSON(resourceLib);
+        // object.put(this.libJsonName, resourceLib);
+        trainMapper.updateTrainProjectResourceById(trainId, new Date(), o.toString());
         attachmentFileService.add(fileInfo);
     }
 
@@ -156,11 +158,12 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
     @Override
     public void removeResourceLib(BigInteger trainId, FileDTO fileDTO) throws Exception {
         Train train = trainMapper.findTrainById(trainId);
-        JSONObject object = JSON.parseObject(train.getResourceLibrary());
-        List<FileDTO> resourceLib = JSON.parseArray(object.getJSONArray(this.libJsonName).toJSONString(), FileDTO.class);
+        //JSONObject object = JSON.parseObject(train.getResourceLibrary());
+        List<FileDTO> resourceLib = JSON.parseArray(train.getResourceLibrary(), FileDTO.class);
         resourceLib.remove(fileDTO);
-        object.put(this.libJsonName, resourceLib);
-        trainMapper.updateTrainProjectResourceById(trainId, new Date(), JSONObject.toJSON(object).toString());
+        // object.put(this.libJsonName, resourceLib);
+        Object o = JSONObject.toJSON(resourceLib);
+        trainMapper.updateTrainProjectResourceById(trainId, new Date(), o.toString());
         attachmentFileService.remove(fileDTO);
         removeFile(fileDTO.getFilePath());
     }
@@ -221,10 +224,9 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
             Train train = new Train();
             BeanUtils.copyProperties(dto, train);
             train.setGmtCreate(new Date());
-            JSONObject object = new JSONObject();
             List<FileDTO> fileDTOS = new ArrayList<>();
-            object.put(this.libJsonName, fileDTOS);
-            train.setResourceLibrary(object.toJSONString());
+            Object o = JSONObject.toJSON(fileDTOS);
+            train.setResourceLibrary(o.toString());
             trainMapper.addTrain(train);
         }catch (Exception e){
             e.printStackTrace();
