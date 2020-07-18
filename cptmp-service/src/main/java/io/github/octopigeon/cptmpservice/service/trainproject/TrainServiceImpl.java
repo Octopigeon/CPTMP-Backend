@@ -2,6 +2,7 @@ package io.github.octopigeon.cptmpservice.service.trainproject;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.TrainMapper;
@@ -143,7 +144,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
         List<FileDTO> resourceLib = JSON.parseArray(object.getJSONArray(this.libJsonName).toJSONString(), FileDTO.class);
         resourceLib.add(fileInfo);
         object.put(this.libJsonName, resourceLib);
-        trainMapper.updateTrainProjectResourceById(trainId, new Date(), object.toJSONString());
+        trainMapper.updateTrainProjectResourceById(trainId, new Date(), JSONObject.toJSONString(object, SerializerFeature.DisableCircularReferenceDetect));
         attachmentFileService.add(fileInfo);
     }
 
@@ -159,7 +160,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
         List<FileDTO> resourceLib = JSON.parseArray(object.getJSONArray(this.libJsonName).toJSONString(), FileDTO.class);
         resourceLib.remove(fileDTO);
         object.put(this.libJsonName, resourceLib);
-        trainMapper.updateTrainProjectResourceById(trainId, new Date(), object.toJSONString());
+        trainMapper.updateTrainProjectResourceById(trainId, new Date(), JSONObject.toJSONString(object, SerializerFeature.DisableCircularReferenceDetect));
         attachmentFileService.remove(fileDTO);
         removeFile(fileDTO.getFilePath());
     }
