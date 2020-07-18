@@ -42,6 +42,7 @@ public class GitHubApiController {
                     contributorStaticsService.getContributorStatics(repoUrl, githubUsername, githubToken)
             );
         } catch (Exception e) {
+            e.printStackTrace();
             return new RespBeanWithContributorStaticsDTOList(CptmpStatusCode.INFO_ACCESS_FAILED, "get contributor info failed");
         }
     }
