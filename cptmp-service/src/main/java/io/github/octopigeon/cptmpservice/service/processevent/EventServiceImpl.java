@@ -1,5 +1,7 @@
 package io.github.octopigeon.cptmpservice.service.processevent;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.EventMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProcessEventMapper;
 import io.github.octopigeon.cptmpdao.model.Event;
@@ -99,7 +101,8 @@ public class EventServiceImpl implements EventService{
      * @return
      */
     @Override
-    public List<EventDTO> findAllEvents() {
+    public PageInfo<EventDTO> findAllEvents(int page, int offset) {
+        PageHelper.startPage(page, offset);
         List<Event> events = eventMapper.findAllEvents();
         List<EventDTO> results = new ArrayList<>();
         for (Event event: events) {
@@ -107,6 +110,6 @@ public class EventServiceImpl implements EventService{
             BeanUtils.copyProperties(event, result);
             results.add(result);
         }
-        return results;
+        return new PageInfo<>(results);
     }
 }
