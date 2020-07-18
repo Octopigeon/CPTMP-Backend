@@ -1136,7 +1136,47 @@ College Practice Training Management Platform
 
   
 
-## 10.更新实训信息
+## 10.删除实训相关文件
+
++ 接口：/api/train/{train_id}/resource-lib
+
++ 方法：DELETE
+
++ 调用实例：
+
+  ```json
+  //api/train/1/resource-lib
+  {
+     "fileName":"0b09aecb-f324-4f83-b453-e5b55203048a.md",
+     "filePath":"C:\\\\cptmp\\\\private\\\\2020\\\\7\\\\18\\\\0b09aecb-f324-4f83-b453-e5b55203048a.md",
+     "fileSize":31,
+     "fileType":"text/markdown",
+     "fileUrl":"/api/storage/2020/7/18/0b09aecb-f324-4f83-b453-e5b55203048a.md",
+     "gmtCreate":1595067876399,
+     "originName":"CPTMP-需求分析文档.md"
+  }
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-18T11:45:47.318+00:00",
+      "msg": "remove resource files success"
+  }
+  //失败
+  {
+      "status": 16,
+      "date": "2020-07-18T11:48:27.966+00:00",
+      "msg": "remove resource files failed"
+  }
+  ```
+
+  
+
+## 11.更新实训信息
 
 + 接口：/api/train
 
