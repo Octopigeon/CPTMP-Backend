@@ -158,7 +158,7 @@ public interface CptmpUserMapper {
     @ResultMap("user")
     CptmpUser findUserByEmail(String email);
 
-    @Select("select id, " + COLUMNS + " from cptmp_user where idx_name like concat('%', #{name}, '%')and gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from cptmp_user where idx_name like concat('%', #{name}, '%') and gmt_deleted is null")
     @ResultMap("user")
     List<CptmpUser> findUsersByName(String name);
 

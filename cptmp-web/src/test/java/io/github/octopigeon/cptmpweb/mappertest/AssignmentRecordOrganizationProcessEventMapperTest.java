@@ -144,7 +144,7 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         //查询(find 与 get 操作对象不同，为了测试)
         Assertions.assertEquals("test1",organizationMapper.findOrganizationByRealName("test1").getInvitationCode());
         Assertions.assertEquals("test1",organizationMapper.findOrganizationByInvitationCode("test1").getName());
-        Assertions.assertEquals("test1",organizationMapper.findOrganizationByName("test1").getRealName());
+        Assertions.assertEquals("test1",organizationMapper.findOrganizationByName("test1").get(0).getRealName());
 
         //用户
         // 创建学校
