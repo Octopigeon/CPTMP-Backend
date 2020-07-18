@@ -70,6 +70,7 @@ public class RecordDetailsController {
     }
 
 
+
 }
 
 @Data
