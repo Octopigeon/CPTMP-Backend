@@ -775,6 +775,7 @@ College Practice Training Management Platform
 + 返回实例：
 
   ```json
+  //成功
   {
       "status": 0,
       "date": "2020-07-17T06:57:21.536+00:00",
@@ -805,8 +806,16 @@ College Practice Training Management Platform
           }
       ]
   }
+//失败
+  {
+      "status": 15,
+      "date": "2020-07-17T17:23:14.420+00:00",
+      "msg": "get train failed",
+      "total_rows": 0,
+      "data": null
+  }
   ```
-
+  
   
 
 ## 4.根据关键词查询实训
@@ -814,6 +823,8 @@ College Practice Training Management Platform
 + 接口：api/train/search/{property}
 
 + 方法：GET
+
++  注明：目前完成的接口还可以根据organization_id查询
 
 + 调用实例：
 
@@ -861,8 +872,15 @@ College Practice Training Management Platform
       ]
   }
   //
+  {
+    "status": 15,
+      "date": "2020-07-17T17:23:14.420+00:00",
+      "msg": "get train failed",
+      "total_rows": 0,
+      "data": null
+  }
   ```
-
+  
   
 
 ## 5.根据id删除实训
@@ -1014,6 +1032,752 @@ College Practice Training Management Platform
   ```
 
   
+
+## 9.上传实训相关文件
+
++ 接口：/api/train/{train_id}/resource-lib
+
++ 方法：POST
+
++ 调用实例：
+
+  ```json
+  //api/train/1/resource-lib
+  
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T16:13:00.278+00:00",
+      "msg": "upload resource files success"
+  }
+  //失败
+  {
+      "status": 16,
+      "date": "2020-07-17T16:13:17.800+00:00",
+      "msg": "upload resource files failed"
+  }
+  ```
+
+  
+
+# 团队模块（TeamDetialsController）
+
+## 1.创建团队
+
++ 接口：api/team
+
++ 方法：POST
+
++ 调用实例：
+
+  ```json
+  {
+      "name": "章鱼鸽",
+      "avatar": "abc.com",
+      "evaluation": "good",
+      "train_id": 1,
+      "project_id": 3,
+      "repo_url": "123456.github.io",
+      "team_grade": 99
+  }
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T12:52:03.411+00:00",
+      "msg": "create team successfully"
+  }
+  //失败
+  {
+      "status": 11,
+      "date": "2020-07-17T12:52:50.922+00:00",
+      "msg": "Team create failed"
+  }
+  ```
+
+
+## 2.删除团队
+
++ 接口：api/team/{team_id}
+
++ 方法：DELETE
+
++ 调用实例：
+
+  ```json
+  //api/team/6
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T13:07:16.334+00:00",
+      "msg": "team remove successfully"
+  }
+  //失败
+  {
+      "status": 17,
+      "date": "2020-07-17T13:10:44.450+00:00",
+      "msg": "team remove failed"
+  }
+  ```
+
+  
+
+## 3.根据属性分页查询团队
+
++ 接口：api/team/search/{property}
+
++ 方法：GET
+
++ 注明：根据name搜索keyword为空会返回所有团队
+
++ 调用实例：
+
+  ```json
+  //api/team/search/name
+  {
+      "key_word":"章鱼鸽",
+      "page":1,
+      "offset":8
+  }
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T14:06:10.390+00:00",
+      "msg": "success",
+      "total_rows": 1,
+      "data": [
+          {
+              "id": 4,
+              "name": "章鱼鸽",
+              "avatar": "abc.com",
+              "evaluation": "good",
+              "train_id": 1,
+              "project_id": 3,
+              "repo_url": "123456.github.io",
+              "team_grade": 99
+          }
+      ]
+  }
+  //失败
+  ```
+
+  
+
+## 4.根据id获取团队信息
+
++ 接口：api/team/{team_id}
+
++ 方法：GET
+
++ 调用实例：
+
+  ```json
+  //api/team/4
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T14:11:56.234+00:00",
+      "msg": "success",
+      "data": {
+          "id": 4,
+          "name": "章鱼鸽",
+          "avatar": "abc.com",
+          "evaluation": "good",
+          "train_id": 1,
+          "project_id": 3,
+          "repo_url": "123456.github.io",
+          "team_grade": 99
+      }
+  }
+  //失败
+  {
+      "status": 15,
+      "date": "2020-07-17T14:13:10.350+00:00",
+      "msg": "find team failed",
+      "data": null
+  }
+  ```
+
+  
+
+## 5.修改团队信息
+
++ 接口：api/team
+
++ 方法：PUT
+
++ 调用实例：
+
+  ```json
+  {
+      "id": 4,
+      "name": "章鱼鸽！",
+      "avatar": "abc.com",
+      "evaluation": "good",
+      "train_id": 1,
+      "project_id": 1,
+      "repo_url": "123456.github.io",
+      "team_grade": 100
+  }
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T15:20:24.169+00:00",
+      "msg": "update team info successfully"
+  }
+  //失败
+  {
+      "status": 10,
+      "date": "2020-07-17T14:14:37.127+00:00",
+      "msg": "update team info failed"
+  }
+  ```
+
+  
+
+## 6.增加团队成员
+
++ 接口：api/team/{team_id}/member
+
++ 方法：POST
+
++ 调用实例：
+
+  ```json
+  //api/team/1/member
+  [
+      2,
+      1
+  ]
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T15:23:06.096+00:00",
+      "msg": "all set",
+      "data": null
+  }
+  //失败
+  {
+      "status": 11,
+      "date": "2020-07-17T15:23:30.293+00:00",
+      "msg": "operation failed",
+      "data": [
+          0,
+          1
+      ]
+  }
+  ```
+
+  
+
+## 7.删除团队成员
+
++ 接口：api/team/{team_id}/member
+
++ 方法：DELETE
+
++ 调用实例：
+
+  ```json
+  //api/team/1/member
+  [
+      2,
+      1
+  ]
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T15:25:07.028+00:00",
+      "msg": "all set",
+      "data": null
+  }
+  //失败
+  {
+      "status": 11,
+      "date": "2020-07-17T15:23:30.293+00:00",
+      "msg": "operation failed",
+      "data": [
+          0
+      ]
+  }
+  ```
+
+
+## 8.获取团队成员信息
+
++ 接口：api/team/{team_id}/member
+
++ 方法：GET
+
++ 调用实例：
+
+  ```json
+  //api/team/4/member
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T15:37:41.609+00:00",
+      "msg": "success",
+      "data": [
+          {
+              "email": "wxcnb@qq.com",
+              "role_name": "ROLE_SCHOOL_TEACHER",
+              "username": "WHU-2018302060342",
+              "name": "魏啸冲",
+              "avatar": null,
+              "common_id": "2018302060342",
+              "organization_id": 1,
+              "phone_number": null,
+              "gender": null,
+              "introduction": null,
+              "user_id": 1
+          }
+      ]
+  }
+  //失败
+  ```
+
+
+# 流程模块（ProcessDetailsController）
+
+## 1.创建流程
+
++ 接口：api/process
+
++ 方法：POST
+
++ 调用实例：
+
+  ```json
+   {
+      "train_id": 1,
+      "start_time": "2020-07-17T16:00:00.000+00:00",
+      "end_time": "2020-09-09T16:00:00.000+00:00"
+  }
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T16:26:50.983+00:00",
+      "msg": "create process successfully"
+  }
+  //失败
+  {
+      "status": 18,
+      "date": "2020-07-17T16:27:32.657+00:00",
+      "msg": "create process failed"
+  }
+  ```
+
+  
+
+## 2.根据id删除流程
+
++ 接口：api/process/{process_id}
+
++ 方法：DELETE
+
++ 调用实例：
+
+  ```json
+  //api/process/6
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T16:32:45.114+00:00",
+      "msg": "delete process successfully"
+  }
+  //失败
+  ```
+
+
+## 3.根据id获取流程
+
++ 接口：api/process
+
++ 方法：GET
+
++ 调用实例：
+
+  ```json
+  //api/process/4
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T16:36:58.279+00:00",
+      "msg": "success",
+      "data": {
+          "id": 4,
+          "train_id": 1,
+          "start_time": "2020-07-16T16:00:00.000+00:00",
+          "end_time": "2020-09-08T16:00:00.000+00:00"
+      }
+  }
+  //失败
+  {
+      "status": 15,
+      "date": "2020-07-17T16:29:13.959+00:00",
+      "msg": "get process failed",
+      "data": null
+  }
+  ```
+
+
+## 4.根据ID更新流程
+
++ 接口：api/process
+
++ 方法：PUT
+
++ 调用实例：
+
+  ```json
+   {
+      "id": 4,
+      "train_id": 1,
+      "start_time": "2020-07-17T16:00:00.000+00:00",
+      "end_time": "2020-09-20T16:00:00.000+00:00"
+  }
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T16:38:41.682+00:00",
+      "msg": "update process successfully"
+  }
+  //失败
+  {
+      "status": 0,
+      "date": "2020-07-17T16:39:19.346+00:00",
+      "msg": "update process successfully"
+  }
+  ```
+
+  
+
+## 5.在流程中添加事件
+
++ 接口：api/process_event
+
++ 参数：process_id 、event_id
+
++ 方法：PUT
+
++ 调用实例：
+
+  ```json
+  //api/process_event?process_id=1&event_id=1
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T16:48:20.430+00:00",
+      "msg": "add event successfully"
+  }
+  //失败
+  {
+      "status": 18,
+      "date": "2020-07-17T16:50:59.501+00:00",
+      "msg": "add event failed"
+  }
+  ```
+
+  
+
+## 6.在流程中删除事件
+
++ 接口：api/process_event
+
++ 参数：process_id 、event_id
+
++ 方法：DELETE
+
++ 调用实例：
+
+  ```json
+  //api/process_event?process_id=1&event_id=1
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T16:57:57.309+00:00",
+      "msg": "remove event successfully"
+  }
+  //失败
+  ```
+
+  
+
+## 7.根据实训id获取流程
+
++ 接口：api/train_process/{train_id}
+
++ 方法：GET
+
++ 调用实例：
+
+  ```json
+  //api/train_process/1
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T17:03:35.310+00:00",
+      "msg": "success",
+      "data": [
+          {
+              "id": 4,
+              "train_id": 1,
+              "start_time": "2020-07-16T16:00:00.000+00:00",
+              "end_time": "2020-09-19T16:00:00.000+00:00"
+          }
+      ]
+  }
+  //失败
+  ```
+
+  
+
+## 8.移除特定实训中的流程
+
++ 接口：api/train_process/{train_id}
+
++ 方法：DELETE
+
++ 调用实例：
+
+  ```json
+  //api/train_process/1
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T17:12:37.232+00:00",
+      "msg": "remove process successfully"
+  }
+  //失败
+  ```
+
+  
+
+# 事件模块（EventDetailsController）
+
+## 1.创建事件
+
++ 接口：api/event
+
++ 方法：POST
+
++ 调用实例：
+
+  ```json
+  {
+      "start_time": "2020-07-14T16:00:00.000+00:00",
+      "end_time": "2020-07-14T16:00:00.000+00:00",
+      "content": "提交文档",
+      "person_or_team": true
+  }
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T17:28:51.048+00:00",
+      "msg": "add event successfully"
+  }
+  //失败
+  {
+      "status": 11,
+      "date": "2020-07-17T17:21:40.747+00:00",
+      "msg": "event add failed"
+  }
+  ```
+
+  
+
+## 2.根据ID删除event
+
++ 接口：api/event/{event_id}
+
++ 方法：DELETE
+
++ 调用实例：
+
+  ```json
+  //api/event/2
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T17:29:33.969+00:00",
+      "msg": "delete event successfully"
+  }
+  //失败
+  {
+      "status": 17,
+      "date": "2020-07-17T17:30:12.115+00:00",
+      "msg": "event delete failed"
+  }
+  ```
+
+  
+
+## 3.更新事件信息
+
++ 接口：api/event
+
++ 方法：PUT
+
++ 调用实例：
+
+  ```json
+  {
+      "id":1,
+      "start_time": "2020-07-14T16:00:00.000+00:00",
+      "end_time": "2020-07-19T16:00:00.000+00:00",
+      "content": "提交文档",
+      "person_or_team": true
+  }
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T17:30:50.886+00:00",
+      "msg": "update event successfully"
+  }
+  //失败
+  ```
+
+  
+
+## 4.根据id获取事件
+
++ 接口：api/event/{event_id}
+
++ 方法：GET
+
++ 调用实例：
+
+  ```json
+  //api/event/1
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-17T17:33:25.691+00:00",
+      "msg": "success",
+      "data": {
+          "id": 1,
+          "content": "提交文档",
+          "start_time": "2020-07-13T16:00:00.000+00:00",
+          "end_time": "2020-07-18T16:00:00.000+00:00",
+          "person_or_team": true
+      }
+  }
+  //失败
+  {
+      "status": 15,
+      "date": "2020-07-17T17:33:53.600+00:00",
+      "msg": "get event failed",
+      "data": null
+  }
+  ```
+
+
+
 
 ## 1.创建实训//这是我的模板 勿删🙅‍
 
