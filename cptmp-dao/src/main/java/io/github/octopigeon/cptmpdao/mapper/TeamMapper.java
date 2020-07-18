@@ -26,10 +26,10 @@ public interface TeamMapper {
      *
      * @param team 团队
      */
-    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, avatar, idx_project_train_id, idx_team_name, repo_url, team_grade,evaluation";
-    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{avatar},#{projectTrainId}, #{name}, #{repoUrl}, #{teamGrade},#{evaluation}";
+    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, avatar, idx_project_train_id, idx_team_name, repo_url, team_grade,evaluation, idx_team_master_id";
+    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{avatar},#{projectTrainId}, #{name}, #{repoUrl}, #{teamGrade},#{evaluation}, #{teamMasterId}";
     String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, idx_project_train_id = #{projectTrainId}, idx_team_name = #{name}, evaluation = #{evaluation}, " +
-            " repo_url = #{repoUrl},team_grade = #{teamGrade},avatar = #{avatar}";
+            " repo_url = #{repoUrl},team_grade = #{teamGrade},avatar = #{avatar}, idx_team_master_id = #{teamMasterId}";
 
     @Insert("insert into team (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -79,7 +79,8 @@ public interface TeamMapper {
             @Result(column = "avatar", property = "avatar", jdbcType = JdbcType.VARCHAR),
             @Result(column = "repo_url", property = "repoUrl", jdbcType = JdbcType.VARCHAR),
             @Result(column = "evaluation", property = "evaluation", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "team_grade", property = "teamGrade", jdbcType = JdbcType.SMALLINT)
+            @Result(column = "team_grade", property = "teamGrade", jdbcType = JdbcType.SMALLINT),
+            @Result(column = "idx_team_master_id", property = "teamMasterId", jdbcType = JdbcType.BIGINT)
 
     })
     List<Team> findAllTeam();
@@ -104,7 +105,13 @@ public interface TeamMapper {
     @ResultMap("team")
     List<Team> findTeamByName(String name);
 
-    @Select("select id, " + COLUMNS + " from team where idx_project_train_id=#{id} and gmt_deleted is null")
+    /**
+     * 根据团队队长查找团队
+     *
+     * @param name：团队名称
+     * @return 团队列表
+     */
+    @Select("select id, " + COLUMNS + " from team where idx_team_master_id = #{teamMasterId} and gmt_deleted is null")
     @ResultMap("team")
-    List<Team> findTeamsByProjectTrainId(BigInteger id);
+    List<Team> findTeamByMasterId(BigInteger teamMasterId);
 }

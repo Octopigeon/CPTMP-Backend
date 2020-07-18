@@ -123,7 +123,7 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         train.setGpsInfo("{}");
         trainMapper.addTrain(train);
         Train train1 = trainMapper.findAllTrain().get(0);
-        Assertions.assertEquals(2, Utils.getNullPropertyNames(train1).length);
+        Assertions.assertEquals(3, Utils.getNullPropertyNames(train1).length);
 
         ProjectTrain projectTrain = new ProjectTrain();
         projectTrain.setGmtCreate(new Date());
@@ -153,6 +153,7 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         team.setEvaluation("good");
         team.setName("octopigeon");
         team.setTeamGrade(99);
+        team.setTeamMasterId(cptmpUser.getId());
         team.setProjectTrainId(projectTrain.getId());
         teamMapper.addTeam(team);
         team = teamMapper.findAllTeam().get(0);
@@ -166,7 +167,7 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         Assertions.assertEquals("111", team.getName());
         Assertions.assertEquals(2, Utils.getNullPropertyNames(teamMapper.findTeamByTeamId(team.getId())).length);
         Assertions.assertEquals(1, teamMapper.findTeamByName("111").size());
-
+        Assertions.assertEquals(1, teamMapper.findTeamByMasterId(cptmpUser.getId()).size());
 
         // 创建队伍-用户关系
         TeamPerson teamPerson = new TeamPerson();
