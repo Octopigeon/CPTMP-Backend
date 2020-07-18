@@ -109,6 +109,15 @@ public interface CptmpUserMapper {
     void removeUserById(BigInteger id, Date gmtDeleted);
 
     /**
+     * 通过organizationId删除
+     *
+     * @param organizationId   组织id
+     * @param gmtDeleted 删除日期
+     */
+    @Update("update cptmp_user set " + REMOVE_CONTENT + " where idx_organization_id = #{organizationId} and gmt_deleted is null")
+    void removeUsersByOrganizationId(BigInteger organizationId, Date gmtDeleted);
+
+    /**
      * 通过用户名获取用户，可以用来进行登录验证
      *
      * @param username 用户名，唯一

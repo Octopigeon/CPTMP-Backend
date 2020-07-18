@@ -2,10 +2,18 @@ package io.github.octopigeon.cptmpservice.service.organization;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.github.octopigeon.cptmpdao.mapper.CptmpUserMapper;
-import io.github.octopigeon.cptmpdao.mapper.OrganizationMapper;
+import io.github.octopigeon.cptmpdao.mapper.*;
+import io.github.octopigeon.cptmpdao.mapper.relation.ProcessEventMapper;
+import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
+import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpdao.model.Organization;
+import io.github.octopigeon.cptmpdao.model.Process;
+import io.github.octopigeon.cptmpdao.model.Team;
+import io.github.octopigeon.cptmpdao.model.Train;
+import io.github.octopigeon.cptmpdao.model.relation.ProcessEvent;
+import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
+import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.organization.OrganizationDTO;
 import io.github.octopigeon.cptmpservice.utils.Utils;
@@ -36,6 +44,30 @@ public class OrganizationServiceImpl implements OrganizationService{
     @Autowired
     private CptmpUserMapper cptmpUserMapper;
 
+    @Autowired
+    private TrainMapper trainMapper;
+
+    @Autowired
+    private TeamPersonMapper teamPersonMapper;
+
+    @Autowired
+    private PersonalGradeMapper personalGradeMapper;
+
+    @Autowired
+    private TeamMapper teamMapper;
+
+    @Autowired
+    private ProjectTrainMapper projectTrainMapper;
+
+    @Autowired
+    private ProcessMapper processMapper;
+
+    @Autowired
+    private ProcessEventMapper processEventMapper;
+
+    @Autowired
+    private EventMapper eventMapper;
+
     /**
      * 添加数据
      *
@@ -63,8 +95,17 @@ public class OrganizationServiceImpl implements OrganizationService{
     @Override
     public void remove(OrganizationDTO dto) throws Exception {
         try {
-            Organization organization = organizationMapper.findOrganizationByName(dto.getName());
+            Organization organization = organizationMapper.findOrganizationById(dto.getId());
             if(organization != null){
+                //级联删除
+                List<CptmpUser> users = cptmpUserMapper.findUsersByOrganizationId(dto.getId());
+                for (CptmpUser user: users) {
+                    reomoveUser(user);
+                }
+                List<Train> trains = trainMapper.findTrainByOrganizationId(dto.getId());
+                for (Train train: trains) {
+                    removeTrain(train);
+                }
                 organizationMapper.hideOrganizationById(organization.getId(), new Date());
             }
             else {
@@ -74,6 +115,49 @@ public class OrganizationServiceImpl implements OrganizationService{
             e.printStackTrace();
             throw new Exception(e);
         }
+    }
+
+    private void reomoveUser(CptmpUser user){
+        cptmpUserMapper.removeUserById(user.getId(), new Date());
+        List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByUserId(user.getId());
+        for (TeamPerson teamPerson: teamPeople) {
+            personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPerson.getId(), new Date());
+            teamPersonMapper.removeTeamPersonById(teamPerson.getId());
+        }
+    }
+
+    private void removeTrain(Train train){
+        if(train != null) {
+            List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByTrainId(train.getId());
+            List<io.github.octopigeon.cptmpdao.model.Process> processes = processMapper.findProcessesByTrainId(train.getId());
+            for (ProjectTrain projectTrain: projectTrains) {
+                removeTeams(projectTrain);
+            }
+            for (Process process: processes) {
+                List<ProcessEvent> processEvents = processEventMapper.findProcessEventsByProcessId(process.getId());
+                for (ProcessEvent processEvent: processEvents) {
+                    if(eventMapper.findEventById(processEvent.getEventId()) != null){
+                        eventMapper.hideEventById(processEvent.getEventId(), new Date());
+                    }
+                }
+                processEventMapper.removeProcessEventsByProcessId(process.getId());
+            }
+            processMapper.hideProcessesByTrainId(new Date(), train.getId());
+            trainMapper.hideTrainById(train.getId(), new Date());
+        }
+    }
+
+    private void removeTeams(ProjectTrain projectTrain) {
+        List<Team> teams = teamMapper.findTeamsByProjectTrainId(projectTrain.getId());
+        for (Team team: teams) {
+            List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByTeamId(team.getId());
+            for (TeamPerson teamPerson: teamPeople) {
+                personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPerson.getId(), new Date());
+                teamPersonMapper.removeTeamPersonById(teamPerson.getId());
+            }
+            teamMapper.hideTeamById(team.getId(), new Date());
+        }
+        projectTrainMapper.removeProjectTrainsById(projectTrain.getId());
     }
 
     /**

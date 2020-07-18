@@ -6,8 +6,8 @@ import org.omg.CORBA.PUBLIC_MEMBER;
  * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/7
- * @last-check-in 魏啸冲
- * @date 2020/7/13
+ * @last-check-in 陈若琳
+ * @date 2020/7/16
  */
 public class CptmpStatusCode {
 
@@ -49,5 +49,7 @@ public class CptmpStatusCode {
     public static int FILE_UPLOAD_FAILED = 16;
     /** 删除对象失败 */
     public static int REMOVE_FAILED = 17;
+    /** 创建失败 */
+    public static int CREATE_FAILED = 18;
 
 }

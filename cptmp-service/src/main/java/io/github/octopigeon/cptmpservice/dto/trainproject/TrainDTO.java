@@ -7,11 +7,11 @@ import java.math.BigInteger;
 import java.util.Date;
 
 /**
- * @author Gh Li
+ * @author 李国豪
  * @version 1.0
  * @date 2020/7/14
  * @last-check-in 陈若琳
- * @date 2020/7/14
+ * @date 2020/7/16
  */
 @Data
 public class TrainDTO {

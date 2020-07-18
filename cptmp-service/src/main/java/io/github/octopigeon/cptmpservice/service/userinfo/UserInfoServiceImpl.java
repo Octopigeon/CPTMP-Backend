@@ -79,27 +79,16 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     /**
      * 移除数据
-     * TODO 建立级联删除
      * @param dto ：dto实体
      */
     @Override
     public void remove(BaseUserInfoDTO dto) throws Exception {
-        // 删除personal_grade中的记录
-        // 删除team_person中的记录
-        // 删除record中的记录
-        // 最后删除user表中的记录
-        BigInteger userId = dto.getId();
-        List<TeamPerson> teamPersons = teamPersonMapper.findTeamPersonByUserId(userId);
-        for (TeamPerson teamPerson : teamPersons) {
-            if (teamPerson == null) {
-                recordMapper.hideRecordById(userId, new Date());
-            } else {
-                BigInteger teamPersonId = teamPerson.getId();
-                personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPersonId, new Date());
-                teamPersonMapper.removeTeamPersonByUserId(userId);
-            }
-            cptmpUserMapper.removeUserById(userId, new Date());
+        List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByUserId(dto.getId());
+        for (TeamPerson teamPerson: teamPeople) {
+            personalGradeMapper.hidePersonalGradeByTeamPersonId(teamPerson.getId(), new Date());
+            teamPersonMapper.removeTeamPersonById(teamPerson.getId());
         }
+        cptmpUserMapper.removeUserById(dto.getId(), new Date());
     }
 
     // 修改用户信息
