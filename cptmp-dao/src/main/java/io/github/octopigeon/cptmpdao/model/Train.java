@@ -37,4 +37,5 @@ public class Train {
 
     /** GPS 信息 */
     private String gpsInfo;
+    private Double limits;
 }

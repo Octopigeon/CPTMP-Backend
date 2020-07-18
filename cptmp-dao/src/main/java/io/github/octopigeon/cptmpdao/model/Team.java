@@ -28,4 +28,5 @@ public class Team {
     private String repoUrl;
     private String evaluation;
     private Integer teamGrade;
+    private BigInteger teamMasterId;
 }
