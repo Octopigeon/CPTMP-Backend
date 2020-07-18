@@ -72,7 +72,7 @@ public class ProcessDetailsController {
     }
 
     /**
-     * 更新某个流程
+     * 根据ID更新流程
      * @param json
      * @return
      * @throws JsonProcessingException
@@ -112,18 +112,14 @@ public class ProcessDetailsController {
 
     /**
      * 在process中添加event
-     * @param json
+     * @param processId
+     * @param eventId
      * @return
      * @throws JsonProcessingException
      */
     @PutMapping("api/process_event")
-    public RespBean addEvent(@RequestBody String json) throws JsonProcessingException
+    public RespBean addEvent(@RequestParam("process_id")BigInteger processId,@RequestParam("event_id")BigInteger eventId) throws JsonProcessingException
     {
-        ObjectMapper objectMapper = new ObjectMapper();
-        BigInteger processId = BigInteger.valueOf(
-                objectMapper.readValue(json, ObjectNode.class).get("process_id").asInt());
-        BigInteger eventId = BigInteger.valueOf(
-                objectMapper.readValue(json, ObjectNode.class).get("event_id").asInt());
         try{
             processService.addEvent(processId,eventId);
             return RespBean.ok("add event successfully");
@@ -135,19 +131,15 @@ public class ProcessDetailsController {
     }
 
     /**
+     * TODO:service没有对不存在的id进行过滤
      * 在process中移除event
-     * @param json
+     * @param processId
      * @return
      * @throws JsonProcessingException
      */
     @DeleteMapping("api/process_event")
-    public RespBean removeEvent(@RequestBody String json) throws JsonProcessingException
+    public RespBean removeEvent(@RequestParam("process_id")BigInteger processId,@RequestParam("event_id")BigInteger eventId)
     {
-        ObjectMapper objectMapper = new ObjectMapper();
-        BigInteger processId = BigInteger.valueOf(
-                objectMapper.readValue(json, ObjectNode.class).get("process_id").asInt());
-        BigInteger eventId = BigInteger.valueOf(
-                objectMapper.readValue(json, ObjectNode.class).get("event_id").asInt());
         try{
             processService.removeEvent(processId,eventId);
             return RespBean.ok("remove event successfully");
@@ -159,6 +151,7 @@ public class ProcessDetailsController {
     }
 
     /**
+     * TODO：service没有对不存在的id进行过滤
      * 根据实训id获取流程
      * @param trainId
      * @return
