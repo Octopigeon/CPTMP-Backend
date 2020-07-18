@@ -3,12 +3,15 @@ package io.github.octopigeon.cptmpservice.service.organization;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.*;
+import io.github.octopigeon.cptmpdao.mapper.relation.ProcessEventMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpdao.model.Organization;
+import io.github.octopigeon.cptmpdao.model.Process;
 import io.github.octopigeon.cptmpdao.model.Team;
 import io.github.octopigeon.cptmpdao.model.Train;
+import io.github.octopigeon.cptmpdao.model.relation.ProcessEvent;
 import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
 import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
@@ -55,6 +58,15 @@ public class OrganizationServiceImpl implements OrganizationService{
 
     @Autowired
     private ProjectTrainMapper projectTrainMapper;
+
+    @Autowired
+    private ProcessMapper processMapper;
+
+    @Autowired
+    private ProcessEventMapper processEventMapper;
+
+    @Autowired
+    private EventMapper eventMapper;
 
     /**
      * 添加数据
@@ -116,11 +128,22 @@ public class OrganizationServiceImpl implements OrganizationService{
 
     private void removeTrain(Train train){
         if(train != null) {
-            trainMapper.hideTrainById(train.getId(), new Date());
             List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByTrainId(train.getId());
-            for (ProjectTrain projectTrain : projectTrains) {
+            List<io.github.octopigeon.cptmpdao.model.Process> processes = processMapper.findProcessesByTrainId(train.getId());
+            for (ProjectTrain projectTrain: projectTrains) {
                 removeTeams(projectTrain);
             }
+            for (Process process: processes) {
+                List<ProcessEvent> processEvents = processEventMapper.findProcessEventsByProcessId(process.getId());
+                for (ProcessEvent processEvent: processEvents) {
+                    if(eventMapper.findEventById(processEvent.getEventId()) != null){
+                        eventMapper.hideEventById(processEvent.getEventId(), new Date());
+                    }
+                }
+                processEventMapper.removeProcessEventsByProcessId(process.getId());
+            }
+            processMapper.hideProcessesByTrainId(new Date(), train.getId());
+            trainMapper.hideTrainById(train.getId(), new Date());
         }
     }
 
