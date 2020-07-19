@@ -268,6 +268,44 @@ College Practice Training Management Platform
 
   
 
+## /api/user/pwd
+
++ HTTP方法：PUT
+
++ 返回类型：json
+
++ 说明：系统管理员设置密码
+
++ 调用实例：
+
++ ```json
+   {
+          "username": "WHU-1000432423552",
+          "new_password": "123456"
+   }
+  ```
+
++ 返回实例
+
++ ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-19T03:50:49.147+00:00",
+      "msg": "update password successfully"
+  }
+  //失败（权限不足）
+  {
+      "timestamp": "2020-07-19T03:53:05.162+00:00",
+      "status": 403,
+      "error": "Forbidden",
+      "message": "",
+      "path": "/api/user/pwd"
+  }
+  ```
+
+  
+
 # RegisterController
 
 ## /api/user/enterprise-admin
@@ -1828,7 +1866,7 @@ College Practice Training Management Platform
 
   
 
-## 2.根据ID删除event
+## 2.根据id删除event
 
 + 接口：api/event/{event_id}
 
