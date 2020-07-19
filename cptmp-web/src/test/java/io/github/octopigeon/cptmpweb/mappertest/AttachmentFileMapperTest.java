@@ -16,7 +16,7 @@ import java.util.Date;
  * @date 2020/7/12
  * <p>
  * last-check-in 李国鹏
- * @date 2020/7/12
+ * @date 2020/7/19
  */
 public class AttachmentFileMapperTest extends BaseTest {
     @Autowired
@@ -89,8 +89,11 @@ public class AttachmentFileMapperTest extends BaseTest {
         attachmentFileMapper.restoreAttachmentFileByName(restoreTestName);
         Assertions.assertEquals(2, attachmentFileMapper.findAllAttachmentFile().size());
 
+        AttachmentFile attachmentFile5 = attachmentFileMapper.findAttachmentFileById(attachmentFileMapper.findAttachmentFileByFileName("test1").getId());
+        attachmentFile5.setOriginName("test5");
+        attachmentFileMapper.updateAttachmentFileById(attachmentFile5);
         //特殊查询
-        Assertions.assertEquals("test1",attachmentFileMapper.findAttachmentFileById(attachmentFileMapper.findAttachmentFileByFileName("test1").getId()).getOriginName());
+        Assertions.assertEquals("test5",attachmentFileMapper.findAllAttachmentFile().get(0).getOriginName());
 
     }
 }
