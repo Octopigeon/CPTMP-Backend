@@ -8,6 +8,7 @@ import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
+import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
@@ -69,6 +70,41 @@ public class UserDetailsController {
         }
     }
 
+    @GetMapping("api/user/search/{property}")
+    public RespBeanWithBaseUserInfoList searchUser(@RequestBody String json, @PathVariable("property") String property) throws JsonProcessingException
+    {
+        ObjectMapper objectMapper = new ObjectMapper();
+        int page = objectMapper.readValue(json, ObjectNode.class).get("page").asInt();
+        int offset = objectMapper.readValue(json, ObjectNode.class).get("offset").asInt();
+
+        try{
+            switch (property)
+            {
+                case "organization_id":
+                    BigInteger organizationId = BigInteger.valueOf(objectMapper.readValue(json, ObjectNode.class).get("key_word").asInt());
+                    PageInfo<BaseUserInfoDTO> searchById = userInfoService.findByOrganizationId(page,offset,organizationId);
+                    return new RespBeanWithBaseUserInfoList(
+                            searchById.getList(),
+                            searchById.getTotal()
+                    );
+                case "role_name":
+                    String roleName = objectMapper.readValue(json, ObjectNode.class).get("key_word").asText();
+                    PageInfo<BaseUserInfoDTO> searchByName = userInfoService.findByRoleName(page,offset,roleName);
+                    return new RespBeanWithBaseUserInfoList(
+                            searchByName.getList(),
+                            searchByName.getTotal()
+                    );
+                default:
+                    return new RespBeanWithBaseUserInfoList(CptmpStatusCode.INFO_ACCESS_FAILED,"wrong property");
+            }
+
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new RespBeanWithBaseUserInfoList(CptmpStatusCode.INFO_ACCESS_FAILED,"get user failed");
+        }
+    }
+
 
     /**
      * 修改用户信息，如姓名，性别，简介信息等
@@ -123,6 +159,7 @@ public class UserDetailsController {
             return RespBean.ok("reset password success");
         }
     }
+
 
     /**
      * 处理上传头像的api
@@ -199,6 +236,22 @@ public class UserDetailsController {
             }
         }
         return RespBeanWithFailedList.report(restoreFailedList);
+    }
+
+    @Secured(CptmpRole.ROLE_SYSTEM_ADMIN)
+    @PutMapping("api/user/pwd")
+    public RespBean setPassword(@RequestBody String json) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String username = objectMapper.readValue(json, ObjectNode.class).get("username").asText();
+        String newPassword = objectMapper.readValue(json, ObjectNode.class).get("new_password").asText();
+        try{
+            userInfoService.updatePassword(username,newPassword);
+            return RespBean.ok("update password successfully");
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED,"update password failed");
+        }
     }
 
 }
