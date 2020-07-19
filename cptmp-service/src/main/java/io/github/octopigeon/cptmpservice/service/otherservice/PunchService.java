@@ -30,18 +30,18 @@ public interface PunchService {
      * @param username 用户名
      * @return
      */
-    Boolean facePunch(MultipartFile image, String username);
+    Boolean facePunch(MultipartFile image, String username) throws Exception;
 
     /**
      * 添加人脸信息
      * @param image 人脸图片
      * @param username 用户名
      */
-    void addFaceInfo(MultipartFile image, String username);
+    void addFaceInfo(MultipartFile image, String username) throws Exception;
 
     /**
      * 删除人脸联系
      * @param username 用户名
      */
-    void removeFaceInfo(String username);
+    void removeFaceInfo(String username) throws Exception;
 }
