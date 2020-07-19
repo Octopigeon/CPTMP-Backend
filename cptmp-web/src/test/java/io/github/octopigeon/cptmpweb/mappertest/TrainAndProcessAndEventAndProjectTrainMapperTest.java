@@ -69,7 +69,7 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         organizationDTO.setDescription("北京市清华大学");
         organizationDTO.setWebsiteUrl("www.thu.wdu.cn");
         organizationService.add(organizationDTO);
-        Organization organization = organizationMapper.findOrganizationByName("THU");
+        Organization organization = organizationMapper.findOrganizationByName("THU").get(0);
         Assertions.assertEquals(2, Utils.getNullPropertyNames(organization).length);
 
         Train train = new Train();

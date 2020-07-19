@@ -47,7 +47,7 @@ public class ContributorDTO {
     public Long getTotalDeletions() {
         long totalDeletions = 0L;
         for (WeekContributionsDTO week : weeks) {
-            totalAdditions += week.getDeletions();
+            totalDeletions += week.getDeletions();
         }
         this.totalDeletions = totalDeletions;
         return totalDeletions;

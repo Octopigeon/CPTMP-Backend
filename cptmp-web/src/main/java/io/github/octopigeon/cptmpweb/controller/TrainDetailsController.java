@@ -19,6 +19,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,6 +49,7 @@ public class TrainDetailsController {
      * @return
      * @throws JsonProcessingException
      */
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @PostMapping("api/train")
     public RespBean createTrain(@RequestBody String json) throws JsonProcessingException
     {
@@ -65,16 +67,14 @@ public class TrainDetailsController {
 
     /**
      * 获取所有实训
-     * @param json
-     * @return
-     * @throws JsonProcessingException
      */
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @GetMapping("api/train")
-    public RespBeanWithTrainList getAllTrains(@RequestBody String json) throws JsonProcessingException
+    public RespBeanWithTrainList getAllTrains(
+            @RequestParam(value = "offset") Integer offset,
+            @RequestParam(value = "page") Integer page
+    )
     {
-        ObjectMapper objectMapper = new ObjectMapper();
-        int offset = objectMapper.readValue(json, ObjectNode.class).get("offset").asInt();
-        int page = objectMapper.readValue(json, ObjectNode.class).get("page").asInt();
         try{
             PageInfo<TrainDTO> pageInfo = trainService.findAll(page,offset);
             return new RespBeanWithTrainList(
@@ -132,7 +132,7 @@ public class TrainDetailsController {
     }
 
     /**
-     * 通过id获取实训
+     * 通过id获取实训，学生和老师只能获取自己学校的实训信息
      * @param trainId
      * @return
      */
@@ -154,6 +154,7 @@ public class TrainDetailsController {
      * @param trainId
      * @return
      */
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @DeleteMapping("api/train/{train_id}")
     public RespBean deleteTrain(@PathVariable("train_id") BigInteger trainId)
     {
@@ -196,6 +197,7 @@ public class TrainDetailsController {
      * @return
      * @throws JsonProcessingException
      */
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @PutMapping("api/train/{train_id}/project")
     public RespBeanWithFailedList addProject(@RequestBody String json,@PathVariable("train_id") BigInteger trainId) throws JsonProcessingException
     {
@@ -222,6 +224,7 @@ public class TrainDetailsController {
      * @return
      * @throws JsonProcessingException
      */
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @DeleteMapping("api/train/{train_id}/project")
     public RespBeanWithFailedList deleteProject(@RequestBody String json,@PathVariable("train_id") BigInteger trainId) throws JsonProcessingException
     {
@@ -275,6 +278,7 @@ public class TrainDetailsController {
      * @param trainId
      * @return 更新是否成功
      */
+    @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @PostMapping("/api/train/{train_id}/resource-lib")
     public RespBean updateTrainResourceLib(
             @RequestParam("file") MultipartFile resource,
