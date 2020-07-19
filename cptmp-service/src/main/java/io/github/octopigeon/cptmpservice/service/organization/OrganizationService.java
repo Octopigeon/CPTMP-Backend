@@ -12,7 +12,7 @@ import java.math.BigInteger;
  * @version 1.0
  * @date 2020/7/13
  * @last-check-in 李国豪
- * @date 2020/7/13
+ * @date 2020/7/19
  */
 @Service
 public interface OrganizationService extends BaseNormalService<OrganizationDTO> {
@@ -37,7 +37,7 @@ public interface OrganizationService extends BaseNormalService<OrganizationDTO> 
     /**
      * 根据组织全名进行模糊查询
      * @param page 页号
-     *      * @param offset 页偏移
+     * @param offset 页偏移
      * @param realName 组织全名
      * @return
      */
