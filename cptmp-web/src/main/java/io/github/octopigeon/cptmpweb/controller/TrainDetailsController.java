@@ -272,7 +272,7 @@ public class TrainDetailsController {
     /**
      * 处理实训有关文档的上传信息
      * @param resource 上传的文件
-     * @param trainId
+     * @param trainId 实训id
      * @return 更新是否成功
      */
     @PostMapping("/api/train/{train_id}/resource-lib")
@@ -291,7 +291,7 @@ public class TrainDetailsController {
     /**
      * 删除实训有关文档
      * @param json
-     * @return 更新是否成功
+     * @return 删除是否成功
      */
     @DeleteMapping("/api/train/{train_id}/resource-lib")
     public RespBean updateTrainResourceLib(
