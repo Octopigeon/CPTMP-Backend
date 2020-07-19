@@ -22,7 +22,7 @@ import java.util.UUID;
  * @version 1.0
  * @date 2020/7/9
  * @last-check-in 李国鹏
- * @date 2020/7/15
+ * @date 2020/7/19
  */
 public class PasswordResetTokenMapperTest extends BaseTest {
 

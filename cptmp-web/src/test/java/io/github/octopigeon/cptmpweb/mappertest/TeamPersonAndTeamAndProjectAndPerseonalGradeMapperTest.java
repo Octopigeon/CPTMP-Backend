@@ -29,8 +29,8 @@ import java.util.Date;
  * @version 1.0
  * @date 2020/07/12
  * 重要提示：此测试程序请勿删除，此测试文件测试覆盖率为100%
- * @last-check-in 魏啸冲
- * @date 2020/07/14
+ * @last-check-in 李国鹏
+ * @date 2020/07/19
  */
 public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends BaseTest {
 
@@ -83,7 +83,7 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         organizationDTO.setDescription("湖北省武汉市武汉大学");
         organizationDTO.setWebsiteUrl("www.whu.edu.cn");
         organizationService.add(organizationDTO);
-        organizationDTO = organizationService.findByName("WHU");
+        organizationDTO = organizationService.findByName(1,1,"WHU").getList().get(0);
 
         // 创建用户
         BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
@@ -221,9 +221,13 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         Assertions.assertEquals(2, Utils.getNullPropertyNames(personalGrade).length);
         personalGradeMapper.hidePersonalGradeById(personalGrade.getId(), new Date());
         Assertions.assertEquals(0, personalGradeMapper.findAllPersonalGrades().size());
+        personalGradeMapper.restorePersonalGradeById(personalGrade.getId());
+        Assertions.assertEquals(1, personalGradeMapper.findAllPersonalGrades().size());
         personalGradeMapper.restoreAllPersonalGrade();
         personalGradeMapper.hidePersonalGradeByTeamPersonId(personalGrade.getTeamPersonId(), new Date());
         Assertions.assertEquals(0, personalGradeMapper.findAllPersonalGrades().size());
+        personalGradeMapper.restorePersonalGradeByTeamPersonId(personalGrade.getTeamPersonId());
+        Assertions.assertEquals(1, personalGradeMapper.findAllPersonalGrades().size());
         personalGradeMapper.restoreAllPersonalGrade();
         personalGrade.setPersonalGrade(90);
         BigInteger personalGradeId = personalGrade.getId();

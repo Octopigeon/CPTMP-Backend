@@ -55,11 +55,12 @@ public class UserDetailsController {
      * @return
      */
     @GetMapping("/api/user")
-    public RespBeanWithBaseUserInfoList getAllUser(@RequestBody String json) throws JsonProcessingException
+    public RespBeanWithBaseUserInfoList getAllUser(
+            @RequestParam(value = "offset") Integer offset,
+            @RequestParam(value = "page") Integer page
+    ) throws JsonProcessingException
     {
         ObjectMapper objectMapper = new ObjectMapper();
-        int offset = objectMapper.readValue(json,ObjectNode.class).get("offset").asInt();
-        int page = objectMapper.readValue(json,ObjectNode.class).get("page").asInt();
         try{
             PageInfo<BaseUserInfoDTO> pageInfo = userInfoService.findAllByPage(page,offset);
             List<BaseUserInfoDTO> userList = pageInfo.getList();
