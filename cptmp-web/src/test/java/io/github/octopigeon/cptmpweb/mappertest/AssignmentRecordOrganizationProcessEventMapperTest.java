@@ -91,7 +91,7 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         Assertions.assertEquals(2, assignmentMapper.findAllAssignment().size());
         Assertions.assertEquals(2, Utils.getNullPropertyNames(assignmentMapper.findAllAssignment().get(0)).length);
         //删除作业
-        assignmentMapper.removeAssignmentById(assignmentMapper.findAllAssignment().get(0).getId(), new Date());
+        assignmentMapper.hideAssignmentById(assignmentMapper.findAllAssignment().get(0).getId(), new Date());
         Assertions.assertEquals(1, assignmentMapper.findAllAssignment().size());
 
         //更新作业
@@ -195,7 +195,7 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         trainMapper.addTrain(train);
         trainMapper.addTrain(train);
         Assertions.assertEquals(2, trainMapper.findAllTrain().size());
-        Assertions.assertEquals(2, Utils.getNullPropertyNames(trainMapper.findAllTrain().get(0)).length);
+        Assertions.assertEquals(3, Utils.getNullPropertyNames(trainMapper.findAllTrain().get(0)).length);
 
         projectTrainMapper.removeAllProjectTrain();
         ProjectTrain projectTrain = new ProjectTrain();
@@ -215,6 +215,7 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         team.setProjectTrainId(projectTrain.getId());
         team.setName("test1");
         team.setTeamGrade(1);
+        team.setTeamMasterId(cptmpUser.getId());
         teamMapper.addTeam(team);
         team.setProjectTrainId(projectTrainMapper.findAllProjectTrains().get(0).getId());
         teamMapper.addTeam(team);
