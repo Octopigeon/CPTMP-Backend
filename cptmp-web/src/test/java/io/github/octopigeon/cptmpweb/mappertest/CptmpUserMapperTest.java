@@ -25,7 +25,7 @@ import java.util.List;
  * @date 2020/7/8
  *
  * @last-check-in 李国鹏
- * @date 2020/07/18
+ * @date 2020/7/19
  */
 public class CptmpUserMapperTest extends BaseTest {
 

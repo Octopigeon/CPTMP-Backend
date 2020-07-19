@@ -110,8 +110,6 @@ public interface TeamMapper {
     List<Team> findTeamsByProjectTrainId(BigInteger id);
     /**
      * 根据团队队长查找团队
-     *
-     * @param name：团队名称
      * @return 团队列表
      */
     @Select("select id, " + COLUMNS + " from team where idx_team_master_id = #{teamMasterId} and gmt_deleted is null")

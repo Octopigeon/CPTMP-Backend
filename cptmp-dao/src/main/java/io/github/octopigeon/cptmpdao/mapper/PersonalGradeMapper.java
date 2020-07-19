@@ -13,8 +13,8 @@ import java.util.List;
  * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/15
- * @last-check-in 魏啸冲
- * @date 2020/7/15
+ * @last-check-in 李国鹏
+ * @date 2020/7/19
  */
 @Repository
 @Mapper
@@ -48,7 +48,7 @@ public interface PersonalGradeMapper {
     @Update("update personal_grade set gmt_deleted = #{gmtDeleted} where uk_team_person_id = #{teamPersonId} and " + SOFT_DELETE_TAIL)
     void hidePersonalGradeByTeamPersonId(BigInteger teamPersonId, Date gmtDeleted);
 
-    @Update("update personal_grade set gmt_deleted = null where uk_team_person_id = #{teamPersonId} and and gmt_deleted is not null")
+    @Update("update personal_grade set gmt_deleted = null where uk_team_person_id = #{teamPersonId} and gmt_deleted is not null")
     void restorePersonalGradeByTeamPersonId(BigInteger teamPersonId);
 
     /**

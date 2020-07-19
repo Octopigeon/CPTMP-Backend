@@ -30,7 +30,7 @@ import java.util.Date;
  * @date 2020/07/12
  * 重要提示：此测试程序请勿删除，此测试文件测试覆盖率为100%
  * @last-check-in 李国鹏
- * @date 2020/07/18
+ * @date 2020/07/19
  */
 public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends BaseTest {
 
@@ -221,9 +221,13 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         Assertions.assertEquals(2, Utils.getNullPropertyNames(personalGrade).length);
         personalGradeMapper.hidePersonalGradeById(personalGrade.getId(), new Date());
         Assertions.assertEquals(0, personalGradeMapper.findAllPersonalGrades().size());
+        personalGradeMapper.restorePersonalGradeById(personalGrade.getId());
+        Assertions.assertEquals(1, personalGradeMapper.findAllPersonalGrades().size());
         personalGradeMapper.restoreAllPersonalGrade();
         personalGradeMapper.hidePersonalGradeByTeamPersonId(personalGrade.getTeamPersonId(), new Date());
         Assertions.assertEquals(0, personalGradeMapper.findAllPersonalGrades().size());
+        personalGradeMapper.restorePersonalGradeByTeamPersonId(personalGrade.getTeamPersonId());
+        Assertions.assertEquals(1, personalGradeMapper.findAllPersonalGrades().size());
         personalGradeMapper.restoreAllPersonalGrade();
         personalGrade.setPersonalGrade(90);
         BigInteger personalGradeId = personalGrade.getId();
