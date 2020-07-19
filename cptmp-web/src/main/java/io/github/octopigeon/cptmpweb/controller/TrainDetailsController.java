@@ -298,7 +298,7 @@ public class TrainDetailsController {
      * @return 删除是否成功
      */
     @DeleteMapping("/api/train/{train_id}/resource-lib")
-    public RespBean updateTrainResourceLib(
+    public RespBean deleteTrainResource(
             @RequestBody String json,
             @PathVariable(value = "train_id") BigInteger trainId)
     {
