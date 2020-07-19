@@ -90,7 +90,14 @@ public class UserDetailsController {
                     );
                 case "role_name":
                     String roleName = objectMapper.readValue(json, ObjectNode.class).get("key_word").asText();
-                    PageInfo<BaseUserInfoDTO> searchByName = userInfoService.findByRoleName(page,offset,roleName);
+                    PageInfo<BaseUserInfoDTO> searchByRoleName = userInfoService.findByRoleName(page,offset,roleName);
+                    return new RespBeanWithBaseUserInfoList(
+                            searchByRoleName.getList(),
+                            searchByRoleName.getTotal()
+                    );
+                case "real_name":
+                    String realName = objectMapper.readValue(json, ObjectNode.class).get("key_word").asText();
+                    PageInfo<BaseUserInfoDTO> searchByName = userInfoService.findByName(page,offset,realName);
                     return new RespBeanWithBaseUserInfoList(
                             searchByName.getList(),
                             searchByName.getTotal()
