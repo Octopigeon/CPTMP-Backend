@@ -24,8 +24,8 @@ import java.util.List;
  * @version 1.0
  * @date 2020/7/14
  * 重要提示：此测试程序请勿删除，此测试文件测试覆盖率为100%
- * @last-check-in 魏啸冲
- * @date 2020/7/15
+ * @last-check-in 李国鹏
+ * @date 2020/7/19
  */
 public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
 
@@ -69,7 +69,7 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         organizationDTO.setDescription("北京市清华大学");
         organizationDTO.setWebsiteUrl("www.thu.wdu.cn");
         organizationService.add(organizationDTO);
-        Organization organization = organizationMapper.findOrganizationByName("THU");
+        Organization organization = organizationMapper.findOrganizationByName("THU").get(0);
         Assertions.assertEquals(2, Utils.getNullPropertyNames(organization).length);
 
         Train train = new Train();
@@ -101,6 +101,8 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         Assertions.assertEquals(2, Utils.getNullPropertyNames(project).length);
         projectMapper.hideTrainProjectById(project.getId(), new Date());
         Assertions.assertEquals(0, projectMapper.findAllTrainProject().size());
+        projectMapper.restoreTrainProjectById(project.getId());
+        Assertions.assertEquals(1, projectMapper.findAllTrainProject().size());
         projectMapper.restoreAllTrainProjects();
         Assertions.assertEquals(1, projectMapper.findAllTrainProject().size());
         projectMapper.hideTrainProjectByName(project.getName(), new Date());
@@ -165,6 +167,8 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         Train train2 = trainMapper.findTrainByOrganizationId(trains.get(0).getOrganizationId()).get(0);
         Assertions.assertEquals(3, Utils.getNullPropertyNames(train2).length);
         trainMapper.hideTrainById(trains.get(0).getId(), new Date());
+        Assertions.assertEquals(1,  trainMapper.findAllTrain().size());
+        trainMapper.restoreTrainById(trains.get(0).getId());
         Assertions.assertEquals(1,  trainMapper.findAllTrain().size());
         trainMapper.restoreAllTrain();
         trainMapper.hideTrainsByOrganizationId(trains.get(0).getOrganizationId(), new Date());

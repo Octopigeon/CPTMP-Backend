@@ -28,7 +28,7 @@ import java.util.List;
  * @date 2020/7/14
  * <p>
  * last-check-in 李国鹏
- * @date 2020/7/15
+ * @date 2020/7/19
  */
 public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest {
 
@@ -91,7 +91,7 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         Assertions.assertEquals(2, assignmentMapper.findAllAssignment().size());
         Assertions.assertEquals(2, Utils.getNullPropertyNames(assignmentMapper.findAllAssignment().get(0)).length);
         //删除作业
-        assignmentMapper.removeAssignmentById(assignmentMapper.findAllAssignment().get(0).getId(), new Date());
+        assignmentMapper.hideAssignmentById(assignmentMapper.findAllAssignment().get(0).getId(), new Date());
         Assertions.assertEquals(1, assignmentMapper.findAllAssignment().size());
 
         //更新作业
@@ -141,9 +141,9 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         organizationMapper.restoreOrganizationById(restoreTestId);
         Assertions.assertEquals(2, organizationMapper.findAllOrganization().size());
         //查询(find 与 get 操作对象不同，为了测试)
-        Assertions.assertEquals("test1", organizationMapper.findOrganizationByRealName("test1").getInvitationCode());
+        Assertions.assertEquals("test1", organizationMapper.findOrganizationByRealName("test1").get(0).getInvitationCode());
         Assertions.assertEquals("test1", organizationMapper.findOrganizationByInvitationCode("test1").getName());
-        Assertions.assertEquals("test1", organizationMapper.findOrganizationByName("test1").getRealName());
+        Assertions.assertEquals("test1", organizationMapper.findOrganizationByName("test1").get(0).getRealName());
 
         //用户
         // 创建学校
@@ -154,7 +154,7 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         organizationDTO.setDescription("湖北省武汉市武汉大学");
         organizationDTO.setWebsiteUrl("www.whu.edu.cn");
         organizationService.add(organizationDTO);
-        organizationDTO = organizationService.findByName("WHU");
+        organizationDTO = organizationService.findByName(1,1,"WHU").getList().get(0);
 
         BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
         baseUserInfoDTO.setUsername("WHU-2018302060342");
@@ -195,7 +195,7 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         trainMapper.addTrain(train);
         trainMapper.addTrain(train);
         Assertions.assertEquals(2, trainMapper.findAllTrain().size());
-        Assertions.assertEquals(2, Utils.getNullPropertyNames(trainMapper.findAllTrain().get(0)).length);
+        Assertions.assertEquals(3, Utils.getNullPropertyNames(trainMapper.findAllTrain().get(0)).length);
 
         projectTrainMapper.removeAllProjectTrain();
         ProjectTrain projectTrain = new ProjectTrain();
@@ -215,6 +215,7 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         team.setProjectTrainId(projectTrain.getId());
         team.setName("test1");
         team.setTeamGrade(1);
+        team.setTeamMasterId(cptmpUser.getId());
         teamMapper.addTeam(team);
         team.setProjectTrainId(projectTrainMapper.findAllProjectTrains().get(0).getId());
         teamMapper.addTeam(team);

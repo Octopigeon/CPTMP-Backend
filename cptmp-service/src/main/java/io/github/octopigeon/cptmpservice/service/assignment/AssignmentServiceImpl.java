@@ -1,10 +1,8 @@
 package io.github.octopigeon.cptmpservice.service.assignment;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.github.octopigeon.cptmpdao.mapper.AssignmentMapper;
 import io.github.octopigeon.cptmpdao.model.Assignment;
-import io.github.octopigeon.cptmpdao.model.Project;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.assignment.AssignmentDTO;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
@@ -19,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author 李国豪
@@ -64,7 +61,7 @@ public class AssignmentServiceImpl extends BaseFileServiceImpl implements Assign
      */
     @Override
     public void remove(AssignmentDTO dto) throws Exception {
-        assignmentMapper.removeAssignmentById(dto.getId(), new Date());
+        assignmentMapper.hideAssignmentById(dto.getId(), new Date());
     }
 
     /**
