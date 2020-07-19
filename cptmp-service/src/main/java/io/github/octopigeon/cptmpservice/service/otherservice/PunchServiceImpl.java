@@ -1,8 +1,13 @@
 package io.github.octopigeon.cptmpservice.service.otherservice;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import io.github.octopigeon.cptmpdao.mapper.TrainMapper;
+import io.github.octopigeon.cptmpdao.model.Train;
 import org.gavaghan.geodesy.Ellipsoid;
 import org.gavaghan.geodesy.GeodeticCalculator;
 import org.gavaghan.geodesy.GlobalCoordinates;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,13 +17,14 @@ import java.math.BigInteger;
  * @author Gh Li
  * @version 1.0
  * @date 2020/7/16
- * @last-check-in Gh Li
- * @date 2020/7/16
+ * @last-check-in 李国豪
+ * @date 2020/7/18
  */
 @Service
 public class PunchServiceImpl implements PunchService{
 
-    private double limits = 10.0;
+    @Autowired
+    private TrainMapper trainMapper;
 
     /**
      * 根据位置进行打卡
@@ -30,13 +36,20 @@ public class PunchServiceImpl implements PunchService{
      */
     @Override
     public Boolean locationPunch(BigInteger trainId, double longitude, double latitude) {
-        // TODO 根据trainID获取实训打卡点
-        double latitudeFrom = 0.0;
-        double longitudeFrom = 0.0;
+        Train train = trainMapper.findTrainById(trainId);
+        Double limits;
+        if(train.getLimits() == null){
+            limits = 100.;
+        }else {
+            limits = train.getLimits();
+        }
+        JSONObject object = JSON.parseObject(train.getGpsInfo());
+        double latitudeFrom = object.getDoubleValue("latitude");
+        double longitudeFrom = object.getDoubleValue("longitude");
         GlobalCoordinates source = new GlobalCoordinates(latitudeFrom, longitudeFrom);
         GlobalCoordinates target = new GlobalCoordinates(latitude, longitude);
         double distance = new GeodeticCalculator().calculateGeodeticCurve(Ellipsoid.Sphere, source, target).getEllipsoidalDistance();
-        return distance <= this.limits;
+        return distance <= limits;
     }
 
     /**

@@ -15,7 +15,6 @@ import java.util.Date;
  */
 @Data
 public class OrganizationDTO {
-    @JsonIgnore
     private BigInteger id;
     private Date gmtCreate;
     private String name;
