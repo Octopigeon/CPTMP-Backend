@@ -15,7 +15,7 @@ import java.util.List;
  * @date 2020/7/8
  * <p>
  * last-check-in 李国鹏
- * @date 2020/7/15
+ * @date 2020/7/19
  */
 @Repository
 @Mapper
@@ -54,7 +54,7 @@ public interface AssignmentMapper {
      * @param gmtDeleted 删除日期
      */
     @Update("update assignment set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
-    void removeAssignmentById(BigInteger id,Date gmtDeleted);
+    void hideAssignmentById(BigInteger id, Date gmtDeleted);
 
 //    /**
 //     * 根据用户id删除日志
