@@ -3,6 +3,8 @@ package io.github.octopigeon.cptmpweb.controller;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
@@ -115,9 +117,10 @@ public class EventDetailsController {
     public RespBeanWithEventList getAllEvents(@RequestParam("page") int page,@RequestParam("offset") int offset)
     {
         try{
+            Page pages = PageHelper.startPage(page, offset);
             PageInfo<EventDTO> pageInfo = eventService.findAllEvents(page, offset) ;
             List<EventDTO> eventList = pageInfo.getList();
-            return new RespBeanWithEventList(eventList,pageInfo.getTotal());
+            return new RespBeanWithEventList(eventList,pages.getTotal());
         }catch (Exception e)
         {
             e.printStackTrace();

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
@@ -80,25 +82,28 @@ public class TeamDetialsController {
 
     /**
      * 根据属性分页查询
-     * @param json
+     * @param keyWord
+     * @param offset 
      * @return
      * @throws JsonProcessingException
      */
-    @GetMapping("api/team/search/{property}")
-    public RespBeanWithTeamList searchTeam(@RequestBody String json,@PathVariable("property") String property) throws JsonProcessingException
+    @GetMapping("api/team/search/{property}/{key_word}")
+    public RespBeanWithTeamList searchTeam(
+            @PathVariable("key_word")String keyWord,
+            @PathVariable("property") String property,
+            @RequestParam("offset") int offset,
+            @RequestParam("page")int page)
     {
         ObjectMapper objectMapper = new ObjectMapper();
-        int offset = objectMapper.readValue(json, ObjectNode.class).get("offset").asInt();
-        int page = objectMapper.readValue(json, ObjectNode.class).get("page").asInt();
         try{
             switch (property)
             {
                 case "name":
-                    String name = objectMapper.readValue(json, ObjectNode.class).get("key_word").asText();
-                    PageInfo<TeamDTO> pageInfoByName = teamService.findByLikeName(page,offset,name);
+                    Page pages = PageHelper.startPage(page, offset);
+                    PageInfo<TeamDTO> pageInfoByName = teamService.findByLikeName(page,offset,keyWord);
                     return new RespBeanWithTeamList(
                             pageInfoByName.getList(),
-                            pageInfoByName.getTotal()
+                            pages.getTotal()
                     );
                 default:
                     return new RespBeanWithTeamList(CptmpStatusCode.INFO_ACCESS_FAILED,"property is wrong");

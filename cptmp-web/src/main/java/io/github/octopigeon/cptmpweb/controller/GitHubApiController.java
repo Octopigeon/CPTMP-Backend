@@ -32,14 +32,11 @@ public class GitHubApiController {
 
     @GetMapping("/api/team/{id}/contributor/statics")
     public RespBeanWithContributorStaticsDTOList getContributorStatics(
-            @PathVariable(value = "id") BigInteger teamId,
-            @RequestParam(value = "repo_url") String repoUrl,
-            @RequestParam(value = "github_username") String githubUsername,
-            @RequestParam(value = "github_token") String githubToken
+            @PathVariable(value = "id") BigInteger teamId
     ) {
         try {
             return new RespBeanWithContributorStaticsDTOList(
-                    contributorStaticsService.getContributorStatics(repoUrl, githubUsername, githubToken)
+                    contributorStaticsService.getContributorStatics(teamId)
             );
         } catch (Exception e) {
             e.printStackTrace();

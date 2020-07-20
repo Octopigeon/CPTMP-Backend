@@ -2,8 +2,11 @@ package io.github.octopigeon.cptmpweb.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
@@ -62,9 +65,10 @@ public class UserDetailsController {
     {
         ObjectMapper objectMapper = new ObjectMapper();
         try{
+            Page pages = PageHelper.startPage(page, offset);
             PageInfo<BaseUserInfoDTO> pageInfo = userInfoService.findAllByPage(page,offset);
             List<BaseUserInfoDTO> userList = pageInfo.getList();
-            return new RespBeanWithBaseUserInfoList(userList,pageInfo.getTotal());
+            return new RespBeanWithBaseUserInfoList(userList,pages.getTotal());
         }catch (Exception e)
         {
             return  new RespBeanWithBaseUserInfoList(CptmpStatusCode.INFO_ACCESS_FAILED,"get user info failed");
@@ -126,7 +130,13 @@ public class UserDetailsController {
         };
         // 前端发来的json包含name，gender，introduction三个字段
         String name = objectMapper.readValue(json, ObjectNode.class).get("name").asText();
-        Boolean gender = objectMapper.readValue(json, ObjectNode.class).get("gender").asBoolean();
+        JsonNode genderNode = objectMapper.readValue(json, ObjectNode.class).get("gender");
+        Boolean gender;
+        if (genderNode.asText().equals("null")) {
+            gender = null;
+        } else {
+            gender = genderNode.asBoolean();
+        }
         String introduction = objectMapper.readValue(json, ObjectNode.class).get("introduction").asText();
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         // 将要修改的信息打包，传到service层
