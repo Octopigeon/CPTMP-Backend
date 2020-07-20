@@ -2,6 +2,7 @@ package io.github.octopigeon.cptmpservice.service.trainproject;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.ProjectMapper;
@@ -131,9 +132,16 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
      */
     @Override
     public PageInfo<ProjectDTO> findAll(int page, int offset) {
-        PageHelper.startPage(page, offset);
+        Page pages = PageHelper.startPage(page, offset);
         List<Project> projects = projectMapper.findAllTrainProject();
-        return getProjectDTOPageInfo(projects);
+        List<ProjectDTO> results = new ArrayList<>();
+        for (Project project: projects) {
+            ProjectDTO result = new ProjectDTO();
+            BeanUtils.copyProperties(project, result);
+            results.add(result);
+        }
+        pages.add(results);
+        return new PageInfo<>(pages);
     }
 
     /**
