@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.model.Project;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
@@ -90,40 +92,46 @@ public class TrainDetailsController {
     }
 
     /**
-     * 根据关键词获取实训
-     * @param json
-     * @param property 关键词对应属性
+     * 根据组织获取实训
      * @return
      * @throws JsonProcessingException
      */
-    @GetMapping("api/train/search/{property}")
-    public RespBeanWithTrainList searchTrain(@RequestBody String json, @PathVariable("property") String property) throws JsonProcessingException
+    @GetMapping("api/train/search/org")
+    public RespBeanWithTrainList searchTrainByOrg(
+            @RequestParam("offset") int offset,
+            @RequestParam("page")int page,
+            @RequestParam("key_word") BigInteger keyWord)
     {
-        ObjectMapper objectMapper = new ObjectMapper();
-        int page = objectMapper.readValue(json, ObjectNode.class).get("page").asInt();
-        int offset = objectMapper.readValue(json, ObjectNode.class).get("offset").asInt();
-
         try{
-            switch (property)
-            {
-                case "organization_id":
-                    BigInteger organizationId = BigInteger.valueOf(objectMapper.readValue(json, ObjectNode.class).get("key_word").asInt());
-                    PageInfo<TrainDTO> searchById = trainService.findByOrganizationId(page,offset,organizationId);
-                    return new RespBeanWithTrainList(
-                            searchById.getList(),
-                            searchById.getTotal()
-                    );
-                case "name":
-                    String trainName = objectMapper.readValue(json, ObjectNode.class).get("key_word").asText();
-                    PageInfo<TrainDTO> searchByName = trainService.findByLikeName(page,offset,trainName);
-                    return new RespBeanWithTrainList(
-                            searchByName.getList(),
-                            searchByName.getTotal()
-                    );
-                default:
-                    return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED,"wrong property");
-            }
+            Page pages = PageHelper.startPage(page, offset);
+            PageInfo<TrainDTO> searchById = trainService.findByOrganizationId(page,offset,keyWord);
+            return new RespBeanWithTrainList(
+                    searchById.getList(),
+                    pages.getTotal());
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED,"get train failed");
+        }
+    }
 
+    /**
+     * 根据名称获取实训
+     * @return
+     * @throws JsonProcessingException
+     */
+    @GetMapping("api/train/search/name")
+    public RespBeanWithTrainList searchTrainByName(
+            @RequestParam("offset") int offset,
+            @RequestParam("page")int page,
+            @RequestParam("key_word") String keyWord)
+    {
+        try{
+            Page pages = PageHelper.startPage(page, offset);
+            PageInfo<TrainDTO> searchByName = trainService.findByLikeName(page,offset,keyWord);
+            return new RespBeanWithTrainList(
+                    searchByName.getList(),
+                    pages.getTotal());
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -246,17 +254,18 @@ public class TrainDetailsController {
 
     /**
      * 获取实训的所有项目
-     * @param json
      * @param trainId
+     * @param offset
+     * @param page
      * @return
      * @throws JsonProcessingException
      */
     @GetMapping("api/train/{train_id}/project")
-    public RespBeanWithProjectList getProject(@RequestBody String json,@PathVariable("train_id") BigInteger trainId) throws JsonProcessingException
+    public RespBeanWithProjectList getProject(
+            @PathVariable("train_id") BigInteger trainId,
+            @RequestParam("offset")int offset,
+            @RequestParam("page")int page)
     {
-        ObjectMapper objectMapper = new ObjectMapper();
-        int page = objectMapper.readValue(json, ObjectNode.class).get("page").asInt();
-        int offset = objectMapper.readValue(json, ObjectNode.class).get("offset").asInt();
         try{
             PageInfo<BigInteger> pageInfo = trainService.findProjectIdsById(page,offset,trainId);
             List<BigInteger> projectIds = pageInfo.getList();

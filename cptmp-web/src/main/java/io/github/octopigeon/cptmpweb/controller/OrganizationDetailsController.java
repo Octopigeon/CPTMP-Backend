@@ -151,21 +151,16 @@ public class OrganizationDetailsController {
      * @param offset 每页最大条目数
      * @return 所有组织信息
      */
-    @GetMapping("api/org/{property}/{key_word}")
+    @GetMapping("api/org/real_name")
     public RespBeanWithOrganizationList searchOrganization(
             @RequestParam("page")int page,
             @RequestParam("offset") int offset,
-            @PathVariable("key_word")String keyword,
-            @PathVariable("property")String property) {
+            @RequestParam("key_word")String keyword)
+    {
         try {
-            switch (property) {
-                case "real_name":
-                    Page pages = PageHelper.startPage(page, offset);
-                    PageInfo<OrganizationDTO> pageInfo = organizationService.findByRealName(page, offset, keyword);
-                    return new RespBeanWithOrganizationList(pageInfo.getList(), pages.getTotal());
-                default:
-                    return new RespBeanWithOrganizationList(CptmpStatusCode.INFO_ACCESS_FAILED, "get org failed");
-            }
+            Page pages = PageHelper.startPage(page, offset);
+            PageInfo<OrganizationDTO> pageInfo = organizationService.findByRealName(page, offset, keyword);
+            return new RespBeanWithOrganizationList(pageInfo.getList(), pages.getTotal());
         } catch (Exception e) {
             e.printStackTrace();
             return new RespBeanWithOrganizationList(CptmpStatusCode.INFO_ACCESS_FAILED, "get org failed");
