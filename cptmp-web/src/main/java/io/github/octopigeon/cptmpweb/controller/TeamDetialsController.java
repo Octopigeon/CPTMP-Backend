@@ -7,17 +7,24 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import io.github.octopigeon.cptmpdao.model.Team;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.team.TeamDTO;
+import io.github.octopigeon.cptmpservice.dto.team.TeamInfoDTO;
+import io.github.octopigeon.cptmpservice.service.processevent.ProcessService;
 import io.github.octopigeon.cptmpservice.service.team.TeamService;
+import io.github.octopigeon.cptmpservice.service.trainproject.ProjectService;
+import io.github.octopigeon.cptmpservice.service.trainproject.TrainService;
 import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.ws.soap.Addressing;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +44,10 @@ public class TeamDetialsController {
     private TeamService teamService;
     @Autowired
     private UserInfoService userInfoService;
+    @Autowired
+    private TrainService trainService;
+    @Autowired
+    private ProjectService projectService;
 
     /**
      * 创建团队
@@ -95,10 +106,13 @@ public class TeamDetialsController {
     {
         try {
             Page pages = PageHelper.startPage(page, offset);
-            PageInfo<TeamDTO> pageInfoByName = teamService.findByLikeName(page, offset, keyWord);
-            return new RespBeanWithTeamList(
-                    pageInfoByName.getList(),
-                    pages.getTotal());
+            PageInfo<TeamDTO> pageInfo = teamService.findByLikeName(page, offset, keyWord);
+            List<TeamInfoDTO>teamInfoDTOList = new ArrayList<>();
+            for (TeamDTO team :pageInfo.getList())
+            {
+                teamInfoDTOList.add(convertTeam(team));
+            }
+            return new RespBeanWithTeamList(teamInfoDTOList, pages.getTotal());
         }catch(Exception e)
         {
             e.printStackTrace();
@@ -118,7 +132,7 @@ public class TeamDetialsController {
     {
         try{
             TeamDTO team = teamService.findById(teamId);
-            return new RespBeanWithTeam(team);
+            return new RespBeanWithTeam(convertTeam(team));
         }catch(Exception e)
         {
             e.printStackTrace();
@@ -219,7 +233,17 @@ public class TeamDetialsController {
             e.printStackTrace();
             return new RespBeanWithUsers(CptmpStatusCode.INFO_ACCESS_FAILED,"get member failed");
         }
+    }
 
+    private TeamInfoDTO convertTeam(TeamDTO team) throws Exception
+    {
+        TeamInfoDTO teamInfoDTO = new TeamInfoDTO();
+        BeanUtils.copyProperties(team, teamInfoDTO);
+        teamInfoDTO.setProjectName(projectService.findById(team.getProjectId()).getName());
+        teamInfoDTO.setTrainName(trainService.findById(team.getTrainId()).getName());
+        teamInfoDTO.setTeamMaster(userInfoService.findById(team.getTeamMasterId()).getName());
+        teamInfoDTO.setSize(teamService.findUsersByTeamId(team.getId()).size());
+        return teamInfoDTO;
     }
 }
 
@@ -227,7 +251,7 @@ public class TeamDetialsController {
 @EqualsAndHashCode(callSuper = true)
 class RespBeanWithTeamList extends RespBean
 {
-    public RespBeanWithTeamList(List<TeamDTO> teams, long totalRows)
+    public RespBeanWithTeamList(List<TeamInfoDTO> teams, long totalRows)
     {
         super();
         this.teams = teams;
@@ -242,7 +266,7 @@ class RespBeanWithTeamList extends RespBean
     @JsonProperty("total_rows")
     private long totalRows;
     @JsonProperty("data")
-    private List<TeamDTO> teams;
+    private List<TeamInfoDTO> teams;
 }
 
 @Data
@@ -254,13 +278,13 @@ class RespBeanWithTeam extends RespBean
         super(status,msg);
     }
 
-    public RespBeanWithTeam(TeamDTO team)
+    public RespBeanWithTeam(TeamInfoDTO team)
     {
         this.team = team;
     }
 
     @JsonProperty("data")
-    private TeamDTO team;
+    private TeamInfoDTO team;
 }
 
 @Data

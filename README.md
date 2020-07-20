@@ -717,7 +717,7 @@ College Practice Training Management Platform
     "msg": "update project basic info failed"
 }
 ```
-## "/api/train-project/{id}/resource-lib
+## /api/train-project/{id}/resource-lib
 + HTTP方法：PUT
 + 返回类型：json
 + 说明：通过id更新具体某个project的信息
@@ -737,7 +737,7 @@ College Practice Training Management Platform
 }
 ```
 
-## /api/train-project
+## /api/train
 + HTTP方法：GET
 + 返回类型：json
 + 参数：offset、page
@@ -809,6 +809,54 @@ College Practice Training Management Platform
         2
     ]
 }
+```
+
+## api/project/search/name
+
++ HTTP方法：GET
++ 返回类型：json
++ 说明：按名称获取项目
++ 调用实例：
+
+``` json
+//api/project/search/name?page=1&offset=6&key_word=实训
+```
+
++ 返回实例:
+
+``` json
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-20T16:14:07.727+00:00",
+    "msg": "success",
+    "total_rows": 3,
+    "data": [
+        {
+            "id": 1,
+            "name": "大一实训",
+            "level": 1,
+            "content": "坦克大战",
+            "resource_library": "https://www.baidu.com/"
+        },
+        {
+            "id": 2,
+            "name": "大二实训",
+            "level": 2,
+            "content": "飞机大战",
+            "resource_library": "https://www.baidu.com/"
+        },
+        {
+            "id": 3,
+            "name": "大三实训",
+            "level": 3,
+            "content": "实训管理平台",
+            "resource_library": "https://www.baidu.com/"
+        }
+    ]
+}
+// 失败
+
 ```
 
 
