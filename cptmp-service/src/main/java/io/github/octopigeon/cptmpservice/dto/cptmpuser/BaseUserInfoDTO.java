@@ -55,7 +55,7 @@ public class BaseUserInfoDTO{
     /**
      * 默认头像
      */
-    final String DEFAULT_AVATAR = ""; //TODO 填入默认头像地址
+    final String DEFAULT_AVATAR = "/assets/avatar.png";
 
     /**
      * Gravatar 地址
@@ -69,7 +69,7 @@ public class BaseUserInfoDTO{
      * @return 头像地址
      */
     public String getAvatar(){
-        if ((avatar == null) || (avatar.length() > 0)) {
+        if ((avatar != null) && (avatar.length() > 0)) {
             return avatar;
         } else {
             try {
