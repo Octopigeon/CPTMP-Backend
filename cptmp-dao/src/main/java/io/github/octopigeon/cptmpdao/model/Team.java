@@ -29,4 +29,8 @@ public class Team {
     private String evaluation;
     private Integer teamGrade;
     private BigInteger teamMasterId;
+    /** github用户名 */
+    private String githubUsername;
+    /** github token */
+    private String githubToken;
 }

@@ -3,6 +3,7 @@ package io.github.octopigeon.cptmpweb.controller;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
@@ -107,15 +108,16 @@ public class EventDetailsController {
     }
 
     /**
-     * 获取所有event
+     * 分页获取所有event
      * @return
      */
     @GetMapping("api/event")
-    public RespBeanWithEventList getAllEvents()
+    public RespBeanWithEventList getAllEvents(@RequestParam("page") int page,@RequestParam("offset") int offset)
     {
         try{
-            List<EventDTO> eventList = eventService.findAllEvents();
-            return new RespBeanWithEventList(eventList);
+            PageInfo<EventDTO> pageInfo = eventService.findAllEvents(page, offset) ;
+            List<EventDTO> eventList = pageInfo.getList();
+            return new RespBeanWithEventList(eventList,pageInfo.getTotal());
         }catch (Exception e)
         {
             e.printStackTrace();
@@ -151,12 +153,15 @@ class RespBeanWithEventList extends RespBean
         super(status, msg);
     }
 
-    public RespBeanWithEventList(List<EventDTO> events)
+    public RespBeanWithEventList(List<EventDTO> events,long totalRows)
     {
         super();
         this.events = events;
+        this.totalRows = totalRows;
     }
 
+    @JsonProperty("total_rows")
+    private long totalRows;
     @JsonProperty("data")
     private List<EventDTO> events;
 }
