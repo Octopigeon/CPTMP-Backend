@@ -24,16 +24,16 @@ public interface CptmpUserMapper {
 
     String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, uk_email, phone_number, " +
             "gender, avatar, idx_name, uk_common_id, idx_organization_id, uk_username, idx_password, idx_role_name, enabled, " +
-            "account_non_expired, credentials_non_expired, account_non_locked";
+            "account_non_expired, credentials_non_expired, account_non_locked, introduction";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{email}, #{phoneNumber}, " +
             "#{gender}, #{avatar}, #{name}, #{commonId}, #{organizationId}, #{username}, #{password}, #{roleName}, #{enabled}, " +
-            "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}";
+            "#{accountNonExpired}, #{credentialsNonExpired}, #{accountNonLocked}, #{introduction}";
     String UPDATE_HEADER = "update cptmp_user set ";
     String UPDATE_TAIL_USERNAME = " where (uk_username = #{username})";
     String UPDATE_CONTENT = " gmt_modified = #{gmtModified}, " +
             "uk_email = #{email}, phone_number = #{phoneNumber}, gender = #{gender}, uk_username = #{username}, idx_password = #{password}, " +
             "idx_name = #{name}, uk_common_id = #{commonId}, idx_organization_id = #{organizationId},idx_role_name = #{roleName}, enabled = #{enabled}, account_non_expired = #{accountNonExpired}, " +
-            "credentials_non_expired = #{credentialsNonExpired}, account_non_locked = #{accountNonLocked}";
+            "credentials_non_expired = #{credentialsNonExpired}, account_non_locked = #{accountNonLocked}, introduction = #{introduction}";
 
     String REMOVE_CONTENT = " gmt_deleted = #{gmtDeleted}, gmt_modified = null, uk_email = null, phone_number = null, " +
             "gender = null, avatar = null";
