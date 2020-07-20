@@ -182,7 +182,6 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
      */
     @Override
     public PageInfo<TeamDTO> findByLikeName(int page, int offset, String name) {
-        PageHelper.startPage(page, offset);
         List<TeamDTO> results = new ArrayList<>();
         List<Team> teams= teamMapper.findTeamByName(name);
         for (Team team:teams) {
