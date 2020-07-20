@@ -18,6 +18,7 @@ import io.github.octopigeon.cptmpservice.service.attachmentfile.AttachmentFileSe
 import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileServiceImpl;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -122,6 +123,20 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
     }
 
     /**
+     * 查询所有项目
+     *
+     * @param page   页号
+     * @param offset 页容量
+     * @return
+     */
+    @Override
+    public PageInfo<ProjectDTO> findAll(int page, int offset) {
+        PageHelper.startPage(page, offset);
+        List<Project> projects = projectMapper.findAllTrainProject();
+        return getProjectDTOPageInfo(projects);
+    }
+
+    /**
      * 根据名字进行模糊查找
      *
      * @param page   页号
@@ -133,6 +148,11 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
     public PageInfo<ProjectDTO> findByLikeName(int page, int offset, String name) {
         PageHelper.startPage(page, offset);
         List<Project> projects = projectMapper.findTrainProjectByNameAmbiguously(name);
+        return getProjectDTOPageInfo(projects);
+    }
+
+    @NotNull
+    private PageInfo<ProjectDTO> getProjectDTOPageInfo(List<Project> projects) {
         List<ProjectDTO> results = new ArrayList<>();
         for (Project project: projects) {
             ProjectDTO result = new ProjectDTO();
