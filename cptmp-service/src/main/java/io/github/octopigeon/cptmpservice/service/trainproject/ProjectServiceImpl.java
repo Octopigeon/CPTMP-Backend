@@ -140,7 +140,7 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
             BeanUtils.copyProperties(project, result);
             results.add(result);
         }
-        return new PageInfo<>(pages);
+        return new PageInfo<ProjectDTO>(pages);
     }
 
     /**
