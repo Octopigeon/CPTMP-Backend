@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.dto.recruitment.RecruitmentDTO;
 import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileService;
 import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalService;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
@@ -15,6 +16,7 @@ import java.math.BigInteger;
  * @last-check-in Gh Li
  * @date 2020/7/20
  */
+@Service
 public interface RecruitmentService extends BaseNormalService<RecruitmentDTO>, BaseFileService {
 
     /**
@@ -30,7 +32,6 @@ public interface RecruitmentService extends BaseNormalService<RecruitmentDTO>, B
      * @param photo 图片文件
      * @param recruitmentId 招聘资料id
      */
-    void uploadPhoto(MultipartFile photo, BigInteger recruitmentId);
+    void uploadPhoto(MultipartFile photo, BigInteger recruitmentId) throws Exception;
 
-    void removePhoto(BigInteger recruitmentId);
 }
