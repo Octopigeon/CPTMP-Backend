@@ -89,7 +89,7 @@ public class BaseUserInfoDTO{
                 // d 默认头像类型
                 // s 图像大小
                 // r 限制级
-                return GRAVATAR_ROOT + emailMD5 + "/?d="+default_avatar+"&s=128&r=g";
+                return GRAVATAR_ROOT + emailMD5 + "/?d="+default_avatar+"&s=512&r=g";
 
             } catch (Exception e) {
                 return DEFAULT_AVATAR;
