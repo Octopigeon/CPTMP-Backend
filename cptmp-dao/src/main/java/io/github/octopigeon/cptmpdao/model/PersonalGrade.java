@@ -22,6 +22,14 @@ public class PersonalGrade {
 
     private BigInteger teamPersonId;
     private String evaluation;
-    private Integer personalGrade;
+    /**
+     * 管理、代码能力、技术水平、架构能力、沟通能力
+     */
+    private Integer managePt;
+    private Integer codePt;
+    private Integer techPt;
+    private Integer frameworkPt;
+    private Integer communicationPt;
+
 
 }

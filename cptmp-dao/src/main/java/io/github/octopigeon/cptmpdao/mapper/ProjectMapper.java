@@ -60,6 +60,10 @@ public interface ProjectMapper {
     @Update("update train_project set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
     void hideTrainProjectById(BigInteger id, Date gmtDeleted);
 
+    /**
+     * 根据id恢复
+     * @param id id
+     */
     @Update("update train_project set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
     void restoreTrainProjectById(BigInteger id);
     /**
@@ -72,6 +76,10 @@ public interface ProjectMapper {
     void hideTrainProjectByName(String name, Date gmtDeleted);
 
 
+    /**
+     * 根据名字恢复
+     * @param name 名字
+     */
     @Update("update train_project set gmt_deleted = null where idx_name = #{name} and gmt_deleted is not null")
     void restoreTrainProjectByName(String name);
 
