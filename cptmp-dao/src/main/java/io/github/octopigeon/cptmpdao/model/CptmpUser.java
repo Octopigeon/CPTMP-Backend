@@ -57,6 +57,7 @@ public class CptmpUser {
     /** nullable */
     /** nullable */
     private BigDecimal phoneNumber;
+    private String introduction;
     /**
      * 0-female, 1-male null-保密
      * nullable
@@ -66,53 +67,9 @@ public class CptmpUser {
     /** nullable */
     private String avatar;
 
-
-
     public CptmpUser updatePassword(String password) {
         this.password = ENCODER.encode(password);
         return this;
     }
 
-    /**
-     * 默认头像
-     */
-    final String DEFAULT_AVATAR = ""; //TODO 填入默认头像地址
-
-    /**
-     * Gravatar 地址
-     */
-    // final String GRAVATAR_ROOT = "https://www.gravatar.com/avatar/"; // 原版
-    final String GRAVATAR_ROOT = "https://cdn.v2ex.com/gravatar/"; // V2EX 镜像站
-
-
-    /**
-     * Gravatar 支持
-     *
-     * @return 头像地址
-     */
-    public String getAvatar(){
-        if ((avatar == null) || (avatar.length() > 0)) {
-            return avatar;
-        } else {
-            try {
-                if ((email == null) || (email.length() == 0)) {
-                    return DEFAULT_AVATAR;
-                }
-
-                // 小写的邮箱地址 MD5
-                String emailMD5 = DigestUtils.md5DigestAsHex(email.getBytes()).toLowerCase();
-
-                // 默认头像设置
-                String default_avatar = DEFAULT_AVATAR.equals("") ? "" : URLEncoder.encode(DEFAULT_AVATAR, "UTF-8");
-
-                // d 默认头像类型
-                // s 图像大小
-                // r 限制级
-                return GRAVATAR_ROOT + emailMD5 + "/?d="+default_avatar+"&s=128&r=g";
-
-            } catch (Exception e) {
-                return DEFAULT_AVATAR;
-            }
-        }
-    }
 }

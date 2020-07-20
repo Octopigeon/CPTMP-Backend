@@ -102,7 +102,6 @@ public class EventServiceImpl implements EventService{
      */
     @Override
     public PageInfo<EventDTO> findAllEvents(int page, int offset) {
-        PageHelper.startPage(page, offset);
         List<Event> events = eventMapper.findAllEvents();
         List<EventDTO> results = new ArrayList<>();
         for (Event event: events) {
