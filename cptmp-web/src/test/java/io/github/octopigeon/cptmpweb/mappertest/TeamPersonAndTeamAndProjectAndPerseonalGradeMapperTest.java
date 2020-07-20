@@ -214,11 +214,11 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         PersonalGrade personalGrade = new PersonalGrade();
         personalGrade.setGmtCreate(new Date());
         personalGrade.setEvaluation("good");
-        personalGrade.setPersonalGrade(95);
+        personalGrade.setManagePt(95);
         personalGrade.setTeamPersonId(teamPerson.getId());
         personalGradeMapper.addPersonalGrade(personalGrade);
         personalGrade = personalGradeMapper.findAllPersonalGrades().get(0);
-        Assertions.assertEquals(2, Utils.getNullPropertyNames(personalGrade).length);
+        Assertions.assertEquals(6, Utils.getNullPropertyNames(personalGrade).length);
         personalGradeMapper.hidePersonalGradeById(personalGrade.getId(), new Date());
         Assertions.assertEquals(0, personalGradeMapper.findAllPersonalGrades().size());
         personalGradeMapper.restorePersonalGradeById(personalGrade.getId());
@@ -229,15 +229,15 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         personalGradeMapper.restorePersonalGradeByTeamPersonId(personalGrade.getTeamPersonId());
         Assertions.assertEquals(1, personalGradeMapper.findAllPersonalGrades().size());
         personalGradeMapper.restoreAllPersonalGrade();
-        personalGrade.setPersonalGrade(90);
+        personalGrade.setManagePt(90);
         BigInteger personalGradeId = personalGrade.getId();
         personalGradeMapper.updatePersonalGradeById(personalGrade);
         personalGrade = personalGradeMapper.findPersonalGradeById(personalGradeId);
-        Assertions.assertEquals(90, personalGrade.getPersonalGrade());
-        personalGrade.setPersonalGrade(50);
+        Assertions.assertEquals(90, personalGrade.getManagePt());
+        personalGrade.setManagePt(50);
         personalGradeMapper.updatePersonalGradeByTeamPersonId(personalGrade);
         personalGrade = personalGradeMapper.findPersonalGradeByTeamPersonId(personalGrade.getTeamPersonId());
-        Assertions.assertEquals(50, personalGrade.getPersonalGrade());
+        Assertions.assertEquals(50, personalGrade.getManagePt());
     }
 
 }

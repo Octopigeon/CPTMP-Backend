@@ -14,8 +14,8 @@ import java.util.List;
  * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/14
- * @last-check-in 陈若琳
- * @date 2020/7/16
+ * @last-check-in 李国鹏
+ * @date 2020/7/20
  */
 @Repository
 @Mapper
@@ -28,21 +28,25 @@ public interface ProcessMapper {
     String BY_ID_TAIL = " where id = #{id} and gmt_deleted is null";
     String SOFT_DELETE_TAIL = " and gmt_deleted is null";
 
+    /**
+     * 插入流程
+     * @param process 流程
+     */
     @Insert("insert into cptmp_process (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addProcess(Process process);
 
     /**
      * 删除一个实训下的所有流程（当实训结束的时候）
-     * @param gmtDeleted
-     * @param trainId
+     * @param gmtDeleted 删除日期
+     * @param trainId 实训id
      */
     @Update("update cptmp_process set gmt_deleted = #{gmtDeleted} where train_id = #{trainId} and gmt_deleted is null")
     void hideProcessesByTrainId(Date gmtDeleted, BigInteger trainId);
 
     /**
      * 删除一个实训下的所有流程（当实训结束的时候）
-     * @param trainId
+     * @param trainId 实训id
      */
     @Update("update cptmp_process set gmt_deleted = null where train_id = #{trainId} and gmt_deleted is not null")
     void restoreProcessesByTrainId(BigInteger trainId);
@@ -54,16 +58,33 @@ public interface ProcessMapper {
     @Delete("delete from cptmp_process")
     void removeAllProcesses();
 
+    /**
+     * 根据id删除
+     * @param gmtDeleted 删除日期
+     * @param id id
+     */
     @Update("update cptmp_process set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
     void hideProcessById(Date gmtDeleted, BigInteger id);
 
+    /**
+     * 根据id 恢复
+     * @param id id
+     */
     @Update("update cptmp_process set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
     void restoreProcessById(BigInteger id);
 
+    /**
+     * 根据id 更新
+     * @param process 流程
+     */
     @Update("update cptmp_process set " + UPDATE_CONTENT + BY_ID_TAIL)
     void updateProcessById(Process process);
 
-    @Select("select id, " + COLUMNS + " from cptmp_process" + BY_ID_TAIL)
+    /**
+     * 查询全部
+     * @return
+     */
+    @Select("select id, " + COLUMNS + " from cptmp_process where gmt_deleted is null")
     @Results(id = "process", value = {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
             @Result(column = "gmt_create", property = "gmtCreate", jdbcType = JdbcType.DATE),
@@ -73,15 +94,26 @@ public interface ProcessMapper {
             @Result(column = "start_time", property = "startTime", jdbcType = JdbcType.DATE),
             @Result(column = "end_time", property = "endTime", jdbcType = JdbcType.DATE)
     })
-    Process findProcessById(BigInteger id);
+    List<Process> findAllProcesses();
 
+    /**
+     * 根据实训id查找
+     * @param trainId
+     * @return
+     */
     @Select("select id, " + COLUMNS + " from cptmp_process where train_id = #{trainId}" + SOFT_DELETE_TAIL)
     @ResultMap("process")
     List<Process> findProcessesByTrainId(BigInteger trainId);
 
-    @Select("select id, " + COLUMNS + " from cptmp_process where gmt_deleted is null")
+    /**
+     * 根据id查
+     * @param id id
+     * @return 流程
+     */
+    @Select("select id, " + COLUMNS + " from cptmp_process where id = #{id} and gmt_deleted is null")
     @ResultMap("process")
-    List<Process> findAllProcesses();
+    Process findProcessById(BigInteger id);
+
 
 
 }
