@@ -106,6 +106,6 @@ public interface RecruitmentMapper {
      */
     @Select("select id, " + COLUMNS + " from recruitment where id = #{id} and gmt_deleted is null")
     @ResultMap("recruitment")
-    Team findRecruitmentById(BigInteger id);
+    Recruitment findRecruitmentById(BigInteger id);
 
 }
