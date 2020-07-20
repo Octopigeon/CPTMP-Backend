@@ -88,7 +88,6 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
      */
     @Override
     public PageInfo<TrainDTO> findAll(int page, int offset) {
-        PageHelper.startPage(page, offset);
         List<Train> trains = trainMapper.findAllTrain();
         return getTrainDTOPageInfo(trains);
     }
@@ -103,7 +102,6 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
      */
     @Override
     public PageInfo<TrainDTO> findByOrganizationId(int page, int offset, BigInteger organizationId) {
-        PageHelper.startPage(page, offset);
         List<Train> trains = trainMapper.findTrainByOrganizationId(organizationId);
         return getTrainDTOPageInfo(trains);
     }
@@ -118,7 +116,6 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
      */
     @Override
     public PageInfo<TrainDTO> findByLikeName(int page, int offset, String likeName) {
-        PageHelper.startPage(page, offset);
         List<Train> trains = trainMapper.findTrainByNameAmbiguously(likeName);
         return getTrainDTOPageInfo(trains);
     }
@@ -143,7 +140,6 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
      */
     @Override
     public PageInfo<BigInteger> findProjectIdsById(int page, int offset, BigInteger id) {
-        PageHelper.startPage(page, offset);
         List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByTrainId(id);
         List<BigInteger> results = new ArrayList<>();
         for (ProjectTrain projectTrain: projectTrains) {

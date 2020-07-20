@@ -2,8 +2,6 @@ package io.github.octopigeon.cptmpservice.service.trainproject;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.ProjectMapper;
 import io.github.octopigeon.cptmpdao.mapper.TrainMapper;
@@ -133,13 +131,7 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
     @Override
     public PageInfo<ProjectDTO> findAll(int page, int offset) {
         List<Project> projects = projectMapper.findAllTrainProject();
-        List<ProjectDTO> results = new ArrayList<>();
-        for (Project project: projects) {
-            ProjectDTO result = new ProjectDTO();
-            BeanUtils.copyProperties(project, result);
-            results.add(result);
-        }
-        return new PageInfo<>(results);
+        return getProjectDTOPageInfo(projects);
     }
 
     /**
@@ -152,7 +144,6 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
      */
     @Override
     public PageInfo<ProjectDTO> findByLikeName(int page, int offset, String name) {
-        PageHelper.startPage(page, offset);
         List<Project> projects = projectMapper.findTrainProjectByNameAmbiguously(name);
         return getProjectDTOPageInfo(projects);
     }
@@ -178,7 +169,6 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
      */
     @Override
     public PageInfo<TrainDTO> findTrainsById(int page, int offset, BigInteger projectId) {
-        PageHelper.startPage(page, offset);
         List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByProjectId(projectId);
         List<TrainDTO> results = new ArrayList<>();
         for (ProjectTrain projectTrain: projectTrains) {

@@ -204,7 +204,6 @@ public class OrganizationServiceImpl implements OrganizationService{
      */
     @Override
     public PageInfo<OrganizationDTO> findAll(int page, int offset) {
-        PageHelper.startPage(page,offset);
         List<Organization> organizationList = organizationMapper.findAllOrganization();
         return getOrganizationDTOPageInfo(organizationList);
     }
@@ -217,7 +216,6 @@ public class OrganizationServiceImpl implements OrganizationService{
      */
     @Override
     public PageInfo<OrganizationDTO> findByName(int page, int offset, String name){
-        PageHelper.startPage(page, offset);
         List<Organization> organizations = organizationMapper.findOrganizationByName(name);
         return getOrganizationDTOPageInfo(organizations);
     }
@@ -240,7 +238,6 @@ public class OrganizationServiceImpl implements OrganizationService{
      */
     @Override
     public PageInfo<OrganizationDTO> findByRealName(int page, int offset, String realName) {
-        PageHelper.startPage(page, offset);
         List<Organization> organizations = organizationMapper.findOrganizationByRealName(realName);
         return getOrganizationDTOPageInfo(organizations);
     }
