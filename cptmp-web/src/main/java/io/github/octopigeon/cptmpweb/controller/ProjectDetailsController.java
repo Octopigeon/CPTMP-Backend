@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
@@ -145,6 +147,29 @@ public class ProjectDetailsController {
             e.printStackTrace();
             return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED,"get trains failed");
         }
+    }
+
+    /**
+     * TODO:接口文档
+     * 获取所有项目
+     * @param offset
+     * @param page
+     * @return
+     */
+    @GetMapping("api/project")
+    public RespBeanWithProjectList getAllProjects(
+            @RequestParam("offset")int offset,@RequestParam("page") int page)
+    {
+        try{
+            Page pages = PageHelper.startPage(page, offset);
+            PageInfo<ProjectDTO>pageInfo = projectService.findAll(page,offset);
+            return new RespBeanWithProjectList(pageInfo.getList(),pages.getTotal());
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new RespBeanWithProjectList(CptmpStatusCode.INFO_ACCESS_FAILED,"get project failed");
+        }
+
     }
 
     /**

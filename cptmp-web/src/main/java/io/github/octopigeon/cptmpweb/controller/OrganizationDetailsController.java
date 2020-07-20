@@ -77,6 +77,26 @@ public class OrganizationDetailsController {
     }
 
     /**
+     * 根据id删除组织
+     * @param orgId
+     * @return
+     */
+    @DeleteMapping("api/org/{org_id}")
+    public RespBean deleteOrg(@PathVariable("org_id")BigInteger orgId)
+    {
+        OrganizationDTO organizationDTO = new OrganizationDTO();
+        organizationDTO.setId(orgId);
+        try{
+            organizationService.remove(organizationDTO);
+            return RespBean.ok("delete org successfully");
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.REMOVE_FAILED,"delete org failed");
+        }
+    }
+
+    /**
      * 根据id获取学校名称
      * @param json
      * @return
