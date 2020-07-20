@@ -25,7 +25,7 @@ import java.util.List;
  * @date 2020/7/14
  * 重要提示：此测试程序请勿删除，此测试文件测试覆盖率为100%
  * @last-check-in 李国鹏
- * @date 2020/7/19
+ * @date 2020/7/20
  */
 public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
 
@@ -88,6 +88,7 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         train = trainMapper.findTrainById(train1.getId());
         Assertions.assertEquals(3, Utils.getNullPropertyNames(train).length);
 
+
         // 总共加了两个
         // 创建工程
         Project project = new Project();
@@ -106,7 +107,8 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         projectMapper.restoreAllTrainProjects();
         Assertions.assertEquals(1, projectMapper.findAllTrainProject().size());
         projectMapper.hideTrainProjectByName(project.getName(), new Date());
-        Assertions.assertEquals(0, projectMapper.findAllTrainProject().size());
+        projectMapper.restoreTrainProjectByName("cptmp");
+        Assertions.assertEquals(1,projectMapper.findAllTrainProject().size());
         projectMapper.restoreAllTrainProjects();
         Assertions.assertEquals(1, projectMapper.findAllTrainProject().size());
         project.setName("aptmp");
@@ -119,6 +121,7 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         project = projectMapper.findTrainProjectById(project.getId());
         Assertions.assertEquals(1, Utils.getNullPropertyNames(project).length);
         Assertions.assertEquals(1, projectMapper.findTrainProjectByNameAmbiguously("p").size());
+
 
         ProjectTrain projectTrain = new ProjectTrain();
         projectTrain.setGmtCreate(new Date());
@@ -169,11 +172,13 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         trainMapper.hideTrainById(trains.get(0).getId(), new Date());
         Assertions.assertEquals(1,  trainMapper.findAllTrain().size());
         trainMapper.restoreTrainById(trains.get(0).getId());
-        Assertions.assertEquals(1,  trainMapper.findAllTrain().size());
+        Assertions.assertEquals(2,  trainMapper.findAllTrain().size());
         trainMapper.restoreAllTrain();
         trainMapper.hideTrainsByOrganizationId(trains.get(0).getOrganizationId(), new Date());
         Assertions.assertEquals(0, trainMapper.findAllTrain().size());
         trainMapper.restoreAllTrain();
+        Assertions.assertEquals(2, trainMapper.findAllTrain().size());
+
 
         Process process = new Process();
         process.setGmtCreate(new Date());
@@ -194,6 +199,7 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         processMapper.updateProcessById(process);
         process = processMapper.findProcessById(process1.getId());
         Assertions.assertEquals(1, Utils.getNullPropertyNames(process).length);
+
 
         BigInteger restoreTestId = processMapper.findAllProcesses().get(0).getId();
         processMapper.hideProcessById(new Date(),processMapper.findAllProcesses().get(0).getId());

@@ -93,10 +93,10 @@ public interface CptmpUserMapper {
      * 通过id恢复
      * @param id 用户id
      */
-    @Update("update cptmp_user set gmt_deleted = null where id = #{id}")
+    @Update("update cptmp_user set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
     void restoreUserById(BigInteger id);
 
-    @Update("update cptmp_user set gmt_deleted = null where uk_username = #{username}")
+    @Update("update cptmp_user set gmt_deleted = null where uk_username = #{username} and gmt_deleted is not null")
     void restoreUserByUsername(String username);
     
     /** 
