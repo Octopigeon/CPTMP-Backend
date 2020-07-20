@@ -17,6 +17,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +27,7 @@ import java.util.List;
  * @last-check-in 陈若琳
  * @date 2020/7/18
  */
+
 @RestController
 public class OrganizationDetailsController {
 
@@ -71,6 +73,31 @@ public class OrganizationDetailsController {
         }catch (Exception e)
         {
             return new RespBeanWithOrganization(CptmpStatusCode.INFO_ACCESS_FAILED,"get org info failed");
+        }
+    }
+
+    /**
+     * 根据id获取学校名称
+     * @param json
+     * @return
+     */
+    @GetMapping("api/org/name")
+    public RespBeanWithOrgNameList getOrganizationName(@RequestBody String json) throws JsonProcessingException
+    {
+        ObjectMapper objectMapper = new ObjectMapper();
+        BigInteger[]orgId = objectMapper.readValue(json,BigInteger[].class);
+        try{
+            List<String>organizationList = new ArrayList<>();
+            for (int i=0;i<orgId.length;i++)
+            {
+                OrganizationDTO organizationDTO = organizationService.findById(orgId[i]);
+                organizationList.add(organizationDTO.getRealName());
+            }
+            return new RespBeanWithOrgNameList(organizationList);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new RespBeanWithOrgNameList(CptmpStatusCode.INFO_ACCESS_FAILED,"get org info failed");
         }
     }
 
@@ -136,5 +163,25 @@ class RespBeanWithOrganizationList extends RespBean
     private long totalRows;
     @JsonProperty("data")
     private List<OrganizationDTO> organizationDTOList;
+
+}
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+class RespBeanWithOrgNameList extends RespBean
+{
+    public RespBeanWithOrgNameList(Integer status, String msg)
+    {
+        super(status,msg);
+    }
+
+    public RespBeanWithOrgNameList(List<String> organizations)
+    {
+        super();
+        this.organizations = organizations;
+    }
+
+    @JsonProperty("data")
+    private List<String> organizations;
 
 }

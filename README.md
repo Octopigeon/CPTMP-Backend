@@ -596,6 +596,44 @@ College Practice Training Management Platform
 
 
 
+## /api/org/name
+
++ HTTP方法：GET
++ 返回类型：json
++ 说明：根据id批量获取组织
++ 调用实例：
+
+``` json
+[
+    4,
+    5
+]
+```
+
++ 返回实例
+
+``` json
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-20T07:14:30.977+00:00",
+    "msg": "success",
+    "data": [
+        "百度",
+        "HUST"
+    ]
+}
+// 失败
+{
+    "status": 15,
+    "date": "2020-07-20T07:15:26.112+00:00",
+    "msg": "get org info failed",
+    "data": null
+}
+```
+
+
+
 # ProjectDetailsController
 
 ## /api/train-project/{id}/basic-info
