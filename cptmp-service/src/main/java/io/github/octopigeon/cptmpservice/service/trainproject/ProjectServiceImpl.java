@@ -133,13 +133,14 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
     @Override
     public PageInfo<ProjectDTO> findAll(int page, int offset) {
         List<Project> projects = projectMapper.findAllTrainProject();
-        Page pages = PageHelper.startPage(page, offset);
         List<ProjectDTO> results = new ArrayList<>();
         for (Project project: projects) {
             ProjectDTO result = new ProjectDTO();
             BeanUtils.copyProperties(project, result);
             results.add(result);
         }
+        Page pages = PageHelper.startPage(page, offset);
+        List<ProjectDTO> out = new ArrayList<>(results);
         return new PageInfo<>(pages);
     }
 
