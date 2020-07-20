@@ -3,9 +3,11 @@ package io.github.octopigeon.cptmpservice.dto.cptmpuser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.springframework.util.DigestUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.net.URLEncoder;
 
 /**
  * 带有必要信息的UserDTO类
@@ -49,4 +51,47 @@ public class BaseUserInfoDTO{
     /** 返回携带用户账号 */
     @JsonProperty("user_id")
     private BigInteger id;
+
+    /**
+     * 默认头像
+     */
+    final String DEFAULT_AVATAR = "/assets/avatar.png";
+
+    /**
+     * Gravatar 地址
+     */
+    // final String GRAVATAR_ROOT = "https://www.gravatar.com/avatar/"; // 原版
+    final String GRAVATAR_ROOT = "https://cdn.v2ex.com/gravatar/"; // V2EX 镜像站
+
+    /**
+     * Gravatar 支持
+     *
+     * @return 头像地址
+     */
+    public String getAvatar(){
+        if ((avatar != null) && (avatar.length() > 0)) {
+            return avatar;
+        } else {
+            try {
+                if ((email == null) || (email.length() == 0)) {
+                    return DEFAULT_AVATAR;
+                }
+
+                // 小写的邮箱地址 MD5
+                String emailMD5 = DigestUtils.md5DigestAsHex(email.getBytes()).toLowerCase();
+
+                // 默认头像设置
+                String default_avatar = DEFAULT_AVATAR.equals("") ? "" : URLEncoder.encode(DEFAULT_AVATAR, "UTF-8");
+
+                // d 默认头像类型
+                // s 图像大小
+                // r 限制级
+                return GRAVATAR_ROOT + emailMD5 + "/?d="+default_avatar+"&s=128&r=g";
+
+            } catch (Exception e) {
+                return DEFAULT_AVATAR;
+            }
+        }
+    }
+
 }
