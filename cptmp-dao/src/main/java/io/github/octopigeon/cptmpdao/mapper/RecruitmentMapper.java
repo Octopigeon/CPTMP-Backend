@@ -21,7 +21,6 @@ import java.util.List;
 @Repository
 @Mapper
 public interface RecruitmentMapper {
-
     String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, start_time, end_time, photo, title, website_url";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{startTime},#{endTime}, #{photo}, #{title}, #{websiteUrl}";
     String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, start_time = #{startTime}, end_time = #{endTime}, photo = #{photo}, title = #{title}, website_url = #{websiteUrl}";
@@ -106,6 +105,6 @@ public interface RecruitmentMapper {
      */
     @Select("select id, " + COLUMNS + " from recruitment where id = #{id} and gmt_deleted is null")
     @ResultMap("recruitment")
-    Team findRecruitmentById(BigInteger id);
+    Recruitment findRecruitmentById(BigInteger id);
 
 }
