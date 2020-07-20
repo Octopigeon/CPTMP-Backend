@@ -172,33 +172,25 @@ public class ProjectDetailsController {
     }
 
     /**
-     * 根据关键词获取项目
-     * @param json
-     * @param property 关键词对应属性
+     * 根据名称获取项目
+     * @param page
+     * @param offset
+     * @param keyWord
      * @return
      * @throws JsonProcessingException
      */
-    @GetMapping("api/project/search/{property}")
-    public RespBeanWithProjectList searchProject(@RequestBody String json, @PathVariable("property") String property) throws JsonProcessingException
+    @GetMapping("api/project/search/name")
+    public RespBeanWithProjectList searchProject(
+            @RequestParam("page") int page,
+            @RequestParam("offset") int offset,
+            @RequestParam("key_word") String keyWord)
     {
-        ObjectMapper objectMapper = new ObjectMapper();
-        int page = objectMapper.readValue(json, ObjectNode.class).get("page").asInt();
-        int offset = objectMapper.readValue(json, ObjectNode.class).get("offset").asInt();
-
         try{
-            switch (property)
-            {
-                case "name":
-                    String trainName = objectMapper.readValue(json, ObjectNode.class).get("key_word").asText();
-                    PageInfo<ProjectDTO> searchByName = projectService.findByLikeName(page,offset,trainName);
-                    return new RespBeanWithProjectList(
-                            searchByName.getList(),
-                            searchByName.getTotal()
-                    );
-                default:
-                    return new RespBeanWithProjectList(CptmpStatusCode.INFO_ACCESS_FAILED,"wrong property");
-            }
-
+            PageInfo<ProjectDTO> searchByName = projectService.findByLikeName(page,offset,keyWord);
+            return new RespBeanWithProjectList(
+                    searchByName.getList(),
+                    searchByName.getTotal()
+            );
         }catch (Exception e)
         {
             e.printStackTrace();

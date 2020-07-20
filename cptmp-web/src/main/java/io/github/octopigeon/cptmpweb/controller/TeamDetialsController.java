@@ -81,40 +81,31 @@ public class TeamDetialsController {
 
 
     /**
-     * 根据属性分页查询
+     * 根据名称模糊分页查询
      * @param keyWord
-     * @param offset 
+     * @param offset
      * @return
      * @throws JsonProcessingException
      */
-    @GetMapping("api/team/search/{property}/{key_word}")
-    public RespBeanWithTeamList searchTeam(
-            @PathVariable("key_word")String keyWord,
-            @PathVariable("property") String property,
+    @GetMapping("api/team/search/name")
+    public RespBeanWithTeamList searchTeamByName(
+            @RequestParam("key_word")String keyWord,
             @RequestParam("offset") int offset,
             @RequestParam("page")int page)
     {
-        ObjectMapper objectMapper = new ObjectMapper();
-        try{
-            switch (property)
-            {
-                case "name":
-                    Page pages = PageHelper.startPage(page, offset);
-                    PageInfo<TeamDTO> pageInfoByName = teamService.findByLikeName(page,offset,keyWord);
-                    return new RespBeanWithTeamList(
-                            pageInfoByName.getList(),
-                            pages.getTotal()
-                    );
-                default:
-                    return new RespBeanWithTeamList(CptmpStatusCode.INFO_ACCESS_FAILED,"property is wrong");
-            }
+        try {
+            Page pages = PageHelper.startPage(page, offset);
+            PageInfo<TeamDTO> pageInfoByName = teamService.findByLikeName(page, offset, keyWord);
+            return new RespBeanWithTeamList(
+                    pageInfoByName.getList(),
+                    pages.getTotal());
         }catch(Exception e)
         {
             e.printStackTrace();
             return new RespBeanWithTeamList(CptmpStatusCode.INFO_ACCESS_FAILED,"find team failed");
         }
-
     }
+
 
     /**
      * 根据id获取团队信息
