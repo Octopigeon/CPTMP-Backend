@@ -1,6 +1,10 @@
 package io.github.octopigeon.cptmpservice.dto.notice;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+
+import java.math.BigInteger;
+import java.util.Date;
 
 /**
  * @author Gh Li
@@ -11,4 +15,12 @@ import lombok.Data;
  */
 @Data
 public class NoticeDTO {
+    private Date gmtCreate;
+    private BigInteger senderId;
+    private BigInteger receiverId;
+    private BigInteger teamId;
+    @JsonProperty("type")
+    private String noticeType;
+    private String content;
+    private Boolean isRead;
 }
