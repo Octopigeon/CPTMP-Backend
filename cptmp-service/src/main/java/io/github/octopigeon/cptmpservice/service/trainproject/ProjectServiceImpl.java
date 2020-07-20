@@ -2,7 +2,6 @@ package io.github.octopigeon.cptmpservice.service.trainproject;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.ProjectMapper;
 import io.github.octopigeon.cptmpdao.mapper.TrainMapper;
@@ -18,6 +17,7 @@ import io.github.octopigeon.cptmpservice.service.attachmentfile.AttachmentFileSe
 import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileServiceImpl;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -122,6 +122,19 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
     }
 
     /**
+     * 查询所有项目
+     *
+     * @param page   页号
+     * @param offset 页容量
+     * @return
+     */
+    @Override
+    public PageInfo<ProjectDTO> findAll(int page, int offset) {
+        List<Project> projects = projectMapper.findAllTrainProject();
+        return getProjectDTOPageInfo(projects);
+    }
+
+    /**
      * 根据名字进行模糊查找
      *
      * @param page   页号
@@ -131,8 +144,12 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
      */
     @Override
     public PageInfo<ProjectDTO> findByLikeName(int page, int offset, String name) {
-        PageHelper.startPage(page, offset);
         List<Project> projects = projectMapper.findTrainProjectByNameAmbiguously(name);
+        return getProjectDTOPageInfo(projects);
+    }
+
+    @NotNull
+    private PageInfo<ProjectDTO> getProjectDTOPageInfo(List<Project> projects) {
         List<ProjectDTO> results = new ArrayList<>();
         for (Project project: projects) {
             ProjectDTO result = new ProjectDTO();
@@ -152,7 +169,6 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
      */
     @Override
     public PageInfo<TrainDTO> findTrainsById(int page, int offset, BigInteger projectId) {
-        PageHelper.startPage(page, offset);
         List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByProjectId(projectId);
         List<TrainDTO> results = new ArrayList<>();
         for (ProjectTrain projectTrain: projectTrains) {

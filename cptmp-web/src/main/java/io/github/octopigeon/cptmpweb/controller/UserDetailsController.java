@@ -5,6 +5,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
@@ -63,9 +65,10 @@ public class UserDetailsController {
     {
         ObjectMapper objectMapper = new ObjectMapper();
         try{
+            Page pages = PageHelper.startPage(page, offset);
             PageInfo<BaseUserInfoDTO> pageInfo = userInfoService.findAllByPage(page,offset);
             List<BaseUserInfoDTO> userList = pageInfo.getList();
-            return new RespBeanWithBaseUserInfoList(userList,pageInfo.getTotal());
+            return new RespBeanWithBaseUserInfoList(userList,pages.getTotal());
         }catch (Exception e)
         {
             return  new RespBeanWithBaseUserInfoList(CptmpStatusCode.INFO_ACCESS_FAILED,"get user info failed");

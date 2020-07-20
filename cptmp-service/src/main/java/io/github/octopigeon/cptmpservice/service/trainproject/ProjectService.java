@@ -24,6 +24,14 @@ public interface ProjectService extends BaseNormalService<ProjectDTO>, BaseFileS
     //TODO 查询选该项目的团队
 
     /**
+     * 查询所有项目
+     * @param page 页号
+     * @param offset 页容量
+     * @return
+     */
+    PageInfo<ProjectDTO> findAll(int page, int offset);
+
+    /**
      * 根据名字进行模糊查找
      * @param page 页号
      * @param offset 页内数量

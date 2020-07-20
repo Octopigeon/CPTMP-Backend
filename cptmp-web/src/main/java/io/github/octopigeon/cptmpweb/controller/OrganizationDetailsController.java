@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
@@ -17,6 +19,7 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +29,7 @@ import java.util.List;
  * @last-check-in 陈若琳
  * @date 2020/7/18
  */
+
 @RestController
 public class OrganizationDetailsController {
 
@@ -75,6 +79,51 @@ public class OrganizationDetailsController {
     }
 
     /**
+     * 根据id删除组织
+     * @param orgId
+     * @return
+     */
+    @DeleteMapping("api/org/{org_id}")
+    public RespBean deleteOrg(@PathVariable("org_id")BigInteger orgId)
+    {
+        OrganizationDTO organizationDTO = new OrganizationDTO();
+        organizationDTO.setId(orgId);
+        try{
+            organizationService.remove(organizationDTO);
+            return RespBean.ok("delete org successfully");
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.REMOVE_FAILED,"delete org failed");
+        }
+    }
+
+    /**
+     * 根据id获取学校名称
+     * @param json
+     * @return
+     */
+    @GetMapping("api/org/name")
+    public RespBeanWithOrgNameList getOrganizationName(@RequestBody String json) throws JsonProcessingException
+    {
+        ObjectMapper objectMapper = new ObjectMapper();
+        BigInteger[]orgId = objectMapper.readValue(json,BigInteger[].class);
+        try{
+            List<String>organizationList = new ArrayList<>();
+            for (int i=0;i<orgId.length;i++)
+            {
+                OrganizationDTO organizationDTO = organizationService.findById(orgId[i]);
+                organizationList.add(organizationDTO.getRealName());
+            }
+            return new RespBeanWithOrgNameList(organizationList);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new RespBeanWithOrgNameList(CptmpStatusCode.INFO_ACCESS_FAILED,"get org info failed");
+        }
+    }
+
+    /**
      * 分页获取所有组织
      * @param page 页号
      * @param offset 每页最大条目数
@@ -86,12 +135,40 @@ public class OrganizationDetailsController {
             @RequestParam("offset") int offset)
     {
         try{
+            Page pages = PageHelper.startPage(page, offset);
             PageInfo<OrganizationDTO>pageInfo = organizationService.findAll(page,offset);
-            return new RespBeanWithOrganizationList(pageInfo.getList(),pageInfo.getTotal());
+            return new RespBeanWithOrganizationList(pageInfo.getList(),pages.getTotal());
         }catch (Exception e)
         {
             e.printStackTrace();
             return new RespBeanWithOrganizationList(CptmpStatusCode.INFO_ACCESS_FAILED,"get org failed");
+        }
+    }
+
+    /**
+     * 根据属性查询组织
+     * @param page 页号
+     * @param offset 每页最大条目数
+     * @return 所有组织信息
+     */
+    @GetMapping("api/org/{property}/{key_word}")
+    public RespBeanWithOrganizationList searchOrganization(
+            @RequestParam("page")int page,
+            @RequestParam("offset") int offset,
+            @PathVariable("key_word")String keyword,
+            @PathVariable("property")String property) {
+        try {
+            switch (property) {
+                case "real_name":
+                    Page pages = PageHelper.startPage(page, offset);
+                    PageInfo<OrganizationDTO> pageInfo = organizationService.findByRealName(page, offset, keyword);
+                    return new RespBeanWithOrganizationList(pageInfo.getList(), pages.getTotal());
+                default:
+                    return new RespBeanWithOrganizationList(CptmpStatusCode.INFO_ACCESS_FAILED, "get org failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new RespBeanWithOrganizationList(CptmpStatusCode.INFO_ACCESS_FAILED, "get org failed");
         }
     }
 }
@@ -136,5 +213,25 @@ class RespBeanWithOrganizationList extends RespBean
     private long totalRows;
     @JsonProperty("data")
     private List<OrganizationDTO> organizationDTOList;
+
+}
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+class RespBeanWithOrgNameList extends RespBean
+{
+    public RespBeanWithOrgNameList(Integer status, String msg)
+    {
+        super(status,msg);
+    }
+
+    public RespBeanWithOrgNameList(List<String> organizations)
+    {
+        super();
+        this.organizations = organizations;
+    }
+
+    @JsonProperty("data")
+    private List<String> organizations;
 
 }
