@@ -3,14 +3,18 @@ package io.github.octopigeon.cptmpservice.service.github;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.github.octopigeon.cptmpdao.mapper.TeamMapper;
+import io.github.octopigeon.cptmpdao.model.Team;
 import io.github.octopigeon.cptmpservice.dto.github.ContributorDTO;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.*;
@@ -26,7 +30,14 @@ import java.util.*;
 @Service
 public class ContributorStaticsService {
 
-    public List<ContributorDTO> getContributorStatics(String repoUrl, String githubUsername, String githubToken) throws IOException {
+    @Autowired
+    private TeamMapper teamMapper;
+
+    public List<ContributorDTO> getContributorStatics(BigInteger teamId) throws IOException {
+        Team team = teamMapper.findTeamByTeamId(teamId);
+        String githubUsername = team.getGithubUsername();
+        String githubToken = team.getGithubToken();
+        String repoUrl = team.getRepoUrl();
         OkHttpClient client = Utils.getOkhttpClientWithProxy();
         String combineToken = githubUsername + ":" + githubToken;
         String auth = Base64.getEncoder().encodeToString(combineToken.getBytes());
