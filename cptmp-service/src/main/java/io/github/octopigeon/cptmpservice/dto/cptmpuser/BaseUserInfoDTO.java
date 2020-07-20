@@ -3,6 +3,7 @@ package io.github.octopigeon.cptmpservice.dto.cptmpuser;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.DigestUtils;
 
 import java.math.BigDecimal;
@@ -52,10 +53,13 @@ public class BaseUserInfoDTO{
     @JsonProperty("user_id")
     private BigInteger id;
 
+    @Value("domain.name")
+    final String domainName;
+
     /**
      * 默认头像
      */
-    final String DEFAULT_AVATAR = "/assets/avatar.png";
+    final String DEFAULT_AVATAR = domainName + "/assets/avatar.png";
 
     /**
      * Gravatar 地址
