@@ -47,9 +47,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     private PersonalGradeMapper personalGradeMapper;
 
     @Autowired
-    private RecordMapper recordMapper;
-
-    @Autowired
     public UserInfoServiceImpl(FileProperties fileProperties) throws Exception {
         super(fileProperties);
     }
@@ -198,13 +195,12 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     @Override
     public PageInfo<BaseUserInfoDTO> findAllByPage(int page, int offset) {
-        PageHelper.startPage(page, offset);
-        List<BaseUserInfoDTO> results = new ArrayList<>();
         List<CptmpUser> cptmpUsers = cptmpUserMapper.findAllUsers();
+        List<BaseUserInfoDTO> results = new ArrayList<>();
         for (CptmpUser cptmpUser: cptmpUsers) {
             results.add(getFullUserInfo(cptmpUser));
         }
-        return new PageInfo<BaseUserInfoDTO>(results);
+        return new PageInfo<>(results);
     }
 
     /**
@@ -239,7 +235,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     @Override
     public PageInfo<BaseUserInfoDTO> findByName(int page, int offset, String name) {
-        PageHelper.startPage(page, offset);
         List<CptmpUser> cptmpUsers = cptmpUserMapper.findUsersByName(name);
         List<BaseUserInfoDTO> results = new ArrayList<>();
         for (CptmpUser cptmpUser: cptmpUsers) {
@@ -310,7 +305,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     @Override
     public PageInfo<BaseUserInfoDTO> findByOrganizationId(int page, int offset, BigInteger organizationId) {
-        PageHelper.startPage(page, offset);
         List<BaseUserInfoDTO> results = new ArrayList<>();
         List<CptmpUser> cptmpUsers = cptmpUserMapper.findUsersByOrganizationId(organizationId);
         for (CptmpUser cptmpUser: cptmpUsers) {
@@ -329,7 +323,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     @Override
     public PageInfo<BaseUserInfoDTO> findByRoleName(int page, int offset, String roleName) {
-        PageHelper.startPage(page, offset);
         List<BaseUserInfoDTO> results = new ArrayList<>();
         List<CptmpUser> cptmpUsers = cptmpUserMapper.findUsersByRoleName(roleName);
         for (CptmpUser cptmpUser: cptmpUsers) {
@@ -349,7 +342,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      */
     @Override
     public PageInfo<BaseUserInfoDTO> findByGroupFilter(int page, int offset, BigInteger organizationId, String roleName) {
-        PageHelper.startPage(page, offset);
         List<BaseUserInfoDTO> results = new ArrayList<>();
         List<CptmpUser> cptmpUsers = cptmpUserMapper.findUsersByGroupFilter(organizationId, roleName);
         for (CptmpUser cptmpUser: cptmpUsers) {
