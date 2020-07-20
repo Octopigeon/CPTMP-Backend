@@ -1,6 +1,7 @@
 package io.github.octopigeon.cptmpdao.mapper;
 
 import io.github.octopigeon.cptmpdao.model.Assignment;
+import io.github.octopigeon.cptmpdao.model.AttachmentFile;
 import org.apache.ibatis.annotations.*;
 import org.apache.ibatis.type.JdbcType;
 import org.springframework.stereotype.Repository;
@@ -21,16 +22,16 @@ import java.util.List;
 @Mapper
 public interface AssignmentMapper {
     /**
-     * 添加日志
-     * @param assignment：日志类
+     * 添加作业
+     * @param assignment：作业
      */
     String COLUMNS = "gmt_create, gmt_modified, gmt_deleted,  title, content, is_file, document_path";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted},  #{title}, #{content}, #{isFile}, #{documentPath}";
     String UPDATE_CONTENT = " gmt_create = #{gmtCreate}, gmt_modified = #{gmtModified}, gmt_deleted = #{gmtDeleted},title = #{title}, content = #{content},  is_file = #{isFile}";
 
     /**
-     *
-     * @param assignment
+     *插入作业
+     * @param assignment 作业
      */
     @Insert("insert into assignment (" +COLUMNS+ ") values (" +PROPS+ ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -43,10 +44,17 @@ public interface AssignmentMapper {
     void removeAllAssignmentTest();
 
     /**
+     *软删除作业
      * @param gmtDeleted 删除日期
      */
-    @Delete("delete from assignment")
-    void removeAllAssignment(Date gmtDeleted);
+    @Update("update assignment set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
+    void hideAllAssignment(Date gmtDeleted);
+
+    /**
+     *软删除恢复作业
+     */
+    @Update("update assignment set gmt_deleted = null where gmt_deleted is not null")
+    void restoreAllAssignment();
 
     /**
      * 根据日志id删除对应的日志信息
@@ -177,6 +185,7 @@ public interface AssignmentMapper {
 //    @Select("select id, " + COLUMNS + " from assignment where idx_team_id = #{teamId} and gmt_deleted is null")
 //    @ResultMap("assignment")
 //    List<Assignment> findAssignmentByTeamId(BigInteger teamId);
+
 
 
 }
