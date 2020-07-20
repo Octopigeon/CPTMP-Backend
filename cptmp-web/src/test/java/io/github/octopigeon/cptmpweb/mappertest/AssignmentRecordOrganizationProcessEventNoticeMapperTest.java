@@ -30,7 +30,7 @@ import java.util.List;
  * last-check-in 李国鹏
  * @date 2020/7/19
  */
-public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest {
+public class AssignmentRecordOrganizationProcessEventNoticeMapperTest extends BaseTest {
 
     @Autowired
     private OrganizationMapper organizationMapper;
@@ -52,6 +52,10 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
 
     @Autowired
     private TeamMapper teamMapper;
+
+    @Autowired
+    private NoticeMapper noticeMapper;
+
     @Autowired
     private ProjectMapper projectMapper;
 
@@ -221,6 +225,36 @@ public class AssignmentRecordOrganizationProcessEventMapperTest extends BaseTest
         teamMapper.addTeam(team);
         Assertions.assertEquals(2, teamMapper.findAllTeam().size());
         Assertions.assertEquals(5, Utils.getNullPropertyNames(teamMapper.findAllTeam().get(0)).length);
+
+        //信息
+        noticeMapper.removeAllNoticeTest();
+        Notice notice1 =new Notice();
+        notice1.setGmtCreate(new Date());
+        notice1.setReceiverId(cptmpUser.getId());
+        notice1.setIsRead(false);
+        notice1.setContent("test1");
+        notice1.setNoticeType("test1");
+        //增加
+        noticeMapper.addNotice(notice1);
+        noticeMapper.addNotice(notice1);
+        Assertions.assertEquals(2,noticeMapper.findAllNotice().size());
+        Assertions.assertEquals(4, Utils.getNullPropertyNames(noticeMapper.findAllNotice().get(0)).length);
+        //删除,恢复
+        BigInteger restoreNoticeId = noticeMapper.findAllNotice().get(0).getId();
+        noticeMapper.hideNoticeById(noticeMapper.findAllNotice().get(0).getId(),new Date());
+        Assertions.assertEquals(1,noticeMapper.findAllNotice().size());
+        noticeMapper.restoreNoticeById(restoreNoticeId);
+        Assertions.assertEquals(2,noticeMapper.findAllNotice().size());
+        //修改
+        notice1 = noticeMapper.findAllNotice().get(0);
+        notice1.setContent("test2");
+        noticeMapper.updateNoticeById(notice1);
+        Assertions.assertEquals("test2",noticeMapper.findNoticeById(noticeMapper.findAllNotice().get(0).getId()).getContent());
+        //整体删除恢复
+        noticeMapper.hideNoticeByAll(new Date());
+        Assertions.assertEquals(0,noticeMapper.findAllNotice().size());
+        noticeMapper.restoreNoticeByAll();
+        Assertions.assertEquals(2,noticeMapper.findAllNotice().size());
 
         //流程
         processMapper.removeAllProcesses();

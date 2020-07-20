@@ -57,6 +57,7 @@ public class CptmpUser {
     /** nullable */
     /** nullable */
     private BigDecimal phoneNumber;
+    private String introduction;
     /**
      * 0-female, 1-male null-保密
      * nullable

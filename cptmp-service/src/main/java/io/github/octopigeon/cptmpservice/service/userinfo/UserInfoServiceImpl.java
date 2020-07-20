@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -106,7 +107,24 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         }
         try {
             CptmpUser user = cptmpUserMapper.findUserByUsername(userInfo.getUsername());
-            BeanUtils.copyProperties(userInfo, user, Utils.getNullPropertyNames(userInfo));
+            List<String> ignoreProperties = Arrays.asList(Utils.getNullPropertyNames(userInfo));
+            String[] ignoreProps = null;
+            for (int i = 0; i < ignoreProperties.size(); i++) {
+                if (ignoreProperties.get(i).equals("gender")) {
+                    ignoreProps = new String[ignoreProperties.size() - 1];
+                    break;
+                }
+            }
+            if (ignoreProps == null) {
+                ignoreProps = new String[ignoreProperties.size()];
+            }
+            int p = 0;
+            for (int i = 0; i < ignoreProperties.size(); i++) {
+                if (!ignoreProperties.get(i).equals("gender")) {
+                    ignoreProps[p++] = ignoreProperties.get(i);
+                }
+            }
+            BeanUtils.copyProperties(userInfo, user, ignoreProps);
             // 设置修改日期
             user.setGmtModified(new Date());
             cptmpUserMapper.updateUserByUserName(user);
