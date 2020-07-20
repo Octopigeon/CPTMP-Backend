@@ -29,6 +29,7 @@ import java.util.List;
  */
 public class CptmpUserMapperTest extends BaseTest {
 
+
     @Autowired
     private CptmpUserMapper cptmpUserMapper;
 
@@ -63,7 +64,6 @@ public class CptmpUserMapperTest extends BaseTest {
         baseUserInfoDTO.setName("魏啸冲");
         baseUserInfoDTO.setPassword("123");
         baseUserInfoDTO.setEmail("wxcnb@qq.com");
-        baseUserInfoDTO.setIntroduction("123");
         baseUserInfoDTO.setOrganizationId(organizationDTO.getId());
         userInfoService.add(baseUserInfoDTO);
         CptmpUser cptmpUser = cptmpUserMapper.findUserByUsername("WHU-2018302060342");
@@ -79,7 +79,7 @@ public class CptmpUserMapperTest extends BaseTest {
         cptmpUserMapper.restoreUserByUsername(cptmpUser.getUsername());
         cptmpUsers = cptmpUserMapper.findAllUsers();
         CptmpUser cptmpUser1 = cptmpUserMapper.findAllUsers().get(0);
-        Assertions.assertEquals(6, Utils.getNullPropertyNames(cptmpUser1).length);
+        Assertions.assertEquals(7, Utils.getNullPropertyNames(cptmpUser1).length);
         cptmpUserMapper.removeAllUsersTest();
         cptmpUserMapper.addUser(cptmpUser);
         cptmpUser = cptmpUserMapper.findAllUsers().get(0);

@@ -33,6 +33,7 @@ public class RecruitmentMapperTest extends BaseTest {
         recruitment1.setWebsiteUrl("test1");
 
         //增加
+        recruitmentMapper.removeAllRecruitmentTest();
         recruitmentMapper.addRecruitment(recruitment1);
         recruitmentMapper.addRecruitment(recruitment1);
         Assertions.assertEquals(2,recruitmentMapper.findAllRecruitment().size());
@@ -57,5 +58,6 @@ public class RecruitmentMapperTest extends BaseTest {
         recruitmentMapper.restoreRecruitmentByAll();
         Assertions.assertEquals(2,recruitmentMapper.findAllRecruitment().size());
 
+        Assertions.assertEquals("test1",recruitmentMapper.findRecruitmentById(recruitmentMapper.findAllRecruitment().get(0).getId()).getTitle());
     }
 }

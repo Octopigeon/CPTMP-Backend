@@ -30,6 +30,10 @@ public interface AttachmentFileMapper {
             " uk_file_path = #{filePath}, uk_file_url = #{fileUrl}, origin_name = #{originName}, file_size = #{fileSize}, idx_file_type = #{fileType}";
 
 
+    /**
+     * 添加文件
+     * @param file 文件
+     */
     @Insert("insert into attachment_file (" + COLUMNS + ") values ( " + PROPS +" )")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addAttachmentFile(AttachmentFile file);
@@ -43,7 +47,7 @@ public interface AttachmentFileMapper {
     void removeAllAttachmentFileTest();
 
     /**
-     * 删除所有文件
+     * 软删除所有文件
      * @param gmtDeleted 删除日期
      */
     @Update("update attachment_file set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
@@ -58,6 +62,7 @@ public interface AttachmentFileMapper {
     /**
      * 根据文件id进行文件删除
      * @param id：文件id
+     * @param gmtDeleted 删除日期
      */
     @Update("update attachment_file set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
     void hideAttachmentFileById(BigInteger id, Date gmtDeleted);
@@ -72,6 +77,7 @@ public interface AttachmentFileMapper {
     /**
      * 根据文件名进行文件删除
      * @param fileName：文件名
+     * @param gmtDeleted 删除日期
      */
     @Update("update attachment_file set gmt_deleted = #{gmtDeleted} where uk_file_name = #{fileName} and gmt_deleted is null")
     void hideAttachmentFileByName(String fileName, Date gmtDeleted);
@@ -85,12 +91,14 @@ public interface AttachmentFileMapper {
 
     /**
      * 根据id修改
+     * @param attachmentFile 文件
      */
     @Update("update attachment_file set "+ UPDATE_CONTENT +" where id = #{id} and gmt_deleted is null ")
     void updateAttachmentFileById(AttachmentFile attachmentFile);
 
     /**
      * 根据文件名修改
+     * @param attachmentFile 文件
      */
     @Update("update attachment_file set "+ UPDATE_CONTENT +" where uk_file_name = #{fileName} and gmt_deleted is null")
     void updateAttachmentFileByFileName(AttachmentFile attachmentFile);
@@ -125,6 +133,7 @@ public interface AttachmentFileMapper {
     List<AttachmentFile> findAllAttachmentFile();
     /**
      * 查找id所有记录
+     * @param id id
      * @return 根据id记录列表
      */
     @Select("select id, " + COLUMNS + " from attachment_file where id = #{id} and gmt_deleted is null")
@@ -132,6 +141,7 @@ public interface AttachmentFileMapper {
     AttachmentFile findAttachmentFileById(BigInteger id);
     /**
      * 查找文件名所有记录
+     * @param fileName 文件名
      * @return 根据文件名记录列表
      */
     @Select("select id, " + COLUMNS + " from attachment_file where uk_file_name = #{fileName} and gmt_deleted is null")
@@ -147,7 +157,6 @@ public interface AttachmentFileMapper {
 //            @Result(column = "origin_name", property = "originName", jdbcType = JdbcType.VARCHAR),
 //    })
 //    AttachmentFile findPathAndOriginNameByfileName(String fileName);
-
 
 
 }
