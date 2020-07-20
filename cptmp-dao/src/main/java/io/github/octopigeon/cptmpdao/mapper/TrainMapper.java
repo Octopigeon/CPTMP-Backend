@@ -63,7 +63,7 @@ public interface TrainMapper {
     @Update("update train set gmt_deleted = #{gmtDeleted} where id = #{id} and " + SOFT_DELETE_TAIL)
     void hideTrainById(BigInteger id, Date gmtDeleted);
 
-    @Update("update train set gmt_deleted = null where id = #{id} and gmt_deleted is null")
+    @Update("update train set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
     void restoreTrainById(BigInteger id);
 
     /**
@@ -75,7 +75,7 @@ public interface TrainMapper {
     @Update("update train set gmt_deleted = #{gmtDeleted} where organization_id = #{organizationId} and " + SOFT_DELETE_TAIL)
     void hideTrainsByOrganizationId(BigInteger organizationId, Date gmtDeleted);
 
-    @Update("update train set gmt_deleted = null where organization_id = #{organizationId} and gmt_deleted is null")
+    @Update("update train set gmt_deleted = null where organization_id = #{organizationId} and gmt_deleted is not null")
     void restoreTrainsByOrganizationId(BigInteger organizationId);
 
     /**
@@ -86,7 +86,7 @@ public interface TrainMapper {
     @Update("update train set " + UPDATE_CONTENT + " where id = #{id} and " + SOFT_DELETE_TAIL)
     void updateTrainById(Train train);
 
-    @Update("update train set gmt_modified = #{date}, resource_library = #{resourceLib} where id = #{trainId}")
+    @Update("update train set gmt_modified = #{date}, resource_library = #{resourceLib} where id = #{trainId} and " + SOFT_DELETE_TAIL)
     void updateTrainProjectResourceById(BigInteger trainId, Date date, String resourceLib);
 
     /**

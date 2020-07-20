@@ -14,8 +14,9 @@ import java.util.List;
  * @version 2.0
  * @date 2020/7/9
  * <p>
- * last-check-in 李国鹏
- * @date 2020/7/14
+ * last-check-in 魏啸冲
+ * 添加团队队长的token
+ * @date 2020/7/20
  */
 @Repository
 @Mapper
@@ -26,10 +27,13 @@ public interface TeamMapper {
      *
      * @param team 团队
      */
-    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, avatar, idx_project_train_id, idx_team_name, repo_url, team_grade,evaluation, idx_team_master_id";
-    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{avatar},#{projectTrainId}, #{name}, #{repoUrl}, #{teamGrade},#{evaluation}, #{teamMasterId}";
+    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, avatar, idx_project_train_id, idx_team_name, repo_url, team_grade,evaluation, idx_team_master_id, " +
+            "github_username, github_token";
+    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{avatar},#{projectTrainId}, #{name}, #{repoUrl}, #{teamGrade},#{evaluation}, #{teamMasterId}, " +
+            "#{githubUsername}, #{githubToken}";
     String UPDATE_CONTENT = "gmt_modified = #{gmtModified}, idx_project_train_id = #{projectTrainId}, idx_team_name = #{name}, evaluation = #{evaluation}, " +
-            " repo_url = #{repoUrl},team_grade = #{teamGrade},avatar = #{avatar}, idx_team_master_id = #{teamMasterId}";
+            " repo_url = #{repoUrl},team_grade = #{teamGrade},avatar = #{avatar}, idx_team_master_id = #{teamMasterId}, github_username = #{githubUsername}, " +
+            "github_token = #{githubToken}";
 
     @Insert("insert into team (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
@@ -50,6 +54,7 @@ public interface TeamMapper {
      */
     @Update("update team set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
     void hideTeamById(BigInteger id, Date gmtDeleted);
+
 
     @Update("update team set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
     void restoreTeamById(BigInteger id);
@@ -80,7 +85,9 @@ public interface TeamMapper {
             @Result(column = "repo_url", property = "repoUrl", jdbcType = JdbcType.VARCHAR),
             @Result(column = "evaluation", property = "evaluation", jdbcType = JdbcType.VARCHAR),
             @Result(column = "team_grade", property = "teamGrade", jdbcType = JdbcType.SMALLINT),
-            @Result(column = "idx_team_master_id", property = "teamMasterId", jdbcType = JdbcType.BIGINT)
+            @Result(column = "idx_team_master_id", property = "teamMasterId", jdbcType = JdbcType.BIGINT),
+            @Result(column = "github_username", property = "githubUsername", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "github_token", property = "githubToken", jdbcType = JdbcType.VARCHAR)
 
     })
     List<Team> findAllTeam();

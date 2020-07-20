@@ -63,6 +63,7 @@ public class CptmpUserMapperTest extends BaseTest {
         baseUserInfoDTO.setName("魏啸冲");
         baseUserInfoDTO.setPassword("123");
         baseUserInfoDTO.setEmail("wxcnb@qq.com");
+        baseUserInfoDTO.setIntroduction("123");
         baseUserInfoDTO.setOrganizationId(organizationDTO.getId());
         userInfoService.add(baseUserInfoDTO);
         CptmpUser cptmpUser = cptmpUserMapper.findUserByUsername("WHU-2018302060342");

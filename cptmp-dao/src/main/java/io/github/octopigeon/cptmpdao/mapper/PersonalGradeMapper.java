@@ -14,17 +14,17 @@ import java.util.List;
  * @version 1.0
  * @date 2020/7/15
  * @last-check-in 李国鹏
- * @date 2020/7/19
+ * @date 2020/7/20
  */
 @Repository
 @Mapper
 public interface PersonalGradeMapper {
 
-    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, uk_team_person_id, personal_grade, evaluation";
-    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{teamPersonId}, #{personalGrade}, #{evaluation}";
+    String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, uk_team_person_id, evaluation, manage_pt, code_pt, tech_pt, framework_pt, communication_pt";
+    String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{teamPersonId}, #{evaluation}, #{managePt}, #{codePt}, #{techPt}, #{frameworkPt}, #{communicationPt}";
     String UPDATE_CONTENT = "gmt_create = #{gmtCreate}, gmt_modified = #{gmtModified}, " +
-            "gmt_deleted = #{gmtDeleted}, uk_team_person_id = #{teamPersonId}, personal_grade = #{personalGrade}, " +
-            "evaluation = #{evaluation}";
+            "gmt_deleted = #{gmtDeleted}, uk_team_person_id = #{teamPersonId}, evaluation = #{evaluation}, " +
+            "manage_pt = #{managePt}, code_pt = #{codePt}, tech_pt = #{techPt}, framework_pt = #{frameworkPt}, communication_pt = #{communicationPt}";
     String SOFT_DELETE_TAIL = "gmt_deleted is null";
 
 
@@ -63,7 +63,6 @@ public interface PersonalGradeMapper {
 
     @Update("update personal_grade set " + UPDATE_CONTENT + " where uk_team_person_id = #{teamPersonId} and " + SOFT_DELETE_TAIL)
     void updatePersonalGradeByTeamPersonId(PersonalGrade personalGrade);
-
     @Select("select id, " + COLUMNS + " from personal_grade where id = #{id} and " + SOFT_DELETE_TAIL)
     @Results(id = "personal_grade", value = {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
@@ -71,8 +70,12 @@ public interface PersonalGradeMapper {
             @Result(column = "gmt_modified", property = "gmtModified", jdbcType = JdbcType.DATE),
             @Result(column = "gmt_deleted", property = "gmtDeleted", jdbcType = JdbcType.DATE),
             @Result(column = "uk_team_person_id", property = "teamPersonId", jdbcType = JdbcType.BIGINT),
-            @Result(column = "personal_grade", property = "personalGrade", jdbcType = JdbcType.SMALLINT),
-            @Result(column = "evaluation", property = "evaluation", jdbcType = JdbcType.VARCHAR)
+            @Result(column = "evaluation", property = "evaluation", jdbcType = JdbcType.VARCHAR),
+            @Result(column = "manage_pt", property = "managePt", jdbcType = JdbcType.SMALLINT),
+            @Result(column = "code_pt", property = "codePt", jdbcType = JdbcType.SMALLINT),
+            @Result(column = "tech_pt", property = "techPt", jdbcType = JdbcType.SMALLINT),
+            @Result(column = "framework_pt", property = "frameworkPt", jdbcType = JdbcType.SMALLINT),
+            @Result(column = "communication_pt", property = "communicationPt", jdbcType = JdbcType.SMALLINT)
     })
     PersonalGrade findPersonalGradeById(BigInteger id);
 
