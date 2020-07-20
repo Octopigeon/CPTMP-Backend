@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 
 import java.math.BigDecimal;
@@ -53,13 +55,10 @@ public class BaseUserInfoDTO{
     @JsonProperty("user_id")
     private BigInteger id;
 
-    @Value("domain.name")
-    final String domainName;
-
     /**
      * 默认头像
      */
-    final String DEFAULT_AVATAR = domainName + "/assets/avatar.png";
+    final String DEFAULT_AVATAR = "49.235.232.153/assets/avatar.png";
 
     /**
      * Gravatar 地址
