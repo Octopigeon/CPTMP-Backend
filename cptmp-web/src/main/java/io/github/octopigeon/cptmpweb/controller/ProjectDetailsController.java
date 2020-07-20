@@ -150,7 +150,6 @@ public class ProjectDetailsController {
     }
 
     /**
-     * TODO:接口文档
      * 获取所有项目
      * @param offset
      * @param page
