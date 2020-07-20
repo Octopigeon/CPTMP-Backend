@@ -983,50 +983,75 @@ College Practice Training Management Platform
 
 + 方法：GET
 
++ 参数：page，offset
+
 + 调用实例：
 
   ```json
-  {
-      "page":1,  //页号
-      "offset":8 //每页最大条目数
-  }
+  //api/train?page=1&offset=8
   ```
-
+  
 + 返回实例：
 
   ```json
   //成功
   {
       "status": 0,
-      "date": "2020-07-17T06:57:21.536+00:00",
+      "date": "2020-07-20T13:09:51.868+00:00",
       "msg": "success",
-      "total_rows": 2,
+      "total_rows": 4,
       "data": [
           {
               "id": 1,
-              "name": "清华大学暑期实训",
-              "content": "啊这",
+              "name": "初级项目实训",
+              "content": "武汉大学大一实训",
+              "limits": null,
               "organization_id": 1,
-              "start_time": "2020-07-16T16:00:00.000+00:00",
-              "end_time": "2020-07-16T16:00:00.000+00:00",
-              "accept_standard": "啊这也",
+              "start_time": "2018-07-07T16:00:00.000+00:00",
+              "end_time": "2018-07-19T16:00:00.000+00:00",
+              "accept_standard": "完成基础项目",
               "resource_library": "{\"resourceLib\":[]}",
-              "gps_info": "{}"
+              "gps_info": "http://www.boorgeel.com/"
           },
           {
               "id": 2,
-              "name": "2020武汉大学暑期实训",
-              "content": "啊这",
-              "organization_id": 1,
-              "start_time": "2020-07-13T16:00:00.000+00:00",
-              "end_time": "2020-07-13T16:00:00.000+00:00",
-              "accept_standard": "啊这",
+              "name": "中级项目实训",
+              "content": "武汉大学大二实训",
+              "limits": null,
+              "organization_id": 2,
+              "start_time": "2019-07-15T16:00:00.000+00:00",
+              "end_time": "2019-08-05T16:00:00.000+00:00",
+              "accept_standard": "完成基础项目",
               "resource_library": "{\"resourceLib\":[]}",
-              "gps_info": "{}"
+              "gps_info": "http://www.boorgeel.com/"
+          },
+        {
+              "id": 4,
+              "name": "大三合作实训",
+              "content": "武汉大学大三实训",
+              "limits": null,
+              "organization_id": 4,
+              "start_time": "2021-07-15T16:00:00.000+00:00",
+              "end_time": "2021-09-15T16:00:00.000+00:00",
+              "accept_standard": "完成拓展项目",
+              "resource_library": "{\"resourceLib\":[]}",
+              "gps_info": "http://www.boorgeel.com/"
+          },
+          {
+              "id": 5,
+              "name": "大四合作实训",
+              "content": "武汉大学大四实训",
+              "limits": null,
+              "organization_id": 5,
+              "start_time": "2022-07-15T16:00:00.000+00:00",
+              "end_time": "2022-10-15T16:00:00.000+00:00",
+              "accept_standard": "完成所有项目",
+              "resource_library": "{\"resourceLib\":[]}",
+              "gps_info": "http://www.boorgeel.com/"
           }
       ]
   }
-//失败
+  //失败
   {
       "status": 15,
       "date": "2020-07-17T17:23:14.420+00:00",
@@ -1038,60 +1063,59 @@ College Practice Training Management Platform
   
   
 
-## 4.根据关键词查询实训
+## 4.根据属性查询实训
 
-+ 接口：api/train/search/{property}
+#### 4.1 根据名称
+
++ 接口：api/train/search/name
 
 + 方法：GET
 
-+  注明：目前完成的接口还可以根据organization_id查询
++  参数：key_word、page、offset
 
 + 调用实例：
 
   ```json
-  //api/train/search/name
-  {
-      "key_word":"武汉大学",
-      "page":1,
-      "offset":8
-  }
+  //api/train/search/name?key_word=实训&page=1&offset=8
   ```
-
+  
 + 返回实例：
 
   ```json
   //成功
   {
       "status": 0,
-      "date": "2020-07-17T07:04:41.931+00:00",
+      "date": "2020-07-20T13:19:00.713+00:00",
       "msg": "success",
       "total_rows": 2,
       "data": [
           {
-              "id": 2,
-              "name": "2020武汉大学暑期实训",
-              "content": "啊这",
+              "id": 1,
+              "name": "初级项目实训",
+              "content": "武汉大学大一实训",
+              "limits": null,
               "organization_id": 1,
-              "start_time": "2020-07-13T16:00:00.000+00:00",
-              "end_time": "2020-07-13T16:00:00.000+00:00",
-              "accept_standard": "啊这",
+              "start_time": "2018-07-07T16:00:00.000+00:00",
+              "end_time": "2018-07-19T16:00:00.000+00:00",
+              "accept_standard": "完成基础项目",
               "resource_library": "{\"resourceLib\":[]}",
-              "gps_info": "{}"
+              "gps_info": "http://www.boorgeel.com/"
           },
           {
-              "id": 3,
-              "name": "2020武汉大学暑期实训",
-              "content": "啊这",
-              "organization_id": 1,
-              "start_time": "2020-07-13T16:00:00.000+00:00",
-              "end_time": "2020-07-13T16:00:00.000+00:00",
-              "accept_standard": "啊这",
+              "id": 2,
+              "name": "中级项目实训",
+              "content": "武汉大学大二实训",
+              "limits": null,
+              "organization_id": 2,
+              "start_time": "2019-07-15T16:00:00.000+00:00",
+              "end_time": "2019-08-05T16:00:00.000+00:00",
+              "accept_standard": "完成基础项目",
               "resource_library": "{\"resourceLib\":[]}",
-              "gps_info": "{}"
+              "gps_info": "http://www.boorgeel.com/"
           }
       ]
   }
-  //
+  //失败
   {
     "status": 15,
       "date": "2020-07-17T17:23:14.420+00:00",
@@ -1101,6 +1125,56 @@ College Practice Training Management Platform
   }
   ```
   
+  
+
+#### 4.2 根据组织
+
++ 接口：api/train/search/org
+
++ 方法：GET
+
++ 参数：key_word、page、offset
+
++ 调用实例：
+
+  ```json
+  //api/train/search/org?key_word=1&page=1&offset=8
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-20T13:21:59.181+00:00",
+      "msg": "success",
+      "total_rows": 1,
+      "data": [
+          {
+              "id": 1,
+              "name": "初级项目实训",
+              "content": "武汉大学大一实训",
+              "limits": null,
+              "organization_id": 1,
+              "start_time": "2018-07-07T16:00:00.000+00:00",
+              "end_time": "2018-07-19T16:00:00.000+00:00",
+              "accept_standard": "完成基础项目",
+              "resource_library": "{\"resourceLib\":[]}",
+              "gps_info": "http://www.boorgeel.com/"
+          }
+      ]
+  }
+  //失败
+  {
+    "status": 15,
+      "date": "2020-07-17T17:23:14.420+00:00",
+      "msg": "get train failed",
+      "total_rows": 0,
+      "data": null
+  }
+  ```
+
   
 
 ## 5.根据id删除实训
@@ -1222,30 +1296,25 @@ College Practice Training Management Platform
 + 调用实例：
 
   ```json
-  //api/train/1/project
-  {
-      "page":1,
-      "offset":8
-  }
-  
+  //api/train/1/project?page=1&offset=2
   ```
-
+  
 + 返回实例：
 
   ```json
   //成功
   {
       "status": 0,
-      "date": "2020-07-17T07:47:33.010+00:00",
+      "date": "2020-07-20T13:26:40.487+00:00",
       "msg": "success",
       "total_rows": 1,
       "data": [
           {
-              "id": 3,
-              "name": "cptmp",
+              "id": 1,
+              "name": "大一实训",
               "level": 1,
-              "content": "xxx",
-              "resource_library": "file/233"
+              "content": "坦克大战",
+              "resource_library": "https://www.baidu.com/"
           }
       ]
   }
@@ -1437,50 +1506,55 @@ College Practice Training Management Platform
 
   
 
-## 3.根据属性分页查询团队
+## 3.根据名称分页查询团队
 
-+ 接口：api/team/search/{property}
++ 接口：api/team/search/name
 
 + 方法：GET
 
-+ 注明：根据name搜索keyword为空会返回所有团队
++ 参数：key_word,offset,page
 
 + 调用实例：
 
   ```json
-  //api/team/search/name
-  {
-      "key_word":"章鱼鸽",
-      "page":1,
-      "offset":8
-  }
+  //api/team/search/name?key_word=鸽&page=1&offset=2
   ```
-
+  
 + 返回实例：
 
   ```json
   //成功
   {
       "status": 0,
-      "date": "2020-07-17T14:06:10.390+00:00",
+      "date": "2020-07-20T13:06:07.225+00:00",
       "msg": "success",
-      "total_rows": 1,
+      "total_rows": 3,
       "data": [
           {
-              "id": 4,
+              "id": 1,
               "name": "章鱼鸽",
-              "avatar": "abc.com",
-              "evaluation": "good",
+              "avatar": null,
+              "evaluation": "优秀",
               "train_id": 1,
-              "project_id": 3,
-              "repo_url": "123456.github.io",
+              "project_id": 1,
+              "repo_url": "Octopigeon/CPTMP-Backend",
               "team_grade": 99
+          },
+          {
+              "id": 4,
+              "name": "小鸽子",
+              "avatar": null,
+            "evaluation": "及格",
+              "train_id": 4,
+              "project_id": 4,
+              "repo_url": "",
+              "team_grade": 98
           }
       ]
   }
   //失败
   ```
-
+  
   
 
 ## 4.根据id获取团队信息
@@ -1782,7 +1856,7 @@ College Practice Training Management Platform
   ```
 
 
-## 4.根据ID更新流程
+## 4.根据id更新流程
 
 + 接口：api/process
 
