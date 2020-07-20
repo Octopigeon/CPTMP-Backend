@@ -106,11 +106,10 @@ public class AssignmentRecordOrganizationProcessEventNoticeMapperTest extends Ba
         assignmentMapper.updateAssignmentDocumentById(assignmentMapper.findAllAssignment().get(0).getId(), new Date(), "test3");
         Assertions.assertEquals("test3", assignmentMapper.findAllAssignment().get(0).getDocumentPath());
         //移除所有作业
-        assignmentMapper.removeAllAssignment(new Date());
+        assignmentMapper.hideAllAssignment(new Date());
         Assertions.assertEquals(0, assignmentMapper.findAllAssignment().size());
         //添加作业，为以后测试做准备
-        assignmentMapper.addAssignment(assignment);
-        assignmentMapper.addAssignment(assignment);
+        assignmentMapper.restoreAllAssignment();
         Assertions.assertEquals(2, assignmentMapper.findAllAssignment().size());
 
 
@@ -224,7 +223,7 @@ public class AssignmentRecordOrganizationProcessEventNoticeMapperTest extends Ba
         team.setProjectTrainId(projectTrainMapper.findAllProjectTrains().get(0).getId());
         teamMapper.addTeam(team);
         Assertions.assertEquals(2, teamMapper.findAllTeam().size());
-        Assertions.assertEquals(5, Utils.getNullPropertyNames(teamMapper.findAllTeam().get(0)).length);
+        Assertions.assertEquals(7, Utils.getNullPropertyNames(teamMapper.findAllTeam().get(0)).length);
 
         //信息
         noticeMapper.removeAllNoticeTest();
