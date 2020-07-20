@@ -152,6 +152,8 @@ public class TeamPersonAndTeamAndProjectAndPerseonalGradeMapperTest extends Base
         team.setAvatar("abc.com");
         team.setEvaluation("good");
         team.setName("octopigeon");
+        team.setGithubUsername("anlowee");
+        team.setGithubToken("123");
         team.setTeamGrade(99);
         team.setTeamMasterId(cptmpUser.getId());
         team.setProjectTrainId(projectTrain.getId());

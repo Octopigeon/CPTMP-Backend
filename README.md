@@ -268,6 +268,44 @@ College Practice Training Management Platform
 
   
 
+## /api/user/pwd
+
++ HTTP方法：PUT
+
++ 返回类型：json
+
++ 说明：系统管理员设置密码
+
++ 调用实例：
+
++ ```json
+   {
+          "username": "WHU-1000432423552",
+          "new_password": "123456"
+   }
+  ```
+
++ 返回实例
+
++ ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-19T03:50:49.147+00:00",
+      "msg": "update password successfully"
+  }
+  //失败（权限不足）
+  {
+      "timestamp": "2020-07-19T03:53:05.162+00:00",
+      "status": 403,
+      "error": "Forbidden",
+      "message": "",
+      "path": "/api/user/pwd"
+  }
+  ```
+
+  
+
 # RegisterController
 
 ## /api/user/enterprise-admin
@@ -1828,7 +1866,7 @@ College Practice Training Management Platform
 
   
 
-## 2.根据ID删除event
+## 2.根据id删除event
 
 + 接口：api/event/{event_id}
 
@@ -1928,6 +1966,62 @@ College Practice Training Management Platform
   }
   ```
 
+
+
+## 5.分页获取所有事件
+
++ 接口：api/event
+
++ 方法：GET
+
++ 调用实例：
+
+  ```json
+  //api/event?page=1&offset=4
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-19T12:52:34.538+00:00",
+      "msg": "success",
+      "total_rows": 4,
+      "data": [
+          {
+              "id": 1,
+              "content": "注册成功",
+              "start_time": "2020-07-15T16:00:00.000+00:00",
+              "end_time": "2020-07-15T16:00:00.000+00:00",
+              "person_or_team": false
+          },
+          {
+              "id": 2,
+              "content": "选择项目",
+              "start_time": "2020-07-15T16:00:00.000+00:00",
+              "end_time": "2020-07-15T16:00:00.000+00:00",
+              "person_or_team": false
+          },
+          {
+              "id": 3,
+              "content": "团队破冰",
+              "start_time": "2020-07-15T16:00:00.000+00:00",
+              "end_time": "2020-07-15T16:00:00.000+00:00",
+              "person_or_team": false
+          },
+          {
+              "id": 4,
+              "content": "发布项目",
+              "start_time": "2020-07-15T16:00:00.000+00:00",
+              "end_time": "2020-07-15T16:00:00.000+00:00",
+              "person_or_team": false
+          }
+      ]
+  }
+  //失败
+  ```
 
 
 
