@@ -632,6 +632,34 @@ College Practice Training Management Platform
 }
 ```
 
+## /api/org/{org_id}
+
++ HTTP方法：DELETE
++ 返回类型：json
++ 说明：根据id删除组织
++ 调用实例：
+
+``` json
+//api/org/3
+```
+
++ 返回实例
+
+``` json
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-20T09:18:13.813+00:00",
+    "msg": "delete org successfully"
+}
+// 失败
+{
+    "status": 17,
+    "date": "2020-07-20T10:27:41.497+00:00",
+    "msg": "delete org failed"
+}
+```
+
 
 
 # ProjectDetailsController
@@ -710,10 +738,50 @@ College Practice Training Management Platform
 ```
 
 ## /api/train-project
++ HTTP方法：GET
++ 返回类型：json
++ 参数：offset、page
++ 说明：获取所有项目
++ 调用实例：
+``` 
+/api/train-project?offset=2&page=1
+```
++ 返回实例:
+``` json
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-20T08:54:01.213+00:00",
+    "msg": "success",
+    "total_rows": 5,
+    "data": [
+        {
+            "id": 1,
+            "name": "大一实训",
+            "level": 1,
+            "content": "坦克大战",
+            "resource_library": "https://www.baidu.com/"
+        },
+        {
+            "id": 2,
+            "name": "大二实训",
+            "level": 2,
+            "content": "飞机大战",
+            "resource_library": "https://www.baidu.com/"
+        }
+    ]
+}
+// 失败
+
+```
+
+## /api/train-project
+
 + HTTP方法：DELETE
 + 返回类型：json
 + 说明：批量删除project
 + 调用实例：
+
 ``` 
 [
     9,
@@ -721,7 +789,9 @@ College Practice Training Management Platform
     11
 ]
 ```
+
 + 返回实例:
+
 ``` 
 // 成功
 {
@@ -741,7 +811,10 @@ College Practice Training Management Platform
 }
 ```
 
+
+
 # PersonTrainController
+
 ## /api/student/me/team/{teamId}/remark
 + HTTP方法：GET
 + 返回类型：json

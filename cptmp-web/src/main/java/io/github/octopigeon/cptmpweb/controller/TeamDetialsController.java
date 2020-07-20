@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
@@ -95,10 +97,11 @@ public class TeamDetialsController {
             {
                 case "name":
                     String name = objectMapper.readValue(json, ObjectNode.class).get("key_word").asText();
+                    Page pages = PageHelper.startPage(page, offset);
                     PageInfo<TeamDTO> pageInfoByName = teamService.findByLikeName(page,offset,name);
                     return new RespBeanWithTeamList(
                             pageInfoByName.getList(),
-                            pageInfoByName.getTotal()
+                            pages.getTotal()
                     );
                 default:
                     return new RespBeanWithTeamList(CptmpStatusCode.INFO_ACCESS_FAILED,"property is wrong");
