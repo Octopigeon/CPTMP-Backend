@@ -280,6 +280,7 @@ class RespBeanWithTeam extends RespBean
 
     public RespBeanWithTeam(TeamInfoDTO team)
     {
+        super();
         this.team = team;
     }
 
@@ -298,6 +299,7 @@ class RespBeanWithUsers extends RespBean
 
     public RespBeanWithUsers(List<BaseUserInfoDTO> userInfoList)
     {
+        super();
         this.userInfoList = userInfoList;
     }
 
