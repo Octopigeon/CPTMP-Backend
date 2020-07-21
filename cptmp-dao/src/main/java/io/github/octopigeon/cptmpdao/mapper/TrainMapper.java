@@ -63,6 +63,10 @@ public interface TrainMapper {
     @Update("update train set gmt_deleted = #{gmtDeleted} where id = #{id} and " + SOFT_DELETE_TAIL)
     void hideTrainById(BigInteger id, Date gmtDeleted);
 
+    /**
+     * 根据id恢复
+     * @param id id
+     */
     @Update("update train set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
     void restoreTrainById(BigInteger id);
 
@@ -75,17 +79,27 @@ public interface TrainMapper {
     @Update("update train set gmt_deleted = #{gmtDeleted} where organization_id = #{organizationId} and " + SOFT_DELETE_TAIL)
     void hideTrainsByOrganizationId(BigInteger organizationId, Date gmtDeleted);
 
+    /**
+     * 根据组织恢复
+     * @param organizationId 组织id
+     */
     @Update("update train set gmt_deleted = null where organization_id = #{organizationId} and gmt_deleted is not null")
     void restoreTrainsByOrganizationId(BigInteger organizationId);
 
     /**
      * 按id更新train的信息
      *
-     * @param train
+     * @param train 实训
      */
     @Update("update train set " + UPDATE_CONTENT + " where id = #{id} and " + SOFT_DELETE_TAIL)
     void updateTrainById(Train train);
 
+    /**
+     * 根据实训更新资源库
+     * @param trainId 实训id
+     * @param date 修改日期
+     * @param resourceLib 资源库
+     */
     @Update("update train set gmt_modified = #{date}, resource_library = #{resourceLib} where id = #{trainId} and " + SOFT_DELETE_TAIL)
     void updateTrainProjectResourceById(BigInteger trainId, Date date, String resourceLib);
 
@@ -132,6 +146,11 @@ public interface TrainMapper {
     @ResultMap("train")
     List<Train> findTrainByNameAmbiguously(String name);
 
+    /**
+     * 根据组织id查找
+     * @param organizationId 组织id
+     * @return 实训列表
+     */
     @Select("select id, " + COLUMNS + " from train where organization_id = #{organizationId} and " + SOFT_DELETE_TAIL)
     @ResultMap("train")
     List<Train> findTrainByOrganizationId(BigInteger organizationId);

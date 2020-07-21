@@ -15,7 +15,7 @@ import java.util.List;
  * @version 1.0
  * @date 2020/7/14
  * @last-check-in 李国鹏
- * @date 2020/7/20
+ * @date 2020/7/21
  */
 @Repository
 @Mapper
@@ -82,7 +82,7 @@ public interface ProcessMapper {
 
     /**
      * 查询全部
-     * @return
+     * @return 流程列表
      */
     @Select("select id, " + COLUMNS + " from cptmp_process where gmt_deleted is null")
     @Results(id = "process", value = {
@@ -98,8 +98,8 @@ public interface ProcessMapper {
 
     /**
      * 根据实训id查找
-     * @param trainId
-     * @return
+     * @param trainId 实训id
+     * @return 流程列表
      */
     @Select("select id, " + COLUMNS + " from cptmp_process where train_id = #{trainId}" + SOFT_DELETE_TAIL)
     @ResultMap("process")
