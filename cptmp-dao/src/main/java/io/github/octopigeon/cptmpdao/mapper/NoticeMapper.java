@@ -47,6 +47,9 @@ public interface NoticeMapper {
     @Delete("delete from notice")
     void removeAllNoticeTest();
 
+    @Delete("delete from notice where datediff(NOW(), gmt_create) > 30 and is_read = 1")
+    void removeExpiredNotices();
+
     /**
      * 删除所有
 
@@ -109,5 +112,21 @@ public interface NoticeMapper {
     @ResultMap("notice")
     Notice findNoticeById(BigInteger id);
 
+    /**
+     * 根据接受者Id查找Notice
+     * @param receiverId 接受者Id
+     * @return
+     */
+    @Select("select id, " + COLUMNS + " from notice where idx_receiver_id = #{receiverId} and " + SOFT_DELETE_TAIL)
+    @ResultMap("notice")
+    List<Notice> findNoticeByReceiverId(BigInteger receiverId);
 
+    /**
+     * 根据接收团队Id查找notice
+     * @param teamId 团队Id
+     * @return
+     */
+    @Select("select id, " + COLUMNS + " from notice where idx_team_id = #{teamId} and " + SOFT_DELETE_TAIL)
+    @ResultMap("notice")
+    List<Notice> findNoticeByTeamId(BigInteger teamId);
 }
