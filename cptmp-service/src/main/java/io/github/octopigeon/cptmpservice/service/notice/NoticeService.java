@@ -18,17 +18,24 @@ import java.math.BigInteger;
 public interface NoticeService extends BaseNormalService<NoticeDTO> {
     /**
      * 根据接收者去获取通知
+     * @param page 页号
+     * @param offset 页容量
      * @param receiverId 接受者Id
      * @return
      */
-    PageInfo<NoticeDTO> findByReceiverId(BigInteger receiverId);
+    PageInfo<NoticeDTO> findByReceiverId(int page, int offset, BigInteger receiverId);
 
     /**
      * 根据团队Id获取通知
+     * @param page 页号
+     * @param offset 页容量
      * @param teamId 团队Id
      * @return
      */
-    PageInfo<NoticeDTO> findByTeamId(BigInteger teamId);
+    PageInfo<NoticeDTO> findByTeamId(int page, int offset, BigInteger teamId);
 
-
+    /**
+     * 移除已读且超过30天的过期消息
+     */
+    void removeExpiredNotice();
 }

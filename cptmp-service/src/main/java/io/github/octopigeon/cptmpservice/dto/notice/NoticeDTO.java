@@ -15,6 +15,7 @@ import java.util.Date;
  */
 @Data
 public class NoticeDTO {
+    private BigInteger id;
     private Date gmtCreate;
     private BigInteger senderId;
     private BigInteger receiverId;
