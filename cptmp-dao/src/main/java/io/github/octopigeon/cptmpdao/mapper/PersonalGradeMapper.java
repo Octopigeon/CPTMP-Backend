@@ -14,7 +14,7 @@ import java.util.List;
  * @version 1.0
  * @date 2020/7/15
  * @last-check-in 李国鹏
- * @date 2020/7/20
+ * @date 2020/7/21
  */
 @Repository
 @Mapper
@@ -28,6 +28,10 @@ public interface PersonalGradeMapper {
     String SOFT_DELETE_TAIL = "gmt_deleted is null";
 
 
+    /**
+     * 插入个人成绩
+     * @param personalGrade 个人成绩对象
+     */
     @Insert("insert into personal_grade (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
     void addPersonalGrade(PersonalGrade personalGrade);
@@ -39,15 +43,33 @@ public interface PersonalGradeMapper {
     @Delete("delete from personal_grade")
     void removeAllPersonalGrades();
 
+    /**
+     * 根据id软删除
+     * @param id id
+     * @param gmtDeleted 删除日期
+     */
     @Update("update personal_grade set gmt_deleted = #{gmtDeleted} where id = #{id} and " + SOFT_DELETE_TAIL)
     void hidePersonalGradeById(BigInteger id, Date gmtDeleted);
 
+    /**
+     * 通过id恢复
+     * @param id  id
+     */
     @Update("update personal_grade set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
     void restorePersonalGradeById(BigInteger id);
 
+    /**
+     * 通过团队成员id软删除
+     * @param teamPersonId 团队成员id
+     * @param gmtDeleted 删除日期
+     */
     @Update("update personal_grade set gmt_deleted = #{gmtDeleted} where uk_team_person_id = #{teamPersonId} and " + SOFT_DELETE_TAIL)
     void hidePersonalGradeByTeamPersonId(BigInteger teamPersonId, Date gmtDeleted);
 
+    /**
+     * 通过团队成员id恢复
+     * @param teamPersonId 团队成员id
+     */
     @Update("update personal_grade set gmt_deleted = null where uk_team_person_id = #{teamPersonId} and gmt_deleted is not null")
     void restorePersonalGradeByTeamPersonId(BigInteger teamPersonId);
 
@@ -58,11 +80,25 @@ public interface PersonalGradeMapper {
     @Update("update personal_grade set gmt_deleted = null")
     void restoreAllPersonalGrade();
 
+    /**
+     * 通过id修改
+     * @param personalGrade 个人成绩id
+     */
     @Update("update personal_grade set " + UPDATE_CONTENT + " where id = #{id} and " + SOFT_DELETE_TAIL)
     void updatePersonalGradeById(PersonalGrade personalGrade);
 
+    /**
+     * 通过团队成员id更新
+     * @param personalGrade 个人成绩
+     */
     @Update("update personal_grade set " + UPDATE_CONTENT + " where uk_team_person_id = #{teamPersonId} and " + SOFT_DELETE_TAIL)
     void updatePersonalGradeByTeamPersonId(PersonalGrade personalGrade);
+
+    /**
+     * 通过id查询
+     * @param id id
+     * @return 个人成绩对象
+     */
     @Select("select id, " + COLUMNS + " from personal_grade where id = #{id} and " + SOFT_DELETE_TAIL)
     @Results(id = "personal_grade", value = {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),
@@ -79,10 +115,19 @@ public interface PersonalGradeMapper {
     })
     PersonalGrade findPersonalGradeById(BigInteger id);
 
+    /**
+     * 通过团队成员id查询
+     * @param teamPersonId 团队成员id
+     * @return  个人成绩对象
+     */
     @Select("select id, " + COLUMNS + " from personal_grade where uk_team_person_id = #{teamPersonId} and " + SOFT_DELETE_TAIL)
     @ResultMap("personal_grade")
     PersonalGrade findPersonalGradeByTeamPersonId(BigInteger teamPersonId);
 
+    /**
+     * 查询所有个人成绩
+     * @return 个人成绩
+     */
     @Select("select id, " + COLUMNS + " from personal_grade where " + SOFT_DELETE_TAIL)
     @ResultMap("personal_grade")
     List<PersonalGrade> findAllPersonalGrades();

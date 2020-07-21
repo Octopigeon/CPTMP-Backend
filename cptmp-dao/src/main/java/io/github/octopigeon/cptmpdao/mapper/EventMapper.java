@@ -13,8 +13,8 @@ import java.util.List;
  * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/14
- * @last-check-in 陈若琳
- * @date 2020/7/15
+ * @last-check-in 李国鹏
+ * @date 2020/7/21
  */
 @Repository
 @Mapper
@@ -27,6 +27,10 @@ public interface EventMapper {
             "content = #{content}, person_or_team = #{personOrTeam}";
     String SOFT_DELETE_TAIL = "gmt_deleted is null";
 
+    /**
+     * 添加事件
+     * @param event 事件对象
+     */
     @Insert("insert into cptmp_event (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyColumn = "id", keyProperty = "id")
     void addEvent(Event event);
@@ -35,27 +39,53 @@ public interface EventMapper {
 
     /**
      * 测试用
+     * 删除全部
      */
     @Deprecated
     @Delete("delete from cptmp_event")
     void removeAllEvents();
 
+    /**
+     * 软删除所有事件
+     * @param gmtDeleted 删除日期
+     */
     @Update("update cptmp_event set gmt_deleted = #{gmtDeleted} where "  + SOFT_DELETE_TAIL)
     void hideAllEvent(Date gmtDeleted);
 
+    /**
+     * 恢复所有事件
+     */
     @Update("update cptmp_event set gmt_deleted = null where gmt_deleted is not null")
     void restoreAllEvent();
 
 
+    /**
+     * 通过id隐藏事件
+     * @param id id
+     * @param gmtDeleted 删除日期
+     */
     @Update("update cptmp_event set gmt_deleted = #{gmtDeleted} where id = #{id} and " + SOFT_DELETE_TAIL)
     void hideEventById(BigInteger id, Date gmtDeleted);
 
+    /**
+     * 通过id恢复
+     * @param id id
+     */
     @Update("update cptmp_event set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
     void restoreEventById(BigInteger id);
 
+    /**
+     * 通过id更新
+     * @param event 事件对象
+     */
     @Update("update cptmp_event set " + UPDATE_CONTENT + " where id = #{id} and " + SOFT_DELETE_TAIL)
     void updateEventById(Event event);
 
+    /**
+     * 通过id查询
+     * @param id id
+     * @return 事件对象
+     */
     @Select("select id, " + COLUMNS + " from cptmp_event where id = #{id} and " + SOFT_DELETE_TAIL)
     @Results(id = "event", value = {
             @Result(column = "id", property = "id", jdbcType = JdbcType.BIGINT),

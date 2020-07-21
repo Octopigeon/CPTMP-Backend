@@ -38,6 +38,7 @@ public class OrganizationDetailsController {
 
     /**
      * 修改学校基本信息，学校真实名字，描述，官方网站
+     *
      * @param json 包含上述字段code, real_name, description, website_url
      * @return 更新结果
      */
@@ -64,99 +65,93 @@ public class OrganizationDetailsController {
 
     /**
      * 根据id获取学校信息
+     *
      * @param orgId
      * @return
      */
     @GetMapping("api/org/{org_id}")
-    public RespBeanWithOrganization getOrganizationById(@PathVariable("org_id")BigInteger orgId)
-    {
-        try{
+    public RespBeanWithOrganization getOrganizationById(@PathVariable("org_id") BigInteger orgId) {
+        try {
             return new RespBeanWithOrganization(organizationService.findById(orgId));
-        }catch (Exception e)
-        {
-            return new RespBeanWithOrganization(CptmpStatusCode.INFO_ACCESS_FAILED,"get org info failed");
+        } catch (Exception e) {
+            return new RespBeanWithOrganization(CptmpStatusCode.INFO_ACCESS_FAILED, "get org info failed");
         }
     }
 
     /**
      * 根据id删除组织
+     *
      * @param orgId
      * @return
      */
     @DeleteMapping("api/org/{org_id}")
-    public RespBean deleteOrg(@PathVariable("org_id")BigInteger orgId)
-    {
+    public RespBean deleteOrg(@PathVariable("org_id") BigInteger orgId) {
         OrganizationDTO organizationDTO = new OrganizationDTO();
         organizationDTO.setId(orgId);
-        try{
+        try {
             organizationService.remove(organizationDTO);
             return RespBean.ok("delete org successfully");
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-            return RespBean.error(CptmpStatusCode.REMOVE_FAILED,"delete org failed");
+            return RespBean.error(CptmpStatusCode.REMOVE_FAILED, "delete org failed");
         }
     }
 
     /**
      * 根据id获取学校名称
-     * @param json
+     *
      * @return
      */
     @GetMapping("api/org/name")
-    public RespBeanWithOrgNameList getOrganizationName(@RequestBody String json) throws JsonProcessingException
-    {
-        ObjectMapper objectMapper = new ObjectMapper();
-        BigInteger[]orgId = objectMapper.readValue(json,BigInteger[].class);
-        try{
-            List<String>organizationList = new ArrayList<>();
-            for (int i=0;i<orgId.length;i++)
-            {
+    public RespBeanWithOrgNameList getOrganizationName(
+           @RequestParam(value = "org_id") BigInteger[] orgId
+    ) {
+        try {
+            List<String> organizationList = new ArrayList<>();
+            for (int i = 0; i < orgId.length; i++) {
                 OrganizationDTO organizationDTO = organizationService.findById(orgId[i]);
                 organizationList.add(organizationDTO.getRealName());
             }
             return new RespBeanWithOrgNameList(organizationList);
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-            return new RespBeanWithOrgNameList(CptmpStatusCode.INFO_ACCESS_FAILED,"get org info failed");
+            return new RespBeanWithOrgNameList(CptmpStatusCode.INFO_ACCESS_FAILED, "get org info failed");
         }
     }
 
     /**
      * 分页获取所有组织
-     * @param page 页号
+     *
+     * @param page   页号
      * @param offset 每页最大条目数
      * @return 所有组织信息
      */
     @GetMapping("api/org")
     public RespBeanWithOrganizationList getAllOrganization(
-            @RequestParam("page")int page,
-            @RequestParam("offset") int offset)
-    {
-        try{
+            @RequestParam("page") int page,
+            @RequestParam("offset") int offset) {
+        try {
             Page pages = PageHelper.startPage(page, offset);
-            PageInfo<OrganizationDTO>pageInfo = organizationService.findAll(page,offset);
-            return new RespBeanWithOrganizationList(pageInfo.getList(),pages.getTotal());
-        }catch (Exception e)
-        {
+            PageInfo<OrganizationDTO> pageInfo = organizationService.findAll(page, offset);
+            return new RespBeanWithOrganizationList(pageInfo.getList(), pages.getTotal());
+        } catch (Exception e) {
             e.printStackTrace();
-            return new RespBeanWithOrganizationList(CptmpStatusCode.INFO_ACCESS_FAILED,"get org failed");
+            return new RespBeanWithOrganizationList(CptmpStatusCode.INFO_ACCESS_FAILED, "get org failed");
         }
     }
 
     /**
      * 根据属性查询组织
-     * @param page 页号
+     *
+     * @param page   页号
      * @param offset 每页最大条目数
      * @return 所有组织信息
      */
     @GetMapping("api/org/real_name")
     public RespBeanWithOrganizationList searchOrganization(
-            @RequestParam("page")int page,
+            @RequestParam("page") int page,
             @RequestParam("offset") int offset,
-            @RequestParam("key_word")String keyword)
-    {
+            @RequestParam("key_word") String keyword) {
         try {
             Page pages = PageHelper.startPage(page, offset);
             PageInfo<OrganizationDTO> pageInfo = organizationService.findByRealName(page, offset, keyword);
@@ -170,15 +165,12 @@ public class OrganizationDetailsController {
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-class RespBeanWithOrganization extends RespBean
-{
-    public RespBeanWithOrganization(Integer status, String msg)
-    {
-        super(status,msg);
+class RespBeanWithOrganization extends RespBean {
+    public RespBeanWithOrganization(Integer status, String msg) {
+        super(status, msg);
     }
 
-    public RespBeanWithOrganization(OrganizationDTO organizationDTO)
-    {
+    public RespBeanWithOrganization(OrganizationDTO organizationDTO) {
         super();
         this.organizationDTO = organizationDTO;
     }
@@ -190,15 +182,12 @@ class RespBeanWithOrganization extends RespBean
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-class RespBeanWithOrganizationList extends RespBean
-{
-    public RespBeanWithOrganizationList(Integer status, String msg)
-    {
-        super(status,msg);
+class RespBeanWithOrganizationList extends RespBean {
+    public RespBeanWithOrganizationList(Integer status, String msg) {
+        super(status, msg);
     }
 
-    public RespBeanWithOrganizationList(List<OrganizationDTO> organizationDTOList,long totalRows)
-    {
+    public RespBeanWithOrganizationList(List<OrganizationDTO> organizationDTOList, long totalRows) {
         super();
         this.totalRows = totalRows;
         this.organizationDTOList = organizationDTOList;
@@ -213,15 +202,12 @@ class RespBeanWithOrganizationList extends RespBean
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-class RespBeanWithOrgNameList extends RespBean
-{
-    public RespBeanWithOrgNameList(Integer status, String msg)
-    {
-        super(status,msg);
+class RespBeanWithOrgNameList extends RespBean {
+    public RespBeanWithOrgNameList(Integer status, String msg) {
+        super(status, msg);
     }
 
-    public RespBeanWithOrgNameList(List<String> organizations)
-    {
+    public RespBeanWithOrgNameList(List<String> organizations) {
         super();
         this.organizations = organizations;
     }

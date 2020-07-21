@@ -15,7 +15,7 @@ import java.util.List;
  * @version 2.1
  * @date 2020/07/12
  * @last-check-in 李国鹏
- * @date 2020/07/20
+ * @date 2020/07/21
  */
 @Repository
 @Mapper
@@ -30,7 +30,6 @@ public interface OrganizationMapper {
 
     /**
      * 创建组织
-     *
      * @param organization 组织对象
      */
     @Insert("insert into cptmp_organization (" + COLUMNS + ") values (" + PROPS + ")")
@@ -45,7 +44,6 @@ public interface OrganizationMapper {
 
     /**
      * 测试删除
-     *
      */
     @Deprecated
     @Delete("delete from cptmp_organization")
@@ -53,7 +51,6 @@ public interface OrganizationMapper {
 
     /**
      * 删除所有组织
-     *
      * @param gmtDeleted 删除日期
      */
     @Update("update cptmp_organization set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
@@ -76,7 +73,6 @@ public interface OrganizationMapper {
 
     /**
      * 根据id恢复组织(软删除）
-     *
      * @param id         组织id
      */
     @Update("update cptmp_organization set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
@@ -85,7 +81,6 @@ public interface OrganizationMapper {
 
     /**
      * 查询所有组织
-     *
      * @return 组织列表
      */
     @Select("select id, " + COLUMNS + " from cptmp_organization where gmt_deleted is null")
@@ -107,7 +102,7 @@ public interface OrganizationMapper {
      * 根据id查询组织
      *
      * @param id 组织id
-     * @return 组织列表
+     * @return 组织对象
      */
     @Select("select id, " + COLUMNS + " from cptmp_organization where id = #{id} and gmt_deleted is null")
     @ResultMap("cptmpOrganization")
@@ -115,7 +110,6 @@ public interface OrganizationMapper {
 
     /**
      * 根据名称查询组织
-     *
      * @param name 组织名称
      * @return 组织列表
      */
@@ -125,14 +119,18 @@ public interface OrganizationMapper {
 
     /**
      * 根据组织邀请码进行查询
-     *
      * @param invitationCode 邀请码
-     * @return
+     * @return 组织
      */
     @Select("select id, " + COLUMNS + " from cptmp_organization where invitation_code = #{invitationCode} and gmt_deleted is null")
     @ResultMap("cptmpOrganization")
     Organization findOrganizationByInvitationCode(String invitationCode);
 
+    /**
+     * 根据名字查询
+     * @param realName 名称
+     * @return 组织列表
+     */
     @Select("select id, " + COLUMNS + " from cptmp_organization where uk_real_name like concat('%', #{realName}, '%') and gmt_deleted is null")
     @ResultMap("cptmpOrganization")
     List<Organization> findOrganizationByRealName(String realName);
