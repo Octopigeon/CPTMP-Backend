@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
+
 /**
  * @author Gh Li
  * @version 1.0
@@ -27,6 +29,14 @@ public class ScheduleNotice {
     }
 
     /**
+     * 每隔30秒检测一次作业，签到情况
+     */
+    @Scheduled(initialDelay = 10000, fixedDelay = 30000)
+    public void addWarningNotice(){
+
+    }
+
+    /**
      * 每天自动检测notice表，移除已读且超过30天的过期notice
      */
     @Scheduled(cron = "0 0 0 * * ?")
@@ -35,10 +45,22 @@ public class ScheduleNotice {
     }
 
     /**
-     * 每隔30秒检测一次作业，签到情况
+     * deadline提醒内容
+     * @param content 事务内容
+     * @param deadline 最后期限
+     * @return
      */
-    @Scheduled(initialDelay = 10000, fixedDelay = 30000)
-    public void addWarningNotice(){
+    private String generateDeadlineNotice(String content, Date deadline){
+        return "您有一个 "+content+" 待完成，最后期限为："+deadline;
+    }
 
+    /**
+     * 警告消息提醒内容
+     * @param username 用户名
+     * @param content 事务内容
+     * @return
+     */
+    private String generateWarningNotice(String username, String content){
+        return "用户 "+username+" 未正常完成 "+content;
     }
 }
