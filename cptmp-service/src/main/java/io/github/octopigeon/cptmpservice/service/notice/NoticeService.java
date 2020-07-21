@@ -33,9 +33,4 @@ public interface NoticeService extends BaseNormalService<NoticeDTO> {
      * @return
      */
     PageInfo<NoticeDTO> findByTeamId(int page, int offset, BigInteger teamId);
-
-    /**
-     * 移除已读且超过30天的过期消息
-     */
-    void removeExpiredNotice();
 }

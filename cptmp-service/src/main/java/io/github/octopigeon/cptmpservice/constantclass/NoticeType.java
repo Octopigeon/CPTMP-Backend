@@ -14,5 +14,4 @@ public final class NoticeType {
     public final String DEADLINE_NOTICE = "DEADLINE";
     //Message通知
     public final String MESSAGE_NOTICE = "MESSAGE";
-
 }

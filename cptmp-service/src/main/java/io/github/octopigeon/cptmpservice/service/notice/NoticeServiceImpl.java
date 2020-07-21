@@ -95,14 +95,6 @@ public class NoticeServiceImpl implements NoticeService{
     }
 
     /**
-     * 移除已读且超过30天的过期消息
-     */
-    @Override
-    public void removeExpiredNotice() {
-        noticeMapper.removeExpiredNotices();
-    }
-
-    /**
      * 更新的文件实体
      *
      * @param dto
