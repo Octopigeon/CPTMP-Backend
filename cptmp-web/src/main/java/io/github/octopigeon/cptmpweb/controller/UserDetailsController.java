@@ -22,6 +22,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +32,8 @@ import java.util.List;
  * @version 1.0
  * @date 2020/7/10
  * 用于提供各种与用户信息交互的接口
- * @last-check-in 陈若琳
- * @date 2020/7/16
+ * @last-check-in 魏啸冲
+ * @date 2020/7/21
  */
 @RestController
 public class UserDetailsController {
@@ -139,11 +140,56 @@ public class UserDetailsController {
         }
         String introduction = objectMapper.readValue(json, ObjectNode.class).get("introduction").asText();
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        BigDecimal phoneNumber = BigDecimal.valueOf(objectMapper.readValue(json, ObjectNode.class).get("phone_number").asDouble());
         // 将要修改的信息打包，传到service层
         baseUserInfoDTO.setName(name);
         baseUserInfoDTO.setUsername(username);
         baseUserInfoDTO.setGender(gender);
         baseUserInfoDTO.setIntroduction(introduction);
+        baseUserInfoDTO.setPhoneNumber(phoneNumber);
+        try {
+            if (userInfoService.modify(baseUserInfoDTO)) {
+                return RespBean.ok("update basic info successfully");
+            } else {
+                return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "update basic info failed");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "modify info failed");
+        }
+    }
+
+    /**
+     * 修改别的用户信息，如姓名，性别，简介信息等
+     * @param json 包含姓名、性别和简介的json
+     * @return ok-成功 error-失败
+     */
+    @Secured(CptmpRole.ROLE_SYSTEM_ADMIN)
+    @PutMapping("/api/user/{id}/basic-info")
+    public RespBean updateOtherBasicInfo(
+            @RequestBody String json,
+            @PathVariable(value = "id") BigInteger userId) throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO() {
+        };
+        // 前端发来的json包含name，gender，introduction三个字段
+        String name = objectMapper.readValue(json, ObjectNode.class).get("name").asText();
+        JsonNode genderNode = objectMapper.readValue(json, ObjectNode.class).get("gender");
+        Boolean gender;
+        if (genderNode.asText().equals("null")) {
+            gender = null;
+        } else {
+            gender = genderNode.asBoolean();
+        }
+        String introduction = objectMapper.readValue(json, ObjectNode.class).get("introduction").asText();
+        String username = userInfoService.findById(userId).getUsername();
+        BigDecimal phoneNumber = BigDecimal.valueOf(objectMapper.readValue(json, ObjectNode.class).get("phone_number").asDouble());
+        // 将要修改的信息打包，传到service层
+        baseUserInfoDTO.setName(name);
+        baseUserInfoDTO.setUsername(username);
+        baseUserInfoDTO.setGender(gender);
+        baseUserInfoDTO.setIntroduction(introduction);
+        baseUserInfoDTO.setPhoneNumber(phoneNumber);
         try {
             if (userInfoService.modify(baseUserInfoDTO)) {
                 return RespBean.ok("update basic info successfully");
