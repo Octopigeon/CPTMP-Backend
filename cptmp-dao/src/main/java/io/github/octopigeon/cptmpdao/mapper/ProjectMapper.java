@@ -85,6 +85,7 @@ public interface ProjectMapper {
 
     /**
      * 根据id修改实训项目
+     * @param project 项目
      */
     @Update("update train_project set " + UPDATE_CONTENT + " where id = #{id} and gmt_deleted is null")
     void updateTrainProjectById(Project project);

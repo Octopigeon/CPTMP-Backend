@@ -16,7 +16,7 @@ import java.util.List;
  * @date 2020/7/20
  * <p>
  * last-check-in 李国鹏
- * @date 2020/7/20
+ * @date 2020/7/21
  */
 @Repository
 @Mapper
@@ -55,6 +55,9 @@ public interface NoticeMapper {
     @Update("update notice set gmt_deleted = #{gmtDeleted} where " + SOFT_DELETE_TAIL)
     void hideNoticeByAll( Date gmtDeleted);
 
+    /**
+     * 恢复所有信息
+     */
     @Update("update notice set gmt_deleted = null where gmt_deleted is not null")
     void restoreNoticeByAll();
 
@@ -67,13 +70,16 @@ public interface NoticeMapper {
     @Update("update notice set gmt_deleted = #{gmtDeleted} where id = #{id} and " + SOFT_DELETE_TAIL)
     void hideNoticeById(BigInteger id, Date gmtDeleted);
 
+    /**
+     * 根据实训id恢复
+     * @param id id
+     */
     @Update("update notice set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
     void restoreNoticeById(BigInteger id);
 
 
     /**
-     * 按id更新train的信息
-     *
+     * 按id更新notice的信息
      * @param notice 信息
      */
     @Update("update notice set " + UPDATE_CONTENT + " where id = #{id} and " + SOFT_DELETE_TAIL)
@@ -81,7 +87,6 @@ public interface NoticeMapper {
 
     /**
      * 查询所有信息
-     *
      * @return 信息列表
      */
     @Select("select id, " + COLUMNS + " from notice where " + SOFT_DELETE_TAIL)
@@ -101,7 +106,6 @@ public interface NoticeMapper {
 
     /**
      * 根据id查找
-     *
      * @param id：id
      * @return 信息
      */

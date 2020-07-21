@@ -25,7 +25,7 @@ import java.util.List;
  * @date 2020/7/14
  * 重要提示：此测试程序请勿删除，此测试文件测试覆盖率为100%
  * @last-check-in 李国鹏
- * @date 2020/7/20
+ * @date 2020/7/21
  */
 public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
 
@@ -174,8 +174,11 @@ public class TrainAndProcessAndEventAndProjectTrainMapperTest extends BaseTest {
         trainMapper.restoreTrainById(trains.get(0).getId());
         Assertions.assertEquals(2,  trainMapper.findAllTrain().size());
         trainMapper.restoreAllTrain();
+        BigInteger restoreTrainTest = trains.get(0).getOrganizationId();
         trainMapper.hideTrainsByOrganizationId(trains.get(0).getOrganizationId(), new Date());
         Assertions.assertEquals(0, trainMapper.findAllTrain().size());
+        trainMapper.restoreTrainsByOrganizationId(trains.get(0).getOrganizationId());
+        Assertions.assertEquals(2, trainMapper.findAllTrain().size());
         trainMapper.restoreAllTrain();
         Assertions.assertEquals(2, trainMapper.findAllTrain().size());
 

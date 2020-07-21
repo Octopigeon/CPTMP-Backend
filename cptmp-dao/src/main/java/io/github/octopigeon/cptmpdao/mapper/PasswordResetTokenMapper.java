@@ -13,7 +13,7 @@ import java.util.List;
  * @version 1.0
  * @date 2020/7/9
  * @last-check-in 李国鹏
- * @date 2020/7/15
+ * @date 2020/7/21
  */
 @Repository
 @Mapper
@@ -29,6 +29,14 @@ public interface PasswordResetTokenMapper {
     @Insert("insert password_reset_token (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id")
     void addPasswordResetToken(PasswordResetToken passwordResetToken);
+
+
+    /**
+     * 测试删除
+     */
+    @Deprecated
+    @Delete("delete from password_reset_token")
+    void removeAllPasswordResetTokens();
 
     /**
      * 测试
@@ -77,11 +85,5 @@ public interface PasswordResetTokenMapper {
     })
     List<PasswordResetToken> findAllPasswordResetTokens();
 
-    /**
-     * 测试删除
-     */
-    @Deprecated
-    @Delete("delete from password_reset_token")
-    void removeAllPasswordResetTokens();
 
 }
