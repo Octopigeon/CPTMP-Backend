@@ -135,4 +135,13 @@ public interface TrainMapper {
     @Select("select id, " + COLUMNS + " from train where organization_id = #{organizationId} and " + SOFT_DELETE_TAIL)
     @ResultMap("train")
     List<Train> findTrainByOrganizationId(BigInteger organizationId);
+
+    /**
+     * 查找正在进行中的train
+     * @last-check-in 李国豪
+     * @return 项目列表
+     */
+    @Select("select id, " + COLUMNS + " from train where (NOW() between start_time and end_time) and " + SOFT_DELETE_TAIL)
+    @ResultMap("train")
+    List<Train> findValidTrains();
 }
