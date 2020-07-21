@@ -27,6 +27,10 @@ public interface RecordMapper {
     String UPDATE_CONTENT=" gmt_create = #{gmtCreate},gmt_modified = #{gmtModified},gmt_deleted = #{gmtDeleted},idx_user_id = #{userId}, " +
             "idx_train_id = #{trainId}, idx_team_id = #{teamId}, idx_process_event_id = #{processEventId}, assignments_lib = #{assignmentsLib}";
 
+    /**
+     * 添加记录
+     * @param record 记录
+     */
     @Insert("insert into record (" + COLUMNS + ") values ( " + PROPS +" )")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addRecord(Record record);
@@ -46,6 +50,9 @@ public interface RecordMapper {
     @Update("update record set gmt_deleted = #{gmtDeleted} where gmt_deleted is null")
     void hideRecordByAll(Date gmtDeleted);
 
+    /**
+     * 恢复活动记录
+     */
     @Update("update record set gmt_deleted = null where gmt_deleted is not null")
     void restoreRecordByAll();
 
@@ -57,11 +64,16 @@ public interface RecordMapper {
     @Update("update record set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
     void hideRecordById(BigInteger id, Date gmtDeleted);
 
+    /**
+     * 通过id恢复
+     * @param id id
+     */
     @Update("update record set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
     void restoreRecordById(BigInteger id);
 
     /**
      * 根据id修改
+     * @param record 活动记录
      */
     @Update("update record set "+UPDATE_CONTENT+" where id = #{id} and gmt_deleted is null")
     void updateRecordById(Record record);
@@ -89,6 +101,7 @@ public interface RecordMapper {
 
     /**
      * 按照活动人id查找活动记录
+     * @param trainId 实训id
      * @param userId:活动人id
      * @return 活动记录列表
      */
@@ -105,6 +118,11 @@ public interface RecordMapper {
     @ResultMap("record")
     List<Record> findRecordByTeamId(BigInteger teamId);
 
+    /**
+     * 通过id查找
+     * @param id id
+     * @return 活动记录
+     */
     @Select("select id, " + COLUMNS + " from record where id = #{id} and gmt_deleted is null")
     @ResultMap("record")
     Record findRecordById(BigInteger id);

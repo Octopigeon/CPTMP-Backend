@@ -14,19 +14,15 @@ import java.util.List;
  * @version 2.0
  * @date 2020/7/9
  * <p>
- * last-check-in 魏啸冲
+ * last-check-in 李国鹏
  * 添加团队队长的token
- * @date 2020/7/20
+ * @date 2020/7/21
  */
 @Repository
 @Mapper
 public interface TeamMapper {
 
-    /**
-     * 添加团队
-     *
-     * @param team 团队
-     */
+
     String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, avatar, idx_project_train_id, idx_team_name, repo_url, team_grade,evaluation, idx_team_master_id, " +
             "github_username, github_token";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{avatar},#{projectTrainId}, #{name}, #{repoUrl}, #{teamGrade},#{evaluation}, #{teamMasterId}, " +
@@ -35,6 +31,11 @@ public interface TeamMapper {
             " repo_url = #{repoUrl},team_grade = #{teamGrade},avatar = #{avatar}, idx_team_master_id = #{teamMasterId}, github_username = #{githubUsername}, " +
             "github_token = #{githubToken}";
 
+    /**
+     * 添加团队
+     *
+     * @param team 团队
+     */
     @Insert("insert into team (" + COLUMNS + ") values (" + PROPS + ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addTeam(Team team);
@@ -56,6 +57,10 @@ public interface TeamMapper {
     void hideTeamById(BigInteger id, Date gmtDeleted);
 
 
+    /**
+     * 根据id恢复
+     * @param id id
+     */
     @Update("update team set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
     void restoreTeamById(BigInteger id);
 
