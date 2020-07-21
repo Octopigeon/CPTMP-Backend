@@ -108,5 +108,16 @@ public interface RecordMapper {
     @Select("select id, " + COLUMNS + " from record where id = #{id} and gmt_deleted is null")
     @ResultMap("record")
     Record findRecordById(BigInteger id);
+
+    /**
+     * 根据用户Id和processEventId进行记录的查找
+     * @last-check-in 李国豪
+     * @param userId 用户Id
+     * @param processEventId processEventId
+     * @return
+     */
+    @Select("select id, " + COLUMNS + " from record where idx_user_id = #{userId} and idx_process_event_id = #{processEventId} and gmt_deleted is null")
+    @ResultMap("record")
+    Record findRecordByUserIdAndProcessEventId(BigInteger userId, BigInteger processEventId);
 }
 

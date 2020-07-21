@@ -114,6 +114,7 @@ public interface ProcessMapper {
     @ResultMap("process")
     Process findProcessById(BigInteger id);
 
-
-
+    @Select("select id, " + COLUMNS + " from cptmp_process where train_id = #{trainId} and (NOW() between start_time and end_time) and gmt_deleted is null")
+    @ResultMap("process")
+    List<Process> findProcessesByTrainIdAndTime(BigInteger trainId);
 }

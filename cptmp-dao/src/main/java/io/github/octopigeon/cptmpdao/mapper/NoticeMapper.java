@@ -47,6 +47,10 @@ public interface NoticeMapper {
     @Delete("delete from notice")
     void removeAllNoticeTest();
 
+    /**
+     * 对30天以上的已读消息进行硬删除
+     * @last-check-in 李国豪
+     */
     @Delete("delete from notice where datediff(NOW(), gmt_create) > 30 and is_read = 1")
     void removeExpiredNotices();
 
