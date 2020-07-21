@@ -16,7 +16,7 @@ import java.util.List;
  * @version 2.0
  * @date 2020/7/7
  * @last-check-in 李国鹏
- * @date 2020/7/15
+ * @date 2020/7/21
  */
 @Repository
 @Mapper
@@ -56,7 +56,7 @@ public interface CptmpUserMapper {
 
 
     /**
-     * 删除用户(隐藏)
+     * 软删除用户(隐藏)
      *
      * @param gmtDeleted 删除日期
      */
@@ -88,18 +88,7 @@ public interface CptmpUserMapper {
     void hideUserById(BigInteger id, Date gmtDeleted);
 
 
-
     /**
-     * 通过id恢复
-     * @param id 用户id
-     */
-    @Update("update cptmp_user set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
-    void restoreUserById(BigInteger id);
-
-    @Update("update cptmp_user set gmt_deleted = null where uk_username = #{username} and gmt_deleted is not null")
-    void restoreUserByUsername(String username);
-    
-    /** 
      * 通过id删除
      *
      * @param id         用户id
@@ -109,13 +98,28 @@ public interface CptmpUserMapper {
     void removeUserById(BigInteger id, Date gmtDeleted);
 
     /**
-     * 通过organizationId删除
-     *
-     * @param organizationId   组织id
-     * @param gmtDeleted 删除日期
+     * 通过id恢复
+     * @param id 用户id
      */
-    @Update("update cptmp_user set " + REMOVE_CONTENT + " where idx_organization_id = #{organizationId} and gmt_deleted is null")
-    void removeUsersByOrganizationId(BigInteger organizationId, Date gmtDeleted);
+    @Update("update cptmp_user set gmt_deleted = null where id = #{id} and gmt_deleted is not null")
+    void restoreUserById(BigInteger id);
+
+    /**
+     * 通过用户名恢复
+     * @param username 用户名
+     */
+    @Update("update cptmp_user set gmt_deleted = null where uk_username = #{username} and gmt_deleted is not null")
+    void restoreUserByUsername(String username);
+
+//
+//    /**
+//     * 通过organizationId删除
+//     *
+//     * @param organizationId   组织id
+//     * @param gmtDeleted 删除日期
+//     */
+//    @Update("update cptmp_user set " + REMOVE_CONTENT + " where idx_organization_id = #{organizationId} and gmt_deleted is null")
+//    void hideUsersByOrganizationId(BigInteger organizationId, Date gmtDeleted);
 
     /**
      * 通过用户名获取用户，可以用来进行登录验证
@@ -150,12 +154,12 @@ public interface CptmpUserMapper {
     /**
      * 根据id查询
      *
-     * @param userId id
+     * @param id id
      * @return 用户
      */
-    @Select("select id, " + COLUMNS + " from cptmp_user where id = #{userID} and gmt_deleted is null")
+    @Select("select id, " + COLUMNS + " from cptmp_user where id = #{id} and gmt_deleted is null")
     @ResultMap("user")
-    CptmpUser findUserById(BigInteger userId);
+    CptmpUser findUserById(BigInteger id);
 
     /**
      * 根据email查询
@@ -167,18 +171,39 @@ public interface CptmpUserMapper {
     @ResultMap("user")
     CptmpUser findUserByEmail(String email);
 
+    /**
+     * 根据姓名模糊查询
+     * @param name 姓名
+     * @return 用户列表
+     */
     @Select("select id, " + COLUMNS + " from cptmp_user where idx_name like concat('%', #{name}, '%') and gmt_deleted is null")
     @ResultMap("user")
     List<CptmpUser> findUsersByName(String name);
 
+    /**
+     * 根据组织id查询
+     * @param organizationId 组织id
+     * @return 用户列表
+     */
     @Select("select id, " + COLUMNS + " from cptmp_user where idx_organization_id = #{organizationId} and gmt_deleted is null")
     @ResultMap("user")
     List<CptmpUser> findUsersByOrganizationId(BigInteger organizationId);
 
+    /**
+     * 根据角色名查询
+     * @param roleName 角色名
+     * @return 用户列表
+     */
     @Select("select id, " + COLUMNS + " from cptmp_user where idx_role_name = #{roleName} and gmt_deleted is null")
     @ResultMap("user")
     List<CptmpUser> findUsersByRoleName(String roleName);
 
+    /**
+     * 根据组织id和角色名查询
+     * @param organizationId 组织id
+     * @param roleName 角色名
+     * @return 用户列表
+     */
     @Select("select id, " + COLUMNS + " from cptmp_user where idx_organization_id = #{organizationId} and idx_role_name = #{roleName} and gmt_deleted is null")
     @ResultMap("user")
     List<CptmpUser> findUsersByGroupFilter(BigInteger organizationId, String roleName);
@@ -204,27 +229,42 @@ public interface CptmpUserMapper {
 
     /**
      * 根据id更新
+     * @param cptmpUser 用户
      */
     @Update(UPDATE_HEADER + UPDATE_CONTENT + " where (id = #{id}) and gmt_deleted is null")
     void updateUserById(CptmpUser cptmpUser);
 
     /**
      * 根据用户名更新
+     * @param cptmpUser 用户
      */
     @Update(UPDATE_HEADER + UPDATE_CONTENT + " where (uk_username = #{username}) and gmt_deleted is null")
     void updateUserByUserName(CptmpUser cptmpUser);
 
     /**
      * 根据用户名更新是否注销
+     * @param username 用户名
+     * @param enabled 是否注销
      */
     @Update(UPDATE_HEADER + "enabled = #{enabled}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
     void updateEnabledByUsername(String username, Boolean enabled);
 
-
+    /**
+     * 根据用户名更新头像
+     * @param username 用户名
+     * @param gmtModified 修改时间
+     * @param avatar 头像url
+     */
     @Update(UPDATE_HEADER + "gmt_modified=#{gmtModified}, avatar=#{avatar}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
     void updateAvatarByUsername(String username, Date gmtModified, String avatar);
 
 
+    /**
+     * 根据用户名更新密码
+     * @param username 用户名
+     * @param gmtModified 修改时间
+     * @param password 密码
+     */
     @Update(UPDATE_HEADER + "idx_password = #{password}" + UPDATE_TAIL_USERNAME + " and gmt_deleted is null")
     void updatePasswordByUsername(String username, Date gmtModified, String password);
 
