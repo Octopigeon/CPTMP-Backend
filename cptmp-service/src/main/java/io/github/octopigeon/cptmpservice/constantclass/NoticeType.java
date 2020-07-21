@@ -7,11 +7,17 @@ package io.github.octopigeon.cptmpservice.constantclass;
  * @last-check-in Gh Li
  * @date 2020/7/20
  */
-public final class NoticeType {
+public enum NoticeType {
     //警告通知
-    public final String WARNING_NOTICE = "WARNING";
+    WARNING_NOTICE("WARNING"),
     //Deadline通知
-    public final String DEADLINE_NOTICE = "DEADLINE";
+    DEADLINE_NOTICE("DEADLINE"),
     //Message通知
-    public final String MESSAGE_NOTICE = "MESSAGE";
+    MESSAGE_NOTICE("MESSAGE");
+
+    private String noticeType;
+
+    NoticeType(String type) {
+        this.noticeType = type;
+    }
 }
