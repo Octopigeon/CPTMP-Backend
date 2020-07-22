@@ -65,7 +65,7 @@ public class NoticeDetailsController {
      * @param id
      * @return
      */
-    @GetMapping("api/notice/team/{notice_id}")
+    @GetMapping("api/notice/{notice_id}")
     public RespBeanWithNotice findById(@PathVariable("notice_id")BigInteger id)
     {
         try{
