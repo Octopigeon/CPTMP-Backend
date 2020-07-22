@@ -57,6 +57,7 @@ public class RecordServiceImpl extends BaseFileServiceImpl implements RecordServ
     @Override
     public void add(RecordDTO dto) throws Exception {
         Record record = new Record();
+        dto.setProcessEventId(getProcessEventId(dto.getProcessId(), dto.getEventId()));
         BeanUtils.copyProperties(dto, record);
         record.setGmtCreate(new Date());
         JSONObject object = new JSONObject();
