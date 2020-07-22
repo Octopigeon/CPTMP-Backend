@@ -119,5 +119,24 @@ public interface RecordMapper {
     @Select("select id, " + COLUMNS + " from record where idx_user_id = #{userId} and idx_process_event_id = #{processEventId} and gmt_deleted is null")
     @ResultMap("record")
     Record findRecordByUserIdAndProcessEventId(BigInteger userId, BigInteger processEventId);
+
+    /**
+     * 根据processEventID进行记录查找
+     * @param processEventId 过程事件ID
+     * @return
+     */
+    @Select("select id, " + COLUMNS + " from record where idx_process_event_id = #{processEventId} and gmt_deleted is null")
+    @ResultMap("record")
+    List<Record> findRecordByProcessEventId(BigInteger processEventId);
+
+    /**
+     * 根据teamId和processEventId进行记录的查找
+     * @param teamId 团队Id
+     * @param processEventId 过程事件Id
+     * @return
+     */
+    @Select("select id, " + COLUMNS + " from record where idx_team_id = #{teamId} and idx_process_event_id = #{processEventId} and gmt_deleted is null")
+    @ResultMap("record")
+    Record findRecordByTeamIdAndProcessEventId(BigInteger teamId, BigInteger processEventId);
 }
 
