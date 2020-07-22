@@ -8,6 +8,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.model.Notice;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
+import io.github.octopigeon.cptmpservice.constantclass.NoticeType;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.notice.NoticeDTO;
 import io.github.octopigeon.cptmpservice.dto.team.TeamInfoDTO;
@@ -112,6 +113,7 @@ public class NoticeDetailsController {
     {
         ObjectMapper objectMapper = new ObjectMapper();
         NoticeDTO noticeDTO = objectMapper.readValue(json,NoticeDTO.class);
+        noticeDTO.setNoticeType(NoticeType.MESSAGE_NOTICE.name());
         try{
             noticeService.add(noticeDTO);
             return RespBean.ok("create notice successfully");
@@ -148,6 +150,7 @@ public class NoticeDetailsController {
      * @return
      * @throws JsonProcessingException
      */
+    @PutMapping("api/notice")
     public RespBean updateNotice(@RequestBody String json) throws JsonProcessingException
     {
         ObjectMapper objectMapper = new ObjectMapper();
