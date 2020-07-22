@@ -47,6 +47,10 @@ public interface NoticeMapper {
     @Delete("delete from notice")
     void removeAllNoticeTest();
 
+    /**
+     * 对30天以上的已读消息进行硬删除
+     * @last-check-in 李国豪
+     */
     @Delete("delete from notice where datediff(NOW(), gmt_create) > 30 and is_read = 1")
     void removeExpiredNotices();
 
@@ -133,4 +137,14 @@ public interface NoticeMapper {
     @Select("select id, " + COLUMNS + " from notice where idx_team_id = #{teamId} and " + SOFT_DELETE_TAIL)
     @ResultMap("notice")
     List<Notice> findNoticeByTeamId(BigInteger teamId);
+
+    /**
+     * 查找内容一致的notice
+     * @last-check-in 李国豪
+     * @param notice 通知
+     * @return
+     */
+    @Select("select id, " + COLUMNS + " from notice where idx_team_id = #{teamId} and idx_receiver_id = #{receiverId} and notice_type = #{noticeType} and content = #{content} and " + SOFT_DELETE_TAIL)
+    @ResultMap("notice")
+    Notice findNoticeByNotice(Notice notice);
 }
