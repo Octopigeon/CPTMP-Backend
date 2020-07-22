@@ -1,9 +1,12 @@
 package io.github.octopigeon.cptmpweb.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import io.github.octopigeon.cptmpdao.model.Notice;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.notice.NoticeDTO;
@@ -13,9 +16,7 @@ import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -27,6 +28,8 @@ import java.util.List;
  * @last-check-in 陈若琳
  * @date 2020/07/21
  */
+
+@RestController
 public class NoticeDetailsController {
 
     @Autowired
@@ -51,6 +54,7 @@ public class NoticeDetailsController {
             return new RespBeanWithNoticeList(pageInfo.getList(),pages.getTotal());
         }catch (Exception e)
         {
+            e.printStackTrace();
             return new RespBeanWithNoticeList(CptmpStatusCode.INFO_ACCESS_FAILED,"get notice failed");
         }
     }
@@ -60,14 +64,15 @@ public class NoticeDetailsController {
      * @param id
      * @return
      */
-    @GetMapping("api/notice/team/{id}")
-    public RespBeanWithNotice findById(@PathVariable("id")BigInteger id)
+    @GetMapping("api/notice/team/{notice_id}")
+    public RespBeanWithNotice findById(@PathVariable("notice_id")BigInteger id)
     {
         try{
             NoticeDTO noticeDTO = noticeService.findById(id);
             return new RespBeanWithNotice(noticeDTO);
         }catch (Exception e)
         {
+            e.printStackTrace();
             return new RespBeanWithNotice(CptmpStatusCode.INFO_ACCESS_FAILED,"get notice failed");
         }
     }
@@ -91,13 +96,70 @@ public class NoticeDetailsController {
             return new RespBeanWithNoticeList(pageInfo.getList(),pages.getTotal());
         }catch (Exception e)
         {
+            e.printStackTrace();
             return new RespBeanWithNoticeList(CptmpStatusCode.INFO_ACCESS_FAILED,"get notice failed");
         }
     }
 
-    public RespBean createNotice()
+    /**
+     * 创建消息提醒
+     * @param json
+     * @return
+     * @throws JsonProcessingException
+     */
+    @PostMapping("api/notice")
+    public RespBean createNotice(@RequestBody String json) throws JsonProcessingException
     {
-        return null;
+        ObjectMapper objectMapper = new ObjectMapper();
+        NoticeDTO noticeDTO = objectMapper.readValue(json,NoticeDTO.class);
+        try{
+            noticeService.add(noticeDTO);
+            return RespBean.ok("create notice successfully");
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.CREATE_FAILED,"create notice failed");
+        }
+    }
+
+    /**
+     * 根据id删除消息提示
+     * @param noticeId
+     * @return
+     */
+    @DeleteMapping("api/notice/{notice_id}")
+    public RespBean deleteNotice(@PathVariable("notice_id")BigInteger noticeId)
+    {
+        try{
+            NoticeDTO noticeDTO = new NoticeDTO();
+            noticeDTO.setId(noticeId);
+            noticeService.remove(noticeDTO);
+            return RespBean.ok("remove notice successfully");
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.REMOVE_FAILED,"remove notice failed");
+        }
+    }
+
+    /**
+     * 更新消息提示
+     * @param json
+     * @return
+     * @throws JsonProcessingException
+     */
+    public RespBean updateNotice(@RequestBody String json) throws JsonProcessingException
+    {
+        ObjectMapper objectMapper = new ObjectMapper();
+        NoticeDTO noticeDTO = objectMapper.readValue(json,NoticeDTO.class);
+        try{
+            noticeService.modify(noticeDTO);
+            return RespBean.ok("update notice successfully");
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED,"update notice failed");
+        }
     }
 }
 
