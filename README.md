@@ -1765,7 +1765,51 @@ College Practice Training Management Platform
   ```
 
 
-## 8.获取团队成员信息
+## 8.根据实训id获取团队
+
++ 接口：api/team/train/{train_id}
+
++ 方法：GET
+
++ 参数：offset ，page
+
++ 调用实例：
+
+  ```json
+  //api/team/train/2?page=1&offset=8
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-22T16:50:59.604+00:00",
+      "msg": "success",
+      "total_rows": 1,
+      "data": [
+          {
+              "id": 2,
+              "name": "小章鱼",
+              "avatar": null,
+              "evaluation": "良好",
+              "size": 1,
+              "train_id": 2,
+              "train_name": "中级项目实训",
+              "project_id": 2,
+              "project_name": "大二实训",
+              "repo_url": "https://www.baidu.com/",
+              "team_grade": 94,
+              "team_master_id": 2,
+              "team_master": "刘恒"
+          }
+      ]
+  }
+  //失败
+  ```
+
+## 9.获取团队成员信息
 
 + 接口：api/team/{team_id}/member
 
@@ -1803,6 +1847,29 @@ College Practice Training Management Platform
   }
   //失败
   ```
+
+
+
+## 10.上传团队头像
+
++ 接口：api/team/{team_id}/uploadAvatar
+
++ 方法：POST
+
++ 调用实例：
+
+  ```json
+  
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  
+  //失败
+  ```
+
 
 
 # 流程模块（ProcessDetailsController）
