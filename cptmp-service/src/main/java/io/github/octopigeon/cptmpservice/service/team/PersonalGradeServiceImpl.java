@@ -9,7 +9,6 @@ import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import io.github.octopigeon.cptmpservice.dto.team.PersonalGradeDTO;
 import io.github.octopigeon.cptmpservice.utils.Utils;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,9 +40,9 @@ public class PersonalGradeServiceImpl implements PersonalGradeService{
     /**
      * 根据userId和TeamId查询个人成绩
      *
-     * @param userId
-     * @param teamId
-     * @return
+     * @param userId 用户唯一标识Id
+     * @param teamId 团队唯一标识Id
+     * @return 个人成绩相关信息
      */
     @Override
     public PersonalGradeDTO findByUserIdAndTeamId(BigInteger userId, BigInteger teamId) {
@@ -54,7 +53,7 @@ public class PersonalGradeServiceImpl implements PersonalGradeService{
      * 查询一个团队内所有个人成绩
      *
      * @param teamId 团队Id
-     * @return
+     * @return 个人成绩信息列表
      */
     @Override
     public List<PersonalGradeDTO> findByTeamId(BigInteger teamId) {
@@ -70,7 +69,7 @@ public class PersonalGradeServiceImpl implements PersonalGradeService{
      * 使用用户名查询个人成绩
      *
      * @param username 用户名
-     * @return
+     * @return 个人成绩信息列表
      */
     @Override
     public List<PersonalGradeDTO> findByUsername(String username) {
@@ -98,12 +97,7 @@ public class PersonalGradeServiceImpl implements PersonalGradeService{
             return true;
         }else {
             CptmpUser operated = cptmpUserMapper.findUserById(operatedObject.getUserId());
-            if(operator.getOrganizationId().equals(operated.getOrganizationId())){
-                return true;
-            }
-            else {
-                return false;
-            }
+            return operator.getOrganizationId().equals(operated.getOrganizationId());
         }
     }
 
@@ -136,15 +130,15 @@ public class PersonalGradeServiceImpl implements PersonalGradeService{
         if(personalGradeMapper.findPersonalGradeById(dto.getId()) != null){
             personalGradeMapper.hidePersonalGradeById(dto.getId(), new Date());
         }else {
-            throw new ValueException("personalGrade is not existed!");
+            throw new Exception("personalGrade is not existed!");
         }
     }
 
     /**
-     * 更新的文件实体
+     * 修改信息
      *
-     * @param dto
-     * @return 是否删除成功
+     * @param dto 实体
+     * @return 是否修改成功
      */
     @Override
     public Boolean modify(PersonalGradeDTO dto) throws Exception {
@@ -171,6 +165,11 @@ public class PersonalGradeServiceImpl implements PersonalGradeService{
         return convertPersonalGrade(personalGradeMapper.findPersonalGradeById(id));
     }
 
+    /**
+     * 将model转为Dto
+     * @param personalGrade 个人成绩model
+     * @return 个人成绩DTO
+     */
     private PersonalGradeDTO convertPersonalGrade(PersonalGrade personalGrade){
         PersonalGradeDTO personalGradeDTO = new PersonalGradeDTO();
         BeanUtils.copyProperties(personalGrade, personalGradeDTO);
@@ -182,8 +181,8 @@ public class PersonalGradeServiceImpl implements PersonalGradeService{
 
     /**
      * 将teamId和userId转成teamUserId
-     * @param teamId
-     * @param userId
+     * @param teamId 团队Id
+     * @param userId 用户Id
      * @return teamUserId
      */
     private BigInteger getTeamUserId(BigInteger teamId, BigInteger userId){
@@ -193,8 +192,8 @@ public class PersonalGradeServiceImpl implements PersonalGradeService{
 
     /**
      * 将teamUserId转成teamId和userId
-     * @param teamUserId
-     * @return
+     * @param teamUserId 团队用户联系Id
+     * @return 团队和用户Id
      */
     private BigInteger[] getTeamIdAndUserId(BigInteger teamUserId){
         BigInteger[] ids = new BigInteger[2];

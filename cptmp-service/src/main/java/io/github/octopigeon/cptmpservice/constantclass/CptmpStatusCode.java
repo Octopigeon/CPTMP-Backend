@@ -1,8 +1,7 @@
 package io.github.octopigeon.cptmpservice.constantclass;
 
-import org.omg.CORBA.PUBLIC_MEMBER;
-
 /**
+ * 本类主要用于前后端交互的状态码
  * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/7

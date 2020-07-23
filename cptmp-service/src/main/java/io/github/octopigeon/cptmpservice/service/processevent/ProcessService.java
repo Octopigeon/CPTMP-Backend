@@ -34,7 +34,7 @@ public interface ProcessService extends BaseNormalService<ProcessDTO> {
     /**
      * 根据实训id查询流程
      * @param trainId 实训id
-     * @return
+     * @return 流程dto
      */
     List<ProcessDTO> findByTrainId(BigInteger trainId);
 
