@@ -3,6 +3,7 @@ package io.github.octopigeon.cptmpservice.service.basenormalservice;
 import java.math.BigInteger;
 
 /**
+ * 基础的增删改查接口
  * @author 李国豪
  * @version 1.0
  * @date 2020/7/11
