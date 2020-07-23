@@ -1,10 +1,7 @@
 package io.github.octopigeon.cptmpservice.constantclass;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
-
 /**
+ * 本类主要用于生成激活邮件的模板
  * @author 李国豪
  * @version 1.0
  * @date 2020/7/11

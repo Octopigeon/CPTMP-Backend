@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * 目前处于废弃不用状态
  * @author 李国鹏
  * @version 2.0
  * @date 2020/7/8
@@ -18,6 +19,7 @@ import java.util.List;
  * last-check-in 李国鹏
  * @date 2020/7/19
  */
+@Deprecated
 @Repository
 @Mapper
 public interface AssignmentMapper {
