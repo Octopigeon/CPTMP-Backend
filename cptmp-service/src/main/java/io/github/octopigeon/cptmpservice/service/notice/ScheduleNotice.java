@@ -9,6 +9,7 @@ import io.github.octopigeon.cptmpdao.model.Process;
 import io.github.octopigeon.cptmpdao.model.relation.ProcessEvent;
 import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
 import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
+import io.github.octopigeon.cptmpservice.constantclass.NoticeTemplate;
 import io.github.octopigeon.cptmpservice.constantclass.NoticeType;
 import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -86,7 +87,7 @@ public class ScheduleNotice {
                             notice.setGmtCreate(new Date());
                             notice.setNoticeType(NoticeType.DEADLINE_NOTICE.name());
                             notice.setReceiverId(user.getId());
-                            notice.setContent(generateDeadlineNotice(train.getName(), event.getContent(), event.getEndTime()));
+                            notice.setContent(NoticeTemplate.generateDeadlineNotice(train.getName(), event.getContent(), event.getEndTime()));
                             noticeMapper.addNotice(notice);
                         }
                     }
@@ -129,7 +130,7 @@ public class ScheduleNotice {
                                     notice.setNoticeType(NoticeType.WARNING_NOTICE.name());
                                     notice.setReceiverId(teamPerson.getUserId());
                                     notice.setTeamId(teamPerson.getTeamId());
-                                    notice.setContent(generateTeamWarningNotice(team.getName(), event.getContent()));
+                                    notice.setContent(NoticeTemplate.generateTeamWarningNotice(team.getName(), event.getContent()));
                                     // 如果不存在此项notice就进行添加
                                     if(noticeMapper.findNoticeByNotice(notice) == null){
                                         noticeMapper.addNotice(notice);
@@ -144,7 +145,7 @@ public class ScheduleNotice {
                                     notice.setNoticeType(NoticeType.WARNING_NOTICE.name());
                                     notice.setReceiverId(teamPerson.getUserId());
                                     notice.setTeamId(teamPerson.getTeamId());
-                                    notice.setContent(generateUserWarningNotice(user.getUsername(), event.getContent()));
+                                    notice.setContent(NoticeTemplate.generateUserWarningNotice(user.getUsername(), event.getContent()));
                                     // 如果不存在此项notice就进行添加
                                     if(noticeMapper.findNoticeByNotice(notice) == null){
                                         noticeMapper.addNotice(notice);
@@ -214,35 +215,5 @@ public class ScheduleNotice {
             }
         }
         return users;
-    }
-
-    /**
-     * deadline提醒内容
-     * @param content 事务内容
-     * @param deadline 最后期限
-     * @return
-     */
-    private String generateDeadlineNotice(String trainName, String content, Date deadline){
-        return String.format("提醒：在 %s 中，您有一个 %s 待完成，最后期限为：%s",trainName, content, deadline.toString());
-    }
-
-    /**
-     * 警告消息提醒内容
-     * @param username 用户名
-     * @param content 事务内容
-     * @return
-     */
-    private String generateUserWarningNotice(String username, String content){
-        return String.format("警告：用户 %s 未正常完成 %s", username, content);
-    }
-
-    /**
-     * 警告消息提醒内容
-     * @param teamName 用户名
-     * @param content 事务内容
-     * @return
-     */
-    private String generateTeamWarningNotice(String teamName, String content){
-        return String.format("警告：团队 %s 未正常完成 %s", teamName, content);
     }
 }
