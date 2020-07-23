@@ -11,13 +11,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
-import java.io.IOException;
 import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.nio.file.*;
 import java.util.*;
 
 /**
+ * 文件传输服务实现类
  * @author 李国豪
  * @version 1.1
  * @date 2020/7/10
@@ -26,19 +26,26 @@ import java.util.*;
  */
 @Service
 public class BaseFileServiceImpl implements BaseFileService {
-    // 公开文件在本地存储的地址
+    /** 公开文件在本地存储的地址 */
     private final Path publicFileStorageLocation;
-    // 隐私文件在本地存储的地址
+    /** 隐私文件在本地存储的地址 */
     private final Path privateFileStorageLocation;
+    /** 公开文件Url头 */
     private final String publicFileUrl = "storage";
+    /** 私有文件Url头 */
     private final String privateFileUrl = "api/storage";
+    /** 域名 */
     private final String domain;
 
+    /**
+     * 构造函数，初始化一些类常量
+     * @param fileProperties 文件配置类
+     * @throws Exception 无法创建路径
+     */
     @Autowired
     public BaseFileServiceImpl(FileProperties fileProperties) throws Exception {
 
         String path = fileProperties.getUploadDir();
-        // this.domain = fileProperties.getDomain();
         this.domain = "";
         this.publicFileStorageLocation = Paths.get(path, "storage").toAbsolutePath().normalize();
         this.privateFileStorageLocation = Paths.get(path, "private").toAbsolutePath().normalize();
@@ -52,9 +59,9 @@ public class BaseFileServiceImpl implements BaseFileService {
     }
 
     /**
-     * 公开文件上传接收服务
+     * 公开文件接收服务
      * @param file 文件流
-     * @return 文件相关信息
+     * @return 文件相关信息DTO
      * @throws Exception
      */
     @Override
@@ -64,8 +71,8 @@ public class BaseFileServiceImpl implements BaseFileService {
 
     /**
      * 私密附件接收服务
-     * @param file 多文件
-     * @return 文件名
+     * @param file 文件流
+     * @return 文件相关信息DTO
      * @throws Exception
      */
     @Override
@@ -74,11 +81,13 @@ public class BaseFileServiceImpl implements BaseFileService {
     }
 
     /**
-     * 文件下载服务
-     *
-     * @param fileName 文件的url
-     * @return 是否传输成功
-     * @throws IOException
+     * 公共文件下载服务
+     * @param fileName 文件名
+     * @param year 上传时间年份
+     * @param month 上传时间月份
+     * @param day 上传时间日期
+     * @return 资源文件
+     * @throws Exception
      */
     @Override
     public Resource loadPublicFile(String fileName, String year, String month, String day) throws Exception {
@@ -86,11 +95,13 @@ public class BaseFileServiceImpl implements BaseFileService {
     }
 
     /**
-     * 文件下载服务
-     *
-     * @param fileName 文件的url
-     * @return 是否传输成功
-     * @throws IOException
+     * 私密文件下载服务
+     * @param fileName 文件名
+     * @param year 上传时间年份
+     * @param month 上传时间月份
+     * @param day 上传时间日期
+     * @return 资源文件
+     * @throws Exception
      */
     @Override
     public Resource loadPrivateFile(String fileName, String year, String month, String day) throws Exception {
@@ -99,8 +110,9 @@ public class BaseFileServiceImpl implements BaseFileService {
 
     /**
      * 移除路径中的文件
-     *
      * @param path 路径
+     * @return 是否从存储路径上移除成功
+     * @throws Exception
      */
     @Override
     public Boolean removeFile(String path) throws Exception {
@@ -117,6 +129,15 @@ public class BaseFileServiceImpl implements BaseFileService {
         }
     }
 
+    /**
+     * 文件下载服务
+     * @param fileName 文件名
+     * @param year 上传时间年份
+     * @param month 上传时间月份
+     * @param day 上传时间日期
+     * @return 资源文件
+     * @throws Exception
+     */
     private Resource loadFile(String fileName, String year, String month, String day, String storagePath) throws Exception{
         try {
             Path path = Paths.get(storagePath, year, month, day);
@@ -133,6 +154,14 @@ public class BaseFileServiceImpl implements BaseFileService {
         }
     }
 
+    /**
+     * 接受文件
+     * @param file 文件流
+     * @param storagePath 存储路径
+     * @param url url头
+     * @return 文件相关信息DTO
+     * @throws Exception
+     */
     private FileDTO storeFile(MultipartFile file, String storagePath, String url) throws Exception{
         String originName = StringUtils.cleanPath(Objects.requireNonNull(file.getOriginalFilename()));
         try{
@@ -171,7 +200,7 @@ public class BaseFileServiceImpl implements BaseFileService {
 
     /**
      * 产生文件名，不需要管扩展名
-     * @return
+     * @return 文件名
      */
     private String productFilename(){
 
