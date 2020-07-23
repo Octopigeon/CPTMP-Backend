@@ -44,10 +44,10 @@ public class TeamDTO {
     /** 团队队长的唯一标识Id */
     @JsonProperty("team_master_id")
     private BigInteger teamMasterId;
-    /**  */
-    @JsonProperty("team_master")
-    private String teamMaster;
-    /**  */
+    /** 团队队长的名字 */
+    @JsonProperty("team_master_name")
+    private String teamMasterName;
+    /** 团队人员数量 包括老师和学生 */
     private Integer size;
     /** 团队所选实训项目关联Id */
     @JsonIgnore
