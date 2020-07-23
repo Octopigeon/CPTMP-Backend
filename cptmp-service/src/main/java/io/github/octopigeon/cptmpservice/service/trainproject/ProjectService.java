@@ -1,10 +1,8 @@
 package io.github.octopigeon.cptmpservice.service.trainproject;
 
 import com.github.pagehelper.PageInfo;
-import io.github.octopigeon.cptmpdao.model.Project;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
-import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileService;
 import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalService;
 import org.springframework.stereotype.Service;
