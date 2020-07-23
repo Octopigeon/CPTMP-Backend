@@ -88,7 +88,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
     @Override
     public PageInfo<TrainDTO> findAll(int page, int offset) {
         List<Train> trains = trainMapper.findAllTrain();
-        return getTrainDtoPageInfo(trains);
+        return getTrainDTOPageInfo(trains);
     }
 
     /**
@@ -102,7 +102,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
     @Override
     public PageInfo<TrainDTO> findByOrganizationId(int page, int offset, BigInteger organizationId) {
         List<Train> trains = trainMapper.findTrainByOrganizationId(organizationId);
-        return getTrainDtoPageInfo(trains);
+        return getTrainDTOPageInfo(trains);
     }
 
     /**
@@ -116,7 +116,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
     @Override
     public PageInfo<TrainDTO> findByLikeName(int page, int offset, String likeName) {
         List<Train> trains = trainMapper.findTrainByNameAmbiguously(likeName);
-        return getTrainDtoPageInfo(trains);
+        return getTrainDTOPageInfo(trains);
     }
 
     /**
@@ -134,7 +134,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
         for (ProjectTrain projectTrain: projectTrains) {
             trains.add(trainMapper.findTrainById(projectTrain.getTrainId()));
         }
-        return getTrainDtoPageInfo(trains);
+        return getTrainDTOPageInfo(trains);
     }
 
     /**
@@ -143,7 +143,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
      * @return 实训dto分页信息
      */
     @NotNull
-    private PageInfo<TrainDTO> getTrainDtoPageInfo(List<Train> trains) {
+    private PageInfo<TrainDTO> getTrainDTOPageInfo(List<Train> trains) {
         List<TrainDTO> results = new ArrayList<>();
         for (Train train: trains) {
             TrainDTO result = new TrainDTO();

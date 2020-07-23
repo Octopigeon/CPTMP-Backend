@@ -235,7 +235,7 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
     public ProjectDTO findById(BigInteger id) throws Exception {
         Project project = projectMapper.findTrainProjectById(id);
         if(project == null){
-            throw new ValueException("project is not existed!");
+            throw new Exception("project is not existed!");
         }
         ProjectDTO projectDTO = new ProjectDTO();
         BeanUtils.copyProperties(project, projectDTO);
