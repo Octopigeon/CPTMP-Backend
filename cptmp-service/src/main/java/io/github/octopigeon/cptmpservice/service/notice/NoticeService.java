@@ -16,12 +16,22 @@ import java.math.BigInteger;
  */
 @Service
 public interface NoticeService extends BaseNormalService<NoticeDTO> {
+
+    /**
+     * 根据发送者Id获取已发通知
+     * @param page 页号
+     * @param offset 页容量
+     * @param senderId 发送者Id
+     * @return 通知列表
+     */
+    PageInfo<NoticeDTO> findBySenderId(int page, int offset, BigInteger senderId);
+
     /**
      * 根据接收者去获取通知
      * @param page 页号
      * @param offset 页容量
      * @param receiverId 接受者Id
-     * @return
+     * @return 通知列表
      */
     PageInfo<NoticeDTO> findByReceiverId(int page, int offset, BigInteger receiverId);
 
@@ -30,7 +40,7 @@ public interface NoticeService extends BaseNormalService<NoticeDTO> {
      * @param page 页号
      * @param offset 页容量
      * @param teamId 团队Id
-     * @return
+     * @return 通知列表
      */
     PageInfo<NoticeDTO> findByTeamId(int page, int offset, BigInteger teamId);
 }
