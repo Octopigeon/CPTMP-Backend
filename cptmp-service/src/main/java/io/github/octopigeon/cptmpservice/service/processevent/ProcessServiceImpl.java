@@ -148,7 +148,7 @@ public class ProcessServiceImpl implements ProcessService{
      * 根据实训id查询流程
      *
      * @param trainId 实训id
-     * @return
+     * @return 流程列表
      */
     @Override
     public List<ProcessDTO> findByTrainId(BigInteger trainId) {
