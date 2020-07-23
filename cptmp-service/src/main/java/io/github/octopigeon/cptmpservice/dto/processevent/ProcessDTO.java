@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.math.BigInteger;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 流程类，与train类存在联系，一般跨度为一周
@@ -27,4 +28,6 @@ public class ProcessDTO {
     /** 流程结束时间 */
     @JsonProperty("end_time")
     private Date endTime;
+    /** 流程中事件列表 */
+    List<EventDTO> events;
 }
