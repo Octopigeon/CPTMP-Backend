@@ -4,15 +4,12 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.ProjectMapper;
-import io.github.octopigeon.cptmpdao.mapper.TrainMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
 import io.github.octopigeon.cptmpdao.model.Project;
-import io.github.octopigeon.cptmpdao.model.Train;
 import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
-import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.attachmentfile.AttachmentFileService;
 import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileServiceImpl;
 import io.github.octopigeon.cptmpservice.utils.Utils;
@@ -33,7 +30,7 @@ import java.util.List;
  * @version 1.0
  * @date 2020/7/11
  * @last-check-in 李国豪
- * @date 2020/7/11
+ * @date 2020/7/23
  */
 @Service
 public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectService {
@@ -45,9 +42,6 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
 
     @Autowired
     private ProjectTrainMapper projectTrainMapper;
-
-    @Autowired
-    private TrainMapper trainMapper;
 
     @Autowired
     private AttachmentFileService attachmentFileService;
@@ -102,10 +96,9 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
     }
 
     /**
-     * 更新的文件实体
-     *
-     * @param dto
-     * @return 是否删除成功
+     * 修改信息
+     * @param dto 实体
+     * @return 是否修改成功
      */
     @Override
     public Boolean modify(ProjectDTO dto) throws Exception {
@@ -126,12 +119,12 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
      *
      * @param page   页号
      * @param offset 页容量
-     * @return
+     * @return 项目分页列表
      */
     @Override
     public PageInfo<ProjectDTO> findAll(int page, int offset) {
         List<Project> projects = projectMapper.findAllTrainProject();
-        return getProjectDTOPageInfo(projects);
+        return getProjectDtoPageInfo(projects);
     }
 
     /**
@@ -140,41 +133,57 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
      * @param page   页号
      * @param offset 页内数量
      * @param name   项目名
-     * @return
+     * @return 项目分页列表
      */
     @Override
     public PageInfo<ProjectDTO> findByLikeName(int page, int offset, String name) {
         List<Project> projects = projectMapper.findTrainProjectByNameAmbiguously(name);
-        return getProjectDTOPageInfo(projects);
+        return getProjectDtoPageInfo(projects);
     }
 
+    /**
+     * 根据项目难度查找项目
+     *
+     * @param page   页号
+     * @param offset 页容量
+     * @param level  难度水平
+     * @return 项目分页列表
+     */
+    @Override
+    public PageInfo<ProjectDTO> findByLevel(int page, int offset, Integer level) {
+        List<Project> projects = projectMapper.findTrainProjectByLevel(level);
+        return getProjectDtoPageInfo(projects);
+    }
+
+    /**
+     * 根据实训id查项目
+     *
+     * @param page    页号
+     * @param offset  页内数量
+     * @param trainId 实训id
+     * @return 项目分页列表
+     */
+    @Override
+    public PageInfo<ProjectDTO> findByTrainId(int page, int offset, BigInteger trainId) {
+        List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByTrainId(trainId);
+        List<Project> projects = new ArrayList<>();
+        for (ProjectTrain projectTrain: projectTrains) {
+            projects.add(projectMapper.findTrainProjectById(projectTrain.getProjectId()));
+        }
+        return getProjectDtoPageInfo(projects);
+    }
+
+    /**
+     * 获取文件dto分页信息
+     * @param projects project实体列表
+     * @return 项目dto分页信息
+     */
     @NotNull
-    private PageInfo<ProjectDTO> getProjectDTOPageInfo(List<Project> projects) {
+    private PageInfo<ProjectDTO> getProjectDtoPageInfo(List<Project> projects) {
         List<ProjectDTO> results = new ArrayList<>();
         for (Project project: projects) {
             ProjectDTO result = new ProjectDTO();
             BeanUtils.copyProperties(project, result);
-            results.add(result);
-        }
-        return new PageInfo<>(results);
-    }
-
-    /**
-     * 根据项目id查实训
-     *
-     * @param page      页号
-     * @param offset    页内数量
-     * @param projectId 项目id
-     * @return
-     */
-    @Override
-    public PageInfo<TrainDTO> findTrainsById(int page, int offset, BigInteger projectId) {
-        List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByProjectId(projectId);
-        List<TrainDTO> results = new ArrayList<>();
-        for (ProjectTrain projectTrain: projectTrains) {
-            Train train = trainMapper.findTrainById(projectTrain.getTrainId());
-            TrainDTO result = new TrainDTO();
-            BeanUtils.copyProperties(train, result);
             results.add(result);
         }
         return new PageInfo<>(results);
