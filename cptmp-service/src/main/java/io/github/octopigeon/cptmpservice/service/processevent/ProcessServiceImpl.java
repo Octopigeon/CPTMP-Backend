@@ -63,13 +63,14 @@ public class ProcessServiceImpl implements ProcessService{
     public void remove(ProcessDTO dto) throws Exception {
         if(processMapper.findProcessById(dto.getId()) != null){
             processMapper.hideProcessById(new Date(), dto.getId());
+        }else {
+            throw new Exception("Process is not exist!");
         }
     }
 
     /**
-     * 更新的文件实体
-     *
-     * @param dto
+     * 待更新的实体
+     * @param dto 实体
      * @return 是否删除成功
      */
     @Override
@@ -95,6 +96,9 @@ public class ProcessServiceImpl implements ProcessService{
     @Override
     public ProcessDTO findById(BigInteger id) throws Exception {
         Process process = processMapper.findProcessById(id);
+        if(process == null){
+            throw new Exception("Process is not exist!");
+        }
         ProcessDTO processDTO = new ProcessDTO();
         BeanUtils.copyProperties(process, processDTO);
         return processDTO;
