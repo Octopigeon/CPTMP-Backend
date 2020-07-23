@@ -1,6 +1,5 @@
 package io.github.octopigeon.cptmpservice.service.organization;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.*;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProcessEventMapper;
@@ -30,6 +29,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
+ * 组织服务实现类
  * @author 李国豪
  * @version 1.0
  * @date 2020/7/13
@@ -118,6 +118,10 @@ public class OrganizationServiceImpl implements OrganizationService{
         }
     }
 
+    /**
+     * 用于级联删除用户
+     * @param user Cptmp用户
+     */
     private void reomoveUser(CptmpUser user){
         cptmpUserMapper.removeUserById(user.getId(), new Date());
         List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByUserId(user.getId());
@@ -127,6 +131,10 @@ public class OrganizationServiceImpl implements OrganizationService{
         }
     }
 
+    /**
+     * 用于级联删除实训
+     * @param train 实训
+     */
     private void removeTrain(Train train){
         if(train != null) {
             List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByTrainId(train.getId());
@@ -148,6 +156,10 @@ public class OrganizationServiceImpl implements OrganizationService{
         }
     }
 
+    /**
+     * 用于级联删除项目-实训关联表
+     * @param projectTrain 项目实训信息
+     */
     private void removeTeams(ProjectTrain projectTrain) {
         List<Team> teams = teamMapper.findTeamsByProjectTrainId(projectTrain.getId());
         for (Team team: teams) {
@@ -162,10 +174,10 @@ public class OrganizationServiceImpl implements OrganizationService{
     }
 
     /**
-     * 更新的文件实体
+     * 修改相关信息
      *
-     * @param dto
-     * @return 是否删除成功
+     * @param dto 实体
+     * @return 是否修改成功
      */
     @Override
     public Boolean modify(OrganizationDTO dto) throws Exception {
@@ -183,12 +195,15 @@ public class OrganizationServiceImpl implements OrganizationService{
     /**
      * 基础查询服务，每个表都需要支持通过id查询
      *
-     * @param id 查询
+     * @param id 查询Id
      * @return dto
      */
     @Override
     public OrganizationDTO findById(BigInteger id) throws Exception {
         Organization organization = organizationMapper.findOrganizationById(id);
+        if(organization == null){
+            throw new Exception("Organization is not exist!");
+        }
         OrganizationDTO dto = new OrganizationDTO();
         BeanUtils.copyProperties(organization, dto);
         return dto;
@@ -200,7 +215,7 @@ public class OrganizationServiceImpl implements OrganizationService{
      *
      * @param page   页号
      * @param offset 页偏移
-     * @return
+     * @return 分页组织列表
      */
     @Override
     public PageInfo<OrganizationDTO> findAll(int page, int offset) {
@@ -220,6 +235,22 @@ public class OrganizationServiceImpl implements OrganizationService{
         return getOrganizationDTOPageInfo(organizations);
     }
 
+    /**
+     * 根据组织全名进行模糊查询
+     * @param realName 组织全名
+     * @return 组织相关信息
+     */
+    @Override
+    public PageInfo<OrganizationDTO> findByRealName(int page, int offset, String realName) {
+        List<Organization> organizations = organizationMapper.findOrganizationByRealName(realName);
+        return getOrganizationDTOPageInfo(organizations);
+    }
+
+    /**
+     * 将组织model转化成dto分页信息
+     * @param organizations 组织列表
+     * @return 组织dto分页列表
+     */
     @NotNull
     private PageInfo<OrganizationDTO> getOrganizationDTOPageInfo(List<Organization> organizations) {
         List<OrganizationDTO> results = new ArrayList<>();
@@ -232,21 +263,10 @@ public class OrganizationServiceImpl implements OrganizationService{
     }
 
     /**
-     * 根据组织全名进行模糊查询
-     * @param realName 组织全名
-     * @return
-     */
-    @Override
-    public PageInfo<OrganizationDTO> findByRealName(int page, int offset, String realName) {
-        List<Organization> organizations = organizationMapper.findOrganizationByRealName(realName);
-        return getOrganizationDTOPageInfo(organizations);
-    }
-
-    /**
      * 根据邀请码进行查询
      *
      * @param code 邀请码
-     * @return
+     * @return 组织相关信息
      */
     @Override
     public OrganizationDTO findByInvitationCode(String code){
@@ -270,22 +290,15 @@ public class OrganizationServiceImpl implements OrganizationService{
         if(RoleEnum.ROLE_ENTERPRISE_ADMIN.compareTo(role) >= 0){
             return true;
         }else {
-            if(operator.getOrganizationId().equals(operatedObject.getId())){
-                return true;
-            }
-            else {
-                return false;
-            }
+            return operator.getOrganizationId().equals(operatedObject.getId());
         }
     }
-
-
+    
     /**
      * 产生邀请码
-     * @return
+     * @return 唯一邀请码
      */
     private String productInvitationCode(){
         return UUID.randomUUID().toString();
-        // return RandomStringUtils.randomAlphabetic(8);
     }
 }

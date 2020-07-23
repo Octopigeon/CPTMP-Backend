@@ -93,12 +93,18 @@ public class NoticeServiceImpl implements NoticeService{
      */
     @Override
     public void add(NoticeDTO dto) throws Exception {
-        Notice notice = new Notice();
-        BeanUtils.copyProperties(dto, notice);
-        notice.setGmtCreate(new Date());
-        //默认未读
-        notice.setIsRead(false);
-        noticeMapper.addNotice(notice);
+        try{
+            Notice notice = new Notice();
+            BeanUtils.copyProperties(dto, notice);
+            notice.setGmtCreate(new Date());
+            //默认未读
+            notice.setIsRead(false);
+            noticeMapper.addNotice(notice);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new Exception("Add Notice failed!");
+        }
+
     }
 
     /**
