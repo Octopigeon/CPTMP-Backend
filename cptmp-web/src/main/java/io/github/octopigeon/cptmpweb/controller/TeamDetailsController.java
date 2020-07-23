@@ -23,6 +23,7 @@ import lombok.EqualsAndHashCode;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.xml.ws.soap.Addressing;
 import java.math.BigInteger;
@@ -38,7 +39,7 @@ import java.util.List;
  */
 
 @RestController
-public class TeamDetialsController {
+public class TeamDetailsController {
 
     @Autowired
     private TeamService teamService;
@@ -235,6 +236,56 @@ public class TeamDetialsController {
         }
     }
 
+    /**
+     * 上传团队logo
+     * @param teamId
+     * @param resource
+     * @return
+     */
+    @PostMapping("api/team/{team_id}/uploadAvatar")
+    public RespBean uploadAvatar(
+            @PathVariable("team_id")BigInteger teamId,
+            @RequestParam("file") MultipartFile resource)
+    {
+        try{
+            teamService.uploadAvatar(resource,teamId);
+            return RespBean.ok("upload Avatar successfully");
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.FILE_UPLOAD_FAILED,"upload Avatar failed");
+        }
+    }
+
+    /**
+     * 根据实训id获取团队
+     * @param trainId
+     * @param offset
+     * @param page
+     * @return
+     */
+    @GetMapping("api/team/train/{train_id}")
+    public RespBeanWithTeamList getTeamByTrainId(
+            @PathVariable("train_id")BigInteger trainId,
+            @RequestParam("offset")int offset,
+            @RequestParam("page")int page)
+    {
+        try{
+            Page pages = PageHelper.startPage(page, offset);
+            PageInfo<TeamDTO> pageInfo = teamService.findByTrainId(page,offset,trainId);
+            List<TeamInfoDTO>teamInfoDTOList = new ArrayList<>();
+            for (TeamDTO team :pageInfo.getList())
+            {
+                teamInfoDTOList.add(convertTeam(team));
+            }
+            return new RespBeanWithTeamList(teamInfoDTOList,pages.getTotal());
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new RespBeanWithTeamList(CptmpStatusCode.INFO_ACCESS_FAILED,"get team failed");
+        }
+    }
+
     private TeamInfoDTO convertTeam(TeamDTO team) throws Exception
     {
         TeamInfoDTO teamInfoDTO = new TeamInfoDTO();
@@ -280,6 +331,7 @@ class RespBeanWithTeam extends RespBean
 
     public RespBeanWithTeam(TeamInfoDTO team)
     {
+        super();
         this.team = team;
     }
 
@@ -298,6 +350,7 @@ class RespBeanWithUsers extends RespBean
 
     public RespBeanWithUsers(List<BaseUserInfoDTO> userInfoList)
     {
+        super();
         this.userInfoList = userInfoList;
     }
 

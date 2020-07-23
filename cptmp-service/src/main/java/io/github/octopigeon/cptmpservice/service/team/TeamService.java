@@ -55,4 +55,13 @@ public interface TeamService extends BaseNormalService<TeamDTO>, BaseFileService
      * @param userId 用户Id
      */
     void removeUser(BigInteger teamId, BigInteger userId);
+
+    /**
+     * 根据实训id获取团队
+     * @param page
+     * @param offset
+     * @param trainId
+     * @return
+     */
+    PageInfo<TeamDTO> findByTrainId(int page, int offset, BigInteger trainId);
 }

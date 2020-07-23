@@ -30,8 +30,8 @@ import java.util.List;
  * @author 李国豪
  * @version 1.0
  * @date 2020/7/14
- * @last-check-in 李国豪
- * @date 2020/7/14
+ * @last-check-in 陈若琳
+ * @date 2020/7/23
  */
 @Service
 public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
@@ -264,6 +264,18 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
         teamDTO.setProjectId(ids[1]);
         return teamDTO;
     }
+
+    private List<TeamDTO> convertTeamList(List<Team> teamList)
+    {
+        List<TeamDTO>teamDTOList = new ArrayList<>();
+        for (Team team :teamList)
+        {
+            teamDTOList.add(convertTeam(team));
+        }
+        return teamDTOList;
+    }
+
+
 
     /**
      * 根据trainId和projectId获取TrainProjectId
