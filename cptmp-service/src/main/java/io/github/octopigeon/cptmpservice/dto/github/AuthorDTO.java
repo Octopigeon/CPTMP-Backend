@@ -6,6 +6,7 @@ import lombok.Data;
 import java.math.BigInteger;
 
 /**
+ * github贡献者的相关信息
  * @author 魏啸冲
  * @version 1.0
  * @date 2020/7/17
@@ -21,6 +22,7 @@ public class AuthorDTO {
     /** GitHub用户id */
     @JsonProperty("id")
     private BigInteger githubId;
+    /** 非必要属性 */
     @JsonProperty("node_id")
     private String nodeId;
     /** GitHub头像URL */

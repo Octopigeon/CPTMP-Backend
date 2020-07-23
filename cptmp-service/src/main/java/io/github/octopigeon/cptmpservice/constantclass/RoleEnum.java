@@ -1,7 +1,7 @@
 package io.github.octopigeon.cptmpservice.constantclass;
 
 /**
- * 前后端都存英文标识符
+ * 本类主要用于service层进行相关的权限比较等场景
  * @author 李国豪
  * @version 1.0
  * @date 2020/7/9

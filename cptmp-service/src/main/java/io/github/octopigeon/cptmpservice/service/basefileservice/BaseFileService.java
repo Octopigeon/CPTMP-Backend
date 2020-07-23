@@ -54,6 +54,8 @@ public interface BaseFileService {
     /**
      * 移除路径中的文件
      * @param path 路径
+     * @return 是否从存储路径上移除成功
+     * @throws Exception
      */
     Boolean removeFile(String path) throws Exception;
 }

@@ -15,7 +15,7 @@ import java.math.BigInteger;
  * @version 1.0
  * @date 2020/7/14
  * @last-check-in 李国豪
- * @date 2020/7/14
+ * @date 2020/7/23
  */
 @Service
 public interface TrainService extends BaseNormalService<TrainDTO>, BaseFileService {
@@ -24,34 +24,36 @@ public interface TrainService extends BaseNormalService<TrainDTO>, BaseFileServi
      * 分页查询所有实训
      * @param page 页号
      * @param offset 一页的数量
-     * @return
+     * @return 实训分页信息
      */
     PageInfo<TrainDTO> findAll(int page, int offset);
 
     /**
      * 根据组织id查询实训
      * @param page 页号
-     * @param offset 偏移量
+     * @param offset 页容量
      * @param organizationId 组织id
-     * @return
+     * @return 实训分页信息
      */
     PageInfo<TrainDTO> findByOrganizationId(int page, int offset, BigInteger organizationId);
 
     /**
      * 根据实训名称进行模糊查询
+     * @param page 页号
+     * @param offset 页容量
      * @param likeName 模糊名称
-     * @return
+     * @return 实训分页信息
      */
     PageInfo<TrainDTO> findByLikeName(int page, int offset, String likeName);
 
     /**
-     * 分页查询实训对应的项目
+     * 查询一个项目出现的所有实训
      * @param page 页号
-     * @param offset 一页的数量
-     * @param id 实训id
-     * @return 项目的id号
+     * @param offset 页容量
+     * @param projectId 项目Id
+     * @return 实训分页信息
      */
-    PageInfo<BigInteger> findProjectIdsById(int page, int offset, BigInteger id);
+    PageInfo<TrainDTO> findByProjectId(int page, int offset, BigInteger projectId);
 
     /**
      * 给资源库上传文件

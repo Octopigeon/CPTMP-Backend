@@ -3,16 +3,12 @@ package io.github.octopigeon.cptmpweb.controller;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import io.github.octopigeon.cptmpdao.model.Team;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.team.TeamDTO;
-import io.github.octopigeon.cptmpservice.dto.team.TeamInfoDTO;
-import io.github.octopigeon.cptmpservice.service.processevent.ProcessService;
 import io.github.octopigeon.cptmpservice.service.team.TeamService;
 import io.github.octopigeon.cptmpservice.service.trainproject.ProjectService;
 import io.github.octopigeon.cptmpservice.service.trainproject.TrainService;
@@ -25,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.xml.ws.soap.Addressing;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
@@ -108,7 +103,7 @@ public class TeamDetailsController {
         try {
             Page pages = PageHelper.startPage(page, offset);
             PageInfo<TeamDTO> pageInfo = teamService.findByLikeName(page, offset, keyWord);
-            List<TeamInfoDTO>teamInfoDTOList = new ArrayList<>();
+            List<TeamDTO>teamInfoDTOList = new ArrayList<>();
             for (TeamDTO team :pageInfo.getList())
             {
                 teamInfoDTOList.add(convertTeam(team));
@@ -273,7 +268,7 @@ public class TeamDetailsController {
         try{
             Page pages = PageHelper.startPage(page, offset);
             PageInfo<TeamDTO> pageInfo = teamService.findByTrainId(page,offset,trainId);
-            List<TeamInfoDTO>teamInfoDTOList = new ArrayList<>();
+            List<TeamDTO>teamInfoDTOList = new ArrayList<>();
             for (TeamDTO team :pageInfo.getList())
             {
                 teamInfoDTOList.add(convertTeam(team));
@@ -286,9 +281,9 @@ public class TeamDetailsController {
         }
     }
 
-    private TeamInfoDTO convertTeam(TeamDTO team) throws Exception
+    private TeamDTO convertTeam(TeamDTO team) throws Exception
     {
-        TeamInfoDTO teamInfoDTO = new TeamInfoDTO();
+        TeamDTO teamInfoDTO = new TeamDTO();
         BeanUtils.copyProperties(team, teamInfoDTO);
         teamInfoDTO.setProjectName(projectService.findById(team.getProjectId()).getName());
         teamInfoDTO.setTrainName(trainService.findById(team.getTrainId()).getName());
@@ -302,7 +297,7 @@ public class TeamDetailsController {
 @EqualsAndHashCode(callSuper = true)
 class RespBeanWithTeamList extends RespBean
 {
-    public RespBeanWithTeamList(List<TeamInfoDTO> teams, long totalRows)
+    public RespBeanWithTeamList(List<TeamDTO> teams, long totalRows)
     {
         super();
         this.teams = teams;
@@ -317,7 +312,7 @@ class RespBeanWithTeamList extends RespBean
     @JsonProperty("total_rows")
     private long totalRows;
     @JsonProperty("data")
-    private List<TeamInfoDTO> teams;
+    private List<TeamDTO> teams;
 }
 
 @Data
@@ -329,14 +324,14 @@ class RespBeanWithTeam extends RespBean
         super(status,msg);
     }
 
-    public RespBeanWithTeam(TeamInfoDTO team)
+    public RespBeanWithTeam(TeamDTO team)
     {
         super();
         this.team = team;
     }
 
     @JsonProperty("data")
-    private TeamInfoDTO team;
+    private TeamDTO team;
 }
 
 @Data

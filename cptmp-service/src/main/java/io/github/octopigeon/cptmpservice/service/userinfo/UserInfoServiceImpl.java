@@ -1,6 +1,5 @@
 package io.github.octopigeon.cptmpservice.service.userinfo;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.*;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
@@ -28,8 +27,8 @@ import java.util.List;
  * @author 李国豪
  * @version 1.0
  * @date 2020/7/11
- * @last-check-in 魏啸冲
- * @date 2020/7/13
+ * @last-check-in 李国豪
+ * @date 2020/7/23
  */
 @Service
 public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfoService {
@@ -51,6 +50,12 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         super(fileProperties);
     }
 
+    /**
+     * 验证密码
+     * @param username 用户名
+     * @param originPassword 用户输入的原密码
+     * @return 密码是否一致
+     */
     @Override
     public Boolean validateOriginPassword(String username, String originPassword) {
         return passwordEncoder.matches(originPassword, cptmpUserMapper.findPasswordByUsername(username));
@@ -65,7 +70,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     @Override
     public void add(BaseUserInfoDTO dto) throws Exception {
         try {
-            BaseUserInfoDTO parsedUserInfo = parseUserInfo(dto);
+            BaseUserInfoDTO parsedUserInfo = convertUserInfo(dto);
             CptmpUser user = userInfoToUser(parsedUserInfo);
             //添加用户
             cptmpUserMapper.addUser(user);
@@ -89,7 +94,6 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         cptmpUserMapper.removeUserById(dto.getId(), new Date());
     }
 
-    // 修改用户信息
 
     /**
      * 修改用户信息
@@ -107,7 +111,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
             List<String> ignoreProperties = Arrays.asList(Utils.getNullPropertyNames(userInfo));
             String[] ignoreProps = null;
             for (int i = 0; i < ignoreProperties.size(); i++) {
-                if (ignoreProperties.get(i).equals("gender")) {
+                if ("gender".equals(ignoreProperties.get(i))) {
                     ignoreProps = new String[ignoreProperties.size() - 1];
                     break;
                 }
@@ -116,9 +120,9 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
                 ignoreProps = new String[ignoreProperties.size()];
             }
             int p = 0;
-            for (int i = 0; i < ignoreProperties.size(); i++) {
-                if (!ignoreProperties.get(i).equals("gender")) {
-                    ignoreProps[p++] = ignoreProperties.get(i);
+            for (String ignoreProperty : ignoreProperties) {
+                if (!"gender".equals(ignoreProperty)) {
+                    ignoreProps[p++] = ignoreProperty;
                 }
             }
             BeanUtils.copyProperties(userInfo, user, ignoreProps);
@@ -145,7 +149,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     /**
      * 删除账号
-     * @param userId
+     * @param userId 用户Id
      */
     @Override
     public void disableAccount(BigInteger userId) {
@@ -191,7 +195,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      *
      * @param page   页号
      * @param offset 每页数量
-     * @return
+     * @return 用户分页信息
      */
     @Override
     public PageInfo<BaseUserInfoDTO> findAllByPage(int page, int offset) {
@@ -229,9 +233,10 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     /**
      * 根据真实姓名进行模糊查询
-     *
+     * @param page 页号
+     * @param offset 一页容量
      * @param name 真实姓名
-     * @return userInfo
+     * @return 用户分页信息
      */
     @Override
     public PageInfo<BaseUserInfoDTO> findByName(int page, int offset, String name) {
@@ -262,7 +267,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      * @param username 用户名
      * @param email    邮箱
      * @param name     真实姓名
-     * @return
+     * @return 用户分页信息
      */
     @Override
     public List<BaseUserInfoDTO> findByPersonalFilter(BigInteger id, String username, String email, String name) throws Exception {
@@ -286,6 +291,11 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         return null;
     }
 
+    /**
+     * 根据真实姓名进行模糊查找
+     * @param name 真实姓名
+     * @return 用户列表
+     */
     private List<BaseUserInfoDTO> findByName(String name){
         List<CptmpUser> cptmpUsers = cptmpUserMapper.findUsersByName(name);
         List<BaseUserInfoDTO> results = new ArrayList<>();
@@ -301,7 +311,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      * @param page           页号
      * @param offset         偏移
      * @param organizationId 组织号
-     * @return
+     * @return 用户分页信息
      */
     @Override
     public PageInfo<BaseUserInfoDTO> findByOrganizationId(int page, int offset, BigInteger organizationId) {
@@ -319,7 +329,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      * @param page     页号
      * @param offset   页内数量
      * @param roleName 权限名
-     * @return
+     * @return 用户分页信息
      */
     @Override
     public PageInfo<BaseUserInfoDTO> findByRoleName(int page, int offset, String roleName) {
@@ -338,7 +348,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      * @param offset         页内数量
      * @param organizationId 组织id
      * @param roleName       权限名
-     * @return
+     * @return 用户分页信息
      */
     @Override
     public PageInfo<BaseUserInfoDTO> findByGroupFilter(int page, int offset, BigInteger organizationId, String roleName) {
@@ -350,9 +360,11 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         return new PageInfo<>(results);
     }
 
-
-    // 以下为私有方法
-
+    /**
+     * 获取完整用户信息
+     * @param cptmpUser 用户model
+     * @return 用户dto
+     */
     private BaseUserInfoDTO getFullUserInfo(CptmpUser cptmpUser) {
         BaseUserInfoDTO baseUserInfoDTO = new BaseUserInfoDTO();
         BeanUtils.copyProperties(cptmpUser, baseUserInfoDTO);
@@ -365,7 +377,7 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
      * @param userInfo userInfo类
      * @return userInfo类
      */
-    private BaseUserInfoDTO parseUserInfo(BaseUserInfoDTO userInfo) throws ValueException {
+    private BaseUserInfoDTO convertUserInfo(BaseUserInfoDTO userInfo) throws ValueException {
         userInfo.setPassword(userInfo.getPassword());
         if (userInfo.getUsername() == null) {
             throw new ValueException("userName value is invalid!");
@@ -379,6 +391,11 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         return userInfo;
     }
 
+    /**
+     * 验证邮箱是否有效
+     * @param email 邮箱
+     * @return 是否有效
+     */
     private Boolean validateEmailFormat(String email) {
         String check = "^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4})*$";
         boolean tag = true;
@@ -388,6 +405,11 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         return tag;
     }
 
+    /**
+     * 验证电话号码是否有效
+     * @param phoneNumber 手机号码
+     * @return 是否有效
+     */
     private Boolean validatePhoneNumberFormat(String phoneNumber) {
         String check = "^(?:\\+?86)?1(?:3(?:4[^9\\D]|[5-9]\\d)|5[^3-6\\D]\\d|7[28]\\d|8[23478]\\d|9[578]\\d)\\d{7}$";
         boolean tag = true;
@@ -414,72 +436,4 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
         user.setCredentialsNonExpired(true);
         return user;
     }
-
-    // 添加注册用户
-
-//    /**
-//     * 批量添加
-//     * 批量注册用户
-//     *
-//     * @param dtos
-//     */
-//    @Override
-//    public void bulkAdd(List<BaseUserInfoDTO> dtos) throws Exception {
-//        try {
-//            for (BaseUserInfoDTO userInfo : dtos) {
-//                add(userInfo);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new Exception(e);
-//        }
-//    }
-//
-//    /**
-//     * 验证码注册
-//     * @param dto 用户信息类
-//     * @param invitationCode 邀请码
-//     * @throws Exception
-//     */
-//    @Override
-//    public void addByInvitationCode(BaseUserInfoDTO dto, String invitationCode) throws Exception {
-//        try{
-//            List<Organization> organizations = organizationMapper.findAllOrganization();
-//            BigInteger organizationId = null;
-//            for (Organization organization: organizations) {
-//                if(organization.getInvitationCode().equals(invitationCode)){
-//                    organizationId = organization.getId();
-//                    break;
-//                }
-//            }
-//            if(organizationId == null){
-//                throw new ValueException("invatitation code is not existed!");
-//            }
-//            BaseUserInfoDTO parsedUserInfo = parseUserInfo(dto);
-//            parsedUserInfo.setOrganizationId(organizationId);
-//            CptmpUser user = userInfoToUser(parsedUserInfo);
-//            cptmpUserMapper.addUser(user);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//            throw new Exception(e.getMessage());
-//        }
-//    }
-    //    /**
-//     * 上传人脸数据
-//     *
-//     * @param file   人脸图片
-//     * @param username 用户名
-//     */
-//    @Override
-//    public void uploadFace(MultipartFile file, String username) throws Exception {
-//        try{
-//            FileDTO fileInfo = storePublicFile(file);
-//            CptmpUser user = cptmpUserMapper.findUserByUsername(username);
-//            if (RoleEnum.ROLE_STUDENT_MEMBER.name().equals(user.getRoleName())) {
-//                cptmpUserMapper.updateFaceInfoById(user.getId(), new Date(), fileInfo.getFilePath());
-//            }
-//        } catch (Exception e) {
-//            throw new Exception("Face info upload failed!");
-//        }
-//    }
 }

@@ -10,10 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.math.BigInteger;
 
 /**
- * @author Gh Li
+ * @author 李国豪
  * @version 1.0
  * @date 2020/7/20
- * @last-check-in Gh Li
+ * @last-check-in 李国豪
  * @date 2020/7/20
  */
 @Service
@@ -23,7 +23,7 @@ public interface RecruitmentService extends BaseNormalService<RecruitmentDTO>, B
      * 查找所有招聘
      * @param page 页号
      * @param offset 页容量
-     * @return
+     * @return 所有招聘信息
      */
     PageInfo<RecruitmentDTO> findAll(int page, int offset);
 

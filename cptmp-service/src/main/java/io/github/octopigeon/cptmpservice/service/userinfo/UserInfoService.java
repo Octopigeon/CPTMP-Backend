@@ -32,7 +32,7 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
      * 分页查询所有用户
      * @param page 页号
      * @param offset 每页数量
-     * @return
+     * @return 用户分页列表
      */
     PageInfo<BaseUserInfoDTO> findAllByPage(int page, int offset);
 
@@ -65,7 +65,8 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
      * @param username 用户名
      * @param email 邮箱
      * @param name 真实姓名
-     * @return
+     * @return 用户分页列表
+     * @throws Exception 查找异常
      */
     List<BaseUserInfoDTO> findByPersonalFilter(BigInteger id, String username, String email, String name) throws Exception;
 
@@ -74,7 +75,7 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
      * @param page 页号
      * @param offset 偏移
      * @param organizationId 组织号
-     * @return
+     * @return 用户分页列表
      */
     PageInfo<BaseUserInfoDTO> findByOrganizationId(int page, int offset, BigInteger organizationId);
 
@@ -83,7 +84,7 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
      * @param page 页号
      * @param offset 页内数量
      * @param roleName 权限名
-     * @return
+     * @return 用户分页列表
      */
     PageInfo<BaseUserInfoDTO> findByRoleName(int page, int offset, String roleName);
 
@@ -93,19 +94,19 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
      * @param offset 页内数量
      * @param organizationId 组织id
      * @param roleName 权限名
-     * @return
+     * @return 用户分页列表
      */
     PageInfo<BaseUserInfoDTO> findByGroupFilter(int page, int offset, BigInteger organizationId, String roleName);
 
     /**
      * 激活账号
-     * @param userId
+     * @param userId 用户唯一标识符
      */
     void activateAccount(BigInteger userId);
 
     /**
      * 删除账号（软删除）
-     * @param userId
+     * @param userId 用户唯一标识符
      */
     void disableAccount(BigInteger userId);
 
@@ -120,24 +121,8 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
      * 上传用户头像
      * @param file 文件
      * @param username 用户名
-     * @return
+     * @return 头像Url
+     * @throws Exception 文件上传故障
      */
     String uploadAvatar(MultipartFile file, String username) throws Exception;
-
-//    /**
-//     * 上传人脸数据
-//     * @param file 人脸图片
-//     * @param username 用户id
-//     */
-//    void uploadFace(MultipartFile file, String username) throws Exception;
-//
-//    /**
-//     * 批量添加注册
-//     */
-//    void bulkAdd(List<BaseUserInfoDTO> dtos) throws Exception;
-//
-//    /**
-//     * 邀请码注册
-//     */
-//    void addByInvitationCode(BaseUserInfoDTO dto, String invitationCode) throws Exception;
 }

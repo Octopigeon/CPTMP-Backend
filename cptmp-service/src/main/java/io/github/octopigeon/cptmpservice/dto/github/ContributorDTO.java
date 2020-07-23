@@ -1,7 +1,6 @@
 package io.github.octopigeon.cptmpservice.dto.github;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
@@ -19,20 +18,26 @@ import java.util.List;
 @Data
 public class ContributorDTO {
 
-    /** total commits */
+    /** 总的commit数 */
     @JsonProperty("total")
     private Long totalCommits;
+    /** 总共添加代码行数 */
     @JsonProperty("total_additions")
     private Long totalAdditions;
+    /** 总共删除代码行数 */
     @JsonProperty("total_deletions")
     private Long totalDeletions;
-    /** week statics */
+    /** 一周的贡献数据 */
     @JsonProperty("weeks")
     private List<WeekContributionsDTO> weeks;
-    /** contributor info */
+    /** 贡献者的相关信息 */
     @JsonProperty("author")
     private AuthorDTO author;
 
+    /**
+     * 获取总添加代码行数
+     * @return 总添加代码行数
+     */
     @JsonGetter("total_additions")
     public Long getTotalAdditions() {
         long totalAdditions = 0L;
@@ -43,6 +48,10 @@ public class ContributorDTO {
         return totalAdditions;
     }
 
+    /**
+     * 获取总删除代码行数
+     * @return 总删除代码行数
+     */
     @JsonGetter("total_deletions")
     public Long getTotalDeletions() {
         long totalDeletions = 0L;

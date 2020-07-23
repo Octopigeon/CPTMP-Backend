@@ -24,7 +24,7 @@ public class EmailServiceImpl implements EmailService{
 
     /**
      * 邮件服务
-     * @param to 目的地
+     * @param to 目的邮箱地址
      * @param subject 可能是主题
      * @param text 文本
      */
