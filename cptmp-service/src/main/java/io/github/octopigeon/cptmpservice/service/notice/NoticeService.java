@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 
 /**
+ * 通知服务
  * @author 李国豪
  * @version 1.0
  * @date 2020/7/20
