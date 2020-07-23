@@ -1,8 +1,6 @@
 package io.github.octopigeon.cptmpservice.service.github;
 
-import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.octopigeon.cptmpdao.mapper.TeamMapper;
 import io.github.octopigeon.cptmpdao.model.Team;
 import io.github.octopigeon.cptmpservice.dto.github.ContributorDTO;
@@ -15,8 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.math.BigInteger;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
 import java.util.*;
 
 /**
@@ -33,6 +29,12 @@ public class ContributorStaticsService {
     @Autowired
     private TeamMapper teamMapper;
 
+    /**
+     * 获取贡献者的相关信息
+     * @param teamId 团队Id
+     * @return 贡献者列表
+     * @throws IOException
+     */
     public List<ContributorDTO> getContributorStatics(BigInteger teamId) throws IOException {
         Team team = teamMapper.findTeamByTeamId(teamId);
         String githubUsername = team.getGithubUsername();
