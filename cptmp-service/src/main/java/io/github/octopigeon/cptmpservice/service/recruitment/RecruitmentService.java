@@ -23,7 +23,7 @@ public interface RecruitmentService extends BaseNormalService<RecruitmentDTO>, B
      * 查找所有招聘
      * @param page 页号
      * @param offset 页容量
-     * @return
+     * @return 所有招聘信息
      */
     PageInfo<RecruitmentDTO> findAll(int page, int offset);
 

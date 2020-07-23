@@ -42,7 +42,7 @@ public class RecruitmentServiceImpl extends BaseFileServiceImpl implements Recru
      *
      * @param page   页号
      * @param offset 页容量
-     * @return
+     * @return 所有招聘信息
      */
     @Override
     public PageInfo<RecruitmentDTO> findAll(int page, int offset) {
