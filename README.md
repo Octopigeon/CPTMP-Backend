@@ -1856,17 +1856,24 @@ College Practice Training Management Platform
 
 + 方法：POST
 
++ 参数：文件
+
 + 调用实例：
 
   ```json
-  
+  //api/team/1/uploadAvatar
+  文件 key：file
   ```
 
 + 返回实例：
 
   ```json
   //成功
-  
+  {
+      "status": 0,
+      "date": "2020-07-22T17:09:13.955+00:00",
+      "msg": "upload Avatar successfully"
+  }
   //失败
   ```
 
