@@ -28,10 +28,8 @@ public interface EventService extends BaseNormalService<EventDTO> {
 
     /**
      * 根据流程Id查找事件
-     * @param page 页号
-     * @param offset 页容量
      * @param processId 流程Id
      * @return 事件分页列表
      */
-    PageInfo<EventDTO> findEventsByProcessId(int page, int offset, BigInteger processId);
+    List<EventDTO> findEventsByProcessId(BigInteger processId);
 }

@@ -3,8 +3,10 @@ package io.github.octopigeon.cptmpservice.service.processevent;
 import io.github.octopigeon.cptmpdao.mapper.EventMapper;
 import io.github.octopigeon.cptmpdao.mapper.ProcessMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProcessEventMapper;
+import io.github.octopigeon.cptmpdao.model.Event;
 import io.github.octopigeon.cptmpdao.model.Process;
 import io.github.octopigeon.cptmpdao.model.relation.ProcessEvent;
+import io.github.octopigeon.cptmpservice.dto.processevent.EventDTO;
 import io.github.octopigeon.cptmpservice.dto.processevent.ProcessDTO;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
@@ -35,6 +37,9 @@ public class ProcessServiceImpl implements ProcessService{
 
     @Autowired
     private EventMapper eventMapper;
+
+    @Autowired
+    private EventService eventService;
 
     /**
      * 添加数据
@@ -101,6 +106,7 @@ public class ProcessServiceImpl implements ProcessService{
         }
         ProcessDTO processDTO = new ProcessDTO();
         BeanUtils.copyProperties(process, processDTO);
+        processDTO.setEvents(eventService.findEventsByProcessId(id));
         return processDTO;
     }
 
@@ -151,6 +157,7 @@ public class ProcessServiceImpl implements ProcessService{
         for (Process process: processes) {
             ProcessDTO result = new ProcessDTO();
             BeanUtils.copyProperties(process, result);
+            result.setEvents(eventService.findEventsByProcessId(process.getId()));
             results.add(result);
         }
         return results;

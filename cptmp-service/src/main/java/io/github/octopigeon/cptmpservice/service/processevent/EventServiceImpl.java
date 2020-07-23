@@ -123,14 +123,11 @@ public class EventServiceImpl implements EventService{
 
     /**
      * 根据流程Id查找事件
-     *
-     * @param page      页号
-     * @param offset    页容量
      * @param processId 流程Id
      * @return 事件分页列表
      */
     @Override
-    public PageInfo<EventDTO> findEventsByProcessId(int page, int offset, BigInteger processId) {
+    public List<EventDTO> findEventsByProcessId(BigInteger processId) {
         List<ProcessEvent> processEvents = processEventMapper.findProcessEventsByProcessId(processId);
         List<EventDTO> results = new ArrayList<>();
         for (ProcessEvent processEvent: processEvents) {
@@ -139,6 +136,6 @@ public class EventServiceImpl implements EventService{
             BeanUtils.copyProperties(event, result);
             results.add(result);
         }
-        return new PageInfo<>(results);
+        return results;
     }
 }
