@@ -11,11 +11,12 @@ import java.math.BigInteger;
 import java.util.Date;
 
 /**
+ * 附件的相关service，主要由service内部调用
  * @author 李国豪
  * @version 1.0
  * @date 2020/7/11
  * @last-check-in 李国豪
- * @date 2020/7/11
+ * @date 2020/7/23
  */
 @Service
 public class AttachmentFileServiceImpl implements AttachmentFileService {
@@ -24,9 +25,9 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
     private AttachmentFileMapper attachmentFileMapper;
 
     /**
-     * 添加文件
+     * 添加附件
      * @param fileInfo 文件dto
-     * @throws Exception
+     * @throws Exception 填加失败异常
      */
     @Override
     public void add(FileDTO fileInfo) throws Exception {
@@ -43,8 +44,8 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
 
     /**
      * 移除数据
-     *
      * @param dto ：dto实体
+     * @throws Exception 没有找到对应的附件
      */
     @Override
     public void remove(FileDTO dto) throws Exception {
@@ -59,7 +60,7 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
 
     /**
      * 更新的文件实体
-     *
+     * 废弃不用
      * @param dto
      * @return 是否修改成功
      */
@@ -71,7 +72,7 @@ public class AttachmentFileServiceImpl implements AttachmentFileService {
 
     /**
      * 基础查询服务，每个表都需要支持通过id查询
-     *
+     * 废弃不用
      * @param id 查询
      * @return dto
      */
