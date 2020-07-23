@@ -236,6 +236,26 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
         teamPersonMapper.removeTeamPersonById(teamPerson.getId());
     }
 
+    /**
+     * 根据实训id查找团队
+     * @param page
+     * @param offset
+     * @param trainId
+     * @return
+     */
+    @Override
+    public PageInfo<TeamDTO> findByTrainId(int page, int offset, BigInteger trainId)
+    {
+        List<TeamDTO> results = new ArrayList<>();
+        List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByTrainId(trainId);
+        for (ProjectTrain projectTrain: projectTrains)
+        {
+            List<Team> teams = teamMapper.findTeamsByProjectTrainId(projectTrain.getId());
+            results.addAll(convertTeamList(teams));
+        }
+        return new PageInfo<>(results);
+    }
+
     private TeamDTO convertTeam(Team team){
         TeamDTO teamDTO = new TeamDTO();
         BeanUtils.copyProperties(team, teamDTO);
