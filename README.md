@@ -1809,7 +1809,53 @@ College Practice Training Management Platform
   //失败
   ```
 
-## 9.获取团队成员信息
+## 9.根据项目id获取团队
+
++ 接口：api/team/project/{project_id}
+
++ 方法：GET
+
++ 参数：offset ，page
+
++ 调用实例：
+
+  ```json
+  //api/team/project/2?page=1&offset=8
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  
+  //失败
+  ```
+
+## 10. 根据实训id和项目id获取团队
+
++ 接口：api/team/project/{project_id}
+
++ 方法：GET
+
++ 参数：offset ，page，project_id，train_id
+
++ 调用实例：
+
+  ```json
+  //api/team/train/2?page=1&offset=8
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  
+  //失败
+  ```
+
+
+
+## 11.获取团队成员信息
 
 + 接口：api/team/{team_id}/member
 
@@ -1850,7 +1896,7 @@ College Practice Training Management Platform
 
 
 
-## 10.上传团队头像
+## 12.上传团队头像
 
 + 接口：api/team/{team_id}/uploadAvatar
 
