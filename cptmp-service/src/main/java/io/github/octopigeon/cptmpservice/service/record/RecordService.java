@@ -24,16 +24,24 @@ public interface RecordService extends BaseNormalService<RecordDTO>, BaseFileSer
      * 使用实训id和userId进行查询
      * @param trainId 实训id
      * @param userId 用户id
-     * @return
+     * @return 记录列表
      */
     List<RecordDTO> findByTrainIdAndUserId(BigInteger trainId, BigInteger userId);
 
     /**
      * 使用实训id和团队Id进行查询
      * @param teamId 团队id
-     * @return
+     * @return 记录列表
      */
     List<RecordDTO> findByTeamId(BigInteger teamId);
+
+    /**
+     * 使用流程Id和事件Id进行查询
+     * @param processId 流程Id
+     * @param eventId 事件Id
+     * @return 记录列表
+     */
+    List<RecordDTO> findByProcessIdAndEventId(BigInteger processId, BigInteger eventId);
 
     /**
      * 上传作业
