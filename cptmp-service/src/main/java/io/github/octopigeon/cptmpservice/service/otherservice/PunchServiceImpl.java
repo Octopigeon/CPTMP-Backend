@@ -13,6 +13,7 @@ import io.github.octopigeon.cptmpdao.mapper.TrainMapper;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpdao.model.Train;
 import io.github.octopigeon.cptmpservice.config.FaceProperties;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 import org.gavaghan.geodesy.Ellipsoid;
 import org.gavaghan.geodesy.GeodeticCalculator;
 import org.gavaghan.geodesy.GlobalCoordinates;
@@ -89,16 +90,21 @@ public class PunchServiceImpl implements PunchService{
         }
         try{
             IaiClient client = createClient();
+            String base64 = convertMultiFileToBase(image);
             // 发起访问
             JSONObject params = new JSONObject();
-            params.put(this.image, convertMultiFileToBase(image));
+            params.put(this.image, base64);
             params.put(this.personId, username);
-            VerifyFaceRequest req = VerifyFaceRequest.fromJsonString(params.toJSONString(), VerifyFaceRequest.class);
-            //处理返回
-            VerifyFaceResponse resp = client.VerifyFace(req);
-            JSONObject tmp = JSONObject.parseObject(VerifyFaceResponse.toJsonString(resp));
-            JSONObject result = tmp.getJSONObject("Response");
-            return result.getBooleanValue("IsMatch");
+            if(validateImageFace(client, base64)){
+                VerifyFaceRequest req = VerifyFaceRequest.fromJsonString(params.toJSONString(), VerifyFaceRequest.class);
+                //处理返回
+                VerifyFaceResponse resp = client.VerifyFace(req);
+                JSONObject tmp = JSONObject.parseObject(VerifyFaceResponse.toJsonString(resp));
+                JSONObject result = tmp.getJSONObject("Response");
+                return result.getBooleanValue("IsMatch");
+            }else {
+                throw new ValueException("图片中不存在人脸信息");
+            }
         } catch (TencentCloudSDKException e) {
             e.printStackTrace();
             throw new Exception(e);
@@ -121,13 +127,18 @@ public class PunchServiceImpl implements PunchService{
             IaiClient client = createClient();
 
             JSONObject params = new JSONObject();
+            String base64 = convertMultiFileToBase(image);
             params.put(this.groupId, faceProperties.getGroupId());
             params.put(this.personName, user.getName());
             params.put(this.personId, user.getUsername());
-            params.put(this.image, convertMultiFileToBase(image));
-            CreatePersonRequest req = CreatePersonRequest.fromJsonString(params.toJSONString(), CreatePersonRequest.class);
-            CreatePersonResponse resp = client.CreatePerson(req);
-            System.out.println(CreatePersonResponse.toJsonString(resp));
+            params.put(this.image, base64);
+            if(validateImageFace(client, base64)){
+                CreatePersonRequest req = CreatePersonRequest.fromJsonString(params.toJSONString(), CreatePersonRequest.class);
+                CreatePersonResponse resp = client.CreatePerson(req);
+                System.out.println(CreatePersonResponse.toJsonString(resp));
+            }else {
+                throw new ValueException("图片中不存在人脸信息");
+            }
         } catch (TencentCloudSDKException e) {
             e.printStackTrace();
             throw new Exception(e);
@@ -186,5 +197,21 @@ public class PunchServiceImpl implements PunchService{
         ClientProfile clientProfile = new ClientProfile();
         clientProfile.setHttpProfile(httpProfile);
         return new IaiClient(cred, faceProperties.getRegion(), clientProfile);
+    }
+
+    /**
+     * 验证图片是否存在人脸
+     * @param client 客户端
+     * @param imageBase64 图片的base64编码
+     * @return 是否存在人脸
+     */
+    private Boolean validateImageFace(IaiClient client, String imageBase64) throws TencentCloudSDKException {
+        JSONObject params = new JSONObject();
+        params.put(this.image, imageBase64);
+        DetectFaceRequest req = DetectFaceRequest.fromJsonString(params.toJSONString(), DetectFaceRequest.class);
+        DetectFaceResponse response = client.DetectFace(req);
+        JSONObject tmp = JSONObject.parseObject(DetectFaceResponse.toJsonString(response));
+        JSONObject result = tmp.getJSONObject("Response");
+        return result.get("FaceInfos") != null;
     }
 }
