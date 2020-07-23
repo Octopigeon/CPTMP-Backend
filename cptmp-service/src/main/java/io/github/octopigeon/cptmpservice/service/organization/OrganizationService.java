@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigInteger;
 
 /**
+ * 组织相关接口
  * @author 李国豪
  * @version 1.0
  * @date 2020/7/13
@@ -21,7 +22,7 @@ public interface OrganizationService extends BaseNormalService<OrganizationDTO> 
      * 分页查询所有组织
      * @param page 页号
      * @param offset 页偏移
-     * @return
+     * @return 组织相关信息分页dto
      */
     PageInfo<OrganizationDTO> findAll(int page, int offset);
 
@@ -30,7 +31,7 @@ public interface OrganizationService extends BaseNormalService<OrganizationDTO> 
      * @param page 页号
      * @param offset 页偏移
      * @param name 组织的名称
-     * @return 组织相关信息
+     * @return 组织相关信息分页dto
      */
     PageInfo<OrganizationDTO> findByName(int page, int offset, String name);
 
@@ -39,14 +40,14 @@ public interface OrganizationService extends BaseNormalService<OrganizationDTO> 
      * @param page 页号
      * @param offset 页偏移
      * @param realName 组织全名
-     * @return
+     * @return 组织相关信息分页dto
      */
     PageInfo<OrganizationDTO> findByRealName(int page, int offset, String realName);
 
     /**
      * 根据邀请码进行查询
      * @param code 邀请码
-     * @return
+     * @return 组织相关信息
      */
     OrganizationDTO findByInvitationCode(String code);
 

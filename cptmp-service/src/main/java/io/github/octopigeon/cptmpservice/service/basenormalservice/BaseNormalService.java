@@ -3,6 +3,7 @@ package io.github.octopigeon.cptmpservice.service.basenormalservice;
 import java.math.BigInteger;
 
 /**
+ * 基础的增删改查接口
  * @author 李国豪
  * @version 1.0
  * @date 2020/7/11
@@ -23,9 +24,9 @@ public interface BaseNormalService<T> {
     void remove(T dto) throws Exception;
 
     /**
-     * 更新的文件实体
-     * @param dto
-     * @return 是否删除成功
+     * 修改信息
+     * @param dto dto实体
+     * @return 是否修改成功
      */
     Boolean modify(T dto) throws Exception;
 

@@ -112,7 +112,7 @@ public class PersonTrainController {
             personalGradeDTO.setUserId(userId);
             personalGradeDTO.setTeamId(teamId);
             personalGradeDTO.setEvaluation(evaluation);
-            personalGradeDTO.setPersonalGrade(personalGrade);
+            //personalGradeDTO.setPersonalGrade(personalGrade);
             if (personalGradeService.verifyPermission(operatorId, personalGradeDTO)) {
                 personalGradeService.modify(personalGradeDTO);
                 return RespBean.ok("modify student grade success");

@@ -1,6 +1,5 @@
 package io.github.octopigeon.cptmpservice.service.team;
 
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.*;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
@@ -30,8 +29,8 @@ import java.util.List;
  * @author 李国豪
  * @version 1.0
  * @date 2020/7/14
- * @last-check-in 李国豪
- * @date 2020/7/14
+ * @last-check-in 陈若琳
+ * @date 2020/7/23
  */
 @Service
 public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
@@ -52,10 +51,15 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
     private PersonalGradeMapper personalGradeMapper;
 
     @Autowired
+    private TrainMapper trainMapper;
+
+    @Autowired
+    private ProjectMapper projectMapper;
+
+    @Autowired
     public TeamServiceImpl(FileProperties fileProperties) throws Exception {
         super(fileProperties);
     }
-
 
     /**
      * 添加数据
@@ -100,10 +104,10 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
     }
 
     /**
-     * 更新的文件实体
+     * 修改信息
      *
-     * @param dto
-     * @return 是否删除成功
+     * @param dto 实体
+     * @return 是否修改成功
      */
     @Override
     public Boolean modify(TeamDTO dto) throws Exception {
@@ -142,7 +146,7 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
      *
      * @param file   文件
      * @param teamId 用户名
-     * @return
+     * @return 头像Url
      */
     @Override
     public String uploadAvatar(MultipartFile file, BigInteger teamId) throws Exception {
@@ -178,7 +182,7 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
      * @param page   页号
      * @param offset 一页容量
      * @param name   团队名称
-     * @return
+     * @return 团队分页信息
      */
     @Override
     public PageInfo<TeamDTO> findByLikeName(int page, int offset, String name) {
@@ -236,20 +240,99 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
         teamPersonMapper.removeTeamPersonById(teamPerson.getId());
     }
 
+    /**
+     * 根据实训id获取团队
+     * @param page 页号
+     * @param offset 页容量
+     * @param trainId 实训Id
+     * @return 团队分页列表
+     */
+    @Override
+    public PageInfo<TeamDTO> findByTrainId(int page, int offset, BigInteger trainId)
+    {
+        List<TeamDTO> results = new ArrayList<>();
+        List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByTrainId(trainId);
+        for (ProjectTrain projectTrain: projectTrains)
+        {
+            List<Team> teams = teamMapper.findTeamsByProjectTrainId(projectTrain.getId());
+            results.addAll(convertTeamList(teams));
+        }
+        return new PageInfo<>(results);
+    }
+
+    /**
+     * 根据项目Id查找团队
+     *
+     * @param page      页号
+     * @param offset    页容量
+     * @param projectId 项目Id
+     * @return 团队分页列表
+     */
+    @Override
+    public PageInfo<TeamDTO> findByProjectId(int page, int offset, BigInteger projectId) {
+        List<TeamDTO> results = new ArrayList<>();
+        List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByProjectId(projectId);
+        for (ProjectTrain projectTrain: projectTrains)
+        {
+            List<Team> teams = teamMapper.findTeamsByProjectTrainId(projectTrain.getId());
+            results.addAll(convertTeamList(teams));
+        }
+        return new PageInfo<>(results);
+    }
+
+    /**
+     * 根据实训ID和团队Id查找团队
+     *
+     * @param page      页号
+     * @param offset    页容量
+     * @param trainId   实训Id
+     * @param projectId 团队Id
+     * @return 团队分页列表
+     */
+    @Override
+    public PageInfo<TeamDTO> findByProjectIdAndTrainId(int page, int offset, BigInteger trainId, BigInteger projectId) {
+        List<Team> teams = teamMapper.findTeamsByProjectTrainId(getTrainProjectId(trainId, projectId));
+        List<TeamDTO> results = convertTeamList(teams);
+        return new PageInfo<>(results);
+    }
+
+    /**
+     * 将Team转为TeamDTO
+     * @param team 团队Model
+     * @return teamDto
+     */
     private TeamDTO convertTeam(Team team){
         TeamDTO teamDTO = new TeamDTO();
         BeanUtils.copyProperties(team, teamDTO);
         BigInteger[] ids = getTrainIdAndProjectId(teamDTO.getProjectTrainId());
         teamDTO.setTrainId(ids[0]);
         teamDTO.setProjectId(ids[1]);
+        teamDTO.setTrainName(trainMapper.findTrainById(teamDTO.getTrainId()).getName());
+        teamDTO.setProjectName(projectMapper.findTrainProjectById(teamDTO.getProjectId()).getName());
+        teamDTO.setSize(teamPersonMapper.findTeamPersonByTeamId(teamDTO.getId()).size());
         return teamDTO;
+    }
+
+    /**
+     * 将Team列表转为TeamDTO列表
+     * @param teamList 团队列表
+     * @return 团队DTO列表
+     */
+    private List<TeamDTO> convertTeamList(List<Team> teamList)
+    {
+        List<TeamDTO>teamDTOList = new ArrayList<>();
+        for (Team team :teamList)
+        {
+            teamDTOList.add(convertTeam(team));
+        }
+        return teamDTOList;
     }
 
     /**
      * 根据trainId和projectId获取TrainProjectId
      * @param trainId 实训Id
      * @param projectId 项目Id
-     * @return
+     * @return trainProjectId
      */
     private BigInteger getTrainProjectId(BigInteger trainId, BigInteger projectId){
         return projectTrainMapper.findProjectTrainByProjectIdAndTrainId(projectId, trainId).getId();
@@ -257,8 +340,8 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
 
     /**
      * 根据TrainProjectId获取trainId和projectId
-     * @param trainProjectId
-     * @return
+     * @param trainProjectId 实训项目ID
+     * @return trainId和projectId
      */
     private BigInteger[] getTrainIdAndProjectId(BigInteger trainProjectId){
         BigInteger[] ids = new BigInteger[2];

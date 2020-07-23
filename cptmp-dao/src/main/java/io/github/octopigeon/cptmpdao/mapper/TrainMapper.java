@@ -160,7 +160,8 @@ public interface TrainMapper {
      * @last-check-in 李国豪
      * @return 项目列表
      */
-    @Select("select id, " + COLUMNS + " from train where (NOW() between start_time and end_time) and " + SOFT_DELETE_TAIL)
+    @Select("select id, " + COLUMNS + " from train where start_time<=NOW() and end_time>=Now() and " + SOFT_DELETE_TAIL)
     @ResultMap("train")
     List<Train> findValidTrains();
+    //@Select("select id, " + COLUMNS + " from train where (NOW() between start_time and end_time) and " + SOFT_DELETE_TAIL)
 }

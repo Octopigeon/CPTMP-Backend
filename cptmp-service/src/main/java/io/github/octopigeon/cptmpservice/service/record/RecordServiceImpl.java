@@ -4,10 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import io.github.octopigeon.cptmpdao.mapper.RecordMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProcessEventMapper;
-import io.github.octopigeon.cptmpdao.model.Project;
 import io.github.octopigeon.cptmpdao.model.Record;
 import io.github.octopigeon.cptmpdao.model.relation.ProcessEvent;
-import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.record.RecordDTO;
@@ -42,7 +40,7 @@ public class RecordServiceImpl extends BaseFileServiceImpl implements RecordServ
     @Autowired
     private AttachmentFileService attachmentFileService;
 
-    private final String libJsonName = "assignments";
+    private final String assignmentlibJsonName = "assignments";
 
     @Autowired
     public RecordServiceImpl(FileProperties fileProperties) throws Exception {
@@ -56,15 +54,20 @@ public class RecordServiceImpl extends BaseFileServiceImpl implements RecordServ
      */
     @Override
     public void add(RecordDTO dto) throws Exception {
-        Record record = new Record();
-        dto.setProcessEventId(getProcessEventId(dto.getProcessId(), dto.getEventId()));
-        BeanUtils.copyProperties(dto, record);
-        record.setGmtCreate(new Date());
-        JSONObject object = new JSONObject();
-        List<FileDTO> fileDTOS = new ArrayList<>();
-        object.put(this.libJsonName, fileDTOS);
-        record.setAssignmentsLib(object.toJSONString());
-        recordMapper.addRecord(record);
+        try{
+            Record record = new Record();
+            dto.setProcessEventId(getProcessEventId(dto.getProcessId(), dto.getEventId()));
+            BeanUtils.copyProperties(dto, record);
+            record.setGmtCreate(new Date());
+            JSONObject object = new JSONObject();
+            List<FileDTO> fileDTOS = new ArrayList<>();
+            object.put(this.assignmentlibJsonName, fileDTOS);
+            record.setAssignmentsLib(object.toJSONString());
+            recordMapper.addRecord(record);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new Exception("Add Record filed");
+        }
     }
 
     /**
@@ -79,10 +82,9 @@ public class RecordServiceImpl extends BaseFileServiceImpl implements RecordServ
     }
 
     /**
-     * 更新的文件实体
-     *
-     * @param dto
-     * @return 是否删除成功
+     * 修改相关信息
+     * @param dto 实体
+     * @return 是否修改成功
      */
     @Deprecated
     @Override
@@ -106,7 +108,7 @@ public class RecordServiceImpl extends BaseFileServiceImpl implements RecordServ
      *
      * @param trainId 实训id
      * @param userId  用户id
-     * @return
+     * @return 记录信息列表
      */
     @Override
     public List<RecordDTO> findByTrainIdAndUserId(BigInteger trainId, BigInteger userId) {
@@ -121,7 +123,7 @@ public class RecordServiceImpl extends BaseFileServiceImpl implements RecordServ
     /**
      * 使用实训id和团队Id进行查询
      * @param teamId  团队id
-     * @return
+     * @return 记录信息列表
      */
     @Override
     public List<RecordDTO> findByTeamId(BigInteger teamId) {
@@ -134,20 +136,37 @@ public class RecordServiceImpl extends BaseFileServiceImpl implements RecordServ
     }
 
     /**
+     * 使用流程Id和事件Id进行查询
+     *
+     * @param processId 流程Id
+     * @param eventId   事件Id
+     * @return 记录列表
+     */
+    @Override
+    public List<RecordDTO> findByProcessIdAndEventId(BigInteger processId, BigInteger eventId) {
+        List<Record> records = recordMapper.findRecordByProcessEventId(getProcessEventId(processId, eventId));
+        List<RecordDTO> results = new ArrayList<>();
+        for (Record record: records) {
+            results.add(convertRecord(record));
+        }
+        return results;
+    }
+
+    /**
      * 上传作业
      *
      * @param file     文件
      * @param recordId 活动记录id
-     * @throws Exception
+     * @throws Exception 上传文件异常
      */
     @Override
     public void uploadAssignment(MultipartFile file, BigInteger recordId) throws Exception {
         FileDTO fileInfo = storePrivateFile(file);
         Record record = recordMapper.findRecordById(recordId);
         JSONObject object = JSON.parseObject(record.getAssignmentsLib());
-        List<FileDTO> resourceLib = JSON.parseArray(object.getJSONArray(this.libJsonName).toJSONString(), FileDTO.class);
+        List<FileDTO> resourceLib = JSON.parseArray(object.getJSONArray(this.assignmentlibJsonName).toJSONString(), FileDTO.class);
         resourceLib.add(fileInfo);
-        object.put(this.libJsonName, resourceLib);
+        object.put(this.assignmentlibJsonName, resourceLib);
         record.setGmtModified(new Date());
         record.setAssignmentsLib(object.toJSONString());
         recordMapper.updateRecordById(record);
@@ -164,9 +183,9 @@ public class RecordServiceImpl extends BaseFileServiceImpl implements RecordServ
     public void removeAssignment(BigInteger recordId, FileDTO file) throws Exception {
         Record record = recordMapper.findRecordById(recordId);
         JSONObject object = JSON.parseObject(record.getAssignmentsLib());
-        List<FileDTO> resourceLib = JSON.parseArray(object.getJSONArray(this.libJsonName).toJSONString(), FileDTO.class);
+        List<FileDTO> resourceLib = JSON.parseArray(object.getJSONArray(this.assignmentlibJsonName).toJSONString(), FileDTO.class);
         resourceLib.remove(file);
-        object.put(this.libJsonName, resourceLib);
+        object.put(this.assignmentlibJsonName, resourceLib);
         record.setGmtModified(new Date());
         record.setAssignmentsLib(object.toJSONString());
         recordMapper.updateRecordById(record);
@@ -176,8 +195,8 @@ public class RecordServiceImpl extends BaseFileServiceImpl implements RecordServ
 
     /**
      * 将record类型转成recordDTO类型
-     * @param record
-     * @return
+     * @param record record的model
+     * @return recordDto类型
      */
     private RecordDTO convertRecord(Record record){
         RecordDTO recordDTO = new RecordDTO();
@@ -190,9 +209,9 @@ public class RecordServiceImpl extends BaseFileServiceImpl implements RecordServ
 
     /**
      * 根据进程id和事件id获取processEventId
-     * @param processId
-     * @param eventId
-     * @return
+     * @param processId process唯一标识Id
+     * @param eventId event唯一标识Id
+     * @return processEventId
      */
     private BigInteger getProcessEventId(BigInteger processId, BigInteger eventId){
         return processEventMapper.findProcessEventByProcessIdAndEventId(processId, eventId).getId();
@@ -200,8 +219,8 @@ public class RecordServiceImpl extends BaseFileServiceImpl implements RecordServ
 
     /**
      * 根据processEventId获取processId和EventId
-     * @param processEventId
-     * @return
+     * @param processEventId processEvent唯一标识符
+     * @return process与event唯一标识符
      */
     private BigInteger[] getProcessIdAndEventId(BigInteger processEventId){
         BigInteger[] ids = new BigInteger[2];

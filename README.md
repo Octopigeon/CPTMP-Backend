@@ -1765,7 +1765,51 @@ College Practice Training Management Platform
   ```
 
 
-## 8.获取团队成员信息
+## 8.根据实训id获取团队
+
++ 接口：api/team/train/{train_id}
+
++ 方法：GET
+
++ 参数：offset ，page
+
++ 调用实例：
+
+  ```json
+  //api/team/train/2?page=1&offset=8
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-22T16:50:59.604+00:00",
+      "msg": "success",
+      "total_rows": 1,
+      "data": [
+          {
+              "id": 2,
+              "name": "小章鱼",
+              "avatar": null,
+              "evaluation": "良好",
+              "size": 1,
+              "train_id": 2,
+              "train_name": "中级项目实训",
+              "project_id": 2,
+              "project_name": "大二实训",
+              "repo_url": "https://www.baidu.com/",
+              "team_grade": 94,
+              "team_master_id": 2,
+              "team_master": "刘恒"
+          }
+      ]
+  }
+  //失败
+  ```
+
+## 9.获取团队成员信息
 
 + 接口：api/team/{team_id}/member
 
@@ -1803,6 +1847,36 @@ College Practice Training Management Platform
   }
   //失败
   ```
+
+
+
+## 10.上传团队头像
+
++ 接口：api/team/{team_id}/uploadAvatar
+
++ 方法：POST
+
++ 参数：文件
+
++ 调用实例：
+
+  ```json
+  //api/team/1/uploadAvatar
+  文件 key：file
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-22T17:09:13.955+00:00",
+      "msg": "upload Avatar successfully"
+  }
+  //失败
+  ```
+
 
 
 # 流程模块（ProcessDetailsController）
@@ -2257,6 +2331,491 @@ College Practice Training Management Platform
   ```
 
 
+
+# 记录模块（RecordDetailsController）
+
+## 1.创建记录
+
++ 接口：api/record
+
++ 方法：POST
+
++ 调用实例：
+
+  ```json
+   {
+      "train_id": 1,
+      "team_id": 1,
+      "user_id": 1,
+      "process_id": 1,
+      "event_id": 1,
+      "assignments_lib": "www.baidu.com"
+  }
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-22T12:30:45.747+00:00",
+      "msg": "create record successfully"
+  }
+  //失败
+  {
+      "status": 18,
+      "date": "2020-07-22T12:31:13.889+00:00",
+      "msg": "create record failed"
+  }
+  ```
+
+  
+
+## 2.通过id获取记录
+
++ 接口：api/record
+
++ 方法：GET
+
++ 调用实例：
+
+  ```json
+  //api/record/1
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-22T12:33:49.938+00:00",
+      "msg": "success",
+      "data": {
+          "id": 1,
+          "train_id": 1,
+          "team_id": 1,
+          "user_id": 1,
+          "process_id": 1,
+          "event_id": 1,
+          "assignments_lib": "www.baidu.com"
+      }
+  }
+  //失败
+  {
+      "status": 15,
+      "date": "2020-07-22T12:34:41.794+00:00",
+      "msg": "get record failed",
+      "data": null
+  }
+  ```
+
+  
+
+## 3.通过实训id和用户id获取记录
+
++ 接口：api/record
+
++ 方法：GET
+
++ 参数：train_id,user_id
+
++ 调用实例：
+
+  ```json
+  //api/record/user?train_id=2&user_id=2
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-22T12:35:05.545+00:00",
+      "msg": "success",
+      "data": [
+          {
+              "id": 2,
+              "train_id": 2,
+              "team_id": 2,
+              "user_id": 2,
+              "process_id": 2,
+              "event_id": 2,
+              "assignments_lib": "www.baidu.com"
+          }
+      ]
+  }
+  //失败
+  
+  ```
+
+  
+
+## 4.通过团队id记录
+
++ 接口：api/record/team/{team_id}
+
++ 方法：GET
+
++ 调用实例：
+
+  ```json
+  //api/record/team/1
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-22T12:51:43.602+00:00",
+      "msg": "success",
+      "data": [
+          {
+              "id": 1,
+              "train_id": 1,
+              "team_id": 1,
+              "user_id": 1,
+              "process_id": 1,
+              "event_id": 1,
+              "assignments_lib": "www.baidu.com"
+          },
+          {
+              "id": 8,
+              "train_id": 1,
+              "team_id": 1,
+              "user_id": 1,
+              "process_id": 1,
+              "event_id": 1,
+              "assignments_lib": "{\"assignments\":[]}"
+          }
+      ]
+  }
+  //失败
+  
+  ```
+
+  
+
+## 5.上传文件
+
++ 接口：api/record/{record_id}/file
+
++ 方法：POST
+
++ 参数：文件
+
++ 调用实例：
+
+  ```json
+  //api/record/8/file
+  文件key为file
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-22T13:00:04.438+00:00",
+      "msg": "upload resource files successfully"
+  }
+  //失败
+  {
+      "status": 16,
+      "date": "2020-07-22T13:02:12.474+00:00",
+      "msg": "upload resource files failed"
+  }
+  ```
+
+  
+
+## 6.删除记录相关文件
+
++ 接口：api/record
+
++ 方法：POST
+
++ 调用实例：
+
+  ```json
+  {
+      "fileName":"be2dd4db-ba70-472f-ae47-d2c9ef5eddef.png",
+      "filePath":"C:\\cptmp\\private\\2020\\7\\22\\be2dd4db-ba70-472f-ae47-d2c9ef5eddef.png",
+      "fileSize":175186,
+      "fileType":"image/png",
+      "fileUrl":"/api/storage/2020/7/22/be2dd4db-ba70-472f-ae47-d2c9ef5eddef.png",
+      "gmtCreate":1595422804089,
+      "originName":"Logo4-5 (1).png"
+  }
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-22T13:05:04.216+00:00",
+      "msg": "remove resource files success"
+  }
+  //失败
+  {
+      "status": 16,
+      "date": "2020-07-22T13:03:59.791+00:00",
+      "msg": "remove resource files failed"
+  }
+  ```
+
+  
+
+# 提醒模块（NoticeDetailsController）
+
+## 1.创建提示
+
++ 接口：api/notice
+
++ 方法：POST
+
++ 调用实例：
+
+  ```json
+   {
+      "sender_id": 1,
+      "receiver_id": 5,
+      "team_id": 1,
+      "content": "创建团队",
+      "is_read": false,
+      "type": "普通"
+  }
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-22T13:42:28.735+00:00",
+      "msg": "create notice successfully"
+  }
+  //失败
+  {
+      "status": 18,
+      "date": "2020-07-22T13:42:53.215+00:00",
+      "msg": "create notice failed"
+  }
+  ```
+
+  
+
+## 2.通过接收者id获取通知信息
+
++ 接口：api/notice/receiver/{receiver_id}
+
++ 方法：GET
+
++ 参数：offset、page
+
++ 调用实例：
+
+  ```json
+  //api/notice/receiver/5?offset=8&page=1
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-22T13:31:17.335+00:00",
+      "msg": "success",
+      "total_rows": 1,
+      "data": [
+          {
+              "id": 1,
+              "sender_id": 1,
+              "receiver_id": 5,
+              "team_id": 1,
+              "content": "创建团队",
+              "is_read": true,
+              "type": "普通"
+          }
+      ]
+  }
+  //失败
+  {
+      "status": 15,
+      "date": "2020-07-22T13:29:00.589+00:00",
+      "msg": "get notice failed",
+      "total_rows":0,
+      "data": null
+  }
+  ```
+
+  
+
+## 3.通过id获取通知信息
+
++ 接口：api/notice/{notice_id}
+
++ 方法：GET
+
++ 调用实例：
+
+  ```json
+  //api/notice/1
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-22T13:19:13.096+00:00",
+      "msg": "success",
+      "data": {
+          "id": 1,
+          "sender_id": 1,
+          "receiver_id": 5,
+          "team_id": 1,
+          "content": "创建团队",
+          "is_read": true,
+          "type": "普通"
+      }
+  }
+  //失败
+  {
+      "status": 15,
+      "date": "2020-07-22T13:29:00.589+00:00",
+      "msg": "get notice failed",
+      "data": null
+  }
+  ```
+
+  
+
+## 4.通过团队id获取通知信息
+
++ 接口：api/notice/team/{team_id}
+
++ 方法：POST
+
++ 参数：offset、page
+
++ 调用实例：
+
+  ```json
+  //api/notice/team/1?offset=8&page=1
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-22T13:45:33.952+00:00",
+      "msg": "success",
+    "total_rows": 2,
+      "data": [
+          {
+              "id": 1,
+              "content": "创建团队",
+              "sender_id": 1,
+              "receiver_id": 5,
+              "team_id": 1,
+              "type": "普通",
+              "is_read": true
+          },
+          {
+              "id": 8,
+              "content": "创建团队",
+              "sender_id": 1,
+              "receiver_id": 5,
+              "team_id": 1,
+              "type": "MESSAGE_NOTICE",
+              "is_read": false
+          }
+      ]
+  }
+  //失败
+  
+  ```
+  
+  
+
+## 5.根据id删除通知消息
+
++ 接口：api/notice/{notice_id}
+
++ 方法：DELETE
+
++ 调用实例：
+
+  ```json
+  //api/notice/8
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-22T14:03:50.541+00:00",
+      "msg": "remove notice successfully"
+}
+  //失败
+  
+  ```
+  
+  
+
+## 6.更新通知消息
+
++ 接口：api/notice
+
++ 方法：PUT
+
++ 调用实例：
+
+  ```json
+   {
+      "id":1,
+      "sender_id": 2,
+      "receiver_id": 3,
+      "team_id": 1,
+      "content": "提交文档",
+      "is_read": false,
+      "type": "普通"
+  }
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-22T14:11:35.501+00:00",
+      "msg": "update notice successfully"
+  }
+  //失败
+  {
+      "status": 10,
+      "date": "2020-07-22T14:10:55.746+00:00",
+      "msg": "update notice failed"
+  }
+  ```
+
+  
 
 ## 1.创建实训//这是我的模板 勿删🙅‍
 
