@@ -24,9 +24,9 @@ public interface BaseNormalService<T> {
     void remove(T dto) throws Exception;
 
     /**
-     * 更新的文件实体
-     * @param dto
-     * @return 是否删除成功
+     * 修改信息
+     * @param dto dto实体
+     * @return 是否修改成功
      */
     Boolean modify(T dto) throws Exception;
 
