@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
+ * 通知服务实现类
  * @author 李国豪
  * @version 1.0
  * @date 2020/7/20
@@ -109,6 +110,8 @@ public class NoticeServiceImpl implements NoticeService{
     public void remove(NoticeDTO dto) throws Exception {
         if(noticeMapper.findNoticeById(dto.getId()) != null){
             noticeMapper.hideNoticeById(dto.getId(), new Date());
+        }else{
+            throw new Exception("Notice is not exist!");
         }
     }
 
@@ -143,6 +146,9 @@ public class NoticeServiceImpl implements NoticeService{
     public NoticeDTO findById(BigInteger id) throws Exception {
         NoticeDTO noticeDTO = new NoticeDTO();
         Notice notice = noticeMapper.findNoticeById(id);
+        if(notice == null){
+            throw new Exception("Notice is not exist!");
+        }
         BeanUtils.copyProperties(notice, noticeDTO);
         return noticeDTO;
     }
