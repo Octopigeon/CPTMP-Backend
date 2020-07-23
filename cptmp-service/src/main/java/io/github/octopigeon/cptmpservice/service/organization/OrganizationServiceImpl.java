@@ -293,7 +293,7 @@ public class OrganizationServiceImpl implements OrganizationService{
             return operator.getOrganizationId().equals(operatedObject.getId());
         }
     }
-    
+
     /**
      * 产生邀请码
      * @return 唯一邀请码

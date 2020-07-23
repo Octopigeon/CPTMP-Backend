@@ -20,7 +20,7 @@ public interface PunchService {
      * @param trainId 实训id
      * @param longitude 签到的经度
      * @param latitude 签到的纬度
-     * @return
+     * @return 是否签到成功
      */
     Boolean locationPunch(BigInteger trainId, double longitude, double latitude);
 
@@ -28,7 +28,7 @@ public interface PunchService {
      * 采用人脸进行打卡
      * @param image 人脸文件
      * @param username 用户名
-     * @return
+     * @return 是否签到成功
      */
     Boolean facePunch(MultipartFile image, String username) throws Exception;
 

@@ -43,12 +43,10 @@ public class PunchServiceImpl implements PunchService{
     @Autowired
     private FaceProperties faceProperties;
 
+    /** 以下为调用人脸识别接口所用的常量 */
     private final String personId = "PersonId";
-
     private final String image = "Image";
-
     private final String groupId = "GroupId";
-
     private final String personName = "PersonName";
 
     /**
@@ -57,7 +55,7 @@ public class PunchServiceImpl implements PunchService{
      * @param trainId    实训id
      * @param longitude 签到的经度
      * @param latitude   签到的纬度
-     * @return
+     * @return 是否签到成功
      */
     @Override
     public Boolean locationPunch(BigInteger trainId, double longitude, double latitude) {
@@ -82,7 +80,7 @@ public class PunchServiceImpl implements PunchService{
      *
      * @param image    人脸文件
      * @param username 用户名
-     * @return
+     * @return 是否签到成功
      */
     @Override
     public Boolean facePunch(MultipartFile image, String username) throws Exception {
@@ -165,8 +163,8 @@ public class PunchServiceImpl implements PunchService{
     /**
      * 将multifile转换层base64编码
      * @param file 文件
-     * @return
-     * @throws Exception
+     * @return Base64编码
+     * @throws Exception 转base64编码异常
      */
     private String convertMultiFileToBase(MultipartFile file) throws Exception {
         try{
@@ -177,6 +175,10 @@ public class PunchServiceImpl implements PunchService{
         }
     }
 
+    /**
+     * 创建与腾讯云链接的客户端
+     * @return 客户端
+     */
     private IaiClient createClient(){
         Credential cred = new Credential(faceProperties.getSecretId(), faceProperties.getSecretKey());
         HttpProfile httpProfile = new HttpProfile();
