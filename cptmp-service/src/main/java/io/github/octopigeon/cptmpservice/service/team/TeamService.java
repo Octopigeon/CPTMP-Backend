@@ -1,7 +1,6 @@
 package io.github.octopigeon.cptmpservice.service.team;
 
 import com.github.pagehelper.PageInfo;
-import io.github.octopigeon.cptmpdao.model.Team;
 import io.github.octopigeon.cptmpservice.dto.team.TeamDTO;
 import io.github.octopigeon.cptmpservice.service.basefileservice.BaseFileService;
 import io.github.octopigeon.cptmpservice.service.basenormalservice.BaseNormalService;
@@ -15,7 +14,7 @@ import java.util.List;
  * @version 1.0
  * @date 2020/7/14
  * @last-check-in 李国豪
- * @date 2020/7/14
+ * @date 2020/7/23
  */
 public interface TeamService extends BaseNormalService<TeamDTO>, BaseFileService {
 
@@ -47,21 +46,21 @@ public interface TeamService extends BaseNormalService<TeamDTO>, BaseFileService
     PageInfo<TeamDTO> findByTrainId(int page, int offset, BigInteger trainId);
 
     /**
-     *
-     * @param page
-     * @param offset
-     * @param projectId
-     * @return
+     * 根据项目Id查找团队
+     * @param page 页号
+     * @param offset 页容量
+     * @param projectId 项目Id
+     * @return 团队分页列表
      */
     PageInfo<TeamDTO> findByProjectId(int page, int offset, BigInteger projectId);
 
     /**
-     *
-     * @param page
-     * @param offset
-     * @param trainId
-     * @param projectId
-     * @return
+     * 根据实训ID和团队Id查找团队
+     * @param page 页号
+     * @param offset 页容量
+     * @param trainId 实训Id
+     * @param projectId 团队Id
+     * @return 团队分页列表
      */
     PageInfo<TeamDTO> findByProjectIdAndTrainId(int page, int offset, BigInteger trainId, BigInteger projectId);
 
