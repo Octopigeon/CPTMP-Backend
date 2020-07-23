@@ -96,8 +96,8 @@ public class RecordDetailsController {
      * @param teamId
      * @return
      */
-    @GetMapping("api/record/team")
-    public RespBeanWithRecordList getRecordByTrainIdAndUserId(@RequestParam("team_id")BigInteger teamId)
+    @GetMapping("api/record/team/{team_id}")
+    public RespBeanWithRecordList getRecordByTrainIdAndUserId(@PathVariable("team_id")BigInteger teamId)
     {
         try{
             return new RespBeanWithRecordList(recordService.findByTeamId(teamId));
@@ -114,8 +114,8 @@ public class RecordDetailsController {
      * @param recordId
      * @return
      */
-    @PostMapping("/api/record/{record_id}/file")
-    public RespBean updateTeamResource(
+    @PostMapping("api/record/{record_id}/file")
+    public RespBean updateRecordResource(
             @RequestParam("file") MultipartFile resource,
             @PathVariable(value = "record_id") BigInteger recordId) {
         try {
@@ -132,8 +132,8 @@ public class RecordDetailsController {
      * @param json
      * @return 删除是否成功
      */
-    @DeleteMapping("/api/record/{record_id}/file")
-    public RespBean deleteTrainResource(
+    @DeleteMapping("api/record/{record_id}/file")
+    public RespBean deleteRecordResource(
             @RequestBody String json,
             @PathVariable(value = "record_id") BigInteger recordId)
     {

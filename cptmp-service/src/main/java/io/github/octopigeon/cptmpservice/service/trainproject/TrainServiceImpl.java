@@ -2,7 +2,6 @@ package io.github.octopigeon.cptmpservice.service.trainproject;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.*;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProcessEventMapper;
@@ -84,7 +83,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
      *
      * @param page   页号
      * @param offset 一页的数量
-     * @return
+     * @return 实训分页信息
      */
     @Override
     public PageInfo<TrainDTO> findAll(int page, int offset) {
@@ -98,7 +97,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
      * @param page           页号
      * @param offset         偏移量
      * @param organizationId 组织id
-     * @return
+     * @return 实训分页信息
      */
     @Override
     public PageInfo<TrainDTO> findByOrganizationId(int page, int offset, BigInteger organizationId) {
@@ -109,10 +108,10 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
     /**
      * 根据实训名称进行模糊查询
      *
-     * @param page
-     * @param offset
+     * @param page 页号
+     * @param offset 页容量
      * @param likeName 模糊名称
-     * @return
+     * @return 实训分页信息
      */
     @Override
     public PageInfo<TrainDTO> findByLikeName(int page, int offset, String likeName) {
@@ -120,6 +119,29 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
         return getTrainDTOPageInfo(trains);
     }
 
+    /**
+     * 查询一个项目出现的所有实训
+     *
+     * @param page      页号
+     * @param offset    页容量
+     * @param projectId 项目Id
+     * @return 实训分页信息
+     */
+    @Override
+    public PageInfo<TrainDTO> findByProjectId(int page, int offset, BigInteger projectId) {
+        List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByProjectId(projectId);
+        List<Train> trains = new ArrayList<>();
+        for (ProjectTrain projectTrain: projectTrains) {
+            trains.add(trainMapper.findTrainById(projectTrain.getTrainId()));
+        }
+        return getTrainDTOPageInfo(trains);
+    }
+
+    /**
+     * 将实训实体列表转化成实训分页信息
+     * @param trains 实训实体列表
+     * @return 实训dto分页信息
+     */
     @NotNull
     private PageInfo<TrainDTO> getTrainDTOPageInfo(List<Train> trains) {
         List<TrainDTO> results = new ArrayList<>();
@@ -130,23 +152,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
         }
         return new PageInfo<>(results);
     }
-
-    /**
-     * 分页查询实训对应的项目
-     * @param page 页号
-     * @param offset 一页的数量
-     * @param id 实训id
-     * @return 项目id列表
-     */
-    @Override
-    public PageInfo<BigInteger> findProjectIdsById(int page, int offset, BigInteger id) {
-        List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByTrainId(id);
-        List<BigInteger> results = new ArrayList<>();
-        for (ProjectTrain projectTrain: projectTrains) {
-            results.add(projectTrain.getProjectId());
-        }
-        return new PageInfo<>(results);
-    }
+    
 
     /**
      * 给资源库上传文件
@@ -231,7 +237,7 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
 
     /**
      * 移除实训项目下的队伍
-     * @param projectTrain
+     * @param projectTrain 实训项目关联
      */
     private void removeTeams(ProjectTrain projectTrain) {
         List<Team> teams = teamMapper.findTeamsByProjectTrainId(projectTrain.getId());
@@ -300,14 +306,13 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
             processMapper.hideProcessesByTrainId(new Date(), dto.getId());
             trainMapper.hideTrainById(train.getId(), new Date());
         }else{
-            throw new ValueException("The train not exist！");
+            throw new Exception("The train not exist！");
         }
     }
 
     /**
-     * 更新的文件实体
-     *
-     * @param dto
+     * 修改信息
+     * @param dto 实体
      * @return 是否删除成功
      */
     @Override
@@ -333,6 +338,9 @@ public class TrainServiceImpl extends BaseFileServiceImpl implements TrainServic
     @Override
     public TrainDTO findById(BigInteger id) throws Exception {
         Train train = trainMapper.findTrainById(id);
+        if(train == null){
+            throw new Exception("Train is not exist!");
+        }
         TrainDTO result = new TrainDTO();
         BeanUtils.copyProperties(train, result);
         return result;

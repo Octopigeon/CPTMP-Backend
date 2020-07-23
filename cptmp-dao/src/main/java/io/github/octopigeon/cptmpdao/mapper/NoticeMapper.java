@@ -123,7 +123,7 @@ public interface NoticeMapper {
     /**
      * 根据接受者Id查找Notice
      * @param receiverId 接受者Id
-     * @return
+     * @return 通知列表
      */
     @Select("select id, " + COLUMNS + " from notice where idx_receiver_id = #{receiverId} and " + SOFT_DELETE_TAIL)
     @ResultMap("notice")
@@ -132,7 +132,7 @@ public interface NoticeMapper {
     /**
      * 根据接收团队Id查找notice
      * @param teamId 团队Id
-     * @return
+     * @return 通知列表
      */
     @Select("select id, " + COLUMNS + " from notice where idx_team_id = #{teamId} and " + SOFT_DELETE_TAIL)
     @ResultMap("notice")
@@ -142,9 +142,18 @@ public interface NoticeMapper {
      * 查找内容一致的notice
      * @last-check-in 李国豪
      * @param notice 通知
-     * @return
+     * @return 通知信息
      */
     @Select("select id, " + COLUMNS + " from notice where idx_team_id = #{teamId} and idx_receiver_id = #{receiverId} and notice_type = #{noticeType} and content = #{content} and " + SOFT_DELETE_TAIL)
     @ResultMap("notice")
     Notice findNoticeByNotice(Notice notice);
+
+    /**
+     * 根据发送者Id查找Notice
+     * @param senderId 发送者Id
+     * @return 通知列表
+     */
+    @Select("select id, " + COLUMNS + " from notice where idx_sender_id = #{senderId} and " + SOFT_DELETE_TAIL)
+    @ResultMap("notice")
+    List<Notice> findNoticeBySenderId(BigInteger senderId);
 }

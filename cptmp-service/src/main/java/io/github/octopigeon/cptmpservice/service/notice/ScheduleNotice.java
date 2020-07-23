@@ -22,10 +22,11 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Gh Li
+ * 定时任务，定时添加通知
+ * @author 李国豪
  * @version 1.0
  * @date 2020/7/21
- * @last-check-in Gh Li
+ * @last-check-in 李国豪
  * @date 2020/7/21
  */
 @Component
@@ -169,7 +170,7 @@ public class ScheduleNotice {
     /**
      * 查询学生用户的teamPerson
      * @param trainId 实训Id
-     * @return
+     * @return 学生用户的teamPerson列表
      */
     private List<TeamPerson> findStudentTeamPeopleByTrain(BigInteger trainId){
         List<TeamPerson> results = new ArrayList<>();
@@ -193,8 +194,8 @@ public class ScheduleNotice {
 
     /**
      * 找到一个trainId下的所有学生用户
-     * @param trainId
-     * @return
+     * @param trainId 实训Id
+     * @return 学生用户列表
      */
     private List<CptmpUser> findStudentsByTrain(BigInteger trainId){
         List<CptmpUser> users = new ArrayList<>();
@@ -220,7 +221,7 @@ public class ScheduleNotice {
      * deadline提醒内容
      * @param content 事务内容
      * @param deadline 最后期限
-     * @return
+     * @return deadline消息内容
      */
     private String generateDeadlineNotice(String trainName, String content, Date deadline){
         return String.format("提醒：在 %s 中，您有一个 %s 待完成，最后期限为：%s",trainName, content, deadline.toString());
@@ -230,7 +231,7 @@ public class ScheduleNotice {
      * 警告消息提醒内容
      * @param username 用户名
      * @param content 事务内容
-     * @return
+     * @return 个人警告消息内容
      */
     private String generateUserWarningNotice(String username, String content){
         return String.format("警告：用户 %s 未正常完成 %s", username, content);
@@ -240,7 +241,7 @@ public class ScheduleNotice {
      * 警告消息提醒内容
      * @param teamName 用户名
      * @param content 事务内容
-     * @return
+     * @return 团队警告消息内容
      */
     private String generateTeamWarningNotice(String teamName, String content){
         return String.format("警告：团队 %s 未正常完成 %s", teamName, content);

@@ -3,8 +3,10 @@ package io.github.octopigeon.cptmpservice.service.processevent;
 import io.github.octopigeon.cptmpdao.mapper.EventMapper;
 import io.github.octopigeon.cptmpdao.mapper.ProcessMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProcessEventMapper;
+import io.github.octopigeon.cptmpdao.model.Event;
 import io.github.octopigeon.cptmpdao.model.Process;
 import io.github.octopigeon.cptmpdao.model.relation.ProcessEvent;
+import io.github.octopigeon.cptmpservice.dto.processevent.EventDTO;
 import io.github.octopigeon.cptmpservice.dto.processevent.ProcessDTO;
 import io.github.octopigeon.cptmpservice.utils.Utils;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
@@ -36,6 +38,9 @@ public class ProcessServiceImpl implements ProcessService{
     @Autowired
     private EventMapper eventMapper;
 
+    @Autowired
+    private EventService eventService;
+
     /**
      * 添加数据
      *
@@ -63,13 +68,14 @@ public class ProcessServiceImpl implements ProcessService{
     public void remove(ProcessDTO dto) throws Exception {
         if(processMapper.findProcessById(dto.getId()) != null){
             processMapper.hideProcessById(new Date(), dto.getId());
+        }else {
+            throw new Exception("Process is not exist!");
         }
     }
 
     /**
-     * 更新的文件实体
-     *
-     * @param dto
+     * 待更新的实体
+     * @param dto 实体
      * @return 是否删除成功
      */
     @Override
@@ -95,8 +101,12 @@ public class ProcessServiceImpl implements ProcessService{
     @Override
     public ProcessDTO findById(BigInteger id) throws Exception {
         Process process = processMapper.findProcessById(id);
+        if(process == null){
+            throw new Exception("Process is not exist!");
+        }
         ProcessDTO processDTO = new ProcessDTO();
         BeanUtils.copyProperties(process, processDTO);
+        processDTO.setEvents(eventService.findEventsByProcessId(id));
         return processDTO;
     }
 
@@ -138,7 +148,7 @@ public class ProcessServiceImpl implements ProcessService{
      * 根据实训id查询流程
      *
      * @param trainId 实训id
-     * @return
+     * @return 流程列表
      */
     @Override
     public List<ProcessDTO> findByTrainId(BigInteger trainId) {
@@ -147,6 +157,7 @@ public class ProcessServiceImpl implements ProcessService{
         for (Process process: processes) {
             ProcessDTO result = new ProcessDTO();
             BeanUtils.copyProperties(process, result);
+            result.setEvents(eventService.findEventsByProcessId(process.getId()));
             results.add(result);
         }
         return results;

@@ -15,12 +15,16 @@ import java.util.Date;
 @Data
 public class WeekContributionsDTO {
 
+    /** 一周开始时间 */
     @JsonProperty("w")
     private Date weekStartTime;
+    /** 一周添加的代码行数 */
     @JsonProperty("a")
     private Long additions;
+    /** 一周删除代码行数 */
     @JsonProperty("d")
     private Long deletions;
+    /** 一周的commit数量 */
     @JsonProperty("c")
     private Long commits;
 

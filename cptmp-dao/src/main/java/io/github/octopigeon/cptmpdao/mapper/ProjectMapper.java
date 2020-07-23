@@ -139,4 +139,13 @@ public interface ProjectMapper {
     @Select("select id, " + COLUMNS + " from train_project where idx_name like concat('%', #{name}, '%') and gmt_deleted is null")
     @ResultMap("project")
     List<Project> findTrainProjectByNameAmbiguously(String name);
+
+    /**
+     * 根据项目难度进行查询
+     * @param level 项目难度
+     * @return 项目列表
+     */
+    @Select("select id, " + COLUMNS + " from train_project where project_level = #{level} and gmt_deleted is null")
+    @ResultMap("project")
+    List<Project> findTrainProjectByLevel(Integer level);
 }

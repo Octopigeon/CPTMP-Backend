@@ -20,10 +20,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * @author Gh Li
+ * @author 李国豪
  * @version 1.0
  * @date 2020/7/20
- * @last-check-in Gh Li
+ * @last-check-in 李国豪
  * @date 2020/7/20
  */
 @Service
@@ -42,7 +42,7 @@ public class RecruitmentServiceImpl extends BaseFileServiceImpl implements Recru
      *
      * @param page   页号
      * @param offset 页容量
-     * @return
+     * @return 所有招聘信息
      */
     @Override
     public PageInfo<RecruitmentDTO> findAll(int page, int offset) {
