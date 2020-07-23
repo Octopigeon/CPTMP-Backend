@@ -11,10 +11,10 @@ import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
 import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.constantclass.NoticeType;
 import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -31,34 +31,34 @@ import java.util.List;
 @Component
 public class ScheduleNotice {
 
-    @Autowired
+    @Resource
     private NoticeMapper noticeMapper;
 
-    @Autowired
+    @Resource
     private TrainMapper trainMapper;
 
-    @Autowired
+    @Resource
     private ProcessMapper processMapper;
 
-    @Autowired
+    @Resource
     private TeamMapper teamMapper;
 
-    @Autowired
+    @Resource
     private EventMapper eventMapper;
 
-    @Autowired
+    @Resource
     private ProcessEventMapper processEventMapper;
 
-    @Autowired
+    @Resource
     private ProjectTrainMapper projectTrainMapper;
 
-    @Autowired
+    @Resource
     private TeamPersonMapper teamPersonMapper;
 
-    @Autowired
+    @Resource
     private CptmpUserMapper cptmpUserMapper;
 
-    @Autowired
+    @Resource
     private RecordMapper recordMapper;
 
     /**
