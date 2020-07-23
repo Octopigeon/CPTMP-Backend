@@ -1827,7 +1827,29 @@ College Practice Training Management Platform
 
   ```json
   //成功
-  
+  {
+      "status": 0,
+      "date": "2020-07-23T17:07:51.375+00:00",
+      "msg": "success",
+      "total_rows": 1,
+      "data": [
+          {
+              "id": 2,
+              "name": "小章鱼",
+              "avatar": "/storage/2020/7/24/33fa7170-861a-4914-be0a-eb3b236b0964.png",
+              "evaluation": "良好",
+              "size": 1,
+              "repo_url": "https://www.baidu.com/",
+              "team_grade": 94,
+              "train_id": 2,
+              "train_name": "中级项目实训",
+              "project_id": 2,
+              "project_name": "大二实训",
+              "team_master_id": 2,
+              "team_master_name": "刘恒"
+          }
+      ]
+  }
   //失败
   ```
 
@@ -1849,7 +1871,29 @@ College Practice Training Management Platform
 
   ```json
   //成功
-  
+  {
+      "status": 0,
+      "date": "2020-07-23T17:08:58.049+00:00",
+      "msg": "success",
+      "total_rows": 1,
+      "data": [
+          {
+              "id": 1,
+              "name": "章鱼鸽",
+              "avatar": "/storage/2020/7/23/38c76975-4632-4946-be1f-437902a1fb22.",
+              "evaluation": "优秀",
+              "size": 3,
+              "repo_url": "https://www.baidu.com/",
+              "team_grade": 99,
+              "train_id": 1,
+              "train_name": "初级项目实训",
+              "project_id": 1,
+              "project_name": "大一实训",
+              "team_master_id": 1,
+              "team_master_name": "李豪四"
+          }
+      ]
+  }
   //失败
   ```
 
