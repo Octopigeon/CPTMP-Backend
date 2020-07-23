@@ -281,13 +281,73 @@ public class TeamDetailsController {
         }
     }
 
+    /**
+     * 根据项目id获取团队
+     * @param projectId
+     * @param offset
+     * @param page
+     * @return
+     */
+    @GetMapping("api/team/project/{project_id}")
+    public RespBeanWithTeamList getTeamByProjectId(
+            @PathVariable("project_id")BigInteger projectId,
+            @RequestParam("offset")int offset,
+            @RequestParam("page")int page)
+    {
+        try{
+            Page pages = PageHelper.startPage(page, offset);
+            PageInfo<TeamDTO> pageInfo = teamService.findByProjectId(page,offset,projectId);
+            List<TeamDTO>teamInfoDTOList = new ArrayList<>();
+            for (TeamDTO team :pageInfo.getList())
+            {
+                teamInfoDTOList.add(convertTeam(team));
+            }
+            return new RespBeanWithTeamList(teamInfoDTOList,pages.getTotal());
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new RespBeanWithTeamList(CptmpStatusCode.INFO_ACCESS_FAILED,"get team failed");
+        }
+    }
+
+    /**
+     * 通过实训id和项目id获取团队
+     * @param projectId
+     * @param trainId
+     * @param offset
+     * @param page
+     * @return
+     */
+    @GetMapping("api/team/train_project")
+    public RespBeanWithTeamList getTeamByTrainProjectId(
+            @RequestParam("project_id")BigInteger projectId,
+            @RequestParam("train_id")BigInteger trainId,
+            @RequestParam("offset")int offset,
+            @RequestParam("page")int page)
+    {
+        try{
+            Page pages = PageHelper.startPage(page, offset);
+            PageInfo<TeamDTO> pageInfo = teamService.findByProjectIdAndTrainId(page, offset, trainId, projectId);
+            List<TeamDTO>teamInfoDTOList = new ArrayList<>();
+            for (TeamDTO team :pageInfo.getList())
+            {
+                teamInfoDTOList.add(convertTeam(team));
+            }
+            return new RespBeanWithTeamList(teamInfoDTOList,pages.getTotal());
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new RespBeanWithTeamList(CptmpStatusCode.INFO_ACCESS_FAILED,"get team failed");
+        }
+    }
+
     private TeamDTO convertTeam(TeamDTO team) throws Exception
     {
         TeamDTO teamInfoDTO = new TeamDTO();
         BeanUtils.copyProperties(team, teamInfoDTO);
         teamInfoDTO.setProjectName(projectService.findById(team.getProjectId()).getName());
         teamInfoDTO.setTrainName(trainService.findById(team.getTrainId()).getName());
-        teamInfoDTO.setTeamMaster(userInfoService.findById(team.getTeamMasterId()).getName());
+        teamInfoDTO.setTeamMasterName(userInfoService.findById(team.getTeamMasterId()).getName());
         teamInfoDTO.setSize(teamService.findUsersByTeamId(team.getId()).size());
         return teamInfoDTO;
     }

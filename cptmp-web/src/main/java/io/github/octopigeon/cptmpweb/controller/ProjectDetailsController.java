@@ -129,25 +129,6 @@ public class ProjectDetailsController {
         return RespBeanWithFailedList.report(deleteFailedList);
     }
 
-    @GetMapping("/api/train-project/{project_id}/train")
-    public RespBeanWithTrainList getTrainByProjectId(
-            @RequestBody String json,
-            @PathVariable("project_id") BigInteger projectId
-    ) throws JsonProcessingException
-    {
-        ObjectMapper objectMapper = new ObjectMapper();
-        int page = objectMapper.readValue(json, ObjectNode.class).get("page").asInt();
-        int offset = objectMapper.readValue(json, ObjectNode.class).get("offset").asInt();
-        try{
-            PageInfo<TrainDTO> pageInfo = projectService.findTrainsById(page,offset,projectId);
-            List<TrainDTO> trainDTOList = pageInfo.getList();
-            return new RespBeanWithTrainList(trainDTOList,pageInfo.getTotal());
-        }catch (Exception e)
-        {
-            e.printStackTrace();
-            return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED,"get trains failed");
-        }
-    }
 
     /**
      * 获取所有项目

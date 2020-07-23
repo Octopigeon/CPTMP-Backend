@@ -267,14 +267,9 @@ public class TrainDetailsController {
             @RequestParam("page")int page)
     {
         try{
-            PageInfo<BigInteger> pageInfo = trainService.findProjectIdsById(page,offset,trainId);
-            List<BigInteger> projectIds = pageInfo.getList();
-            List<ProjectDTO> projectList = new ArrayList<>();
-            for (BigInteger projectId:projectIds)
-            {
-                projectList.add(projectService.findById(projectId));
-            }
-            return new RespBeanWithProjectList(projectList,pageInfo.getTotal());
+            Page pages = PageHelper.startPage(page, offset);
+            PageInfo<ProjectDTO> pageInfo = projectService.findByTrainId(page,offset,trainId);
+            return new RespBeanWithProjectList(pageInfo.getList(),pages.getTotal());
         } catch (Exception e) {
             e.printStackTrace();
             return new RespBeanWithProjectList(CptmpStatusCode.INFO_ACCESS_FAILED,"get project failed");
@@ -319,6 +314,27 @@ public class TrainDetailsController {
         } catch (Exception e) {
             e.printStackTrace();
             return RespBean.error(CptmpStatusCode.FILE_UPLOAD_FAILED, "remove resource files failed");
+        }
+    }
+
+    @GetMapping("/api/train-project/{project_id}/train")
+    public RespBeanWithTrainList getTrainByProjectId(
+            @RequestBody String json,
+            @PathVariable("project_id") BigInteger projectId
+    ) throws JsonProcessingException
+    {
+        ObjectMapper objectMapper = new ObjectMapper();
+        int page = objectMapper.readValue(json, ObjectNode.class).get("page").asInt();
+        int offset = objectMapper.readValue(json, ObjectNode.class).get("offset").asInt();
+        try{
+            PageInfo<TrainDTO> pageInfo = trainService.findByProjectId(page,offset,projectId);
+
+            List<TrainDTO> trainDTOList = pageInfo.getList();
+            return new RespBeanWithTrainList(trainDTOList,pageInfo.getTotal());
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED,"get trains failed");
         }
     }
 }
