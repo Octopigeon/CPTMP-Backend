@@ -161,22 +161,6 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
     }
 
     /**
-     * 查找团队中的所有成员
-     *
-     * @param teamId 团队Id
-     * @return 所有成员id
-     */
-    @Override
-    public List<BigInteger> findUsersByTeamId(BigInteger teamId) {
-        List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByTeamId(teamId);
-        List<BigInteger> results = new ArrayList<>();
-        for (TeamPerson teamPerson: teamPeople) {
-            results.add(teamPerson.getUserId());
-        }
-        return results;
-    }
-
-    /**
      * 根据团队名称进行模糊查询
      *
      * @param page   页号
@@ -294,6 +278,24 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
         List<Team> teams = teamMapper.findTeamsByProjectTrainId(getTrainProjectId(trainId, projectId));
         List<TeamDTO> results = convertTeamList(teams);
         return new PageInfo<>(results);
+    }
+
+    /**
+     * 根据用户Id查找相应的团队
+     *
+     * @param page 页号
+     * @param offset 页容量
+     * @param userId 用户Id
+     * @return 团队分页列表
+     */
+    @Override
+    public PageInfo<TeamDTO> findByUserId(int page, int offset, BigInteger userId) {
+        List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByUserId(userId);
+        List<Team> teams = new ArrayList<>();
+        for (TeamPerson teamPerson: teamPeople) {
+            teams.add(teamMapper.findTeamByTeamId(teamPerson.getTeamId()));
+        }
+        return new PageInfo<>(convertTeamList(teams));
     }
 
     /**
