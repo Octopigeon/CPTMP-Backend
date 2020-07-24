@@ -268,6 +268,83 @@ College Practice Training Management Platform
 
   
 
+## /api/user/basic-info
+
++ HTTP方法：GET
+
++ 返回类型：json
+
++ 参数：user_id（类型Biginteger[]）
+
++ 说明：根据id得到用户基本信息
+
++ 调用实例：
+
++ ```json
+  //api/user/basic-info?user_id=18,22,30
+  ```
+
++ 返回实例
+
+``` json
+{
+    "status": 0,
+    "date": "2020-07-24T03:18:03.506+00:00",
+    "msg": "success",
+    "total_rows": 3,
+    "data": [
+        {
+            "email": "123123@163.com",
+            "role_name": "ROLE_STUDENT_MEMBER",
+            "username": "WHU-2018302110018",
+            "name": "李四",
+            "avatar": "https://cdn.v2ex.com/gravatar/c8e96b40867bb2e296213c7d4008be7d/?d=null%2Fassets%2Favatar.png&s=512&r=g",
+            "common_id": "2018302110018",
+            "organization_id": 2,
+            "phone_number": null,
+            "gender": null,
+            "introduction": null,
+            "domain": null,
+            "default_avatar": "null/assets/avatar.png",
+            "gravatar_root": "https://cdn.v2ex.com/gravatar/",
+            "user_id": 18
+        },
+        {
+            "email": "1542342@qq.com",
+            "role_name": "ROLE_SCHOOL_TEACHER",
+            "username": "WHU-2018302110054",
+            "name": "刘二思",
+            "avatar": "https://cdn.v2ex.com/gravatar/7e02704d19c48e25b5dbddabf982ce49/?d=null%2Fassets%2Favatar.png&s=512&r=g",
+            "common_id": "2018302110054",
+            "organization_id": 2,
+            "phone_number": null,
+            "gender": null,
+            "introduction": null,
+            "domain": null,
+            "default_avatar": "null/assets/avatar.png",
+            "gravatar_root": "https://cdn.v2ex.com/gravatar/",
+            "user_id": 22
+        },
+        {
+            "email": "125431288@163.com",
+            "role_name": "ROLE_ENTERPRISE_ADMIN",
+            "username": "E-2019302110055",
+            "name": "王文生",
+            "avatar": "https://cdn.v2ex.com/gravatar/7a3f86fd59244591bc18e1dd7d892964/?d=null%2Fassets%2Favatar.png&s=512&r=g",
+            "common_id": "2019302110055",
+            "organization_id": 1,
+            "phone_number": null,
+            "gender": null,
+            "introduction": null,
+            "domain": null,
+            "default_avatar": "null/assets/avatar.png",
+            "gravatar_root": "https://cdn.v2ex.com/gravatar/",
+            "user_id": 30
+        }
+    ]
+}
+```
+
 ## /api/user/pwd
 
 + HTTP方法：PUT
@@ -2906,6 +2983,74 @@ College Practice Training Management Platform
   ```
 
   
+
+# 招聘模块（RecruitmentDetailsController）
+
+## 1.创建招聘信息
+
++ 接口：api/Recruitment
+
++ 方法：POST
+
++ 调用实例：
+
+  ```json
+  
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  //失败
+  {
+      "status": 18,
+      "date": "2020-07-23T17:41:39.215+00:00",
+      "msg": "add Recruitment failed"
+  }
+  ```
+
+
+
+## 2.根据id招聘信息
+
++ 接口：api/recruitment/{recruitment_id}
+
++ 方法：POST
+
++ 调用实例：
+
+  ```json
+  //api/recruitment/1
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-23T17:40:15.482+00:00",
+      "msg": "success",
+      "data": {
+          "id": 1,
+          "photo": "https://www.baidu.com/",
+          "title": "百度",
+          "start_time": "2020-07-19T16:00:00.000+00:00",
+          "end_time": "2020-07-24T16:00:00.000+00:00",
+          "website_url": "https://www.baidu.com/"
+      }
+  }
+  //失败
+  {
+      "status": 15,
+      "date": "2020-07-23T17:40:28.337+00:00",
+      "msg": "get info failed",
+      "data": null
+  }
+  ```
+
+
 
 ## 1.创建实训//这是我的模板 勿删🙅‍
 
