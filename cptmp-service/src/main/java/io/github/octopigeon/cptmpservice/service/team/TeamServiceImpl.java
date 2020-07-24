@@ -291,11 +291,11 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
     @Override
     public PageInfo<TeamDTO> findByUserId(int page, int offset, BigInteger userId) {
         List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByUserId(userId);
-        List<Team> teams = new ArrayList<>();
+        List<TeamDTO> results = new ArrayList<>();
         for (TeamPerson teamPerson: teamPeople) {
-            teams.add(teamMapper.findTeamByTeamId(teamPerson.getTeamId()));
+            results.add(convertTeam(teamMapper.findTeamByTeamId(teamPerson.getTeamId())));
         }
-        return new PageInfo<>(convertTeamList(teams));
+        return new PageInfo<>(results);
     }
 
     /**
