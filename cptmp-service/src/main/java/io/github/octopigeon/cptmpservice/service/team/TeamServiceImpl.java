@@ -4,6 +4,7 @@ import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.*;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
+import io.github.octopigeon.cptmpdao.model.CptmpUser;
 import io.github.octopigeon.cptmpdao.model.PersonalGrade;
 import io.github.octopigeon.cptmpdao.model.Team;
 import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
@@ -185,29 +186,43 @@ public class TeamServiceImpl extends BaseFileServiceImpl implements TeamService{
      * @param userId 用户Id
      */
     @Override
-    public void addUser(BigInteger teamId, BigInteger userId) {
-        if(teamMapper.findTeamByTeamId(teamId) == null){
+    public void addUser(BigInteger teamId, BigInteger userId) throws Exception {
+        Team team = teamMapper.findTeamByTeamId(teamId);
+        CptmpUser user = cptmpUserMapper.findUserById(userId);
+        if(team == null){
             throw new ValueException("Team is not exist!");
         }
-        if(cptmpUserMapper.findUserById(userId) == null){
+        if(user == null){
             throw new ValueException("User is not exist!");
         }
-        //检查成员是不是已经被加入
-        if(teamPersonMapper.findTeamPersonByTeamIdAndUserId(teamId, userId) == null){
-            //添加成员
-            TeamPerson teamPerson = new TeamPerson();
-            teamPerson.setGmtCreate(new Date());
-            teamPerson.setTeamId(teamId);
-            teamPerson.setUserId(userId);
-            teamPersonMapper.addTeamPerson(teamPerson);
-            //如果是学生，在personalgrade表中插入一条数据
-            if(RoleEnum.ROLE_STUDENT_MEMBER.name().equals(cptmpUserMapper.findUserById(userId).getRoleName())){
-                TeamPerson re = teamPersonMapper.findTeamPersonByTeamIdAndUserId(teamId, userId);
-                PersonalGrade personalGrade = new PersonalGrade();
-                personalGrade.setGmtCreate(new Date());
-                personalGrade.setTeamPersonId(re.getId());
-                personalGradeMapper.addPersonalGrade(personalGrade);
+        //如果是学生
+        if(RoleEnum.ROLE_STUDENT_MEMBER.name().equals(user.getRoleName())){
+            //检查是否已经加入同期实训其他队伍了
+            ProjectTrain tmp = projectTrainMapper.findProjectTrainById(team.getProjectTrainId());
+            List<ProjectTrain> projectTrains = projectTrainMapper.findProjectTrainsByTrainId(tmp.getTrainId());
+            List<Team> teams = new ArrayList<>();
+            for (ProjectTrain projectTrain: projectTrains) {
+                teams.addAll(teamMapper.findTeamsByProjectTrainId(projectTrain.getTrainId()));
             }
+            for (Team teamTmp: teams) {
+                if(teamPersonMapper.findTeamPersonByTeamIdAndUserId(teamTmp.getId(), userId) != null){
+                    throw new Exception("你已经加入了其他队伍！");
+                }
+            }
+        }
+        //添加成员
+        TeamPerson teamPerson = new TeamPerson();
+        teamPerson.setGmtCreate(new Date());
+        teamPerson.setTeamId(teamId);
+        teamPerson.setUserId(userId);
+        teamPersonMapper.addTeamPerson(teamPerson);
+        //如果是学生，在personalgrade表中插入一条数据
+        if(RoleEnum.ROLE_STUDENT_MEMBER.name().equals(user.getRoleName())){
+            TeamPerson re = teamPersonMapper.findTeamPersonByTeamIdAndUserId(teamId, userId);
+            PersonalGrade personalGrade = new PersonalGrade();
+            personalGrade.setGmtCreate(new Date());
+            personalGrade.setTeamPersonId(re.getId());
+            personalGradeMapper.addPersonalGrade(personalGrade);
         }
     }
 
