@@ -945,18 +945,22 @@ College Practice Training Management Platform
 + 返回类型：json
 + 说明：学生查询自己的成绩
 + 返回实例：
-``` 
+``` json
 // 成功
 {
     "status": 0,
-    "date": "2020-07-16T10:20:00.560+00:00",
+    "date": "2020-07-24T07:46:19.776+00:00",
     "msg": "success",
     "data": {
-        "id": 5,
-        "team_id": 5,
-        "user_id": 5,
-        "personal_grade": 50,
-        "evaluation": "真tm好啊"
+        "id": 4,
+        "evaluation": "优秀",
+        "team_id": 4,
+        "user_id": 4,
+        "manage_point": 100,
+        "code_point": 100,
+        "tech_point": 100,
+        "framework_point": 100,
+        "communication_point": 100
     }
 }
 // 失败
@@ -982,7 +986,11 @@ College Practice Training Management Platform
         "id": 5,
         "team_id": 5,
         "user_id": 5,
-        "personal_grade": 50,
+        "manage_point": 100,
+        "code_point": 100,
+        "tech_point": 100,
+        "framework_point": 100,
+        "communication_point": 100，
         "evaluation": "真tm好啊"
     }
 }
