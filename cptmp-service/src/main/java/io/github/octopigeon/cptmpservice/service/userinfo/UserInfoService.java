@@ -99,6 +99,13 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
     PageInfo<BaseUserInfoDTO> findByGroupFilter(int page, int offset, BigInteger organizationId, String roleName);
 
     /**
+     * 根据团队Id查询用户
+     * @param teamId 团队Id
+     * @return 用户信息列表
+     */
+    List<BaseUserInfoDTO> findByTeamId(BigInteger teamId);
+
+    /**
      * 激活账号
      * @param userId 用户唯一标识符
      */

@@ -361,6 +361,23 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     }
 
     /**
+     * 根据团队Id查询用户
+     *
+     * @param teamId 团队Id
+     * @return 用户信息列表
+     */
+    @Override
+    public List<BaseUserInfoDTO> findByTeamId(BigInteger teamId) {
+        List<TeamPerson> teamPeople = teamPersonMapper.findTeamPersonByTeamId(teamId);
+        List<BaseUserInfoDTO> results = new ArrayList<>();
+        for (TeamPerson teamPerson: teamPeople) {
+            CptmpUser user = cptmpUserMapper.findUserById(teamPerson.getUserId());
+            results.add(getFullUserInfo(user));
+        }
+        return results;
+    }
+
+    /**
      * 获取完整用户信息
      * @param cptmpUser 用户model
      * @return 用户dto
