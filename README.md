@@ -2873,7 +2873,13 @@ College Practice Training Management Platform
 + 调用实例：
 
   ```json
-  //api/signin/gps
+  {
+      "user_id":4,
+      "team_id":4,
+      "train_id":1,
+      "longitude":114.3574959,
+      "latitude":30.5332712
+  }
   ```
 
 + 返回实例：
@@ -2882,13 +2888,19 @@ College Practice Training Management Platform
   //成功
   {
       "status": 0,
-      "date": "2020-07-24T16:38:57.734+00:00",
+      "date": "2020-07-24T18:50:45.880+00:00",
       "msg": "sign in successfully"
+  }
+  //未在指定范围
+  {
+      "status": 0,
+      "date": "2020-07-24T18:52:21.794+00:00",
+      "msg": "You are not in the specified location range"
   }
   //失败
   {
       "status": 19,
-      "date": "2020-07-24T17:01:47.575+00:00",
+      "date": "2020-07-24T18:52:44.747+00:00",
       "msg": "sign in failed"
   }
   ```
