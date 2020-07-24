@@ -1,6 +1,7 @@
 package io.github.octopigeon.cptmpweb.controller;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -37,10 +38,10 @@ public class RecruitmentDetailsController {
      * @return
      */
     @PostMapping("api/recruitment")
-    public RespBean addRecruitment(@RequestBody String json)
+    public RespBean addRecruitment(@RequestBody String json) throws JsonProcessingException
     {
         ObjectMapper objectMapper = new ObjectMapper();
-        RecruitmentDTO recruitmentDTO = new RecruitmentDTO();
+        RecruitmentDTO recruitmentDTO = objectMapper.readValue(json,RecruitmentDTO.class);
         try{
             recruitmentService.add(recruitmentDTO);
             return RespBean.ok("add Recruitment successfully");
