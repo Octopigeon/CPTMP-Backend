@@ -3012,7 +3012,7 @@ College Practice Training Management Platform
 
 
 
-## 2.根据id招聘信息
+## 2.根据id获取招聘信息
 
 + 接口：api/recruitment/{recruitment_id}
 
@@ -3040,6 +3040,67 @@ College Practice Training Management Platform
           "end_time": "2020-07-24T16:00:00.000+00:00",
           "website_url": "https://www.baidu.com/"
       }
+  }
+  //失败
+  {
+      "status": 15,
+      "date": "2020-07-23T17:40:28.337+00:00",
+      "msg": "get info failed",
+      "data": null
+  }
+  ```
+
+
+
+## 3.获取所有招聘信息
+
++ 接口：api/recruitment
+
++ 方法：POST
+
++ 参数：offset、page
+
++ 调用实例：
+
+  ```json
+  //api/recruitment?offset=3&page=1
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-24T05:45:14.271+00:00",
+      "msg": "success",
+      "total_rows": 5,
+      "data": [
+          {
+              "id": 1,
+              "photo": "https://www.baidu.com/",
+              "title": "百度",
+              "start_time": "2020-07-19T16:00:00.000+00:00",
+              "end_time": "2020-07-24T16:00:00.000+00:00",
+              "website_url": "https://www.baidu.com/"
+          },
+          {
+              "id": 2,
+              "photo": "https://www.baidu.com/",
+              "title": "阿里",
+              "start_time": "2020-07-19T16:00:00.000+00:00",
+              "end_time": "2020-07-24T16:00:00.000+00:00",
+              "website_url": "https://www.baidu.com/"
+          },
+          {
+              "id": 3,
+              "photo": "https://www.baidu.com/",
+              "title": "清华大学",
+              "start_time": "2020-07-19T16:00:00.000+00:00",
+              "end_time": "2020-07-24T16:00:00.000+00:00",
+              "website_url": "https://www.baidu.com/"
+          }
+      ]
   }
   //失败
   {
