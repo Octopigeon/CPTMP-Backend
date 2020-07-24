@@ -9,6 +9,7 @@ import io.github.octopigeon.cptmpdao.model.Process;
 import io.github.octopigeon.cptmpdao.model.relation.ProcessEvent;
 import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
 import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
+import io.github.octopigeon.cptmpservice.constantclass.NoticeTemplate;
 import io.github.octopigeon.cptmpservice.constantclass.NoticeType;
 import io.github.octopigeon.cptmpservice.constantclass.RoleEnum;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -22,11 +23,10 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 定时任务，定时添加通知
- * @author 李国豪
+ * @author Gh Li
  * @version 1.0
  * @date 2020/7/21
- * @last-check-in 李国豪
+ * @last-check-in Gh Li
  * @date 2020/7/21
  */
 @Component
@@ -87,7 +87,7 @@ public class ScheduleNotice {
                             notice.setGmtCreate(new Date());
                             notice.setNoticeType(NoticeType.DEADLINE_NOTICE.name());
                             notice.setReceiverId(user.getId());
-                            notice.setContent(generateDeadlineNotice(train.getName(), event.getContent(), event.getEndTime()));
+                            notice.setContent(NoticeTemplate.generateDeadlineNotice(train.getName(), event.getContent(), event.getEndTime()));
                             noticeMapper.addNotice(notice);
                         }
                     }
@@ -130,7 +130,7 @@ public class ScheduleNotice {
                                     notice.setNoticeType(NoticeType.WARNING_NOTICE.name());
                                     notice.setReceiverId(teamPerson.getUserId());
                                     notice.setTeamId(teamPerson.getTeamId());
-                                    notice.setContent(generateTeamWarningNotice(team.getName(), event.getContent()));
+                                    notice.setContent(NoticeTemplate.generateTeamWarningNotice(team.getName(), event.getContent()));
                                     // 如果不存在此项notice就进行添加
                                     if(noticeMapper.findNoticeByNotice(notice) == null){
                                         noticeMapper.addNotice(notice);
@@ -145,7 +145,7 @@ public class ScheduleNotice {
                                     notice.setNoticeType(NoticeType.WARNING_NOTICE.name());
                                     notice.setReceiverId(teamPerson.getUserId());
                                     notice.setTeamId(teamPerson.getTeamId());
-                                    notice.setContent(generateUserWarningNotice(user.getUsername(), event.getContent()));
+                                    notice.setContent(NoticeTemplate.generateUserWarningNotice(user.getUsername(), event.getContent()));
                                     // 如果不存在此项notice就进行添加
                                     if(noticeMapper.findNoticeByNotice(notice) == null){
                                         noticeMapper.addNotice(notice);
@@ -170,7 +170,7 @@ public class ScheduleNotice {
     /**
      * 查询学生用户的teamPerson
      * @param trainId 实训Id
-     * @return 学生用户的teamPerson列表
+     * @return
      */
     private List<TeamPerson> findStudentTeamPeopleByTrain(BigInteger trainId){
         List<TeamPerson> results = new ArrayList<>();
@@ -194,8 +194,8 @@ public class ScheduleNotice {
 
     /**
      * 找到一个trainId下的所有学生用户
-     * @param trainId 实训Id
-     * @return 学生用户列表
+     * @param trainId
+     * @return
      */
     private List<CptmpUser> findStudentsByTrain(BigInteger trainId){
         List<CptmpUser> users = new ArrayList<>();
@@ -215,35 +215,5 @@ public class ScheduleNotice {
             }
         }
         return users;
-    }
-
-    /**
-     * deadline提醒内容
-     * @param content 事务内容
-     * @param deadline 最后期限
-     * @return deadline消息内容
-     */
-    private String generateDeadlineNotice(String trainName, String content, Date deadline){
-        return String.format("提醒：在 %s 中，您有一个 %s 待完成，最后期限为：%s",trainName, content, deadline.toString());
-    }
-
-    /**
-     * 警告消息提醒内容
-     * @param username 用户名
-     * @param content 事务内容
-     * @return 个人警告消息内容
-     */
-    private String generateUserWarningNotice(String username, String content){
-        return String.format("警告：用户 %s 未正常完成 %s", username, content);
-    }
-
-    /**
-     * 警告消息提醒内容
-     * @param teamName 用户名
-     * @param content 事务内容
-     * @return 团队警告消息内容
-     */
-    private String generateTeamWarningNotice(String teamName, String content){
-        return String.format("警告：团队 %s 未正常完成 %s", teamName, content);
     }
 }
