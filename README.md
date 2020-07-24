@@ -1932,7 +1932,7 @@ College Practice Training Management Platform
 
 ## 10. 根据实训id和项目id获取团队
 
-+ 接口：api/team/project/{project_id}
++ 接口：api/team/train_project
 
 + 方法：GET
 
@@ -1941,7 +1941,7 @@ College Practice Training Management Platform
 + 调用实例：
 
   ```json
-  //api/team/train/2?page=1&offset=8
+  //api/team/train_project?page=1&offset=8&train_id=1&project_id=1
   ```
 
 + 返回实例：
@@ -1976,7 +1976,53 @@ College Practice Training Management Platform
 
 
 
-## 11.获取团队成员信息
+## 11. 根据用户id获取团队
+
++ 接口：api/team/user/{user_id}
+
++ 方法：GET
+
++ 参数：offset ，page
+
++ 调用实例：
+
+  ```json
+  //api/team/user/1?page=1&offset=8
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-24T07:38:47.580+00:00",
+      "msg": "success",
+      "total_rows": 1,
+      "data": [
+          {
+              "id": 1,
+              "name": "章鱼鸽",
+              "avatar": "/storage/2020/7/23/38c76975-4632-4946-be1f-437902a1fb22.",
+              "evaluation": "优秀",
+              "size": 4,
+              "repo_url": "https://www.baidu.com/",
+              "team_grade": 99,
+              "train_id": 1,
+              "train_name": "初级项目实训",
+              "project_id": 1,
+              "project_name": "大一实训",
+              "team_master_id": 1,
+              "team_master_name": "李豪四"
+          }
+      ]
+  }
+  //失败
+  ```
+
+
+
+## 12.获取团队成员信息
 
 + 接口：api/team/{team_id}/member
 
@@ -2017,7 +2063,7 @@ College Practice Training Management Platform
 
 
 
-## 12.上传团队头像
+## 13.上传团队头像
 
 + 接口：api/team/{team_id}/uploadAvatar
 
