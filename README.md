@@ -2794,6 +2794,107 @@ College Practice Training Management Platform
 
   
 
+## 7.添加人脸信息
+
++ 接口：api/face/{user_id}
+
++ 方法：POST
+
++ 参数：人脸图片（key=“file”）
+
++ 调用实例：
+
+  ```json
+  //api/face/4
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-24T16:22:39.683+00:00",
+      "msg": "add face info successfully"
+  }
+  //失败
+  {
+      "status": 18,
+      "date": "2020-07-24T16:52:47.627+00:00",
+      "msg": "add face info failed"
+  }
+  ```
+
+## 8.人脸识别签到
+
++ 接口：api/face/{user_id}
+
++ 方法：POST
+
++ 参数：人脸图片（key=“file”），user_id，team_id，train_id
+
++ 调用实例：
+
+  ```json
+  //api/signin/face?user_id=4&team_id=4&train_id=4
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-24T16:38:57.734+00:00",
+      "msg": "sign in successfully"
+  }
+  //识别失败但未发生异常
+  {
+      "status": 0,
+      "date": "2020-07-24T16:55:58.019+00:00",
+      "msg": "Identification failed or User is not exist"
+  }
+  //失败
+  {
+      "status": 19,
+      "date": "2020-07-24T16:54:31.315+00:00",
+      "msg": "sign in failed"
+  }
+  ```
+
+
+
+## 9.定位签到
+
++ 接口：api/signin/gps
+
++ 方法：POST
+
++ 调用实例：
+
+  ```json
+  //api/signin/gps
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-24T16:38:57.734+00:00",
+      "msg": "sign in successfully"
+  }
+  //失败
+  {
+      "status": 19,
+      "date": "2020-07-24T17:01:47.575+00:00",
+      "msg": "sign in failed"
+  }
+  ```
+
+
+
 # 提醒模块（NoticeDetailsController）
 
 ## 1.创建提示
@@ -3081,7 +3182,7 @@ College Practice Training Management Platform
 
 + 接口：api/recruitment/{recruitment_id}
 
-+ 方法：POST
++ 方法：GET
 
 + 调用实例：
 
@@ -3121,7 +3222,7 @@ College Practice Training Management Platform
 
 + 接口：api/recruitment
 
-+ 方法：POST
++ 方法：GET
 
 + 参数：offset、page
 
