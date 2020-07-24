@@ -63,6 +63,9 @@ public class RecordDetailsController {
                 recordDTO.setProcessEventId(BigInteger.ONE);
                 recordDTO.setTeamId(teamId);
                 recordDTO.setUserId(userId);
+                recordDTO.setTrainId(trainId);
+                recordDTO.setProcessId(BigInteger.valueOf(1));
+                recordDTO.setEventId(BigInteger.valueOf(1));
                 recordService.add(recordDTO);
                 return RespBean.ok("sign in successfully");
             }
