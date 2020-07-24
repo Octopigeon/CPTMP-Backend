@@ -78,7 +78,7 @@ public interface TeamService extends BaseNormalService<TeamDTO>, BaseFileService
      * @param teamId 团队Id
      * @param userId 用户Id
      */
-    void addUser(BigInteger teamId, BigInteger userId);
+    void addUser(BigInteger teamId, BigInteger userId) throws Exception;
 
     /**
      * 从团队中移除成员
