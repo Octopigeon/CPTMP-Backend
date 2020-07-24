@@ -3049,13 +3049,24 @@ College Practice Training Management Platform
 + 调用实例：
 
   ```json
-  
+   {
+      "photo": "//www.baidu.com/",
+      "title": "腾讯",
+      "start_time": "2020-07-19T16:00:00.000+00:00",
+      "end_time": "2020-07-24T16:00:00.000+00:00",
+      "website_url": "https://www.baidu.com/"
+  }
   ```
 
 + 返回实例：
 
   ```json
   //成功
+  {
+      "status": 0,
+      "date": "2020-07-24T13:43:18.968+00:00",
+      "msg": "add Recruitment successfully"
+  }
   //失败
   {
       "status": 18,
