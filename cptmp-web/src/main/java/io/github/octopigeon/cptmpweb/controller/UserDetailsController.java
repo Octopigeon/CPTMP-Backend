@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.tencentcloudapi.kms.v20190118.models.ListAlgorithmsRequest;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
@@ -199,6 +200,28 @@ public class UserDetailsController {
         } catch (Exception e) {
             e.printStackTrace();
             return RespBean.error(CptmpStatusCode.UPDATE_BASIC_INFO_FAILED, "modify info failed");
+        }
+    }
+
+    /**
+     * 根据id批量获取用户信息
+     * @param userId
+     * @return
+     */
+    @GetMapping("api/user/basic-info")
+    public RespBeanWithBaseUserInfoList getUserInfoById(@RequestParam("user_id")BigInteger[] userId)
+    {
+        List<BaseUserInfoDTO>userInfoDTOList = new ArrayList<>();
+        try{
+            for (BigInteger id:userId)
+            {
+                userInfoDTOList.add(userInfoService.findById(id));
+            }
+            return new RespBeanWithBaseUserInfoList(userInfoDTOList,userInfoDTOList.size());
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return new RespBeanWithBaseUserInfoList(CptmpStatusCode.INFO_ACCESS_FAILED,"get user info failed");
         }
     }
 

@@ -65,18 +65,20 @@ public interface TeamService extends BaseNormalService<TeamDTO>, BaseFileService
     PageInfo<TeamDTO> findByProjectIdAndTrainId(int page, int offset, BigInteger trainId, BigInteger projectId);
 
     /**
-     * 查找团队中的所有成员
-     * @param teamId 团队Id
-     * @return 用户id列表
+     * 根据用户Id查找相应的团队
+     * @param page 页号
+     * @param offset 页容量
+     * @param userId 用户Id
+     * @return 团队分页列表
      */
-    List<BigInteger> findUsersByTeamId(BigInteger teamId);
+    PageInfo<TeamDTO> findByUserId(int page, int offset, BigInteger userId);
 
     /**
      * 向团队中添加成员
      * @param teamId 团队Id
      * @param userId 用户Id
      */
-    void addUser(BigInteger teamId, BigInteger userId);
+    void addUser(BigInteger teamId, BigInteger userId) throws Exception;
 
     /**
      * 从团队中移除成员
