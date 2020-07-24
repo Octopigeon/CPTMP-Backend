@@ -104,7 +104,12 @@ public class PersonTrainController {
         String operatorUsername = SecurityContextHolder.getContext().getAuthentication().getName();
         BigInteger operatorId = userInfoService.findByUsername(operatorUsername).getId();
         ObjectMapper objectMapper = new ObjectMapper();
-        Integer personalGrade = objectMapper.readValue(json, ObjectNode.class).get("personal_grade").asInt();
+        Integer managePt = objectMapper.readValue(json, ObjectNode.class).get("manage_point").asInt();
+        Integer codePt = objectMapper.readValue(json, ObjectNode.class).get("code_point").asInt();
+        Integer techPt = objectMapper.readValue(json, ObjectNode.class).get("tech_point").asInt();
+        Integer frameworkPt = objectMapper.readValue(json, ObjectNode.class).get("framework_point").asInt();
+        Integer communicationPt = objectMapper.readValue(json, ObjectNode.class).get("communication_point").asInt();
+
         String evaluation = objectMapper.readValue(json, ObjectNode.class).get("evaluation").asText();
         try {
             PersonalGradeDTO personalGradeDTO = new PersonalGradeDTO();
@@ -112,7 +117,11 @@ public class PersonTrainController {
             personalGradeDTO.setUserId(userId);
             personalGradeDTO.setTeamId(teamId);
             personalGradeDTO.setEvaluation(evaluation);
-            //personalGradeDTO.setPersonalGrade(personalGrade);
+            personalGradeDTO.setManagePt(managePt);
+            personalGradeDTO.setCodePt(codePt);
+            personalGradeDTO.setCommunicationPt(communicationPt);
+            personalGradeDTO.setFrameworkPt(frameworkPt);
+            personalGradeDTO.setTechPt(techPt);
             if (personalGradeService.verifyPermission(operatorId, personalGradeDTO)) {
                 personalGradeService.modify(personalGradeDTO);
                 return RespBean.ok("modify student grade success");
