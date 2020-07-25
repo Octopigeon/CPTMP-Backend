@@ -59,8 +59,8 @@ public interface AssignmentMapper {
     void restoreAllAssignment();
 
     /**
-     * 根据日志id删除对应的日志信息
-     * @param id：日志id
+     * 根据作业id删除对应的作业信息
+     * @param id：作业id
      * @param gmtDeleted 删除日期
      */
     @Update("update assignment set gmt_deleted = #{gmtDeleted} where id = #{id} and gmt_deleted is null")
@@ -96,7 +96,8 @@ public interface AssignmentMapper {
 //    void restoreAssignmentByTeamId(BigInteger teamId);
 
     /**
-     * 根据日志id修改日志
+     * 根据作业id修改作业
+     * @param assignment 作业
      */
     @Update("update assignment set "+ UPDATE_CONTENT+" where id = #{id} and gmt_deleted is null")
     void updateAssignmentById(Assignment assignment);
@@ -106,7 +107,6 @@ public interface AssignmentMapper {
      * @param id 日志id
      * @param gmtModified 修改时间
      * @param documentPath 文件路径
-     * @return
      */
     @Update("update assignment set gmt_modified = #{gmtModified}, document_path = #{documentPath} where id = #{id} and gmt_deleted is null")
     void updateAssignmentDocumentById(BigInteger id,Date gmtModified,String documentPath);
@@ -166,6 +166,11 @@ public interface AssignmentMapper {
     })
     List<Assignment> findAllAssignment();
 
+    /**
+     * 根据id查找
+     * @param id id
+     * @return 作业
+     */
     @Select("select id, " + COLUMNS + " from assignment where id = #{id} and gmt_deleted is null")
     @ResultMap("assignment")
     Assignment findAssignmentById(BigInteger id);
