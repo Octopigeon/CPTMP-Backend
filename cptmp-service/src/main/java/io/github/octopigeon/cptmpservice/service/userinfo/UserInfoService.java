@@ -14,8 +14,8 @@ import java.util.List;
  * @author 李国豪
  * @version 1.0
  * @date 2020/7/11
- * @last-check-in 魏啸冲
- * @date 2020/7/13
+ * @last-check-in 陈若琳
+ * @date 2020/7/25
  */
 @Service
 public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, BaseFileService {
@@ -58,6 +58,13 @@ public interface UserInfoService extends BaseNormalService<BaseUserInfoDTO>, Bas
      * @return userInfo
      */
     BaseUserInfoDTO findByEmail(String email);
+
+    /**
+     * 根据实训id进行模糊查询
+     * @param trainId 实训id
+     * @return userInfo
+     */
+    List<BaseUserInfoDTO> findByTrain(BigInteger trainId);
 
     /**
      * 汇总过滤查询
