@@ -47,23 +47,22 @@ public class TrainDetailsController {
 
     /**
      * 创建实训
+     *
      * @param json
      * @return
      * @throws JsonProcessingException
      */
     @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @PostMapping("api/train")
-    public RespBean createTrain(@RequestBody String json) throws JsonProcessingException
-    {
+    public RespBean createTrain(@RequestBody String json) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         TrainDTO train = objectMapper.readValue(json, TrainDTO.class);
-        try{
+        try {
             trainService.add(train);
             return RespBean.ok("create train successfully");
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-            return RespBean.error(CptmpStatusCode.CREATE_FAILED,"Train create failed");
+            return RespBean.error(CptmpStatusCode.CREATE_FAILED, "Train create failed");
         }
     }
 
@@ -75,131 +74,126 @@ public class TrainDetailsController {
     public RespBeanWithTrainList getAllTrains(
             @RequestParam(value = "offset") Integer offset,
             @RequestParam(value = "page") Integer page
-    )
-    {
-        try{
-            PageInfo<TrainDTO> pageInfo = trainService.findAll(page,offset);
+    ) {
+        try {
+            PageInfo<TrainDTO> pageInfo = trainService.findAll(page, offset);
             return new RespBeanWithTrainList(
                     pageInfo.getList(),
                     pageInfo.getTotal()
             );
 
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-            return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED,"something wrong");
+            return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED, "something wrong");
         }
     }
 
     /**
      * 根据组织获取实训
+     *
      * @return
      * @throws JsonProcessingException
      */
     @GetMapping("api/train/search/org")
     public RespBeanWithTrainList searchTrainByOrg(
             @RequestParam("offset") int offset,
-            @RequestParam("page")int page,
-            @RequestParam("key_word") BigInteger keyWord)
-    {
-        try{
+            @RequestParam("page") int page,
+            @RequestParam("key_word") BigInteger keyWord) {
+        try {
             Page pages = PageHelper.startPage(page, offset);
-            PageInfo<TrainDTO> searchById = trainService.findByOrganizationId(page,offset,keyWord);
+            PageInfo<TrainDTO> searchById = trainService.findByOrganizationId(page, offset, keyWord);
             return new RespBeanWithTrainList(
                     searchById.getList(),
                     pages.getTotal());
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-            return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED,"get train failed");
+            return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED, "get train failed");
         }
     }
 
     /**
      * 根据名称获取实训
+     *
      * @return
      * @throws JsonProcessingException
      */
     @GetMapping("api/train/search/name")
     public RespBeanWithTrainList searchTrainByName(
             @RequestParam("offset") int offset,
-            @RequestParam("page")int page,
-            @RequestParam("key_word") String keyWord)
-    {
-        try{
+            @RequestParam("page") int page,
+            @RequestParam("key_word") String keyWord) {
+        try {
             Page pages = PageHelper.startPage(page, offset);
-            PageInfo<TrainDTO> searchByName = trainService.findByLikeName(page,offset,keyWord);
+            PageInfo<TrainDTO> searchByName = trainService.findByLikeName(page, offset, keyWord);
             return new RespBeanWithTrainList(
                     searchByName.getList(),
                     pages.getTotal());
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-            return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED,"get train failed");
+            return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED, "get train failed");
         }
     }
 
     /**
      * 通过id获取实训，学生和老师只能获取自己学校的实训信息
+     *
      * @param trainId
      * @return
      */
     @GetMapping("api/train/{id}")
-    public RespBeanWithTrainInfo getTrainById(@PathVariable("id") BigInteger trainId)
-    {
-        try{
+    public RespBeanWithTrainInfo getTrainById(@PathVariable("id") BigInteger trainId) {
+        try {
             TrainDTO train = trainService.findById(trainId);
             return new RespBeanWithTrainInfo(train);
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-            return new RespBeanWithTrainInfo(CptmpStatusCode.INFO_ACCESS_FAILED,"get train failed");
+            return new RespBeanWithTrainInfo(CptmpStatusCode.INFO_ACCESS_FAILED, "get train failed");
         }
     }
 
     /**
      * 根据id删除实训
+     *
      * @param trainId
      * @return
      */
     @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @DeleteMapping("api/train/{train_id}")
-    public RespBean deleteTrain(@PathVariable("train_id") BigInteger trainId)
-    {
-        try{
+    public RespBean deleteTrain(@PathVariable("train_id") BigInteger trainId) {
+        try {
             trainService.remove(trainService.findById(trainId));
             return RespBean.ok("train remove successfully");
         } catch (Exception e) {
             e.printStackTrace();
-            return new RespBean(CptmpStatusCode.REMOVE_FAILED,"train remove failed");
+            return new RespBean(CptmpStatusCode.REMOVE_FAILED, "train remove failed");
         }
 
     }
 
     /**
      * 修改实训信息
+     *
      * @param json
      * @return
      * @throws JsonProcessingException
      */
     @PutMapping("api/train")
-    public RespBean updateTrainInfo(@RequestBody String json) throws JsonProcessingException
-    {
+    public RespBean updateTrainInfo(@RequestBody String json) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         TrainDTO train = objectMapper.readValue(json, TrainDTO.class);
-        try{
+        try {
             trainService.modify(train);
             return RespBean.ok("update train successfully");
-        }catch(Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-            return RespBean.error(CptmpStatusCode.CREATE_FAILED,"Train update failed");
+            return RespBean.error(CptmpStatusCode.CREATE_FAILED, "Train update failed");
         }
 
     }
 
     /**
      * 在实训中批量添加项目
+     *
      * @param json
      * @param trainId
      * @return
@@ -207,19 +201,17 @@ public class TrainDetailsController {
      */
     @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @PutMapping("api/train/{train_id}/project")
-    public RespBeanWithFailedList addProject(@RequestBody String json,@PathVariable("train_id") BigInteger trainId) throws JsonProcessingException
-    {
+    public RespBeanWithFailedList addProject(@RequestBody String json, @PathVariable("train_id") BigInteger trainId) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        BigInteger[] projectId = objectMapper.readValue(json,BigInteger[].class);
+        BigInteger[] projectId = objectMapper.readValue(json, BigInteger[].class);
         List<Integer> failedList = new ArrayList<>();
-        for(int i=0;i<projectId.length;i++)
-        {
-            try{
-                trainService.addProject(trainId,projectId[i]);
-            }catch (Exception e)
-            {
-                e.printStackTrace();;
-                failedList.add(i+1);
+        for (int i = 0; i < projectId.length; i++) {
+            try {
+                trainService.addProject(trainId, projectId[i]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                ;
+                failedList.add(i + 1);
             }
         }
         return RespBeanWithFailedList.report(failedList);
@@ -227,25 +219,23 @@ public class TrainDetailsController {
 
     /**
      * 根据id删除实训中的项目
-     * @param json
+     *
+     * @param projectId 待删除
      * @param trainId
      * @return
      * @throws JsonProcessingException
      */
     @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
     @DeleteMapping("api/train/{train_id}/project")
-    public RespBeanWithFailedList deleteProject(@RequestBody String json,@PathVariable("train_id") BigInteger trainId) throws JsonProcessingException
-    {
+    public RespBeanWithFailedList deleteProject(@RequestParam(value = "project_id") BigInteger[] projectId, @PathVariable("train_id") BigInteger trainId) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        BigInteger[] projectId = objectMapper.readValue(json,BigInteger[].class);
         List<Integer> failedList = new ArrayList<>();
-        for(int i=0;i<projectId.length;i++)
-        {
-            try{
-                trainService.removeProject(trainId,projectId[i]);
-            }catch (Exception e)
-            {
-                e.printStackTrace();;
+        for (int i = 0; i < projectId.length; i++) {
+            try {
+                trainService.removeProject(trainId, projectId[i]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                ;
                 failedList.add(i);
             }
         }
@@ -254,6 +244,7 @@ public class TrainDetailsController {
 
     /**
      * 获取实训的所有项目
+     *
      * @param trainId
      * @param offset
      * @param page
@@ -263,23 +254,23 @@ public class TrainDetailsController {
     @GetMapping("api/train/{train_id}/project")
     public RespBeanWithProjectList getProject(
             @PathVariable("train_id") BigInteger trainId,
-            @RequestParam("offset")int offset,
-            @RequestParam("page")int page)
-    {
-        try{
+            @RequestParam("offset") int offset,
+            @RequestParam("page") int page) {
+        try {
             Page pages = PageHelper.startPage(page, offset);
-            PageInfo<ProjectDTO> pageInfo = projectService.findByTrainId(page,offset,trainId);
-            return new RespBeanWithProjectList(pageInfo.getList(),pages.getTotal());
+            PageInfo<ProjectDTO> pageInfo = projectService.findByTrainId(page, offset, trainId);
+            return new RespBeanWithProjectList(pageInfo.getList(), pages.getTotal());
         } catch (Exception e) {
             e.printStackTrace();
-            return new RespBeanWithProjectList(CptmpStatusCode.INFO_ACCESS_FAILED,"get project failed");
+            return new RespBeanWithProjectList(CptmpStatusCode.INFO_ACCESS_FAILED, "get project failed");
         }
     }
 
     /**
      * 处理实训有关文档的上传信息
+     *
      * @param resource 上传的文件
-     * @param trainId 实训id
+     * @param trainId  实训id
      * @return 更新是否成功
      */
     @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
@@ -298,18 +289,18 @@ public class TrainDetailsController {
 
     /**
      * 删除实训有关文档
+     *
      * @param json
      * @return 删除是否成功
      */
     @DeleteMapping("/api/train/{train_id}/resource-lib")
     public RespBean deleteTrainResource(
             @RequestBody String json,
-            @PathVariable(value = "train_id") BigInteger trainId)
-    {
+            @PathVariable(value = "train_id") BigInteger trainId) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            FileDTO fileDTO = objectMapper.readValue(json,FileDTO.class);
-            trainService.removeResourceLib(trainId,fileDTO);
+            FileDTO fileDTO = objectMapper.readValue(json, FileDTO.class);
+            trainService.removeResourceLib(trainId, fileDTO);
             return RespBean.ok("remove resource files success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -321,37 +312,32 @@ public class TrainDetailsController {
     public RespBeanWithTrainList getTrainByProjectId(
             @RequestBody String json,
             @PathVariable("project_id") BigInteger projectId
-    ) throws JsonProcessingException
-    {
+    ) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         int page = objectMapper.readValue(json, ObjectNode.class).get("page").asInt();
         int offset = objectMapper.readValue(json, ObjectNode.class).get("offset").asInt();
-        try{
-            PageInfo<TrainDTO> pageInfo = trainService.findByProjectId(page,offset,projectId);
+        try {
+            PageInfo<TrainDTO> pageInfo = trainService.findByProjectId(page, offset, projectId);
 
             List<TrainDTO> trainDTOList = pageInfo.getList();
-            return new RespBeanWithTrainList(trainDTOList,pageInfo.getTotal());
-        }catch (Exception e)
-        {
+            return new RespBeanWithTrainList(trainDTOList, pageInfo.getTotal());
+        } catch (Exception e) {
             e.printStackTrace();
-            return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED,"get trains failed");
+            return new RespBeanWithTrainList(CptmpStatusCode.INFO_ACCESS_FAILED, "get trains failed");
         }
     }
 }
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-class RespBeanWithTrainInfo extends RespBean
-{
-    public RespBeanWithTrainInfo(TrainDTO train)
-    {
+class RespBeanWithTrainInfo extends RespBean {
+    public RespBeanWithTrainInfo(TrainDTO train) {
         super();
         this.train = train;
     }
 
-    public RespBeanWithTrainInfo(Integer status, String msg)
-    {
-        super(status,msg);
+    public RespBeanWithTrainInfo(Integer status, String msg) {
+        super(status, msg);
     }
 
     @JsonProperty("data")
@@ -360,18 +346,15 @@ class RespBeanWithTrainInfo extends RespBean
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-class RespBeanWithTrainList extends RespBean
-{
-    public RespBeanWithTrainList(List<TrainDTO> trains,long totalRows)
-    {
+class RespBeanWithTrainList extends RespBean {
+    public RespBeanWithTrainList(List<TrainDTO> trains, long totalRows) {
         super();
         this.trains = trains;
         this.totalRows = totalRows;
     }
 
-    public RespBeanWithTrainList(Integer status, String msg)
-    {
-        super(status,msg);
+    public RespBeanWithTrainList(Integer status, String msg) {
+        super(status, msg);
     }
 
     @JsonProperty("total_rows")
@@ -382,18 +365,15 @@ class RespBeanWithTrainList extends RespBean
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-class RespBeanWithProjectList extends RespBean
-{
-    public RespBeanWithProjectList(List<ProjectDTO> projects,long totalRows)
-    {
+class RespBeanWithProjectList extends RespBean {
+    public RespBeanWithProjectList(List<ProjectDTO> projects, long totalRows) {
         super();
         this.projects = projects;
         this.totalRows = totalRows;
     }
 
-    public RespBeanWithProjectList(Integer status, String msg)
-    {
-        super(status,msg);
+    public RespBeanWithProjectList(Integer status, String msg) {
+        super(status, msg);
     }
 
     @JsonProperty("total_rows")
