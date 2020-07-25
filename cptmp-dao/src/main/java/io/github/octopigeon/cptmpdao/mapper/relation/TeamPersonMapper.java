@@ -54,18 +54,23 @@ public interface TeamPersonMapper {
 
     /**
      * 删除一个队时，应当在此表中执行此操作
-     * @param teamId
+     * @param teamId 团队id
      */
     @Delete("delete from team_person where team_id = #{teamId}")
     void removeTeamPersonByTeamId(BigInteger teamId);
 
     /**
      * 某一个队删除某个队员时，执行此操作
-     * @param userId
+     * @param userId 用户id
      */
     @Delete("delete from team_person where user_id = #{userId}")
     void removeTeamPersonByUserId(BigInteger userId);
 
+    /**
+     * 删除某个队某个队员时，执行此操作
+     * @param teamId 团队id
+     * @param userId 用户id
+     */
     @Delete("delete from team_person where user_id = #{userId} and team_id = #{teamId}")
     void removeTeamPersonByTeamIdAndUserId(BigInteger teamId, BigInteger userId);
 
@@ -74,7 +79,7 @@ public interface TeamPersonMapper {
 
     /**
      * 根据用户id定位用户，一般修改用户所属队伍
-     * @param teamPerson
+     * @param teamPerson 对象
      */
     @Update("update team_person set " + UPDATE_CONTENT + " where user_id = #{userId}")
     void updateTeamPersonByTeamIdAndUserId(TeamPerson teamPerson);
@@ -112,10 +117,21 @@ public interface TeamPersonMapper {
     @ResultMap("team_person")
     List<TeamPerson> findTeamPersonByUserId(BigInteger userId);
 
-    @Select("select id, " + COLUMNS + " from team_person where id = #{teamUserId}")
+    /**
+     * 根据id查
+     * @param id id
+     * @return 团队-个人对象
+     */
+    @Select("select id, " + COLUMNS + " from team_person where id = #{id}")
     @ResultMap("team_person")
-    TeamPerson findTeamPersonById(BigInteger teamUserId);
+    TeamPerson findTeamPersonById(BigInteger id);
 
+    /**
+     * 根据团队和用户id查
+     * @param teamId 团队id
+     * @param userId 用户id
+     * @return 团队-个人关系
+     */
     @Select("select id, " + COLUMNS + " from team_person where team_id = #{teamId} and user_id = #{userId}")
     @ResultMap("team_person")
     TeamPerson findTeamPersonByTeamIdAndUserId(BigInteger teamId, BigInteger userId);

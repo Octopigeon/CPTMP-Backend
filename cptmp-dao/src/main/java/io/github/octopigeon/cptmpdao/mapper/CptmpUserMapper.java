@@ -16,7 +16,7 @@ import java.util.List;
  * @version 2.0
  * @date 2020/7/7
  * @last-check-in 李国鹏
- * @date 2020/7/21
+ * @date 2020/7/25
  */
 @Repository
 @Mapper
@@ -150,6 +150,8 @@ public interface CptmpUserMapper {
 
     })
     CptmpUser findUserByUsername(String username);
+
+
 
     /**
      * 根据id查询
