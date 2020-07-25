@@ -131,7 +131,8 @@ public interface ProcessEventMapper {
 //    List<ProcessEvent> findAllProcessEventsTest();
 
     /**
-     * @return
+     * 查询所有
+     * @return 流程事件
      */
     @Select("select id, " + COLUMNS + " from process_event")
     @ResultMap("process_event")

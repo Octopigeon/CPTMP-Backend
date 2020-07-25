@@ -117,11 +117,17 @@ public interface TeamMapper {
     @ResultMap("team")
     List<Team> findTeamByName(String name);
 
+    /**
+     * 通过项目——团队id查团队
+     * @param id
+     * @return
+     */
     @Select("select id, " + COLUMNS + " from team where idx_project_train_id=#{id} and gmt_deleted is null")
     @ResultMap("team")
     List<Team> findTeamsByProjectTrainId(BigInteger id);
     /**
      * 根据团队队长查找团队
+     * @param teamMasterId 队长id
      * @return 团队列表
      */
     @Select("select id, " + COLUMNS + " from team where idx_team_master_id = #{teamMasterId} and gmt_deleted is null")
