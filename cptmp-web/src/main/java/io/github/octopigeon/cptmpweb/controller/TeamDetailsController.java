@@ -183,15 +183,13 @@ public class TeamDetailsController {
 
     /**
      * 删除团队成员
-     * @param json
      * @return
      * @throws JsonProcessingException
      */
     @DeleteMapping("api/team/{team_id}/member")
-    public RespBeanWithFailedList deleteMember(@RequestBody String json,@PathVariable("team_id") BigInteger teamId) throws JsonProcessingException
+    public RespBeanWithFailedList deleteMember(@RequestParam("user_id") BigInteger[] userId ,@PathVariable("team_id") BigInteger teamId) throws JsonProcessingException
     {
         ObjectMapper objectMapper = new ObjectMapper();
-        BigInteger[] userId = objectMapper.readValue(json,BigInteger[].class);
         List<Integer> failedList = new ArrayList<>();
         for(int i=0;i<userId.length;i++)
         {
