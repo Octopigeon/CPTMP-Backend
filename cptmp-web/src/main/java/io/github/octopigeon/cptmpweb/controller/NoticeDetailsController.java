@@ -3,13 +3,17 @@ package io.github.octopigeon.cptmpweb.controller;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.constantclass.NoticeType;
+import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.notice.NoticeDTO;
 import io.github.octopigeon.cptmpservice.service.notice.NoticeService;
+import io.github.octopigeon.cptmpservice.service.trainproject.TrainService;
+import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,6 +36,42 @@ public class NoticeDetailsController {
 
     @Autowired
     private NoticeService noticeService;
+    @Autowired
+    private UserInfoService userInfoService;
+    @Autowired
+    private TrainService trainService;
+
+    /**
+     * 发送签到信息
+     * @param type
+     * @param senderId
+     * @param trainId
+     * @return
+     */
+    @PostMapping("api/notice/signin")
+    public RespBean sendSignInNotice(
+            @RequestParam("type")String type,
+            @RequestParam("sender_id")BigInteger senderId,
+            @RequestParam("train_id")BigInteger  trainId)
+    {
+        try{
+            List<BaseUserInfoDTO>userInfoDTOList = userInfoService.findByTrain(trainId);
+            NoticeDTO noticeDTO = new NoticeDTO();
+            noticeDTO.setSenderId(senderId);
+            noticeDTO.setNoticeType(NoticeType.MESSAGE_NOTICE.name());
+            noticeDTO.setContent(type+"签到：请及时进行"+trainService.findById(trainId).getName()+"实训的签到！");
+            for (BaseUserInfoDTO user:userInfoDTOList)
+            {
+                noticeDTO.setReceiverId(user.getId());
+                noticeService.add(noticeDTO);
+            }
+            return RespBean.ok("send message successfully");
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.CREATE_FAILED,"send message failed");
+        }
+    }
 
     /**
      * 通过接收者id获取通知信息

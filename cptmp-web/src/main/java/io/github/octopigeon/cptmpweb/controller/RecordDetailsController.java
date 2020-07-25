@@ -3,11 +3,15 @@ package io.github.octopigeon.cptmpweb.controller;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
+import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
 import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.record.RecordDTO;
+import io.github.octopigeon.cptmpservice.service.otherservice.PunchService;
 import io.github.octopigeon.cptmpservice.service.record.RecordService;
+import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -25,13 +29,114 @@ import java.util.List;
  * @version 2.0
  * @date 2020/07/17
  * @last-check-in 陈若琳
- * @date 2020/07/17
+ * @date 2020/07/24
  */
 @RestController
 public class RecordDetailsController {
 
     @Autowired
     private RecordService recordService;
+    @Autowired
+    private PunchService punchService;
+    @Autowired
+    private UserInfoService userInfoService;
+
+    /**
+     * 定位签到
+     * @param json
+     * @return
+     * @throws JsonProcessingException
+     */
+    @PostMapping("api/signin/gps")
+    public RespBean signInByGPS(@RequestBody String json) throws JsonProcessingException
+    {
+        ObjectMapper objectMapper = new ObjectMapper();
+        BigInteger userId = BigInteger.valueOf(objectMapper.readValue(json, ObjectNode.class).get("user_id").asInt());
+        BigInteger teamId = BigInteger.valueOf(objectMapper.readValue(json, ObjectNode.class).get("team_id").asInt());
+        BigInteger trainId = BigInteger.valueOf(objectMapper.readValue(json, ObjectNode.class).get("train_id").asInt());
+        double longitude = objectMapper.readValue(json, ObjectNode.class).get("longitude").asDouble();
+        double latitude = objectMapper.readValue(json, ObjectNode.class).get("latitude").asDouble();
+        try{
+            if(punchService.locationPunch(trainId,longitude,latitude))
+            {
+                RecordDTO recordDTO = new RecordDTO();
+                recordDTO.setProcessEventId(BigInteger.ONE);
+                recordDTO.setTeamId(teamId);
+                recordDTO.setUserId(userId);
+                recordDTO.setTrainId(trainId);
+                recordDTO.setProcessId(BigInteger.valueOf(1));
+                recordDTO.setEventId(BigInteger.valueOf(1));
+                recordService.add(recordDTO);
+                return RespBean.ok("sign in successfully");
+            }
+            else{
+                return RespBean.ok("You are not in the specified location range");
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.SIGN_IN_FAILED,"sign in failed");
+        }
+
+    }
+
+    /**
+     * 人脸识别签到
+     * @param face
+     * @return
+     * @throws JsonProcessingException
+     */
+    @PostMapping("api/signin/face")
+    public RespBean signInByFace(
+            @RequestParam("file")MultipartFile face,
+            @RequestParam("user_id")BigInteger userId,
+            @RequestParam("team_id")BigInteger teamId,
+            @RequestParam("train_id")BigInteger trainId)
+    {
+        try{
+            BaseUserInfoDTO userInfoDTO = userInfoService.findById(userId);
+            if(punchService.facePunch(face,userInfoDTO.getUsername()))
+            {
+                RecordDTO recordDTO = new RecordDTO();
+                recordDTO.setProcessEventId(BigInteger.valueOf(2));
+                recordDTO.setTeamId(teamId);
+                recordDTO.setUserId(userId);
+                recordDTO.setEventId(BigInteger.valueOf(2));
+                recordDTO.setProcessId(BigInteger.valueOf(1));
+                recordDTO.setTrainId(trainId);
+                recordService.add(recordDTO);
+                return RespBean.ok("sign in successfully");
+            }
+            else{
+                return RespBean.ok("Identification failed or User is not exist");
+            }
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.SIGN_IN_FAILED,"sign in failed");
+        }
+    }
+
+    /**
+     * 添加人脸信息
+     * @param face
+     * @param userId
+     * @return
+     */
+    @PostMapping("api/face/{user_id}")
+    public RespBean addFace(@RequestParam("file")MultipartFile face,@PathVariable("user_id")BigInteger userId)
+    {
+        try{
+            BaseUserInfoDTO userInfoDTO = userInfoService.findById(userId);
+            punchService.addFaceInfo(face,userInfoDTO.getUsername());
+            return RespBean.ok("add face info successfully");
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.CREATE_FAILED,"add face info failed");
+        }
+
+    }
 
     /**
      * 创建记录
