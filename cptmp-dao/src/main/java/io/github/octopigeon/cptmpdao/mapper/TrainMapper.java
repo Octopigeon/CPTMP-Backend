@@ -122,7 +122,7 @@ public interface TrainMapper {
             @Result(column = "accept_standard", property = "acceptStandard", jdbcType = JdbcType.VARCHAR),
             @Result(column = "resource_library", property = "resourceLibrary", jdbcType = JdbcType.VARCHAR),
             @Result(column = "gps_info", property = "gpsInfo", jdbcType = JdbcType.VARCHAR),
-            @Result(column = "limits", property = "gpsInfo", jdbcType = JdbcType.VARCHAR)
+            @Result(column = "limits", property = "limits", jdbcType = JdbcType.VARCHAR)
     })
     List<Train> findAllTrain();
 
