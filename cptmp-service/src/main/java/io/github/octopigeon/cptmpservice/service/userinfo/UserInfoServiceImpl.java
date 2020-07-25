@@ -2,8 +2,12 @@ package io.github.octopigeon.cptmpservice.service.userinfo;
 
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpdao.mapper.*;
+import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.TeamPersonMapper;
 import io.github.octopigeon.cptmpdao.model.CptmpUser;
+import io.github.octopigeon.cptmpdao.model.Project;
+import io.github.octopigeon.cptmpdao.model.Team;
+import io.github.octopigeon.cptmpdao.model.relation.ProjectTrain;
 import io.github.octopigeon.cptmpdao.model.relation.TeamPerson;
 import io.github.octopigeon.cptmpservice.config.FileProperties;
 import io.github.octopigeon.cptmpservice.dto.cptmpuser.BaseUserInfoDTO;
@@ -44,6 +48,13 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
 
     @Autowired
     private PersonalGradeMapper personalGradeMapper;
+
+    @Autowired
+    private ProjectTrainMapper projectTrainMapper;
+
+    @Autowired
+    private TeamMapper teamMapper;
+
 
     @Autowired
     public UserInfoServiceImpl(FileProperties fileProperties) throws Exception {
@@ -258,6 +269,34 @@ public class UserInfoServiceImpl extends BaseFileServiceImpl implements UserInfo
     public BaseUserInfoDTO findByEmail(String email) {
         CptmpUser cptmpUser = cptmpUserMapper.findUserByEmail(email);
         return getFullUserInfo(cptmpUser);
+    }
+
+    /**
+     * 根据实训id进行模糊查询
+     *
+     * @param trainId 实训id
+     * @return userInfo
+     */
+    @Override
+    public List<BaseUserInfoDTO> findByTrain(BigInteger trainId) {
+        List<ProjectTrain> projectTrainList = projectTrainMapper.findProjectTrainsByTrainId(trainId);
+        List<Team>teamList = new ArrayList<>();
+        for (ProjectTrain projectTrain:projectTrainList)
+        {
+            teamList.addAll(teamMapper.findTeamsByProjectTrainId(projectTrain.getId()));
+        }
+        List<TeamPerson> teamPersonList = new ArrayList<>();
+        for (Team team:teamList)
+        {
+            teamPersonList.addAll(teamPersonMapper.findTeamPersonByTeamId(team.getId()));
+        }
+        List<BaseUserInfoDTO>userInfoDTOList = new ArrayList<>();
+        for (TeamPerson teamPerson:teamPersonList)
+        {
+            CptmpUser user = cptmpUserMapper.findUserById(teamPerson.getUserId());
+            userInfoDTOList.add(getFullUserInfo(user));
+        }
+        return userInfoDTOList;
     }
 
     /**

@@ -3202,6 +3202,39 @@ College Practice Training Management Platform
 
   
 
+## 7.发送签到通知
+
++ 接口：api/notice/signin
+
++ 方法：POST
+
++ 参数：sender_id、train_id、type
+
++ 调用实例：
+
+  ```json
+  //api/notice/signin?sender_id=1&train_id=4&type=识别
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-25T06:16:45.197+00:00",
+      "msg": "send message successfully"
+  }
+  //失败
+  {
+      "status": 18,
+      "date": "2020-07-25T06:18:28.186+00:00",
+      "msg": "send message failed"
+  }
+  ```
+
+  
+
 # 招聘模块（RecruitmentDetailsController）
 
 ## 1.创建招聘信息
