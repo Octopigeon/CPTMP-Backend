@@ -13,15 +13,12 @@ import java.util.List;
  * @date 2020/7/8
  *
  * @last-check-in 李国鹏
- * @date 2020/7/15
+ * @date 2020/7/25
  */
 @Repository
 @Mapper
 public interface RecordMapper {
-    /**
-     * 向activity record中插入一条数据
-     * @param record：类
-     */
+
     String COLUMNS="gmt_create, gmt_modified, gmt_deleted, idx_train_id, idx_user_id, idx_team_id, idx_process_event_id, assignments_lib";
     String PROPS="#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{trainId}, #{userId}, #{teamId}, #{processEventId}, #{assignmentsLib}";
     String UPDATE_CONTENT=" gmt_create = #{gmtCreate},gmt_modified = #{gmtModified},gmt_deleted = #{gmtDeleted},idx_user_id = #{userId}, " +
@@ -129,10 +126,9 @@ public interface RecordMapper {
 
     /**
      * 根据用户Id和processEventId进行记录的查找
-     * @last-check-in 李国豪
      * @param userId 用户Id
      * @param processEventId processEventId
-     * @return
+     * @return 记录
      */
     @Select("select id, " + COLUMNS + " from record where idx_user_id = #{userId} and idx_process_event_id = #{processEventId} and gmt_deleted is null")
     @ResultMap("record")
@@ -141,7 +137,7 @@ public interface RecordMapper {
     /**
      * 根据processEventID进行记录查找
      * @param processEventId 过程事件ID
-     * @return
+     * @return 记录列表
      */
     @Select("select id, " + COLUMNS + " from record where idx_process_event_id = #{processEventId} and gmt_deleted is null")
     @ResultMap("record")
@@ -151,7 +147,7 @@ public interface RecordMapper {
      * 根据teamId和processEventId进行记录的查找
      * @param teamId 团队Id
      * @param processEventId 过程事件Id
-     * @return
+     * @return 记录
      */
     @Select("select id, " + COLUMNS + " from record where idx_team_id = #{teamId} and idx_process_event_id = #{processEventId} and gmt_deleted is null")
     @ResultMap("record")
