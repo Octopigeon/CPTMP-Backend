@@ -59,7 +59,7 @@ public class NoticeDetailsController {
             NoticeDTO noticeDTO = new NoticeDTO();
             noticeDTO.setSenderId(senderId);
             noticeDTO.setNoticeType(NoticeType.MESSAGE_NOTICE.name());
-            noticeDTO.setContent(type+"签到：请及时进行"+trainService.findById(trainId).getName()+"实训的签到！");
+            noticeDTO.setContent(type+"签到:请及时进行"+trainService.findById(trainId).getName()+"实训的签到！");
             for (BaseUserInfoDTO user:userInfoDTOList)
             {
                 noticeDTO.setReceiverId(user.getId());
