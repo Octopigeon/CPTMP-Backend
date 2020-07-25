@@ -82,7 +82,7 @@ College Practice Training Management Platform
 
 
 
-# ==TrainProjectFindController==
+# TrainProjectFindController
 
 ## /api/enterprise-admin/find/train-project
 + HTTP方法：GET
@@ -683,14 +683,12 @@ College Practice Training Management Platform
 
 + HTTP方法：GET
 + 返回类型：json
-+ 说明：根据id批量获取组织
++ 说明：根据id批量获取组织名称
++ 参数：org_id
 + 调用实例：
 
 ``` json
-[
-    4,
-    5
-]
+//api/org/name?org_id=1,2
 ```
 
 + 返回实例
