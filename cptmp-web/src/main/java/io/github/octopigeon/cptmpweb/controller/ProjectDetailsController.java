@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,6 +42,7 @@ public class ProjectDetailsController {
 
     /**
      * 得到项目基本信息，参加projectDTO中的内容
+     *
      * @param id 项目id
      * @return 返回查询到的信息
      */
@@ -60,8 +62,9 @@ public class ProjectDetailsController {
 
     /**
      * 跟新项目的名字，简介，等级信息
+     *
      * @param json 包含上述三个json字段
-     * @param id 项目的id
+     * @param id   项目的id
      * @return 返回更新结果
      */
     @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
@@ -86,8 +89,9 @@ public class ProjectDetailsController {
 
     /**
      * 处理实训项目有关文档的上传信息
+     *
      * @param resource 上传的文件
-     * @param id 项目id
+     * @param id       项目id
      * @return 更新是否成功
      */
     @Secured({CptmpRole.ROLE_SYSTEM_ADMIN, CptmpRole.ROLE_ENTERPRISE_ADMIN})
@@ -106,18 +110,18 @@ public class ProjectDetailsController {
 
     /**
      * 删除项目有关文档
-     * @param json
+     *
      * @return 删除是否成功
      */
     @DeleteMapping("/api/train-project/{project_id}/resource-lib")
     public RespBean deleteProjectResource(
-            @RequestBody String json,
-            @PathVariable(value = "project_id") BigInteger projectId)
-    {
+            @RequestParam(value = "fileName") String fileName,
+            @PathVariable(value = "project_id") BigInteger projectId) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            FileDTO fileDTO = objectMapper.readValue(json,FileDTO.class);
-            projectService.removeResourceLib(projectId,fileDTO);
+            FileDTO fileDTO = new FileDTO();
+            fileDTO.setFileName(fileName);
+            projectService.removeResourceLib(projectId, fileDTO);
             return RespBean.ok("remove resource files success");
         } catch (Exception e) {
             e.printStackTrace();
@@ -127,6 +131,7 @@ public class ProjectDetailsController {
 
     /**
      * 批量删除实训项目
+     *
      * @param json 包含需要删除的项目id
      * @return 删除失败列表
      */
@@ -154,28 +159,28 @@ public class ProjectDetailsController {
 
     /**
      * 获取所有项目
+     *
      * @param offset
      * @param page
      * @return
      */
     @GetMapping("api/project")
     public RespBeanWithProjectList getAllProjects(
-            @RequestParam("offset")int offset,@RequestParam("page") int page)
-    {
-        try{
+            @RequestParam("offset") int offset, @RequestParam("page") int page) {
+        try {
             Page pages = PageHelper.startPage(page, offset);
-            PageInfo<ProjectDTO>pageInfo = projectService.findAll(page,offset);
-            return new RespBeanWithProjectList(pageInfo.getList(),pages.getTotal());
-        }catch (Exception e)
-        {
+            PageInfo<ProjectDTO> pageInfo = projectService.findAll(page, offset);
+            return new RespBeanWithProjectList(pageInfo.getList(), pages.getTotal());
+        } catch (Exception e) {
             e.printStackTrace();
-            return new RespBeanWithProjectList(CptmpStatusCode.INFO_ACCESS_FAILED,"get project failed");
+            return new RespBeanWithProjectList(CptmpStatusCode.INFO_ACCESS_FAILED, "get project failed");
         }
 
     }
 
     /**
      * 根据名称获取项目
+     *
      * @param page
      * @param offset
      * @param keyWord
@@ -186,18 +191,16 @@ public class ProjectDetailsController {
     public RespBeanWithProjectList searchProject(
             @RequestParam("page") int page,
             @RequestParam("offset") int offset,
-            @RequestParam("key_word") String keyWord)
-    {
-        try{
-            PageInfo<ProjectDTO> searchByName = projectService.findByLikeName(page,offset,keyWord);
+            @RequestParam("key_word") String keyWord) {
+        try {
+            PageInfo<ProjectDTO> searchByName = projectService.findByLikeName(page, offset, keyWord);
             return new RespBeanWithProjectList(
                     searchByName.getList(),
                     searchByName.getTotal()
             );
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
-            return new RespBeanWithProjectList(CptmpStatusCode.INFO_ACCESS_FAILED,"get project failed");
+            return new RespBeanWithProjectList(CptmpStatusCode.INFO_ACCESS_FAILED, "get project failed");
         }
     }
 
