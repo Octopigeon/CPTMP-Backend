@@ -3,6 +3,7 @@ package io.github.octopigeon.cptmpservice.service.trainproject;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageInfo;
+import io.github.octopigeon.cptmpdao.mapper.AttachmentFileMapper;
 import io.github.octopigeon.cptmpdao.mapper.ProjectMapper;
 import io.github.octopigeon.cptmpdao.mapper.relation.ProjectTrainMapper;
 import io.github.octopigeon.cptmpdao.model.Project;
@@ -45,6 +46,9 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
 
     @Autowired
     private AttachmentFileService attachmentFileService;
+
+    @Autowired
+    private AttachmentFileMapper attachmentFileMapper;
 
     @Autowired
     public ProjectServiceImpl(FileProperties fileProperties) throws Exception {
@@ -218,11 +222,13 @@ public class ProjectServiceImpl extends BaseFileServiceImpl implements ProjectSe
         Project project = projectMapper.findTrainProjectById(projectId);
         JSONObject object = JSON.parseObject(project.getResourceLibrary());
         List<FileDTO> resourceLib = JSON.parseArray(object.getJSONArray(this.libJsonName).toJSONString(), FileDTO.class);
-        resourceLib.remove(file);
+        FileDTO fileDTO = new FileDTO();
+        BeanUtils.copyProperties(attachmentFileMapper.findAttachmentFileByFileName(fileDTO.getFileName()), fileDTO);
+        resourceLib.remove(fileDTO);
         object.put(this.libJsonName, resourceLib);
         projectMapper.updateTrainProjectResourceById(projectId, new Date(), object.toJSONString());
-        attachmentFileService.remove(file);
-        removeFile(file.getFilePath());
+        attachmentFileService.remove(fileDTO);
+        removeFile(fileDTO.getFilePath());
     }
 
     /**
