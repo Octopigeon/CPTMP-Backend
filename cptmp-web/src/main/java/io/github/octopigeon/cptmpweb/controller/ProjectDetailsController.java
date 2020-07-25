@@ -9,6 +9,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpRole;
 import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
+import io.github.octopigeon.cptmpservice.dto.file.FileDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.ProjectDTO;
 import io.github.octopigeon.cptmpservice.dto.trainproject.TrainDTO;
 import io.github.octopigeon.cptmpservice.service.trainproject.ProjectService;
@@ -104,6 +105,27 @@ public class ProjectDetailsController {
     }
 
     /**
+     * 删除项目有关文档
+     * @param json
+     * @return 删除是否成功
+     */
+    @DeleteMapping("/api/train-project/{project_id}/resource-lib")
+    public RespBean deleteProjectResource(
+            @RequestBody String json,
+            @PathVariable(value = "project_id") BigInteger projectId)
+    {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            FileDTO fileDTO = objectMapper.readValue(json,FileDTO.class);
+            projectService.removeResourceLib(projectId,fileDTO);
+            return RespBean.ok("remove resource files success");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return RespBean.error(CptmpStatusCode.FILE_UPLOAD_FAILED, "remove resource files failed");
+        }
+    }
+
+    /**
      * 批量删除实训项目
      * @param json 包含需要删除的项目id
      * @return 删除失败列表
@@ -178,6 +200,7 @@ public class ProjectDetailsController {
             return new RespBeanWithProjectList(CptmpStatusCode.INFO_ACCESS_FAILED,"get project failed");
         }
     }
+
 }
 
 @EqualsAndHashCode(callSuper = true)

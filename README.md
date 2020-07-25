@@ -64,7 +64,10 @@ College Practice Training Management Platform
 }
 ```
 
+
+
 ## /api/access
+
 + HTTP方法：GET
 + 返回类型：json
 + 说明：用于测试登录是否成功
@@ -77,7 +80,10 @@ College Practice Training Management Platform
 }
 ```
 
-# TrainProjectFindController
+
+
+# ==TrainProjectFindController==
+
 ## /api/enterprise-admin/find/train-project
 + HTTP方法：GET
 + 返回类型：json
@@ -795,10 +801,17 @@ College Practice Training Management Platform
 }
 ```
 ## /api/train-project/{id}/resource-lib
-+ HTTP方法：PUT
-+ 返回类型：json
-+ 说明：通过id更新具体某个project的信息
-+ 返回实例
++ HTTP方法：POST
++ 参数：文件（key=“file”）
++ 说明：上传文件
++ 调用实例：
+``` json
+//api/train-project/1/resource-lib
+参数为要上传文件
+```
+
++ 返回实例:
+
 ``` 
 // 成功
 {
@@ -814,7 +827,45 @@ College Practice Training Management Platform
 }
 ```
 
+## /api/train-project/{id}/resource-lib
+
++ HTTP方法：DELETE
++ 参数：文件（key=“file”）
++ 说明：删除文件
++ 调用实例：
+
+``` json
+//api/train-project/1/resource-lib
+{
+   "fileName":"0b09aecb-f324-4f83-b453-e5b55203048a.md",
+   "filePath":"C:\\\\cptmp\\\\private\\\\2020\\\\7\\\\18\\\\0b09aecb-f324-4f83-b453-e5b55203048a.md",
+   "fileSize":31,
+   "fileType":"text/markdown",
+   "fileUrl":"/api/storage/2020/7/18/0b09aecb-f324-4f83-b453-e5b55203048a.md",
+   "gmtCreate":1595067876399,
+   "originName":"CPTMP-需求分析文档.md"
+}
+```
+
++ 返回实例:
+
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-14T02:18:20.590+00:00",
+    "msg": "remove resource files success"
+}
+// 失败
+{
+    "status": 16,
+    "date": "2020-07-14T02:21:43.068+00:00",
+    "msg": "remove resource files failed"
+}
+```
+
 ## /api/train
+
 + HTTP方法：GET
 + 返回类型：json
 + 参数：offset、page

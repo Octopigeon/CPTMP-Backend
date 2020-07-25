@@ -10,6 +10,8 @@ import io.github.octopigeon.cptmpservice.constantclass.CptmpStatusCode;
 import io.github.octopigeon.cptmpservice.constantclass.NoticeType;
 import io.github.octopigeon.cptmpservice.dto.notice.NoticeDTO;
 import io.github.octopigeon.cptmpservice.service.notice.NoticeService;
+import io.github.octopigeon.cptmpservice.service.trainproject.TrainService;
+import io.github.octopigeon.cptmpservice.service.userinfo.UserInfoService;
 import io.github.octopigeon.cptmpweb.bean.response.RespBean;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -32,6 +34,19 @@ public class NoticeDetailsController {
 
     @Autowired
     private NoticeService noticeService;
+    @Autowired
+    private UserInfoService userInfoService;
+    @Autowired
+    private TrainService trainService;
+
+    @PostMapping("api/notice/signin")
+    public RespBean sendSignInNotice(@RequestBody String json)
+    {
+        BigInteger senderId;
+        BigInteger trainId;
+        //userInfoService.
+        return null;
+    }
 
     /**
      * 通过接收者id获取通知信息
