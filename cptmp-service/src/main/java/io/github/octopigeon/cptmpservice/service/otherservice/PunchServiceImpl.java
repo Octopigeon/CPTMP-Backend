@@ -99,9 +99,7 @@ public class PunchServiceImpl implements PunchService{
                 VerifyFaceRequest req = VerifyFaceRequest.fromJsonString(params.toJSONString(), VerifyFaceRequest.class);
                 //处理返回
                 VerifyFaceResponse resp = client.VerifyFace(req);
-                JSONObject tmp = JSONObject.parseObject(VerifyFaceResponse.toJsonString(resp));
-                JSONObject result = tmp.getJSONObject("Response");
-                return result.getBooleanValue("IsMatch");
+                return resp.getIsMatch();
             }else {
                 throw new ValueException("图片中不存在人脸信息");
             }
@@ -210,8 +208,6 @@ public class PunchServiceImpl implements PunchService{
         params.put(this.image, imageBase64);
         DetectFaceRequest req = DetectFaceRequest.fromJsonString(params.toJSONString(), DetectFaceRequest.class);
         DetectFaceResponse response = client.DetectFace(req);
-        JSONObject tmp = JSONObject.parseObject(DetectFaceResponse.toJsonString(response));
-        JSONObject result = tmp.getJSONObject("Response");
-        return result.get("FaceInfos") != null;
+        return response.getFaceInfos() != null;
     }
 }

@@ -64,7 +64,10 @@ College Practice Training Management Platform
 }
 ```
 
+
+
 ## /api/access
+
 + HTTP方法：GET
 + 返回类型：json
 + 说明：用于测试登录是否成功
@@ -77,7 +80,10 @@ College Practice Training Management Platform
 }
 ```
 
-# TrainProjectFindController
+
+
+# ==TrainProjectFindController==
+
 ## /api/enterprise-admin/find/train-project
 + HTTP方法：GET
 + 返回类型：json
@@ -795,10 +801,17 @@ College Practice Training Management Platform
 }
 ```
 ## /api/train-project/{id}/resource-lib
-+ HTTP方法：PUT
-+ 返回类型：json
-+ 说明：通过id更新具体某个project的信息
-+ 返回实例
++ HTTP方法：POST
++ 参数：文件（key=“file”）
++ 说明：上传文件
++ 调用实例：
+``` json
+//api/train-project/1/resource-lib
+参数为要上传文件
+```
+
++ 返回实例:
+
 ``` 
 // 成功
 {
@@ -814,7 +827,45 @@ College Practice Training Management Platform
 }
 ```
 
+## /api/train-project/{id}/resource-lib
+
++ HTTP方法：DELETE
++ 参数：文件（key=“file”）
++ 说明：删除文件
++ 调用实例：
+
+``` json
+//api/train-project/1/resource-lib
+{
+   "fileName":"0b09aecb-f324-4f83-b453-e5b55203048a.md",
+   "filePath":"C:\\\\cptmp\\\\private\\\\2020\\\\7\\\\18\\\\0b09aecb-f324-4f83-b453-e5b55203048a.md",
+   "fileSize":31,
+   "fileType":"text/markdown",
+   "fileUrl":"/api/storage/2020/7/18/0b09aecb-f324-4f83-b453-e5b55203048a.md",
+   "gmtCreate":1595067876399,
+   "originName":"CPTMP-需求分析文档.md"
+}
+```
+
++ 返回实例:
+
+``` 
+// 成功
+{
+    "status": 0,
+    "date": "2020-07-14T02:18:20.590+00:00",
+    "msg": "remove resource files success"
+}
+// 失败
+{
+    "status": 16,
+    "date": "2020-07-14T02:21:43.068+00:00",
+    "msg": "remove resource files failed"
+}
+```
+
 ## /api/train
+
 + HTTP方法：GET
 + 返回类型：json
 + 参数：offset、page
@@ -2794,6 +2845,119 @@ College Practice Training Management Platform
 
   
 
+## 7.添加人脸信息
+
++ 接口：api/face/{user_id}
+
++ 方法：POST
+
++ 参数：人脸图片（key=“file”）
+
++ 调用实例：
+
+  ```json
+  //api/face/4
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-24T16:22:39.683+00:00",
+      "msg": "add face info successfully"
+  }
+  //失败
+  {
+      "status": 18,
+      "date": "2020-07-24T16:52:47.627+00:00",
+      "msg": "add face info failed"
+  }
+  ```
+
+## 8.人脸识别签到
+
++ 接口：api/face/{user_id}
+
++ 方法：POST
+
++ 参数：人脸图片（key=“file”），user_id，team_id，train_id
+
++ 调用实例：
+
+  ```json
+  //api/signin/face?user_id=4&team_id=4&train_id=4
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-24T16:38:57.734+00:00",
+      "msg": "sign in successfully"
+  }
+  //识别失败但未发生异常
+  {
+      "status": 0,
+      "date": "2020-07-24T16:55:58.019+00:00",
+      "msg": "Identification failed or User is not exist"
+  }
+  //失败
+  {
+      "status": 19,
+      "date": "2020-07-24T16:54:31.315+00:00",
+      "msg": "sign in failed"
+  }
+  ```
+
+
+
+## 9.定位签到
+
++ 接口：api/signin/gps
+
++ 方法：POST
+
++ 调用实例：
+
+  ```json
+  {
+      "user_id":4,
+      "team_id":4,
+      "train_id":1,
+      "longitude":114.3574959,
+      "latitude":30.5332712
+  }
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-24T18:50:45.880+00:00",
+      "msg": "sign in successfully"
+  }
+  //未在指定范围
+  {
+      "status": 0,
+      "date": "2020-07-24T18:52:21.794+00:00",
+      "msg": "You are not in the specified location range"
+  }
+  //失败
+  {
+      "status": 19,
+      "date": "2020-07-24T18:52:44.747+00:00",
+      "msg": "sign in failed"
+  }
+  ```
+
+
+
 # 提醒模块（NoticeDetailsController）
 
 ## 1.创建提示
@@ -3038,6 +3202,39 @@ College Practice Training Management Platform
 
   
 
+## 7.发送签到通知
+
++ 接口：api/notice/signin
+
++ 方法：POST
+
++ 参数：sender_id、train_id、type
+
++ 调用实例：
+
+  ```json
+  //api/notice/signin?sender_id=1&train_id=4&type=识别
+  ```
+
++ 返回实例：
+
+  ```json
+  //成功
+  {
+      "status": 0,
+      "date": "2020-07-25T06:16:45.197+00:00",
+      "msg": "send message successfully"
+  }
+  //失败
+  {
+      "status": 18,
+      "date": "2020-07-25T06:18:28.186+00:00",
+      "msg": "send message failed"
+  }
+  ```
+
+  
+
 # 招聘模块（RecruitmentDetailsController）
 
 ## 1.创建招聘信息
@@ -3081,7 +3278,7 @@ College Practice Training Management Platform
 
 + 接口：api/recruitment/{recruitment_id}
 
-+ 方法：POST
++ 方法：GET
 
 + 调用实例：
 
@@ -3121,7 +3318,7 @@ College Practice Training Management Platform
 
 + 接口：api/recruitment
 
-+ 方法：POST
++ 方法：GET
 
 + 参数：offset、page
 

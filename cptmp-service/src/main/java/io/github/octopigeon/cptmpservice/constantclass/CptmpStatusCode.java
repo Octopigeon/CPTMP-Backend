@@ -50,5 +50,7 @@ public class CptmpStatusCode {
     public static int REMOVE_FAILED = 17;
     /** 创建失败 */
     public static int CREATE_FAILED = 18;
+    /** 签到失败 */
+    public static int SIGN_IN_FAILED = 19;
 
 }
