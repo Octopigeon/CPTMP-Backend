@@ -12,18 +12,14 @@ import java.util.List;
 /**
  * @author 李国豪
  * @version 2.0
- * @date 2020/7/10
+ *
  * @last-check-in 李国鹏
- * @date 2020/7/15
+ * @date 2020/7/25
  */
 @Repository
 @Mapper
 public interface AttachmentFileMapper {
 
-    /**
-     * 新增文件
-     * @param file:attachment类
-     */
     String COLUMNS = "gmt_create, gmt_modified, gmt_deleted, uk_file_name, uk_file_path,uk_file_url, origin_name, file_size, idx_file_type";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted}, #{fileName}, #{filePath}, #{fileUrl}, #{originName}, #{fileSize}, #{fileType}";
     String UPDATE_CONTENT = "gmt_create = #{gmtCreate}, gmt_modified = #{gmtModified}, gmt_deleted = #{gmtDeleted}, uk_file_name = #{fileName}, " +
