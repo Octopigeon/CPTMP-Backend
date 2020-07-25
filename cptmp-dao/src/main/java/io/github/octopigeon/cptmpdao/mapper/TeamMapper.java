@@ -15,8 +15,7 @@ import java.util.List;
  * @date 2020/7/9
  * <p>
  * last-check-in 李国鹏
- * 添加团队队长的token
- * @date 2020/7/21
+ * @date 2020/7/25
  */
 @Repository
 @Mapper
@@ -66,10 +65,17 @@ public interface TeamMapper {
 
     /**
      * 根据团队id修改
+     * @param  team 团队
      */
     @Update("update team set " + UPDATE_CONTENT + "  where id = #{id} and gmt_deleted is null")
     void updateTeamById(Team team);
 
+    /**
+     * 根据团队id修改头像
+     * @param teamId 团队id
+     * @param gmtModified 修改时间
+     * @param avatar 头像url
+     */
     @Update("update team set avatar = #{avatar}, gmt_modified = #{gmtModified} where id = #{teamId} and gmt_deleted is null")
     void updateAvatarById(BigInteger teamId, Date gmtModified, String avatar);
 
@@ -119,8 +125,8 @@ public interface TeamMapper {
 
     /**
      * 通过项目——团队id查团队
-     * @param id
-     * @return
+     * @param id id
+     * @return 团队列表
      */
     @Select("select id, " + COLUMNS + " from team where idx_project_train_id=#{id} and gmt_deleted is null")
     @ResultMap("team")

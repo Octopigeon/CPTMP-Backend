@@ -79,7 +79,6 @@ public interface RecruitmentMapper {
 
     /**
      * 查询所有
-     *
      * @return 招聘列表
      */
     @Select("select id, " + COLUMNS + " from recruitment where gmt_deleted is null")

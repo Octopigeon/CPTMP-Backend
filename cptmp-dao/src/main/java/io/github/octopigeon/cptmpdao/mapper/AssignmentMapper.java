@@ -17,16 +17,13 @@ import java.util.List;
  * @date 2020/7/8
  * <p>
  * last-check-in 李国鹏
- * @date 2020/7/19
+ * @date 2020/7/25
  */
 @Deprecated
 @Repository
 @Mapper
 public interface AssignmentMapper {
-    /**
-     * 添加作业
-     * @param assignment：作业
-     */
+
     String COLUMNS = "gmt_create, gmt_modified, gmt_deleted,  title, content, is_file, document_path";
     String PROPS = "#{gmtCreate}, #{gmtModified}, #{gmtDeleted},  #{title}, #{content}, #{isFile}, #{documentPath}";
     String UPDATE_CONTENT = " gmt_create = #{gmtCreate}, gmt_modified = #{gmtModified}, gmt_deleted = #{gmtDeleted},title = #{title}, content = #{content},  is_file = #{isFile}";
@@ -38,6 +35,7 @@ public interface AssignmentMapper {
     @Insert("insert into assignment (" +COLUMNS+ ") values (" +PROPS+ ")")
     @Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
     void addAssignment(Assignment assignment);
+
     /**
      * 测试用
      */
